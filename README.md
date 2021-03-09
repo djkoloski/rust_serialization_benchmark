@@ -26,8 +26,8 @@ For operations, time per iteration; for size, bytes. Lower is always better.
 
 Relative to best. For operations, higher is better; for size, lower is better.
 
-| Format / Lib  | Serialize all | Access    | Update all    | Deserialize all   | Size (bytes)  |
-|---------------|---------------|-----------|---------------|-------------------|---------------|
-| bincode       | 100%          | n/a       | 0.11%         | 73.23%            | 100%          |
-| flatbuffers   | 2.14%         | 46.25%    | n/a           | n/a               | 148.30%       |
-| rkyv          | 98.62%        | 100%      | 100%          | 100%              | 127.23%       |
+| Format / Lib  | Serialize | Access    | Update    | Deserialize   | Size      |
+|---------------|-----------|-----------|-----------|---------------|-----------|
+| bincode       | 100%      | n/a       | 0.11%     | 73.23%        | 100%      |
+| flatbuffers   | 2.14%     | 46.25%    | n/a       | n/a           | 148.30%   |
+| rkyv          | 98.62%    | 100%      | 100%      | 100%          | 127.23%   |
