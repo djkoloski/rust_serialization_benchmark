@@ -1,0 +1,114 @@
+namespace minecraft_savedata;
+
+enum GameType : byte { Survival, Creative, Adventure, Spectator }
+
+table Item {
+    count: byte;
+    slot: ubyte;
+    id: string (required);
+}
+
+struct Abilities {
+    walk_speed: float;
+    fly_speed: float;
+    may_fly: bool;
+    flying: bool;
+    invulnerable: bool;
+    may_build: bool;
+    instabuild: bool;
+}
+
+struct Vector2f {
+    x: float;
+    y: float;
+}
+
+struct Vector3d {
+    x: double;
+    y: double;
+    z: double;
+}
+
+struct Uuid {
+    x0: uint;
+    x1: uint;
+    x2: uint;
+    x3: uint;
+}
+
+table Entity {
+    id: string (required);
+    pos: Vector3d (required);
+    motion: Vector3d (required);
+    rotation: Vector2f (required);
+    fall_distance: float;
+    fire: ushort;
+    air: ushort;
+    on_ground: bool;
+    no_gravity: bool;
+    invulnerable: bool;
+    portal_cooldown: int;
+    uuid: Uuid (required);
+    custom_name: string;
+    custom_name_visible: bool;
+    silent: bool;
+    glowing: bool;
+}
+
+table RecipeBook {
+    recipes: [string] (required);
+    to_be_displayed: [string] (required);
+    is_filtering_craftable: bool;
+    is_gui_open: bool;
+    is_furnace_filtering_craftable: bool;
+    is_furnace_gui_open: bool;
+    is_blasting_furnace_filtering_craftable: bool;
+    is_blasting_furnace_gui_open: bool;
+    is_smoker_filtering_craftable: bool;
+    is_smoker_gui_open: bool;
+}
+
+table Vehicle {
+    param_0: uint;
+    param_1: uint;
+    param_2: uint;
+    param_3: uint;
+    entity: Entity (required);
+}
+
+table Player {
+    game_type: GameType;
+    previous_game_type: GameType;
+    score: ulong;
+    dimension: string (required);
+    selected_item_slot: uint;
+    selected_item: Item (required);
+    spawn_dimension: string;
+    spawn_x: long;
+    spawn_y: long;
+    spawn_z: long;
+    spawn_forced: bool; // ?????
+    sleep_timer: ushort;
+    food_exhaustion_level: float;
+    food_saturation_level: float;
+    food_tick_timer: uint;
+    xp_level: uint;
+    xp_p: float;
+    xp_total: int;
+    xp_seed: int;
+    inventory: [Item] (required);
+    ender_items: [Item] (required);
+    abilities: Abilities (required);
+    entered_nether_position: Vector3d;
+    root_vehicle: Vehicle;
+    shoulder_entity_left: Entity;
+    shoulder_entity_right: Entity;
+    seen_credits: bool;
+    recipe_book: RecipeBook (required);
+}
+
+table Players {
+    players: [Player] (required);
+}
+
+root_type Players;
