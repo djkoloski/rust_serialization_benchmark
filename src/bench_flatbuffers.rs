@@ -4,7 +4,7 @@ use flatbuffers::{FlatBufferBuilder, Follow, WIPOffset};
 pub trait Serialize<'a> {
     type Target: 'a + Follow<'a>;
 
-    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b;
 }
@@ -17,20 +17,20 @@ where
 
     let mut group = c.benchmark_group("flatbuffers");
 
-    let mut builder = FlatBufferBuilder::new_with_capacity(BUFFER_LEN);
+    let mut fbb = FlatBufferBuilder::new_with_capacity(BUFFER_LEN);
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(&mut builder).reset();
-            let root = data.serialize_fb(&mut builder);
-            builder.finish(root, None);
-            black_box(&mut builder);
+            black_box(&mut fbb).reset();
+            let root = data.serialize_fb(&mut fbb);
+            fbb.finish(root, None);
+            black_box(&mut fbb);
         })
     });
 
-    black_box(&mut builder).reset();
-    let root = data.serialize_fb(&mut builder);
-    builder.finish(root, None);
-    let deserialize_buffer = builder.finished_data();
+    black_box(&mut fbb).reset();
+    let root = data.serialize_fb(&mut fbb);
+    fbb.finish(root, None);
+    let deserialize_buffer = fbb.finished_data();
 
     group.bench_function("access", |b| {
         b.iter(|| {

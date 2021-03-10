@@ -92,16 +92,17 @@ impl Generate for Item {
 impl<'a> bench_flatbuffers::Serialize<'a> for Item {
     type Target = fb::Item<'a>;
 
-    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
-        let id = Some(builder.create_string(&self.id));
-        Self::Target::create(builder, &fb::ItemArgs {
-            count: self.count,
-            slot: self.slot,
-            id,
-        })
+        let id = fbb.create_string(&self.id);
+
+        let mut builder = fb::ItemBuilder::new(fbb);
+        builder.add_count(self.count);
+        builder.add_slot(self.slot);
+        builder.add_id(id);
+        builder.finish()
     }
 }
 
@@ -234,30 +235,38 @@ impl Generate for Entity {
 impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
     type Target = fb::Entity<'a>;
 
-    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
     'a: 'b,
     {
-        let id = Some(builder.create_string(&self.id));
-        let custom_name = self.custom_name.as_ref().map(|name| builder.create_string(&name));
-        Self::Target::create(builder, &fb::EntityArgs {
-            id,
-            pos: Some(&fb::Vector3d::new(self.pos.0, self.pos.1, self.pos.2)),
-            motion: Some(&fb::Vector3d::new(self.motion.0, self.motion.1, self.motion.2)),
-            rotation: Some(&fb::Vector2f::new(self.rotation.0, self.rotation.1)),
-            fall_distance: self.fall_distance,
-            fire: self.fire,
-            air: self.air,
-            on_ground: self.on_ground,
-            no_gravity: self.no_gravity,
-            invulnerable: self.invulnerable,
-            portal_cooldown: self.portal_cooldown,
-            uuid: Some(&fb::Uuid::new(self.uuid[0], self.uuid[1], self.uuid[2], self.uuid[3])),
-            custom_name,
-            custom_name_visible: self.custom_name_visible,
-            silent: self.silent,
-            glowing: self.glowing,
-        })
+        let id = fbb.create_string(&self.id);
+        let custom_name = self.custom_name.as_ref().map(|name| fbb.create_string(&name));
+
+        let pos = fb::Vector3d::new(self.pos.0, self.pos.1, self.pos.2);
+        let motion = fb::Vector3d::new(self.motion.0, self.motion.1, self.motion.2);
+        let rotation = fb::Vector2f::new(self.rotation.0, self.rotation.1);
+        let uuid = fb::Uuid::new(self.uuid[0], self.uuid[1], self.uuid[2], self.uuid[3]);
+
+        let mut builder = fb::EntityBuilder::new(fbb);
+        builder.add_id(id);
+        builder.add_pos(&pos);
+        builder.add_motion(&motion);
+        builder.add_rotation(&rotation);
+        builder.add_fall_distance(self.fall_distance);
+        builder.add_fire(self.fire);
+        builder.add_air(self.air);
+        builder.add_on_ground(self.on_ground);
+        builder.add_no_gravity(self.no_gravity);
+        builder.add_invulnerable(self.invulnerable);
+        builder.add_portal_cooldown(self.portal_cooldown);
+        builder.add_uuid(&uuid);
+        if let Some(custom_name) = custom_name {
+            builder.add_custom_name(custom_name);
+        }
+        builder.add_custom_name_visible(self.custom_name_visible);
+        builder.add_silent(self.silent);
+        builder.add_glowing(self.glowing);
+        builder.finish()
     }
 }
 
@@ -355,34 +364,34 @@ impl Generate for RecipeBook {
 impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
     type Target = fb::RecipeBook<'a>;
 
-    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
         let mut recipes = Vec::new();
         for recipe in self.recipes.iter() {
-            recipes.push(builder.create_string(recipe));
+            recipes.push(fbb.create_string(recipe));
         }
-        let recipes = Some(builder.create_vector(&recipes));
+        let recipes = fbb.create_vector(&recipes);
 
         let mut to_be_displayed = Vec::new();
         for name in self.to_be_displayed.iter() {
-            to_be_displayed.push(builder.create_string(name));
+            to_be_displayed.push(fbb.create_string(name));
         }
-        let to_be_displayed = Some(builder.create_vector(&to_be_displayed));
+        let to_be_displayed = fbb.create_vector(&to_be_displayed);
 
-        Self::Target::create(builder, &fb::RecipeBookArgs {
-            recipes,
-            to_be_displayed,
-            is_filtering_craftable: self.is_filtering_craftable,
-            is_gui_open: self.is_gui_open,
-            is_furnace_filtering_craftable: self.is_furnace_filtering_craftable,
-            is_furnace_gui_open: self.is_furnace_gui_open,
-            is_blasting_furnace_filtering_craftable: self.is_blasting_furnace_filtering_craftable,
-            is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
-            is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
-            is_smoker_gui_open: self.is_smoker_gui_open,
-        })
+        let mut builder = fb::RecipeBookBuilder::new(fbb);
+        builder.add_recipes(recipes);
+        builder.add_to_be_displayed(to_be_displayed);
+        builder.add_is_filtering_craftable(self.is_filtering_craftable);
+        builder.add_is_gui_open(self.is_gui_open);
+        builder.add_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
+        builder.add_is_furnace_gui_open(self.is_furnace_gui_open);
+        builder.add_is_blasting_furnace_filtering_craftable(self.is_blasting_furnace_filtering_craftable);
+        builder.add_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
+        builder.add_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
+        builder.add_is_smoker_gui_open(self.is_smoker_gui_open);
+        builder.finish()
     }
 }
 
@@ -506,32 +515,33 @@ impl Generate for Player {
 impl<'a> bench_flatbuffers::Serialize<'a> for Player {
     type Target = fb::Player<'a>;
 
-    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
-        let dimension = Some(builder.create_string(&self.dimension));
-        let selected_item = Some(self.selected_item.serialize_fb(builder));
-        let spawn_dimension = self.spawn_dimension.as_ref().map(|d| builder.create_string(d));
+        let dimension = fbb.create_string(&self.dimension);
+        let selected_item = self.selected_item.serialize_fb(fbb);
+        let spawn_dimension = self.spawn_dimension.as_ref().map(|d| fbb.create_string(d));
 
         let mut inventory = Vec::new();
         for inventory_item in self.inventory.iter() {
-            inventory.push(inventory_item.serialize_fb(builder));
+            inventory.push(inventory_item.serialize_fb(fbb));
         }
-        let inventory = Some(builder.create_vector(&inventory));
+        let inventory = fbb.create_vector(&inventory);
 
         let mut ender_items = Vec::new();
         for ender_item in self.ender_items.iter() {
-            ender_items.push(ender_item.serialize_fb(builder));
+            ender_items.push(ender_item.serialize_fb(fbb));
         }
-        let ender_items = Some(builder.create_vector(&ender_items));
+        let ender_items = fbb.create_vector(&ender_items);
 
+        let abilities = self.abilities.into();
         let entered_nether_position = self.entered_nether_position.map(|p| {
             fb::Vector3d::new(p.0, p.1, p.2)
         });
         let root_vehicle = self.root_vehicle.as_ref().map(|v| {
-            let entity = Some(v.1.serialize_fb(builder));
-            fb::Vehicle::create(builder, &fb::VehicleArgs {
+            let entity = Some(v.1.serialize_fb(fbb));
+            fb::Vehicle::create(fbb, &fb::VehicleArgs {
                 param_0: v.0[0],
                 param_1: v.0[1],
                 param_2: v.0[2],
@@ -539,40 +549,50 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
                 entity,
             })
         });
-        let shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_fb(builder));
-        let shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize_fb(builder));
-        let recipe_book = Some(self.recipe_book.serialize_fb(builder));
+        let shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_fb(fbb));
+        let shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize_fb(fbb));
+        let recipe_book = self.recipe_book.serialize_fb(fbb);
 
-        Self::Target::create(builder, &fb::PlayerArgs {
-            game_type: self.game_type.into(),
-            previous_game_type: self.previous_game_type.into(),
-            score: self.score,
-            dimension,
-            selected_item_slot: self.selected_item_slot,
-            selected_item,
-            spawn_dimension,
-            spawn_x: self.spawn_x,
-            spawn_y: self.spawn_y,
-            spawn_z: self.spawn_z,
-            spawn_forced: self.spawn_forced.unwrap_or(false),
-            sleep_timer: self.sleep_timer,
-            food_exhaustion_level: self.food_exhaustion_level,
-            food_saturation_level: self.food_saturation_level,
-            food_tick_timer: self.food_tick_timer,
-            xp_level: self.xp_level,
-            xp_p: self.xp_p,
-            xp_total: self.xp_total,
-            xp_seed: self.xp_seed,
-            inventory,
-            ender_items,
-            abilities: Some(&self.abilities.into()),
-            entered_nether_position: entered_nether_position.as_ref(),
-            root_vehicle,
-            shoulder_entity_left,
-            shoulder_entity_right,
-            seen_credits: self.seen_credits,
-            recipe_book,
-        })
+        let mut builder = fb::PlayerBuilder::new(fbb);
+        builder.add_game_type(self.game_type.into());
+        builder.add_previous_game_type(self.previous_game_type.into());
+        builder.add_score(self.score);
+        builder.add_dimension(dimension);
+        builder.add_selected_item_slot(self.selected_item_slot);
+        builder.add_selected_item(selected_item);
+        if let Some(spawn_dimension) = spawn_dimension {
+            builder.add_spawn_dimension(spawn_dimension);
+        }
+        builder.add_spawn_x(self.spawn_x);
+        builder.add_spawn_y(self.spawn_y);
+        builder.add_spawn_z(self.spawn_z);
+        builder.add_spawn_forced(self.spawn_forced.unwrap_or(false));
+        builder.add_sleep_timer(self.sleep_timer);
+        builder.add_food_exhaustion_level(self.food_exhaustion_level);
+        builder.add_food_saturation_level(self.food_saturation_level);
+        builder.add_food_tick_timer(self.food_tick_timer);
+        builder.add_xp_level(self.xp_level);
+        builder.add_xp_p(self.xp_p);
+        builder.add_xp_total(self.xp_total);
+        builder.add_xp_seed(self.xp_seed);
+        builder.add_inventory(inventory);
+        builder.add_ender_items(ender_items);
+        builder.add_abilities(&abilities);
+        if let Some(ref entered_nether_position) = entered_nether_position {
+            builder.add_entered_nether_position(&entered_nether_position);
+        }
+        if let Some(root_vehicle) = root_vehicle {
+            builder.add_root_vehicle(root_vehicle);
+        }
+        if let Some(shoulder_entity_left) = shoulder_entity_left {
+            builder.add_shoulder_entity_left(shoulder_entity_left);
+        }
+        if let Some(shoulder_entity_right) = shoulder_entity_right {
+            builder.add_shoulder_entity_right(shoulder_entity_right);
+        }
+        builder.add_seen_credits(self.seen_credits);
+        builder.add_recipe_book(recipe_book);
+        builder.finish()
     }
 }
 
@@ -676,18 +696,19 @@ impl ArchivedPlayers {
 impl<'a> bench_flatbuffers::Serialize<'a> for Players {
     type Target = fb::Players<'a>;
 
-    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
         let mut players = Vec::new();
         for player in self.players.iter() {
-            players.push(player.serialize_fb(builder));
+            players.push(player.serialize_fb(fbb));
         }
-        let players = Some(builder.create_vector(&players));
-        fb::Players::create(builder, &fb::PlayersArgs {
-            players,
-        })
+        let players = fbb.create_vector(&players);
+
+        let mut builder = fb::PlayersBuilder::new(fbb);
+        builder.add_players(players);
+        builder.finish()
     }
 }
 
