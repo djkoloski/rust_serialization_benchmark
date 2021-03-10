@@ -1,7 +1,9 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use rand_pcg::Lcg64Xsh32;
 use rust_serialization_benchmark::{
+    bench_abomonation,
     bench_bincode,
+    bench_capnp,
     bench_flatbuffers,
     bench_postcard,
     bench_rkyv,
@@ -22,20 +24,15 @@ pub fn criterion_benchmark(c: &mut Criterion) {
         players: generate_vec::<_, Player>(&mut rng, PLAYERS..PLAYERS + 1),
     };
 
-    fn update_players(players: &mut Players) {
-        for player in players.players.iter_mut() {
-            player.game_type = GameType::Survival;
-            player.spawn_x = 0;
-            player.spawn_y = 0;
-            player.spawn_z = 0;
-        }
-    }
+    bench_abomonation::bench(c, &data);
 
-    bench_bincode::bench(c, &data, update_players);
+    bench_bincode::bench(c, &data);
+
+    bench_capnp::bench(c, &data);
 
     bench_flatbuffers::bench(c, &data);
 
-    bench_postcard::bench(c, &data, update_players);
+    bench_postcard::bench(c, &data);
 
     bench_rkyv::bench(c, &data, |mut players| {
         for i in 0..players.as_ref().players.len() {
@@ -47,7 +44,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
         }
     });
 
-    bench_serde_json::bench(c, &data, update_players);
+    bench_serde_json::bench(c, &data);
 }
 
 criterion_group!(benches, criterion_benchmark);

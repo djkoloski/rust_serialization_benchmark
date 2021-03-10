@@ -1,7 +1,9 @@
+mod minecraft_savedata_capnp;
 mod minecraft_savedata_generated;
 
 use core::pin::Pin;
-use crate::{bench_flatbuffers, generate_vec, Generate};
+use minecraft_savedata_capnp as cp;
+use crate::{Generate, bench_capnp, bench_flatbuffers, generate_vec};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 pub use minecraft_savedata_generated::minecraft_savedata as fb;
 use rand::Rng;
@@ -9,6 +11,7 @@ use rkyv::Archived;
 
 #[derive(
     Clone, Copy,
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]
@@ -44,7 +47,19 @@ impl Into<fb::GameType> for GameType {
     }
 }
 
+impl Into<cp::GameType> for GameType {
+    fn into(self) -> cp::GameType {
+        match self {
+            GameType::Survival => cp::GameType::Survival,
+            GameType::Creative => cp::GameType::Creative,
+            GameType::Adventure => cp::GameType::Adventure,
+            GameType::Spectator => cp::GameType::Spectator,
+        }
+    }
+}
+
 #[derive(
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -77,7 +92,7 @@ impl Generate for Item {
 impl<'a> bench_flatbuffers::Serialize<'a> for Item {
     type Target = fb::Item<'a>;
 
-    fn serialize<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
@@ -90,8 +105,20 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Item {
     }
 }
 
+impl<'a> bench_capnp::Serialize<'a> for Item {
+    type Reader = cp::item::Reader<'a>;
+    type Builder = cp::item::Builder<'a>;
+
+    fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        builder.set_count(self.count);
+        builder.set_slot(self.slot);
+        builder.set_id(&self.id);
+    }
+}
+
 #[derive(
     Clone, Copy,
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]
@@ -134,7 +161,23 @@ impl Into<fb::Abilities> for Abilities {
     }
 }
 
+impl<'a> bench_capnp::Serialize<'a> for Abilities {
+    type Reader = cp::abilities::Reader<'a>;
+    type Builder = cp::abilities::Builder<'a>;
+
+    fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        builder.set_walk_speed(self.walk_speed);
+        builder.set_fly_speed(self.fly_speed);
+        builder.set_may_fly(self.may_fly);
+        builder.set_flying(self.flying);
+        builder.set_invulnerable(self.invulnerable);
+        builder.set_may_build(self.may_build);
+        builder.set_instabuild(self.instabuild);
+    }
+}
+
 #[derive(
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -191,7 +234,7 @@ impl Generate for Entity {
 impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
     type Target = fb::Entity<'a>;
 
-    fn serialize<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
     'a: 'b,
     {
@@ -218,7 +261,46 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
     }
 }
 
+impl<'a> bench_capnp::Serialize<'a> for Entity {
+    type Reader = cp::entity::Reader<'a>;
+    type Builder = cp::entity::Builder<'a>;
+
+    fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        builder.set_id(&self.id);
+        let mut pos = builder.reborrow().init_pos();
+        pos.set_x(self.pos.0);
+        pos.set_y(self.pos.1);
+        pos.set_z(self.pos.2);
+        let mut motion = builder.reborrow().init_motion();
+        motion.set_x(self.motion.0);
+        motion.set_y(self.motion.1);
+        motion.set_z(self.motion.2);
+        let mut rotation = builder.reborrow().init_rotation();
+        rotation.set_x(self.rotation.0);
+        rotation.set_y(self.rotation.1);
+        builder.set_fall_distance(self.fall_distance);
+        builder.set_fire(self.fire);
+        builder.set_air(self.air);
+        builder.set_on_ground(self.on_ground);
+        builder.set_no_gravity(self.no_gravity);
+        builder.set_invulnerable(self.invulnerable);
+        builder.set_portal_cooldown(self.portal_cooldown);
+        let mut uuid = builder.reborrow().init_uuid();
+        uuid.set_x0(self.uuid[0]);
+        uuid.set_x1(self.uuid[1]);
+        uuid.set_x2(self.uuid[2]);
+        uuid.set_x3(self.uuid[3]);
+        if let Some(ref custom_name) = self.custom_name {
+            builder.set_custom_name(custom_name);
+        }
+        builder.set_custom_name_visible(self.custom_name_visible);
+        builder.set_silent(self.silent);
+        builder.set_glowing(self.glowing);
+    }
+}
+
 #[derive(
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -273,7 +355,7 @@ impl Generate for RecipeBook {
 impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
     type Target = fb::RecipeBook<'a>;
 
-    fn serialize<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
@@ -304,7 +386,32 @@ impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
     }
 }
 
+impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
+    type Reader = cp::recipe_book::Reader<'a>;
+    type Builder = cp::recipe_book::Builder<'a>;
+
+    fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        let mut recipes = builder.reborrow().init_recipes(self.recipes.len() as u32);
+        for (i, recipe) in self.recipes.iter().enumerate() {
+            recipes.set(i as u32, recipe);
+        }
+        let mut to_be_displayed = builder.reborrow().init_to_be_displayed(self.to_be_displayed.len() as u32);
+        for (i, name) in self.to_be_displayed.iter().enumerate() {
+            to_be_displayed.set(i as u32, name);
+        }
+        builder.set_is_filtering_craftable(self.is_filtering_craftable);
+        builder.set_is_gui_open(self.is_gui_open);
+        builder.set_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
+        builder.set_is_furnace_gui_open(self.is_furnace_gui_open);
+        builder.set_is_blasting_furnace_filtering_craftable(self.is_blasting_furnace_filtering_craftable);
+        builder.set_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
+        builder.set_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
+        builder.set_is_smoker_gui_open(self.is_smoker_gui_open);
+    }
+}
+
 #[derive(
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -399,23 +506,23 @@ impl Generate for Player {
 impl<'a> bench_flatbuffers::Serialize<'a> for Player {
     type Target = fb::Player<'a>;
 
-    fn serialize<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
         let dimension = Some(builder.create_string(&self.dimension));
-        let selected_item = Some(self.selected_item.serialize(builder));
+        let selected_item = Some(self.selected_item.serialize_fb(builder));
         let spawn_dimension = self.spawn_dimension.as_ref().map(|d| builder.create_string(d));
 
         let mut inventory = Vec::new();
         for inventory_item in self.inventory.iter() {
-            inventory.push(inventory_item.serialize(builder));
+            inventory.push(inventory_item.serialize_fb(builder));
         }
         let inventory = Some(builder.create_vector(&inventory));
 
         let mut ender_items = Vec::new();
         for ender_item in self.ender_items.iter() {
-            ender_items.push(ender_item.serialize(builder));
+            ender_items.push(ender_item.serialize_fb(builder));
         }
         let ender_items = Some(builder.create_vector(&ender_items));
 
@@ -423,7 +530,7 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
             fb::Vector3d::new(p.0, p.1, p.2)
         });
         let root_vehicle = self.root_vehicle.as_ref().map(|v| {
-            let entity = Some(v.1.serialize(builder));
+            let entity = Some(v.1.serialize_fb(builder));
             fb::Vehicle::create(builder, &fb::VehicleArgs {
                 param_0: v.0[0],
                 param_1: v.0[1],
@@ -432,9 +539,9 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
                 entity,
             })
         });
-        let shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize(builder));
-        let shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize(builder));
-        let recipe_book = Some(self.recipe_book.serialize(builder));
+        let shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_fb(builder));
+        let shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize_fb(builder));
+        let recipe_book = Some(self.recipe_book.serialize_fb(builder));
 
         Self::Target::create(builder, &fb::PlayerArgs {
             game_type: self.game_type.into(),
@@ -469,7 +576,90 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
     }
 }
 
+impl<'a> bench_capnp::Serialize<'a> for Player {
+    type Reader = cp::player::Reader<'a>;
+    type Builder = cp::player::Builder<'a>;
+
+    fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        builder.set_game_type(self.game_type.into());
+        builder.set_previous_game_type(self.previous_game_type.into());
+        builder.set_score(self.score);
+        builder.set_dimension(&self.dimension);
+        let mut selected_item = builder.reborrow().init_selected_item();
+        self.selected_item.serialize_capnp(&mut selected_item);
+        let mut spawn_dimension = builder.reborrow().init_spawn_dimension();
+        if let Some(ref value) = self.spawn_dimension {
+            spawn_dimension.set_some(value);
+        } else {
+            spawn_dimension.set_none(());
+        }
+        let mut spawn = builder.reborrow().init_spawn();
+        spawn.set_x(self.spawn_x);
+        spawn.set_y(self.spawn_y);
+        spawn.set_z(self.spawn_z);
+        let mut spawn_forced = builder.reborrow().init_spawn_forced();
+        if let Some(ref value) = self.spawn_forced {
+            spawn_forced.set_some(*value);
+        } else {
+            spawn_forced.set_none(());
+        }
+        builder.set_sleep_timer(self.sleep_timer);
+        builder.set_food_exhaustion_level(self.food_exhaustion_level);
+        builder.set_food_saturation_level(self.food_saturation_level);
+        builder.set_food_tick_timer(self.food_tick_timer);
+        builder.set_xp_level(self.xp_level);
+        builder.set_xp_p(self.xp_p);
+        builder.set_xp_total(self.xp_total);
+        builder.set_xp_seed(self.xp_seed);
+        let mut inventory = builder.reborrow().init_inventory(self.inventory.len() as u32);
+        for (i, value) in self.inventory.iter().enumerate() {
+            value.serialize_capnp(&mut inventory.reborrow().get(i as u32));
+        }
+        let mut ender_items = builder.reborrow().init_ender_items(self.ender_items.len() as u32);
+        for (i, value) in self.ender_items.iter().enumerate() {
+            value.serialize_capnp(&mut ender_items.reborrow().get(i as u32));
+        }
+        self.abilities.serialize_capnp(&mut builder.reborrow().init_abilities());
+        let mut entered_nether_position = builder.reborrow().init_entered_nether_position();
+        if let Some(ref value) = self.entered_nether_position {
+            let mut builder = entered_nether_position.init_some();
+            builder.set_x(value.0);
+            builder.set_y(value.1);
+            builder.set_z(value.2);
+        } else {
+            entered_nether_position.set_none(());
+        }
+        let mut root_vehicle = builder.reborrow().init_root_vehicle();
+        if let Some(ref value) = self.root_vehicle {
+            let mut builder = root_vehicle.init_some();
+            let mut uuid = builder.reborrow().init_uuid();
+            uuid.set_x0(value.0[0]);
+            uuid.set_x1(value.0[1]);
+            uuid.set_x2(value.0[2]);
+            uuid.set_x3(value.0[3]);
+            value.1.serialize_capnp(&mut builder.reborrow().init_entity());
+        } else {
+            root_vehicle.set_none(());
+        }
+        let mut shoulder_entity_left = builder.reborrow().init_shoulder_entity_left();
+        if let Some(ref value) = self.shoulder_entity_left {
+            value.serialize_capnp(&mut shoulder_entity_left.init_some());
+        } else {
+            shoulder_entity_left.set_none(());
+        }
+        let mut shoulder_entity_right = builder.reborrow().init_shoulder_entity_right();
+        if let Some(ref value) = self.shoulder_entity_right {
+            value.serialize_capnp(&mut shoulder_entity_right.init_some());
+        } else {
+            shoulder_entity_right.set_none(());
+        }
+        builder.set_seen_credits(self.seen_credits);
+        self.recipe_book.serialize_capnp(&mut builder.reborrow().init_recipe_book());
+    }
+}
+
 #[derive(
+    abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -486,17 +676,29 @@ impl ArchivedPlayers {
 impl<'a> bench_flatbuffers::Serialize<'a> for Players {
     type Target = fb::Players<'a>;
 
-    fn serialize<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+    fn serialize_fb<'b>(&self, builder: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
     {
         let mut players = Vec::new();
         for player in self.players.iter() {
-            players.push(player.serialize(builder));
+            players.push(player.serialize_fb(builder));
         }
         let players = Some(builder.create_vector(&players));
         fb::Players::create(builder, &fb::PlayersArgs {
             players,
         })
+    }
+}
+
+impl<'a> bench_capnp::Serialize<'a> for Players {
+    type Reader = cp::players::Reader<'a>;
+    type Builder = cp::players::Builder<'a>;
+
+    fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        let mut players = builder.reborrow().init_players(self.players.len() as u32);
+        for (i, value) in self.players.iter().enumerate() {
+            value.serialize_capnp(&mut players.reborrow().get(i as u32));
+        }
     }
 }
