@@ -1,0 +1,20 @@
+namespace mesh;
+
+struct Vector3 {
+    x: float;
+    y: float;
+    z: float;
+}
+
+struct Triangle {
+    v0: Vector3;
+    v1: Vector3;
+    v2: Vector3;
+    normal: Vector3;
+}
+
+table Mesh {
+    triangles: [Triangle] (required);
+}
+
+root_type Mesh;

@@ -27,9 +27,13 @@ rand_pcg = "0.3"
 capnpc = "0.14"
 
 [[bench]]
-name = "minecraft_savedata"
+name = "log"
 harness = false
 
 [[bench]]
-name = "log"
+name = "mesh"
+harness = false
+
+[[bench]]
+name = "minecraft_savedata"
 harness = false
