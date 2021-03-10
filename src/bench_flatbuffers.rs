@@ -9,13 +9,13 @@ pub trait Serialize<'a> {
         'a: 'b;
 }
 
-pub fn bench<T>(c: &mut Criterion, data: &T)
+pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: for<'a> Serialize<'a>,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
-    let mut group = c.benchmark_group("flatbuffers");
+    let mut group = c.benchmark_group(format!("{}/flatbuffers", name));
 
     let mut fbb = FlatBufferBuilder::new_with_capacity(BUFFER_LEN);
     group.bench_function("serialize", |b| {

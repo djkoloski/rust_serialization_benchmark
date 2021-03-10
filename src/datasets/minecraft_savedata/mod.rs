@@ -5,7 +5,7 @@ use core::pin::Pin;
 use minecraft_savedata_capnp as cp;
 use crate::{Generate, bench_capnp, bench_flatbuffers, generate_vec};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
-pub use minecraft_savedata_generated::minecraft_savedata as fb;
+use minecraft_savedata_generated::minecraft_savedata as fb;
 use rand::Rng;
 use rkyv::Archived;
 

@@ -8,12 +8,12 @@ use rust_serialization_benchmark::{
     bench_postcard,
     bench_rkyv,
     bench_serde_json,
-    datasets::minecraft_savedata::{Player, Players, GameType},
+    datasets::log::{Address, Log, Logs},
     generate_vec,
 };
 
 pub fn criterion_benchmark(c: &mut Criterion) {
-    const BENCH: &'static str = "minecraft_savedata";
+    const BENCH: &'static str = "log";
 
     // nothing up our sleeves, state and stream are first 20 digits of pi
     const STATE: u64 = 3141592653;
@@ -21,9 +21,9 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
     let mut rng = Lcg64Xsh32::new(STATE, STREAM);
 
-    const PLAYERS: usize = 500;
-    let data = Players {
-        players: generate_vec::<_, Player>(&mut rng, PLAYERS..PLAYERS + 1),
+    const LOGS: usize = 10_000;
+    let data = Logs {
+        logs: generate_vec::<_, Log>(&mut rng, LOGS..LOGS + 1),
     };
 
     bench_abomonation::bench(BENCH, c, &data);
@@ -36,13 +36,12 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
     bench_postcard::bench(BENCH, c, &data);
 
-    bench_rkyv::bench(BENCH, c, &data, |mut players| {
-        for i in 0..players.as_ref().players.len() {
-            let mut player = players.as_mut().players_pin().index_pin(i);
-            *player.as_mut().game_type_pin() = GameType::Survival;
-            *player.as_mut().spawn_x_pin() = 0;
-            *player.as_mut().spawn_y_pin() = 0;
-            *player.as_mut().spawn_z_pin() = 0;
+    bench_rkyv::bench(BENCH, c, &data, |mut logs| {
+        for i in 0..logs.as_ref().logs.len() {
+            let mut log = logs.as_mut().logs_pin().index_pin(i);
+            *log.as_mut().address_pin() = Address { x0: 0, x1: 0, x2: 0, x3: 0 };
+            *log.as_mut().code_pin() = 200;
+            *log.as_mut().size_pin() = 0;
         }
     });
 

@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 use criterion::{black_box, Criterion};
 
-pub fn bench<T>(c: &mut Criterion, data: &T)
+pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: Serialize + for<'de> Deserialize<'de>,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
-    let mut group = c.benchmark_group("serde_json");
+    let mut group = c.benchmark_group(format!("{}/serde_json", name));
 
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {

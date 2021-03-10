@@ -10,7 +10,7 @@ use rkyv::{
     Serialize,
 };
 
-pub fn bench<T, F>(c: &mut Criterion, data: &T, update: F)
+pub fn bench<T, F>(name: &'static str, c: &mut Criterion, data: &T, update: F)
 where
     T: Archive + Serialize<WriteSerializer<Vec<u8>>> + for<'a> Serialize<WriteSerializer<&'a mut [u8]>>,
     T::Archived: Deserialize<T, AllocDeserializer>,
@@ -18,7 +18,7 @@ where
 {
     const BUFFER_LEN: usize = 10_000_000;
 
-    let mut group = c.benchmark_group("rkyv");
+    let mut group = c.benchmark_group(format!("{}/rkyv", name));
 
     let mut serialize_buffer = vec![0u8; BUFFER_LEN];
     group.bench_function("serialize", |b| {

@@ -1,13 +1,13 @@
 use abomonation::{Abomonation, encode, decode};
 use criterion::{black_box, Criterion};
 
-pub fn bench<T>(c: &mut Criterion, data: &T)
+pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: Abomonation,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
-    let mut group = c.benchmark_group("abomonation");
+    let mut group = c.benchmark_group(format!("{}/abomonation", name));
 
     let mut serialize_buffer = Vec::with_capacity(BUFFER_LEN);
     group.bench_function("serialize", |b| {

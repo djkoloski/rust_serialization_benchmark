@@ -8,13 +8,13 @@ pub trait Serialize<'a> {
     fn serialize_capnp(&self, builder: &mut Self::Builder);
 }
 
-pub fn bench<T>(c: &mut Criterion, data: &T)
+pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: for<'a> Serialize<'a>,
 {
     const BUFFER_LEN: usize = 100;
 
-    let mut group = c.benchmark_group("capnp");
+    let mut group = c.benchmark_group(format!("{}/capnp", name));
 
     let mut serialize_buffer = Vec::new();
 

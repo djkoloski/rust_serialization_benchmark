@@ -29,3 +29,7 @@ capnpc = "0.14"
 [[bench]]
 name = "minecraft_savedata"
 harness = false
+
+[[bench]]
+name = "log"
+harness = false

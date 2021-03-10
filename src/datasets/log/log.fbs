@@ -1,0 +1,24 @@
+namespace log;
+
+struct Address {
+    x0: ubyte;
+    x1: ubyte;
+    x2: ubyte;
+    x3: ubyte;
+}
+
+table Log {
+    address: Address;
+    identity: string (required);
+    userid: string (required);
+    date: string (required);
+    request: string (required);
+    code: ushort;
+    size: ulong;
+}
+
+table Logs {
+    logs: [Log] (required);
+}
+
+root_type Logs;
