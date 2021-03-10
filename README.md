@@ -20,7 +20,9 @@ For operations, time per iteration; for size, bytes. Lower is always better.
 |---------------|-----------|-----------|-----------|---------------|-----------|
 | bincode       | 871.63 us | n/a       | 4.5623 ms | 3.5914 ms     | 569975    |
 | flatbuffers   | 40.718 ms | 3.0615 ns | n/a       | n/a           | 845264    |
+| postcard      | 875.36 us | n/a       | 5.6429 ms | 4.1606 ms     | 356311    |
 | rkyv          | 883.87 us | 1.4159 ns | 6.6869 us | 2.6380 ms     | 725176    |
+| serde_json    | 4.6214 ms | n/a       | 15.881 ms | 10.762 ms     | 1623197   |
 
 ### Comparison
 
