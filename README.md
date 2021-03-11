@@ -26,7 +26,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Serialize | Access | Read | Update | Deserialize | Size | Size (zlib) |
 |---|---|---|---|---|---|---|---|
-| abomonation | 315.13 us* | 36.773 us | 58.999 us | † | ‡ | 1705800 | 507971 |
+| abomonation | 315.13 us | 36.773 us* | 58.999 us* | † | ‡ | 1705800 | 507971 |
 | bincode | 640.51 us |  |  |  | 4.2787 ms | 1045784 | 374305 |
 | capnp | 1.8558 ms | 259.95 ns | 711.84 us | § | ‡ | 1843240 | 537966 |
 | cbor | 1.9698 ms |  |  |  | 8.9702 ms | 1407835 | 407372 |
@@ -42,7 +42,7 @@ Relative to best. Higher is better.
 
 | Format / Lib | Serialize | Access | Read | Update | Deserialize | Size | Size (zlib) |
 |---|---|---|---|---|---|---|---|
-| abomonation | 100.00%* | 0.00% | 32.14% | † | ‡ | 44.84% | 53.12% |
+| abomonation | 100.00% | 0.00%* | 32.14%* | † | ‡ | 44.84% | 53.12% |
 | bincode | 49.20% |  |  |  | 75.94% | 73.15% | 72.08% |
 | capnp | 16.98% | 0.52% | 2.66% | § | ‡ | 41.50% | 50.15% |
 | cbor | 16.00% |  |  |  | 36.22% | 54.34% | 66.23% |
@@ -63,7 +63,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Serialize | Access | Read | Update | Deserialize | Size | Size (zlib) |
 |---|---|---|---|---|---|---|---|
-| abomonation | 430.61 us* | 2.4135 ns | 177.87 us | † | ‡ | 6000024 | 5380836 |
+| abomonation | 430.61 us | 2.4135 ns* | 177.87 us* | † | ‡ | 6000024 | 5380836 |
 | bincode | 7.0288 ms |  |  |  | 12.294 ms | 6000008 | 5380823 |
 | capnp | 15.854 ms | 247.35 ns | 8.9442 ms | § | ‡ | 16000056 | 6780527 |
 | cbor | 43.109 ms |  |  |  | 70.247 ms | 13122324 | 7527423 |
@@ -79,7 +79,7 @@ Relative to best. Higher is better.
 
 | Format / Lib | Serialize | Access | Read | Update | Deserialize | Size | Size (zlib) |
 |---|---|---|---|---|---|---|---|
-| abomonation | 100.00%* | 58.03% | 85.67% | † | ‡ | 100.00% | 79.23% |
+| abomonation | 100.00% | 58.03%* | 85.67%* | † | ‡ | 100.00% | 79.23% |
 | bincode | 6.13% |  |  |  | 15.94% | 100.00% | 79.23% |
 | capnp | 2.72% | 0.57% | 1.70% | § | ‡ | 37.50% | 62.87% |
 | cbor | 1.00% |  |  |  | 2.79% | 45.72% | 56.63% |
@@ -99,7 +99,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Serialize | Access | Read | Update | Deserialize | Size | Size (zlib) |
 |---|---|---|---|---|---|---|---|
-| abomonation | 368.23 us* | 40.823 us | 41.413 us | † | ‡ | 1290592 | 393696 |
+| abomonation | 368.23 us | 40.823 us* | 41.413 us* | † | ‡ | 1290592 | 393696 |
 | bincode | 806.73 us |  |  |  | 3.4132 ms | 569975 | 240897 |
 | capnp | 863.41 us | 256.55 ns | 5.3431 us | § | ‡ | 835784 | 342099 |
 | cbor | 2.4356 ms |  |  |  | 8.8797 ms | 1109821 | 347562 |
@@ -115,7 +115,7 @@ Relative to best. Higher is better.
 
 | Format / Lib | Serialize | Access | Read | Update | Deserialize | Size | Size (zlib) |
 |---|---|---|---|---|---|---|---|
-| abomonation | 100.00%* | 0.00% | 0.68% | † | ‡ | 27.61% | 54.17% |
+| abomonation | 100.00% | 0.00%* | 0.68%* | † | ‡ | 27.61% | 54.17% |
 | bincode | 45.64% |  |  |  | 72.69% | 62.51% | 88.53% |
 | capnp | 42.65% | 0.54% | 5.29% | § | ‡ | 42.63% | 62.34% |
 | cbor | 15.12% |  |  |  | 27.94% | 32.11% | 61.36% |
