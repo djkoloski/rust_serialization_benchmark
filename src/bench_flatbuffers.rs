@@ -39,6 +39,7 @@ where
     });
 
     println!("flatbuffers size: {} bytes", deserialize_buffer.len());
+    println!("flatbuffers zlib size: {} bytes", crate::zlib_size(deserialize_buffer));
 
     group.finish();
 }

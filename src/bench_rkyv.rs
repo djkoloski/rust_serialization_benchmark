@@ -63,6 +63,7 @@ where
     });
     
     println!("rkyv size: {} bytes", deserialize_buffer.len());
+    println!("rkyv zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
 
     group.finish();
 }

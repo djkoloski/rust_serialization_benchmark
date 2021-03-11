@@ -36,4 +36,5 @@ where
     });
 
     println!("abomonation size: {} bytes", deserialize_buffer.len());
+    println!("abomonation zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
 }
