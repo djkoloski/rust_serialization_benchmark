@@ -15,16 +15,6 @@ Benchmarks:
 
 These benchmarks are still being developed and pull requests to improve benchmarks are welcome.
 
-## Footnotes:
-
-\* *abomonation requires a mutable backing to access data*
-
-† *abomonation does not support buffer mutation*
-
-‡ *do not provide deserialization capabilities, but the user can write their own*
-
-§ *supports buffer mutation, but not in the rust implementation*
-
 ## `log`
 
 This data set is composed of HTTP request logs that are small and contain many strings.
@@ -133,3 +123,13 @@ Relative to best. Higher is better.
 | prost         | 6.41%     |           |           | 48.61%        | 59.70%    | 69.53%    |
 | rkyv          | 42.71%    | 100.00%   | 100.00%   | 100.00%       | 49.13%    | 63.81%    |
 | serde_json    | 8.14%     |           |           | 22.31%        | 21.95%    | 45.17%    |
+
+## Footnotes:
+
+\* *abomonation requires a mutable backing to access data*
+
+† *abomonation does not support buffer mutation*
+
+‡ *do not provide deserialization capabilities, but the user can write their own*
+
+§ *supports buffer mutation, but not in the rust implementation*
