@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package prost.log;
+
+message Address {
+    uint32 x0 = 1;
+    uint32 x1 = 2;
+    uint32 x2 = 3;
+    uint32 x3 = 4;
+}
+
+message Log {
+    Address address = 1;
+    string identity = 2;
+    string userid = 3;
+    string date = 4;
+    string request = 5;
+    uint32 code = 6;
+    uint64 size = 7;
+}
+
+message Logs {
+    repeated Log logs = 1;
+}

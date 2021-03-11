@@ -1,11 +1,16 @@
 mod minecraft_savedata_capnp;
 mod minecraft_savedata_generated;
 
+pub mod minecraft_savedata_prost {
+    include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
+}
+
 use core::pin::Pin;
-use minecraft_savedata_capnp as cp;
-use crate::{Generate, bench_capnp, bench_flatbuffers, generate_vec};
+use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost, generate_vec};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
+use minecraft_savedata_capnp as cp;
 use minecraft_savedata_generated::minecraft_savedata as fb;
+use minecraft_savedata_prost as pb;
 use rand::Rng;
 use rkyv::Archived;
 
@@ -54,6 +59,17 @@ impl Into<cp::GameType> for GameType {
             GameType::Creative => cp::GameType::Creative,
             GameType::Adventure => cp::GameType::Adventure,
             GameType::Spectator => cp::GameType::Spectator,
+        }
+    }
+}
+
+impl Into<pb::GameType> for GameType {
+    fn into(self) -> pb::GameType {
+        match self {
+            GameType::Survival => pb::GameType::Survival,
+            GameType::Creative => pb::GameType::Creative,
+            GameType::Adventure => pb::GameType::Adventure,
+            GameType::Spectator => pb::GameType::Spectator,
         }
     }
 }
@@ -117,6 +133,18 @@ impl<'a> bench_capnp::Serialize<'a> for Item {
     }
 }
 
+impl bench_prost::Serialize for Item {
+    type Message = pb::Item;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.count = self.count as i32;
+        result.slot = self.slot as u32;
+        result.id = self.id.clone();
+        result
+    }
+}
+
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
@@ -174,6 +202,22 @@ impl<'a> bench_capnp::Serialize<'a> for Abilities {
         builder.set_invulnerable(self.invulnerable);
         builder.set_may_build(self.may_build);
         builder.set_instabuild(self.instabuild);
+    }
+}
+
+impl bench_prost::Serialize for Abilities {
+    type Message = pb::Abilities;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.walk_speed = self.walk_speed;
+        result.fly_speed = self.fly_speed;
+        result.may_fly = self.may_fly;
+        result.flying = self.flying;
+        result.invulnerable = self.invulnerable;
+        result.may_build = self.may_build;
+        result.instabuild = self.instabuild;
+        result
     }
 }
 
@@ -308,6 +352,57 @@ impl<'a> bench_capnp::Serialize<'a> for Entity {
     }
 }
 
+impl bench_prost::Serialize for Entity {
+    type Message = pb::Entity;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.id = self.id.clone();
+        result.pos = Some({
+            let mut result = pb::Vector3d::default();
+            result.x = self.pos.0;
+            result.y = self.pos.1;
+            result.z = self.pos.2;
+            result
+        });
+        result.motion = Some({
+            let mut result = pb::Vector3d::default();
+            result.x = self.motion.0;
+            result.y = self.motion.1;
+            result.z = self.motion.2;
+            result
+        });
+        result.rotation = Some({
+            let mut result = pb::Vector2f::default();
+            result.x = self.rotation.0;
+            result.y = self.rotation.1;
+            result
+        });
+        result.fall_distance = self.fall_distance;
+        result.fire = self.fire as u32;
+        result.air = self.air as u32;
+        result.on_ground = self.on_ground;
+        result.no_gravity = self.no_gravity;
+        result.invulnerable = self.invulnerable;
+        result.portal_cooldown = self.portal_cooldown;
+        result.uuid = Some({
+            let mut result = pb::Uuid::default();
+            result.x0 = self.uuid[0];
+            result.x1 = self.uuid[1];
+            result.x2 = self.uuid[2];
+            result.x3 = self.uuid[3];
+            result
+        });
+        if let Some(ref custom_name) = self.custom_name {
+            result.custom_name = Some(custom_name.clone());
+        }
+        result.custom_name_visible = self.custom_name_visible;
+        result.silent = self.silent;
+        result.glowing = self.glowing;
+        result
+    }
+}
+
 #[derive(
     abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
@@ -416,6 +511,29 @@ impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
         builder.set_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
         builder.set_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
         builder.set_is_smoker_gui_open(self.is_smoker_gui_open);
+    }
+}
+
+impl bench_prost::Serialize for RecipeBook {
+    type Message = pb::RecipeBook;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for recipe in self.recipes.iter() {
+            result.recipes.push(recipe.clone());
+        }
+        for tbd in self.to_be_displayed.iter() {
+            result.to_be_displayed.push(tbd.clone());
+        }
+        result.is_filtering_craftable = self.is_filtering_craftable;
+        result.is_gui_open = self.is_gui_open;
+        result.is_furnace_filtering_craftable = self.is_furnace_filtering_craftable;
+        result.is_furnace_gui_open = self.is_furnace_gui_open;
+        result.is_blasting_furnace_filtering_craftable = self.is_blasting_furnace_filtering_craftable;
+        result.is_blasting_furnace_gui_open = self.is_blasting_furnace_gui_open;
+        result.is_smoker_filtering_craftable = self.is_smoker_filtering_craftable;
+        result.is_smoker_gui_open = self.is_smoker_gui_open;
+        result
     }
 }
 
@@ -678,6 +796,65 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
     }
 }
 
+impl bench_prost::Serialize for Player {
+    type Message = pb::Player;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.game_type = self.game_type as i32;
+        result.previous_game_type = self.previous_game_type as i32;
+        result.score = self.score;
+        result.dimension = self.dimension.clone();
+        result.selected_item_slot = self.selected_item_slot;
+        result.selected_item = Some(self.selected_item.serialize_pb());
+        result.spawn_dimension = self.spawn_dimension.clone();
+        result.spawn_x = self.spawn_x;
+        result.spawn_y = self.spawn_y;
+        result.spawn_z = self.spawn_z;
+        result.spawn_forced = self.spawn_forced;
+        result.sleep_timer = self.sleep_timer as u32;
+        result.food_exhaustion_level = self.food_exhaustion_level;
+        result.food_saturation_level = self.food_saturation_level;
+        result.food_tick_timer = self.food_tick_timer;
+        result.xp_level = self.xp_level as u32;
+        result.xp_p = self.xp_p;
+        result.xp_total = self.xp_total;
+        result.xp_seed = self.xp_seed;
+        for item in self.inventory.iter() {
+            result.inventory.push(item.serialize_pb());
+        }
+        for item in self.ender_items.iter() {
+            result.ender_items.push(item.serialize_pb());
+        }
+        result.abilities = Some(self.abilities.serialize_pb());
+        result.entered_nether_position = self.entered_nether_position.map(|p| {
+            let mut result = pb::Vector3d::default();
+            result.x = p.0;
+            result.y = p.1;
+            result.z = p.2;
+            result
+        });
+        result.root_vehicle = self.root_vehicle.as_ref().map(|v| {
+            let mut result = pb::Vehicle::default();
+            result.uuid = Some({
+                let mut result = pb::Uuid::default();
+                result.x0 = v.0[0];
+                result.x1 = v.0[1];
+                result.x2 = v.0[2];
+                result.x3 = v.0[3];
+                result
+            });
+            result.entity = Some(v.1.serialize_pb());
+            result
+        });
+        result.shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb());
+        result.shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize_pb());
+        result.seen_credits = self.seen_credits;
+        result.recipe_book = Some(self.recipe_book.serialize_pb());
+        result
+    }
+}
+
 #[derive(
     abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
@@ -721,5 +898,17 @@ impl<'a> bench_capnp::Serialize<'a> for Players {
         for (i, value) in self.players.iter().enumerate() {
             value.serialize_capnp(&mut players.reborrow().get(i as u32));
         }
+    }
+}
+
+impl bench_prost::Serialize for Players {
+    type Message = pb::Players;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for player in self.players.iter() {
+            result.players.push(player.serialize_pb());
+        }
+        result
     }
 }

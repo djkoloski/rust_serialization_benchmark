@@ -1,8 +1,12 @@
 mod mesh_capnp;
 mod mesh_generated;
 
+pub mod mesh_prost {
+    include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
+}
+
 use core::pin::Pin;
-use crate::{Generate, bench_capnp, bench_flatbuffers};
+use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 use mesh_capnp as cp;
 use mesh_generated::mesh as fb;
@@ -46,6 +50,18 @@ impl<'a> bench_capnp::Serialize<'a> for Vector3 {
         builder.set_x(self.x);
         builder.set_y(self.y);
         builder.set_z(self.z);
+    }
+}
+
+impl bench_prost::Serialize for Vector3 {
+    type Message = mesh_prost::Vector3;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.x = self.x;
+        result.y = self.y;
+        result.z = self.z;
+        result
     }
 }
 
@@ -97,6 +113,19 @@ impl<'a> bench_capnp::Serialize<'a> for Triangle {
     }
 }
 
+impl bench_prost::Serialize for Triangle {
+    type Message = mesh_prost::Triangle;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.v0 = Some(self.v0.serialize_pb());
+        result.v1 = Some(self.v1.serialize_pb());
+        result.v2 = Some(self.v2.serialize_pb());
+        result.normal = Some(self.normal.serialize_pb());
+        result
+    }
+}
+
 #[derive(
     abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
@@ -140,5 +169,17 @@ impl<'a> bench_capnp::Serialize<'a> for Mesh {
         for (i, value) in self.triangles.iter().enumerate() {
             value.serialize_capnp(&mut mesh.reborrow().get(i as u32));
         }
+    }
+}
+
+impl bench_prost::Serialize for Mesh {
+    type Message = mesh_prost::Mesh;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for triangle in self.triangles.iter() {
+            result.triangles.push(triangle.serialize_pb());
+        }
+        result
     }
 }

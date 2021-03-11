@@ -7,6 +7,7 @@ use rust_serialization_benchmark::{
     bench_cbor,
     bench_flatbuffers,
     bench_postcard,
+    bench_prost,
     bench_rkyv,
     bench_serde_json,
     datasets::log::{Address, Log, Logs},
@@ -38,6 +39,8 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     bench_flatbuffers::bench(BENCH, c, &data);
 
     bench_postcard::bench(BENCH, c, &data);
+
+    bench_prost::bench(BENCH, c, &data);
 
     bench_rkyv::bench(BENCH, c, &data, |mut logs| {
         for i in 0..logs.as_ref().logs.len() {

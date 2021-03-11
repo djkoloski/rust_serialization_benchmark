@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package prost.mesh;
+
+message Vector3 {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message Triangle {
+    Vector3 v0 = 1;
+    Vector3 v1 = 2;
+    Vector3 v2 = 3;
+    Vector3 normal = 4;
+}
+
+message Mesh {
+    repeated Triangle triangles = 1;
+}

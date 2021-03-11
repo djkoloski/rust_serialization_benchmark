@@ -16,6 +16,7 @@ criterion = "0.3"
 flatbuffers = "0.7"
 libflate = "1.0"
 postcard = { version = "0.5", features = ["alloc"] }
+prost = "0.7"
 rand = "0.8"
 rkyv = "0.4"
 serde = { version = "1.0", features = ["derive"] }
@@ -27,6 +28,7 @@ rand_pcg = "0.3"
 
 [build-dependencies]
 capnpc = "0.14"
+prost-build = { version = "0.7" }
 
 [[bench]]
 name = "log"

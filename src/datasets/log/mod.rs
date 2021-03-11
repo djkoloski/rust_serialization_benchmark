@@ -1,8 +1,12 @@
 mod log_capnp;
 mod log_generated;
 
+pub mod log_prost {
+    include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
+}
+
 use core::pin::Pin;
-use crate::{Generate, bench_capnp, bench_flatbuffers};
+use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 use log_capnp as cp;
 use log_generated::log as fb;
@@ -49,6 +53,19 @@ impl<'a> bench_capnp::Serialize<'a> for Address {
         builder.set_x1(self.x1);
         builder.set_x2(self.x2);
         builder.set_x3(self.x3);
+    }
+}
+
+impl bench_prost::Serialize for Address {
+    type Message = log_prost::Address;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.x0 = self.x0 as u32;
+        result.x1 = self.x1 as u32;
+        result.x2 = self.x2 as u32;
+        result.x3 = self.x3 as u32;
+        result
     }
 }
 
@@ -196,6 +213,21 @@ impl<'a> bench_capnp::Serialize<'a> for Log {
     }
 }
 
+impl bench_prost::Serialize for Log {
+    type Message = log_prost::Log;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.identity = self.identity.clone();
+        result.userid = self.userid.clone();
+        result.date = self.date.clone();
+        result.request = self.request.clone();
+        result.code = self.code as u32;
+        result.size = self.size;
+        result
+    }
+}
+
 #[derive(
     abomonation_derive::Abomonation,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
@@ -239,5 +271,17 @@ impl<'a> bench_capnp::Serialize<'a> for Logs {
         for (i, value) in self.logs.iter().enumerate() {
             value.serialize_capnp(&mut logs.reborrow().get(i as u32));
         }
+    }
+}
+
+impl bench_prost::Serialize for Logs {
+    type Message = log_prost::Logs;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for log in self.logs.iter() {
+            result.logs.push(log.serialize_pb());
+        }
+        result
     }
 }

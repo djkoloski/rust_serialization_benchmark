@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package prost.minecraft_savedata;
+
+enum GameType {
+    SURVIVAL = 0;
+    CREATIVE = 1;
+    ADVENTURE = 2;
+    SPECTATOR = 3;
+}
+
+message Item {
+    int32 count = 1;
+    uint32 slot = 2;
+    string id = 3;
+}
+
+message Abilities {
+    float walk_speed = 1;
+    float fly_speed = 2;
+    bool may_fly = 3;
+    bool flying = 4;
+    bool invulnerable = 5;
+    bool may_build = 6;
+    bool instabuild = 7;
+}
+
+message Vector3d {
+    double x = 1;
+    double y = 2;
+    double z = 3;
+}
+
+message Vector2f {
+    float x = 1;
+    float y = 2;
+}
+
+message Uuid {
+    uint32 x0 = 1;
+    uint32 x1 = 2;
+    uint32 x2 = 3;
+    uint32 x3 = 4;
+}
+
+message Entity {
+    string id = 1;
+    Vector3d pos = 2;
+    Vector3d motion = 3;
+    Vector2f rotation = 4;
+    float fall_distance = 5;
+    uint32 fire = 6;
+    uint32 air = 7;
+    bool on_ground = 8;
+    bool no_gravity = 9;
+    bool invulnerable = 10;
+    int32 portal_cooldown = 11;
+    Uuid uuid = 12;
+    optional string custom_name = 13;
+    bool custom_name_visible = 14;
+    bool silent = 15;
+    bool glowing = 16;
+}
+
+message RecipeBook {
+    repeated string recipes = 1;
+    repeated string to_be_displayed = 2;
+    bool is_filtering_craftable = 3;
+    bool is_gui_open = 4;
+    bool is_furnace_filtering_craftable = 5;
+    bool is_furnace_gui_open = 6;
+    bool is_blasting_furnace_filtering_craftable = 7;
+    bool is_blasting_furnace_gui_open = 8;
+    bool is_smoker_filtering_craftable = 9;
+    bool is_smoker_gui_open = 10;
+}
+
+message Vehicle {
+    Uuid uuid = 1;
+    Entity entity = 2;
+}
+
+message Player {
+    GameType game_type = 1;
+    GameType previous_game_type = 2;
+    uint64 score = 3;
+    string dimension = 4;
+    uint32 selected_item_slot = 5;
+    Item selected_item = 6;
+    optional string spawn_dimension = 7;
+    int64 spawn_x = 8;
+    int64 spawn_y = 9;
+    int64 spawn_z = 10;
+    optional bool spawn_forced = 11;
+    uint32 sleep_timer = 12;
+    float food_exhaustion_level = 13;
+    float food_saturation_level = 14;
+    uint32 food_tick_timer = 15;
+    uint32 xp_level = 16;
+    float xp_p = 17;
+    int32 xp_total = 18;
+    int32 xp_seed = 19;
+    repeated Item inventory = 20;
+    repeated Item ender_items = 21;
+    Abilities abilities = 22;
+    optional Vector3d entered_nether_position = 23;
+    optional Vehicle root_vehicle = 24;
+    optional Entity shoulder_entity_left = 25;
+    optional Entity shoulder_entity_right = 26;
+    bool seen_credits = 27;
+    RecipeBook recipe_book = 28;
+}
+
+message Players {
+    repeated Player players = 1;
+}
