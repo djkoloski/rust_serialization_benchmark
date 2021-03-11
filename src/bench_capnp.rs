@@ -8,9 +8,10 @@ pub trait Serialize<'a> {
     fn serialize_capnp(&self, builder: &mut Self::Builder);
 }
 
-pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
+pub fn bench<T, R>(name: &'static str, c: &mut Criterion, data: &T, read: R)
 where
     T: for<'a> Serialize<'a>,
+    R: Fn(&mut &[u8]),
 {
     const BUFFER_LEN: usize = 100;
 
@@ -45,8 +46,14 @@ where
         })
     });
 
-    println!("capnp size: {} bytes", deserialize_buffer.len());
-    println!("capnp zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
+    group.bench_function("read", |b| {
+        b.iter(|| {
+            black_box(read(black_box(&mut deserialize_buffer.as_slice())));
+        })
+    });
+
+    println!("{}/capnp/size {}", name, deserialize_buffer.len());
+    println!("{}/capnp/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
 
     group.finish();
 }

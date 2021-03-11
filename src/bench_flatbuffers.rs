@@ -9,9 +9,10 @@ pub trait Serialize<'a> {
         'a: 'b;
 }
 
-pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
+pub fn bench<T, R>(name: &'static str, c: &mut Criterion, data: &T, read: R)
 where
     T: for<'a> Serialize<'a>,
+    R: Fn(&[u8]),
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -38,8 +39,14 @@ where
         })
     });
 
-    println!("flatbuffers size: {} bytes", deserialize_buffer.len());
-    println!("flatbuffers zlib size: {} bytes", crate::zlib_size(deserialize_buffer));
+    group.bench_function("read", |b| {
+        b.iter(|| {
+            black_box(read(&black_box(deserialize_buffer)))
+        })
+    });
+
+    println!("{}/flatbuffers/size {}", name, deserialize_buffer.len());
+    println!("{}/flatbuffers/zlib {}", name, crate::zlib_size(deserialize_buffer));
 
     group.finish();
 }

@@ -34,8 +34,8 @@ where
         })
     });
 
-    println!("cbor size: {} bytes", deserialize_buffer.len());
-    println!("cbor zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
+    println!("{}/cbor/size {}", name, deserialize_buffer.len());
+    println!("{}/cbor/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
 
     group.finish();
 }

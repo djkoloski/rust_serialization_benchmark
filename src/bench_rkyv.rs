@@ -10,11 +10,12 @@ use rkyv::{
     Serialize,
 };
 
-pub fn bench<T, F>(name: &'static str, c: &mut Criterion, data: &T, update: F)
+pub fn bench<T, R, U>(name: &'static str, c: &mut Criterion, data: &T, read: R, update: U)
 where
     T: Archive + Serialize<WriteSerializer<Vec<u8>>> + for<'a> Serialize<WriteSerializer<&'a mut [u8]>>,
     T::Archived: Deserialize<T, AllocDeserializer>,
-    F: Fn(Pin<&mut T::Archived>),
+    R: Fn(&T::Archived),
+    U: Fn(Pin<&mut T::Archived>),
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -42,6 +43,14 @@ where
         })
     });
 
+    group.bench_function("read", |b| {
+        b.iter(|| {
+            black_box(unsafe {
+                read(archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)))
+            });
+        })
+    });
+
     group.bench_function("update", |b| {
         b.iter(|| {
             let mut value = unsafe {
@@ -62,8 +71,8 @@ where
         })
     });
     
-    println!("rkyv size: {} bytes", deserialize_buffer.len());
-    println!("rkyv zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
+    println!("{}/rkyv/size {}", name, deserialize_buffer.len());
+    println!("{}/rkyv/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
 
     group.finish();
 }

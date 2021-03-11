@@ -1,5 +1,5 @@
-mod mesh_capnp;
-mod mesh_generated;
+pub mod mesh_capnp;
+pub mod mesh_generated;
 
 pub mod mesh_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
@@ -8,8 +8,8 @@ pub mod mesh_prost {
 use core::pin::Pin;
 use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
-use mesh_capnp as cp;
-use mesh_generated::mesh as fb;
+pub use mesh_capnp as cp;
+pub use mesh_generated::mesh as fb;
 use rand::Rng;
 use rkyv::Archived;
 

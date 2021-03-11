@@ -1,5 +1,5 @@
-mod minecraft_savedata_capnp;
-mod minecraft_savedata_generated;
+pub mod minecraft_savedata_capnp;
+pub mod minecraft_savedata_generated;
 
 pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
@@ -8,8 +8,8 @@ pub mod minecraft_savedata_prost {
 use core::pin::Pin;
 use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost, generate_vec};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
-use minecraft_savedata_capnp as cp;
-use minecraft_savedata_generated::minecraft_savedata as fb;
+pub use minecraft_savedata_capnp as cp;
+pub use minecraft_savedata_generated::minecraft_savedata as fb;
 use minecraft_savedata_prost as pb;
 use rand::Rng;
 use rkyv::Archived;

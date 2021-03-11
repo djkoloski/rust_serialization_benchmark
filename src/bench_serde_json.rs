@@ -34,8 +34,8 @@ where
         })
     });
 
-    println!("serde_json size: {} bytes", deserialize_buffer.len());
-    println!("serde_json zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
+    println!("{}/serde_json/size {}", name, deserialize_buffer.len());
+    println!("{}/serde_json/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
 
     group.finish();
 }

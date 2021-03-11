@@ -1,5 +1,5 @@
-mod log_capnp;
-mod log_generated;
+pub mod log_capnp;
+pub mod log_generated;
 
 pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
@@ -8,8 +8,8 @@ pub mod log_prost {
 use core::pin::Pin;
 use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost};
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
-use log_capnp as cp;
-use log_generated::log as fb;
+pub use log_capnp as cp;
+pub use log_generated::log as fb;
 use rand::Rng;
 use rkyv::Archived;
 

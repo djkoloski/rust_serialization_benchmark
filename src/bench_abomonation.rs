@@ -1,9 +1,10 @@
 use abomonation::{Abomonation, encode, decode};
 use criterion::{black_box, Criterion};
 
-pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
+pub fn bench<T, R>(name: &'static str, c: &mut Criterion, data: &T, read: R)
 where
     T: Abomonation,
+    R: Fn(&T),
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -35,6 +36,15 @@ where
         })
     });
 
-    println!("abomonation size: {} bytes", deserialize_buffer.len());
-    println!("abomonation zlib size: {} bytes", crate::zlib_size(deserialize_buffer.as_slice()));
+    group.bench_function("read", |b| {
+        b.iter(|| {
+            unsafe {
+                let (data, _) = decode::<T>(black_box(&mut deserialize_buffer)).unwrap();
+                black_box(read(data));
+            }
+        })
+    });
+
+    println!("{}/abomonation/size {}", name, deserialize_buffer.len());
+    println!("{}/abomonation/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
 }
