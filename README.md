@@ -7,6 +7,7 @@ Benchmarks:
 
 * **Serialize**: serialize data into a buffer
 * **Access**: accesses a buffer as structured data (zero-copy deserialization libraries only)
+* **Read**: runs through a buffer and reads fields out of it (zero-copy deserialization libraries only)
 * **Update**: updates a buffer as structured data (zero-copy deserialization libraries only)
 * **Deserialize**: deserializes a buffer into a normal rust object
 * **Size**: the size of the buffer when serialized
