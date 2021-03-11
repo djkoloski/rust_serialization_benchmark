@@ -4,6 +4,7 @@ use rust_serialization_benchmark::{
     bench_abomonation,
     bench_bincode,
     bench_capnp,
+    bench_cbor,
     bench_flatbuffers,
     bench_postcard,
     bench_rkyv,
@@ -31,6 +32,8 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     bench_bincode::bench(BENCH, c, &data);
 
     bench_capnp::bench(BENCH, c, &data);
+
+    bench_cbor::bench(BENCH, c, &data);
 
     bench_flatbuffers::bench(BENCH, c, &data);
 

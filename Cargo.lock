@@ -642,6 +642,7 @@ dependencies = [
  "rand_pcg",
  "rkyv",
  "serde",
+ "serde_cbor",
  "serde_json",
 ]
 

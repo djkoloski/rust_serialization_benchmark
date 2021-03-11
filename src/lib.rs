@@ -1,6 +1,7 @@
 pub mod bench_abomonation;
 pub mod bench_bincode;
 pub mod bench_capnp;
+pub mod bench_cbor;
 pub mod bench_flatbuffers;
 pub mod bench_postcard;
 pub mod bench_rkyv;
