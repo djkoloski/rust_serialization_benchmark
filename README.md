@@ -26,14 +26,14 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | Format / Lib  | Serialize | Access        | Update    | Deserialize   | Size      | Zlib      |
 |---------------|-----------|---------------|-----------|---------------|-----------|-----------|
 | abomonation   | 296.40 us | 35.883 us*    | †         | ‡             | 1705800   | 507151    |
-| bincode       | 599.80 us | n/a           | n/a       | 4.1668 ms     | 1045784   | 374305    |
+| bincode       | 599.80 us |               |           | 4.1668 ms     | 1045784   | 374305    |
 | capnp         | 1.6796 ms | 234.41 ns     | §         | ‡             | 1843240   | 537966    |
-| cbor          | 1.9819 ms | n/a           | n/a       | 8.7133 ms     | 1407835   | 407372    |
+| cbor          | 1.9819 ms |               |           | 8.7133 ms     | 1407835   | 407372    |
 | flatbuffers   | 2.6301 ms | 2.9371 ns     | §         | ‡             | 1276368   | 469962    |
-| postcard      | 707.77 us | n/a           | n/a       | 4.5096 ms     | 765778    | 312739    |
-| prost         | 5.2709 ms | n/a           | n/a       | 5.0111 ms     | 764951    | 269811    |
+| postcard      | 707.77 us |               |           | 4.5096 ms     | 765778    | 312739    |
+| prost         | 5.2709 ms |               |           | 5.0111 ms     | 764951    | 269811    |
 | rkyv          | 425.09 us | 1.3604 ns     | 67.754 us | 3.1887 ms     | 1065784   | 333895    |
-| serde_json    | 4.3752 ms | n/a           | n/a       | 9.7127 ms     | 1827461   | 474358    |
+| serde_json    | 4.3752 ms |               |           | 9.7127 ms     | 1827461   | 474358    |
 
 ### Comparison
 
@@ -63,14 +63,14 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | Format / Lib  | Serialize | Access        | Update    | Deserialize   | Size      | Zlib      |
 |---------------|-----------|---------------|-----------|---------------|-----------|-----------|
 | abomonation   | 453.63 us | 2.3861 ns*    | †         | ‡             | 6000024   | 5380837   |
-| bincode       | 5.4933 ms | n/a           | n/a       | 12.416 ms     | 6000008   | 5380823   |
+| bincode       | 5.4933 ms |               |           | 12.416 ms     | 6000008   | 5380823   |
 | capnp         | 15.660 ms | 237.09 ns     | §         | ‡             | 16000056  | 6780527   |
-| cbor          | 39.159 ms | n/a           | n/a       | 69.602 ms     | 13122324  | 7527423   |
+| cbor          | 39.159 ms |               |           | 69.602 ms     | 13122324  | 7527423   |
 | flatbuffers   | 1.9309 ms | 2.9659 ns     | §         | ‡             | 6000024   | 5380800   |
-| postcard      | 6.3688 ms | n/a           | n/a       | 8.3112 ms     | 6000003   | 5380817   |
-| prost         | 32.684 ms | n/a           | n/a       | 20.402 ms     | 8750000   | 6683814   |
+| postcard      | 6.3688 ms |               |           | 8.3112 ms     | 6000003   | 5380817   |
+| prost         | 32.684 ms |               |           | 20.402 ms     | 8750000   | 6683814   |
 | rkyv          | 1.1510 ms | 1.3862 ns     | 651.45 us | 1.8980 ms     | 6000008   | 4263104   |
-| serde_json    | 105.75 ms | n/a           | n/a       | 84.321 ms     | 26192883  | 9612105   |
+| serde_json    | 105.75 ms |               |           | 84.321 ms     | 26192883  | 9612105   |
 
 ### Comparison
 
@@ -99,14 +99,14 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | Format / Lib  | Serialize | Access        | Update    | Deserialize   | Size      | Zlib      |
 |---------------|-----------|---------------|-----------|---------------|-----------|-----------|
 | abomonation   | 380.52 us | 41.372 us*    | †         | ‡             | 1290592   | 392506    |
-| bincode       | 813.03 us | n/a           | n/a       | 3.4005 ms     | 569975    | 240897    |
+| bincode       | 813.03 us |               |           | 3.4005 ms     | 569975    | 240897    |
 | capnp         | 862.48 us | 239.69 ns     | §         | ‡             | 835784    | 342099    |
-| cbor          | 2.4551 ms | n/a           | n/a       | 8.6514 ms     | 1109821   | 347562    |
+| cbor          | 2.4551 ms |               |           | 8.6514 ms     | 1109821   | 347562    |
 | flatbuffers   | 38.945 ms | 2.9586 ns     | §         | ‡             | 849472    | 349208    |
-| postcard      | 807.62 us | n/a           | n/a       | 3.7966 ms     | 356311    | 213270    |
-| prost         | 5.9403 ms | n/a           | n/a       | 4.9223 ms     | 596811    | 306728    |
+| postcard      | 807.62 us |               |           | 3.7966 ms     | 356311    | 213270    |
+| prost         | 5.9403 ms |               |           | 4.9223 ms     | 596811    | 306728    |
 | rkyv          | 891.03 us | 1.3783 ns     | 6.5060 us | 2.3929 ms     | 725176    | 334238    |
-| serde_json    | 4.6727 ms | n/a           | n/a       | 10.725 ms     | 1623197   | 472162    |
+| serde_json    | 4.6727 ms |               |           | 10.725 ms     | 1623197   | 472162    |
 
 ### Comparison
 
