@@ -9,6 +9,7 @@ use rust_serialization_benchmark::{
     bench_postcard,
     bench_prost,
     bench_rkyv,
+    bench_rmp,
     bench_serde_json,
     datasets::log::{Address, Log, Logs},
     generate_vec,
@@ -80,6 +81,8 @@ pub fn criterion_benchmark(c: &mut Criterion) {
             }
         }
     );
+
+    bench_rmp::bench(BENCH, c, &data);
 
     bench_serde_json::bench(BENCH, c, &data);
 }
