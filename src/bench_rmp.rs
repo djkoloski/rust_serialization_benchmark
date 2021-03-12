@@ -7,7 +7,7 @@ where
 {
     const BUFFER_LEN: usize = 50_000_000;
 
-    let mut group = c.benchmark_group(format!("{}/rmp-serde", name));
+    let mut group = c.benchmark_group(format!("{}/rmp", name));
 
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {
@@ -34,8 +34,8 @@ where
         })
     });
 
-    println!("{}/rmp-serde/size {}", name, deserialize_buffer.len());
-    println!("{}/rmp-serde/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    println!("{}/rmp/size {}", name, deserialize_buffer.len());
+    println!("{}/rmp/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
 
     group.finish();
 }
