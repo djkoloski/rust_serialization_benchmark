@@ -6,6 +6,7 @@ pub mod bench_flatbuffers;
 pub mod bench_postcard;
 pub mod bench_prost;
 pub mod bench_rkyv;
+pub mod bench_rmp;
 pub mod bench_serde_json;
 pub mod datasets;
 
