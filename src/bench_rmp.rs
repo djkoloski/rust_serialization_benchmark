@@ -5,7 +5,7 @@ pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: Serialize + for<'de> Deserialize<'de>,
 {
-    const BUFFER_LEN: usize = 50_000_000;
+    const BUFFER_LEN: usize = 10_000_000;
 
     let mut group = c.benchmark_group(format!("{}/rmp", name));
 
