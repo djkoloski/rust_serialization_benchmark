@@ -20,6 +20,7 @@ use rkyv::Archived;
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(copy)]
 #[repr(u8)]
@@ -79,7 +80,8 @@ impl Into<pb::GameType> for GameType {
     abomonation_derive::Abomonation,
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize
+    serde::Deserialize, serde::Serialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Item {
@@ -154,6 +156,7 @@ impl bench_prost::Serialize for Item {
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(copy)]
 pub struct Abilities {
@@ -229,7 +232,8 @@ impl bench_prost::Serialize for Abilities {
     abomonation_derive::Abomonation,
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize
+    serde::Deserialize, serde::Serialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Entity {
@@ -413,7 +417,8 @@ impl bench_prost::Serialize for Entity {
     abomonation_derive::Abomonation,
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize
+    serde::Deserialize, serde::Serialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct RecipeBook {
@@ -549,7 +554,8 @@ impl bench_prost::Serialize for RecipeBook {
     abomonation_derive::Abomonation,
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize
+    serde::Deserialize, serde::Serialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Player {
@@ -869,7 +875,8 @@ impl bench_prost::Serialize for Player {
     abomonation_derive::Abomonation,
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize
+    serde::Deserialize, serde::Serialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Players {

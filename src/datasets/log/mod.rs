@@ -19,6 +19,7 @@ use rkyv::Archived;
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(copy)]
 pub struct Address {
@@ -75,6 +76,7 @@ impl bench_prost::Serialize for Address {
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Log {
@@ -236,6 +238,7 @@ impl bench_prost::Serialize for Log {
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Logs {

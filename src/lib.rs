@@ -10,6 +10,7 @@ pub mod bench_prost;
 pub mod bench_rkyv;
 pub mod bench_rmp;
 pub mod bench_serde_json;
+pub mod bench_speedy;
 pub mod datasets;
 
 use core::{mem, ops};

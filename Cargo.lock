@@ -942,6 +942,7 @@ dependencies = [
  "serde",
  "serde_cbor",
  "serde_json",
+ "speedy",
 ]
 
 [[package]]
@@ -1041,6 +1042,26 @@ name = "smallvec"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fe0f37c9e8f3c5a4a66ad655a93c74daac4ad00c441533bf5c6e7990bb42604e"
+
+[[package]]
+name = "speedy"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "92a94ba2dac24da474e3339dfe17709e5c103172bb4a350e5660eb5277305764"
+dependencies = [
+ "speedy-derive",
+]
+
+[[package]]
+name = "speedy-derive"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c359205f2cf241a00e3fcb62ac2dcd4094df137ea19541dad43a404416470141"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "stable_deref_trait"

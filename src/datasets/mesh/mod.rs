@@ -19,6 +19,7 @@ use rkyv::Archived;
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(copy)]
 pub struct Vector3 {
@@ -72,6 +73,7 @@ impl bench_prost::Serialize for Vector3 {
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(copy)]
 pub struct Triangle {
@@ -133,6 +135,7 @@ impl bench_prost::Serialize for Triangle {
     borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
+    speedy::Readable, speedy::Writable,
 )]
 #[archive(derive(bytecheck::CheckBytes))]
 pub struct Mesh {
