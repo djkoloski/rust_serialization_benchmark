@@ -7,6 +7,7 @@ use rust_serialization_benchmark::{
     bench_capnp,
     bench_cbor,
     bench_flatbuffers,
+    bench_nachricht,
     bench_postcard,
     bench_prost,
     bench_rkyv,
@@ -63,6 +64,8 @@ fn bench_log(c: &mut Criterion) {
             black_box(log.size_());
         }
     }});
+
+    bench_nachricht::bench(BENCH, c, &data);
 
     bench_postcard::bench(BENCH, c, &data);
 
@@ -134,6 +137,8 @@ fn bench_mesh(c: &mut Criterion) {
         }
     }});
 
+    bench_nachricht::bench(BENCH, c, &data);
+
     bench_postcard::bench(BENCH, c, &data);
 
     bench_prost::bench(BENCH, c, &data);
@@ -201,6 +206,8 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             black_box(player.game_type());
         }
     }});
+
+    bench_nachricht::bench(BENCH, c, &data);
 
     bench_postcard::bench(BENCH, c, &data);
 

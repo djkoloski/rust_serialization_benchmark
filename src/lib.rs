@@ -4,6 +4,7 @@ pub mod bench_borsh;
 pub mod bench_capnp;
 pub mod bench_cbor;
 pub mod bench_flatbuffers;
+pub mod bench_nachricht;
 pub mod bench_postcard;
 pub mod bench_prost;
 pub mod bench_rkyv;

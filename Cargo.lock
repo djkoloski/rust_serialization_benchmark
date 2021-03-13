@@ -551,6 +551,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1255076139a83bb467426e7f8d0134968a8118844faa755985e077cf31850333"
 
 [[package]]
+name = "nachricht"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6ed8f5d1e7cc595a50fa3488e0be15cee82bc2fb4dbb16a88296d18b07199228"
+
+[[package]]
+name = "nachricht-serde"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9632fb69d7c5312f874ed22ce97cab94cf1e77a9fac31cd255647e595be629e9"
+dependencies = [
+ "nachricht",
+ "serde",
+]
+
+[[package]]
 name = "num-traits"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -915,6 +931,7 @@ dependencies = [
  "criterion",
  "flatbuffers",
  "libflate",
+ "nachricht-serde",
  "postcard",
  "prost",
  "prost-build",
