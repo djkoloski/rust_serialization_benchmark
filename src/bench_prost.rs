@@ -16,10 +16,19 @@ where
     let mut group = c.benchmark_group(format!("{}/prost", name));
 
     let mut serialize_buffer = Vec::with_capacity(BUFFER_LEN);
-    group.bench_function("serialize", |b| {
+
+    group.bench_function("serialize (populate + encode)", |b| {
         b.iter(|| {
             black_box(&mut serialize_buffer).clear();
             black_box(data.serialize_pb().encode(&mut serialize_buffer).unwrap());
+        })
+    });
+
+    let message = data.serialize_pb();
+    group.bench_function("serialize (encode)", |b| {
+        b.iter(|| {
+            black_box(&mut serialize_buffer).clear();
+            black_box(message.encode(&mut serialize_buffer).unwrap());
         })
     });
 
