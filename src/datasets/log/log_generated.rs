@@ -317,26 +317,5 @@ impl<'a: 'b, 'b> LogsBuilder<'a, 'b> {
   }
 }
 
-#[inline]
-pub fn get_root_as_logs<'a>(buf: &'a [u8]) -> Logs<'a> {
-  flatbuffers::get_root::<Logs<'a>>(buf)
-}
-
-#[inline]
-pub fn get_size_prefixed_root_as_logs<'a>(buf: &'a [u8]) -> Logs<'a> {
-  flatbuffers::get_size_prefixed_root::<Logs<'a>>(buf)
-}
-
-#[inline]
-pub fn finish_logs_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<Logs<'a>>) {
-  fbb.finish(root, None);
-}
-
-#[inline]
-pub fn finish_size_prefixed_logs_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<Logs<'a>>) {
-  fbb.finish_size_prefixed(root, None);
-}
 }  // pub mod log
 

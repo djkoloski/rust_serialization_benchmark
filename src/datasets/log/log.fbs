@@ -20,5 +20,3 @@ table Log {
 table Logs {
     logs: [Log] (required);
 }
-
-root_type Logs;

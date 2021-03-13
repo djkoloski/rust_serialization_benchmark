@@ -33,13 +33,13 @@ where
     fbb.finish(root, None);
     let deserialize_buffer = fbb.finished_data();
 
-    group.bench_function("access", |b| {
-        b.iter(|| {
-            black_box(flatbuffers::get_root::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer)))
-        })
+    group.bench_function("access (unvalidated)", |b| {
+        b.iter(|| { unsafe {
+            black_box(flatbuffers::root_unchecked::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer)))
+        }})
     });
 
-    group.bench_function("read", |b| {
+    group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
             black_box(read(&black_box(deserialize_buffer)))
         })

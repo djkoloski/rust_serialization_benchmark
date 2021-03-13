@@ -16,5 +16,3 @@ struct Triangle {
 table Mesh {
     triangles: [Triangle] (required);
 }
-
-root_type Mesh;

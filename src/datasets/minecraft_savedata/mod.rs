@@ -17,7 +17,7 @@ use rkyv::Archived;
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
+    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
 #[archive(copy)]
@@ -79,6 +79,7 @@ impl Into<pb::GameType> for GameType {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct Item {
     pub count: i8,
     pub slot: u8,
@@ -148,7 +149,7 @@ impl bench_prost::Serialize for Item {
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
+    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
 #[archive(copy)]
@@ -226,6 +227,7 @@ impl bench_prost::Serialize for Abilities {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct Entity {
     pub id: String,
     pub pos: (f64, f64, f64),
@@ -408,6 +410,7 @@ impl bench_prost::Serialize for Entity {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct RecipeBook {
     pub recipes: Vec<String>,
     pub to_be_displayed: Vec<String>,
@@ -542,6 +545,7 @@ impl bench_prost::Serialize for RecipeBook {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct Player {
     pub game_type: GameType,
     pub previous_game_type: GameType,
@@ -860,6 +864,7 @@ impl bench_prost::Serialize for Player {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct Players {
     pub players: Vec<Player>,
 }

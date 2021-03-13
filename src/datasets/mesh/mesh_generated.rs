@@ -232,16 +232,6 @@ impl<'a: 'b, 'b> MeshBuilder<'a, 'b> {
 }
 
 #[inline]
-pub fn get_root_as_mesh<'a>(buf: &'a [u8]) -> Mesh<'a> {
-  flatbuffers::get_root::<Mesh<'a>>(buf)
-}
-
-#[inline]
-pub fn get_size_prefixed_root_as_mesh<'a>(buf: &'a [u8]) -> Mesh<'a> {
-  flatbuffers::get_size_prefixed_root::<Mesh<'a>>(buf)
-}
-
-#[inline]
 pub fn finish_mesh_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
     root: flatbuffers::WIPOffset<Mesh<'a>>) {

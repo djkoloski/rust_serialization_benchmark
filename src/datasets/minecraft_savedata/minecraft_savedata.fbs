@@ -110,5 +110,3 @@ table Player {
 table Players {
     players: [Player] (required);
 }
-
-root_type Players;

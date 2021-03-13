@@ -93,6 +93,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63396b8a4b9de3f4fdfb320ab6080762242f66a8ef174c49d8e19b674db4cdbe"
 
 [[package]]
+name = "bytecheck"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ff4e8466d91da2216f7249aef0eb6ec080dec08239d6305309e81c6e555b0f89"
+dependencies = [
+ "bytecheck_derive",
+ "memoffset",
+ "ptr_meta",
+]
+
+[[package]]
+name = "bytecheck_derive"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5dfaa97a05a1c93157f5d85870ddd9a4e74c5a14011563fcaf7a837d228b4bb7"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "byteorder"
 version = "1.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -271,12 +293,13 @@ checksum = "37ab347416e802de484e4d03c7316c48f1ecb56574dfd4a46a80f173ce1de04d"
 
 [[package]]
 name = "flatbuffers"
-version = "0.7.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbf606a9d6674ad82094652789cf69b0e6e598c2d3c9137c28970eec13f11644"
+checksum = "63b5b0f949bdb25c077c83184ac689ae38ae392683d4c71e98be9736db66e94c"
 dependencies = [
  "bitflags",
  "smallvec",
+ "thiserror",
 ]
 
 [[package]]
@@ -770,6 +793,7 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88f0f275023b9b7e2e6b3422599f6bd23e8d0078d871d60934f5a21edb16c862"
 dependencies = [
+ "bytecheck",
  "memoffset",
  "ptr_meta",
  "rkyv_derive",
@@ -821,6 +845,7 @@ dependencies = [
  "abomonation",
  "abomonation_derive",
  "bincode",
+ "bytecheck",
  "capnp",
  "capnpc",
  "criterion",

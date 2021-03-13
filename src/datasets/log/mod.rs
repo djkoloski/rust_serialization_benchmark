@@ -16,7 +16,7 @@ use rkyv::Archived;
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
+    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
 #[archive(copy)]
@@ -74,6 +74,7 @@ impl bench_prost::Serialize for Address {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -233,6 +234,7 @@ impl bench_prost::Serialize for Log {
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]
+#[archive(derive(bytecheck::CheckBytes))]
 pub struct Logs {
     pub logs: Vec<Log>,
 }

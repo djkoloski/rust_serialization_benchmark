@@ -51,14 +51,14 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
     bench_cbor::bench(BENCH, c, &data);
 
-    bench_flatbuffers::bench(BENCH, c, &data, |bytes| {
-        let data = flatbuffers::get_root::<rust_serialization_benchmark::datasets::log::fb::Logs>(bytes);
+    bench_flatbuffers::bench(BENCH, c, &data, |bytes| { unsafe {
+        let data = flatbuffers::root_unchecked::<rust_serialization_benchmark::datasets::log::fb::Logs>(bytes);
         for log in data.logs().iter() {
             black_box(log.address());
             black_box(log.code());
             black_box(log.size_());
         }
-    });
+    }});
 
     bench_postcard::bench(BENCH, c, &data);
 

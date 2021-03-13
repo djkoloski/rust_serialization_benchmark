@@ -47,12 +47,12 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
     bench_cbor::bench(BENCH, c, &data);
 
-    bench_flatbuffers::bench(BENCH, c, &data, |bytes| {
-        let data = flatbuffers::get_root::<rust_serialization_benchmark::datasets::minecraft_savedata::fb::Players>(bytes);
+    bench_flatbuffers::bench(BENCH, c, &data, |bytes| { unsafe {
+        let data = flatbuffers::root_unchecked::<rust_serialization_benchmark::datasets::minecraft_savedata::fb::Players>(bytes);
         for player in data.players().iter() {
             black_box(player.game_type());
         }
-    });
+    }});
 
     bench_postcard::bench(BENCH, c, &data);
 

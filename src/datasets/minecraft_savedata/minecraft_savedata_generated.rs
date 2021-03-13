@@ -1526,16 +1526,6 @@ impl<'a: 'b, 'b> PlayersBuilder<'a, 'b> {
 }
 
 #[inline]
-pub fn get_root_as_players<'a>(buf: &'a [u8]) -> Players<'a> {
-  flatbuffers::get_root::<Players<'a>>(buf)
-}
-
-#[inline]
-pub fn get_size_prefixed_root_as_players<'a>(buf: &'a [u8]) -> Players<'a> {
-  flatbuffers::get_size_prefixed_root::<Players<'a>>(buf)
-}
-
-#[inline]
 pub fn finish_players_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
     root: flatbuffers::WIPOffset<Players<'a>>) {

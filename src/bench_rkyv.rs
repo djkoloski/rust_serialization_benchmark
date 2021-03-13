@@ -1,3 +1,4 @@
+use bytecheck::CheckBytes;
 use core::pin::Pin;
 use criterion::{black_box, Criterion};
 use rkyv::{
@@ -5,6 +6,7 @@ use rkyv::{
     archived_value_mut,
     de::deserializers::AllocDeserializer,
     ser::{Serializer, serializers::WriteSerializer},
+    validation::{check_archive, DefaultArchiveValidator},
     Archive,
     Deserialize,
     Serialize,
@@ -13,7 +15,7 @@ use rkyv::{
 pub fn bench<T, R, U>(name: &'static str, c: &mut Criterion, data: &T, read: R, update: U)
 where
     T: Archive + Serialize<WriteSerializer<Vec<u8>>> + for<'a> Serialize<WriteSerializer<&'a mut [u8]>>,
-    T::Archived: Deserialize<T, AllocDeserializer>,
+    T::Archived: CheckBytes<DefaultArchiveValidator> + Deserialize<T, AllocDeserializer>,
     R: Fn(&T::Archived),
     U: Fn(Pin<&mut T::Archived>),
 {
@@ -35,7 +37,7 @@ where
     let pos = serializer.serialize_value(data).unwrap();
     let mut deserialize_buffer = serializer.into_inner();
 
-    group.bench_function("access", |b| {
+    group.bench_function("access (unvalidated)", |b| {
         b.iter(|| {
             black_box(unsafe {
                 archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
@@ -43,11 +45,27 @@ where
         })
     });
 
-    group.bench_function("read", |b| {
+    group.bench_function("access (validated)", |b| {
+        b.iter(|| {
+            black_box(
+                check_archive::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap()
+            );
+        })
+    });
+
+    group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
             black_box(unsafe {
                 read(archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)))
             });
+        })
+    });
+
+    group.bench_function("read (validated)", |b| {
+        b.iter(|| {
+            black_box(
+                read(check_archive::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap())
+            );
         })
     });
 
