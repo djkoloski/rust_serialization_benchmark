@@ -37,7 +37,7 @@ where
     data.serialize_capnp(&mut builder.init_root::<T::Builder>());
     capnp::serialize::write_message(&mut deserialize_buffer, &builder).unwrap();
 
-    group.bench_function("access", |b| {
+    group.bench_function("access (progressive)", |b| {
         b.iter(|| {
             black_box(&mut deserialize_buffer);
             let message_reader = read_message_from_flat_slice(&mut deserialize_buffer.as_slice(), Default::default()).unwrap();
@@ -46,7 +46,7 @@ where
         })
     });
 
-    group.bench_function("read", |b| {
+    group.bench_function("read (progressive)", |b| {
         b.iter(|| {
             black_box(read(black_box(&mut deserialize_buffer.as_slice())));
         })
