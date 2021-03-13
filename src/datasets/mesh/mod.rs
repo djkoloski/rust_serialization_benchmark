@@ -16,6 +16,7 @@ use rkyv::Archived;
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
@@ -68,6 +69,7 @@ impl bench_prost::Serialize for Vector3 {
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
@@ -128,6 +130,7 @@ impl bench_prost::Serialize for Triangle {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]

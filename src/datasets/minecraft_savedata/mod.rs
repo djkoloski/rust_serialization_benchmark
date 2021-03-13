@@ -17,6 +17,7 @@ use rkyv::Archived;
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
@@ -76,6 +77,7 @@ impl Into<pb::GameType> for GameType {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -149,6 +151,7 @@ impl bench_prost::Serialize for Item {
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
@@ -224,6 +227,7 @@ impl bench_prost::Serialize for Abilities {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -407,6 +411,7 @@ impl bench_prost::Serialize for Entity {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -542,6 +547,7 @@ impl bench_prost::Serialize for RecipeBook {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]
@@ -861,6 +867,7 @@ impl bench_prost::Serialize for Player {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Deserialize, serde::Serialize
 )]

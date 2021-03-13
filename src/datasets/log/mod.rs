@@ -16,6 +16,7 @@ use rkyv::Archived;
 #[derive(
     Clone, Copy,
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
     serde::Serialize, serde::Deserialize,
 )]
@@ -71,6 +72,7 @@ impl bench_prost::Serialize for Address {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]
@@ -231,6 +233,7 @@ impl bench_prost::Serialize for Log {
 
 #[derive(
     abomonation_derive::Abomonation,
+    borsh::BorshSerialize, borsh::BorshDeserialize,
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
     serde::Serialize, serde::Deserialize,
 )]
