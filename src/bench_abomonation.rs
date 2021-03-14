@@ -26,7 +26,7 @@ where
     let mut deserialize_buffer = Vec::new();
     unsafe { encode(data, &mut deserialize_buffer).unwrap(); }
 
-    group.bench_function("access", |b| {
+    group.bench_function("access (unvalidated)", |b| {
         b.iter(|| {
             unsafe {
                 black_box(
@@ -36,7 +36,7 @@ where
         })
     });
 
-    group.bench_function("read", |b| {
+    group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
             unsafe {
                 let (data, _) = decode::<T>(black_box(&mut deserialize_buffer)).unwrap();
