@@ -54,7 +54,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | 37.243 us | 59.472 us | ‡ |
+| abomonation | <span title="unvalidated">*37.243 us\**</span> | <span title="unvalidated">*59.472 us\**</span> | ‡ |
 | capnp | <span title="progressive">*249.22 ns\**</span> | <span title="progressive">*717.69 us\**</span> | ‡ |
 | flatbuffers | <span title="unvalidated">*2.9856 ns\**</span> | <span title="unvalidated">*138.93 us\**</span> | ‡ |
 | rkyv | <span title="unvalidated">*1.3709 ns\**</span> <span title="validated">*1.4739 ms\**</span> | <span title="unvalidated">*18.593 us\**</span> <span title="validated">*1.5105 ms\**</span> | 70.076 us |
@@ -85,7 +85,7 @@ Relative to best. Higher is better.
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | 0.00% | 31.26% | ‡ |
+| abomonation | <span title="unvalidated">*0.00%\**</span> | <span title="unvalidated">*31.26%\**</span> | ‡ |
 | capnp | <span title="progressive">*0.55%\**</span> | <span title="progressive">*2.59%\**</span> | ‡ |
 | flatbuffers | <span title="unvalidated">*45.92%\**</span> | <span title="unvalidated">*13.38%\**</span> | ‡ |
 | rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated">*0.00%\**</span> | <span title="unvalidated">*100.00%\**</span> <span title="validated">*1.23%\**</span> | 100.00% |
@@ -120,7 +120,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | 2.3443 ns | 191.67 us | ‡ |
+| abomonation | <span title="unvalidated">*2.3443 ns\**</span> | <span title="unvalidated">*191.67 us\**</span> | ‡ |
 | capnp | <span title="progressive">*243.37 ns\**</span> | <span title="progressive">*9.0149 ms\**</span> | ‡ |
 | flatbuffers | <span title="unvalidated">*2.9152 ns\**</span> | <span title="unvalidated">*186.15 us\**</span> | ‡ |
 | rkyv | <span title="unvalidated">*1.3414 ns\**</span> <span title="validated">*106.17 ns\**</span> | <span title="unvalidated">*182.54 us\**</span> <span title="validated">*190.35 us\**</span> | 646.96 us |
@@ -151,7 +151,7 @@ Relative to best. Higher is better.
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | 57.22% | 95.24% | ‡ |
+| abomonation | <span title="unvalidated">*57.22%\**</span> | <span title="unvalidated">*95.24%\**</span> | ‡ |
 | capnp | <span title="progressive">*0.55%\**</span> | <span title="progressive">*2.02%\**</span> | ‡ |
 | flatbuffers | <span title="unvalidated">*46.01%\**</span> | <span title="unvalidated">*98.06%\**</span> | ‡ |
 | rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated">*1.26%\**</span> | <span title="unvalidated">*100.00%\**</span> <span title="validated">*95.90%\**</span> | 100.00% |

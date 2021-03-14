@@ -24,7 +24,7 @@ Benchmarking log/abomonation/access
 Benchmarking log/abomonation/access: Warming up for 3.0000 s
 Benchmarking log/abomonation/access: Collecting 100 samples in estimated 5.0726 s (136k iterations)
 Benchmarking log/abomonation/access: Analyzing
-log/abomonation/access  time:   [37.099 us 37.243 us 37.389 us]
+log/abomonation/access (unvalidated)  time:   [37.099 us 37.243 us 37.389 us]
                         change: [+0.7445% +1.3650% +2.0023%] (p = 0.00 < 0.05)
                         Change within noise threshold.
 Found 7 outliers among 100 measurements (7.00%)
@@ -35,7 +35,7 @@ Benchmarking log/abomonation/read
 Benchmarking log/abomonation/read: Warming up for 3.0000 s
 Benchmarking log/abomonation/read: Collecting 100 samples in estimated 5.0418 s (86k iterations)
 Benchmarking log/abomonation/read: Analyzing
-log/abomonation/read    time:   [59.170 us 59.472 us 59.797 us]
+log/abomonation/read (unvalidated)    time:   [59.170 us 59.472 us 59.797 us]
                         change: [+0.7666% +1.4596% +2.1889%] (p = 0.00 < 0.05)
                         Change within noise threshold.
 Found 11 outliers among 100 measurements (11.00%)
@@ -438,7 +438,7 @@ Benchmarking mesh/abomonation/access
 Benchmarking mesh/abomonation/access: Warming up for 3.0000 s
 Benchmarking mesh/abomonation/access: Collecting 100 samples in estimated 5.0000 s (2.2B iterations)
 Benchmarking mesh/abomonation/access: Analyzing
-mesh/abomonation/access time:   [2.3306 ns 2.3443 ns 2.3579 ns]
+mesh/abomonation/access (unvalidated) time:   [2.3306 ns 2.3443 ns 2.3579 ns]
                         change: [-2.9792% -2.2878% -1.5553%] (p = 0.00 < 0.05)
                         Performance has improved.
 Found 2 outliers among 100 measurements (2.00%)
@@ -447,7 +447,7 @@ Benchmarking mesh/abomonation/read
 Benchmarking mesh/abomonation/read: Warming up for 3.0000 s
 Benchmarking mesh/abomonation/read: Collecting 100 samples in estimated 5.8952 s (30k iterations)
 Benchmarking mesh/abomonation/read: Analyzing
-mesh/abomonation/read   time:   [189.59 us 191.67 us 193.64 us]
+mesh/abomonation/read (unvalidated)   time:   [189.59 us 191.67 us 193.64 us]
                         change: [+5.1008% +6.3376% +7.5822%] (p = 0.00 < 0.05)
                         Performance has regressed.
 Found 1 outliers among 100 measurements (1.00%)
