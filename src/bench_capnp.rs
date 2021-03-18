@@ -13,7 +13,7 @@ where
     T: for<'a> Serialize<'a>,
     R: Fn(&mut &[u8]),
 {
-    const BUFFER_LEN: usize = 100;
+    const BUFFER_LEN: usize = 1_000_000;
 
     let mut group = c.benchmark_group(format!("{}/capnp", name));
 
