@@ -12,6 +12,7 @@ use rust_serialization_benchmark::{
     bench_prost,
     bench_rkyv,
     bench_rmp,
+    bench_ron,
     bench_serde_json,
     bench_speedy,
     generate_vec,
@@ -92,6 +93,8 @@ fn bench_log(c: &mut Criterion) {
 
     bench_rmp::bench(BENCH, c, &data);
 
+    bench_ron::bench(BENCH, c, &data);
+
     bench_serde_json::bench(BENCH, c, &data);
 
     bench_speedy::bench(BENCH, c, &data);
@@ -163,6 +166,8 @@ fn bench_mesh(c: &mut Criterion) {
     );
 
     bench_rmp::bench(BENCH, c, &data);
+
+    bench_ron::bench(BENCH, c, &data);
 
     bench_serde_json::bench(BENCH, c, &data);
 
@@ -236,6 +241,8 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     bench_rmp::bench(BENCH, c, &data);
+
+    bench_ron::bench(BENCH, c, &data);
 
     bench_serde_json::bench(BENCH, c, &data);
 
