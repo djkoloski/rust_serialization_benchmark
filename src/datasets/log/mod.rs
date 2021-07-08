@@ -1,27 +1,37 @@
+#[cfg(feature = "capnp")]
 pub mod log_capnp;
+#[cfg(feature = "flatbuffers")]
 pub mod log_generated;
-
+#[cfg(feature = "prost")]
 pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
 }
 
 use core::pin::Pin;
-use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost};
+use crate::Generate;
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+#[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
+#[cfg(feature = "capnp")]
 pub use log_capnp as cp;
+#[cfg(feature = "flatbuffers")]
 pub use log_generated::log as fb;
 use rand::Rng;
+#[cfg(feature = "rkyv")]
 use rkyv::Archived;
 
-#[derive(
-    Clone, Copy,
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
-    serde::Serialize, serde::Deserialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(copy)]
+#[derive(Clone, Copy)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Address {
     pub x0: u8,
     pub x1: u8,
@@ -40,16 +50,20 @@ impl Generate for Address {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl Into<fb::Address> for Address {
+    #[inline]
     fn into(self) -> fb::Address {
         fb::Address::new(self.x0, self.x1, self.x2, self.x3)
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Address {
     type Reader = cp::address::Reader<'a>;
     type Builder = cp::address::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         builder.set_x0(self.x0);
         builder.set_x1(self.x1);
@@ -58,9 +72,11 @@ impl<'a> bench_capnp::Serialize<'a> for Address {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Address {
     type Message = log_prost::Address;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         result.x0 = self.x0 as u32;
@@ -71,14 +87,13 @@ impl bench_prost::Serialize for Address {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Serialize, serde::Deserialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -89,8 +104,9 @@ pub struct Log {
     pub size: u64,
 }
 
+#[cfg(feature = "rkyv")]
 impl ArchivedLog {
-    pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut Address> {
+    pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedAddress> {
         unsafe { self.map_unchecked_mut(|s| &mut s.address) }
     }
 
@@ -177,9 +193,11 @@ impl Generate for Log {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Log {
     type Target = fb::Log<'a>;
 
+    #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
@@ -203,10 +221,12 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Log {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Log {
     type Reader = cp::log::Reader<'a>;
     type Builder = cp::log::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         self.address.serialize_capnp(&mut builder.reborrow().init_address());
         builder.set_identity(&self.identity);
@@ -218,9 +238,11 @@ impl<'a> bench_capnp::Serialize<'a> for Log {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Log {
     type Message = log_prost::Log;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         result.identity = self.identity.clone();
@@ -233,27 +255,29 @@ impl bench_prost::Serialize for Log {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Serialize, serde::Deserialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Logs {
     pub logs: Vec<Log>,
 }
 
+#[cfg(feature = "rkyv")]
 impl ArchivedLogs {
     pub fn logs_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Log>>> {
         unsafe { self.map_unchecked_mut(|s| &mut s.logs) }
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Logs {
     type Target = fb::Logs<'a>;
 
+    #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
@@ -270,10 +294,12 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Logs {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Logs {
     type Reader = cp::logs::Reader<'a>;
     type Builder = cp::logs::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         let mut logs = builder.reborrow().init_logs(self.logs.len() as u32);
         for (i, value) in self.logs.iter().enumerate() {
@@ -282,9 +308,11 @@ impl<'a> bench_capnp::Serialize<'a> for Logs {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Logs {
     type Message = log_prost::Logs;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         for log in self.logs.iter() {

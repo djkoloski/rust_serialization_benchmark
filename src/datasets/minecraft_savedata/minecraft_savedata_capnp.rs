@@ -4,7 +4,7 @@
 
 
 #[repr(u16)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum GameType {
   Survival = 0,
   Creative = 1,

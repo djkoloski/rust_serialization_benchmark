@@ -1,28 +1,39 @@
+#[cfg(feature = "capnp")]
 pub mod minecraft_savedata_capnp;
+#[cfg(feature = "flatbuffers")]
 pub mod minecraft_savedata_generated;
-
+#[cfg(feature = "prost")]
 pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
 }
 
 use core::pin::Pin;
-use crate::{Generate, bench_capnp, bench_flatbuffers, bench_prost, generate_vec};
+use crate::{Generate, generate_vec};
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+#[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
+#[cfg(feature = "capnp")]
 pub use minecraft_savedata_capnp as cp;
+#[cfg(feature = "flatbuffers")]
 pub use minecraft_savedata_generated::minecraft_savedata as fb;
+#[cfg(feature = "prost")]
 use minecraft_savedata_prost as pb;
 use rand::Rng;
+#[cfg(feature = "rkyv")]
 use rkyv::Archived;
 
-#[derive(
-    Clone, Copy,
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
-    serde::Serialize, serde::Deserialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(copy)]
+#[derive(Clone, Copy)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[repr(u8)]
 pub enum GameType {
     Survival,
@@ -43,7 +54,9 @@ impl Generate for GameType {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl Into<fb::GameType> for GameType {
+    #[inline]
     fn into(self) -> fb::GameType {
         match self {
             GameType::Survival => fb::GameType::Survival,
@@ -54,7 +67,9 @@ impl Into<fb::GameType> for GameType {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl Into<cp::GameType> for GameType {
+    #[inline]
     fn into(self) -> cp::GameType {
         match self {
             GameType::Survival => cp::GameType::Survival,
@@ -65,7 +80,9 @@ impl Into<cp::GameType> for GameType {
     }
 }
 
+#[cfg(feature = "prost")]
 impl Into<pb::GameType> for GameType {
+    #[inline]
     fn into(self) -> pb::GameType {
         match self {
             GameType::Survival => pb::GameType::Survival,
@@ -76,14 +93,13 @@ impl Into<pb::GameType> for GameType {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Item {
     pub count: i8,
     pub slot: u8,
@@ -110,9 +126,11 @@ impl Generate for Item {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Item {
     type Target = fb::Item<'a>;
 
+    #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
@@ -127,10 +145,12 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Item {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Item {
     type Reader = cp::item::Reader<'a>;
     type Builder = cp::item::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         builder.set_count(self.count);
         builder.set_slot(self.slot);
@@ -138,9 +158,11 @@ impl<'a> bench_capnp::Serialize<'a> for Item {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Item {
     type Message = pb::Item;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         result.count = self.count as i32;
@@ -150,15 +172,13 @@ impl bench_prost::Serialize for Item {
     }
 }
 
-#[derive(
-    Clone, Copy,
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, bytecheck::CheckBytes,
-    serde::Serialize, serde::Deserialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(copy)]
+#[derive(Clone, Copy)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Abilities {
     pub walk_speed: f32,
     pub fly_speed: f32,
@@ -183,7 +203,9 @@ impl Generate for Abilities {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl Into<fb::Abilities> for Abilities {
+    #[inline]
     fn into(self) -> fb::Abilities {
         fb::Abilities::new(
             self.walk_speed,
@@ -197,10 +219,12 @@ impl Into<fb::Abilities> for Abilities {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Abilities {
     type Reader = cp::abilities::Reader<'a>;
     type Builder = cp::abilities::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         builder.set_walk_speed(self.walk_speed);
         builder.set_fly_speed(self.fly_speed);
@@ -212,9 +236,11 @@ impl<'a> bench_capnp::Serialize<'a> for Abilities {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Abilities {
     type Message = pb::Abilities;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         result.walk_speed = self.walk_speed;
@@ -228,14 +254,13 @@ impl bench_prost::Serialize for Abilities {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Entity {
     pub id: String,
     pub pos: (f64, f64, f64),
@@ -286,9 +311,11 @@ impl Generate for Entity {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
     type Target = fb::Entity<'a>;
 
+    #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
     'a: 'b,
@@ -324,10 +351,12 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Entity {
     type Reader = cp::entity::Reader<'a>;
     type Builder = cp::entity::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         builder.set_id(&self.id);
         let mut pos = builder.reborrow().init_pos();
@@ -362,9 +391,11 @@ impl<'a> bench_capnp::Serialize<'a> for Entity {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Entity {
     type Message = pb::Entity;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         result.id = self.id.clone();
@@ -413,14 +444,13 @@ impl bench_prost::Serialize for Entity {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct RecipeBook {
     pub recipes: Vec<String>,
     pub to_be_displayed: Vec<String>,
@@ -469,9 +499,11 @@ impl Generate for RecipeBook {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
     type Target = fb::RecipeBook<'a>;
 
+    #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
@@ -503,10 +535,12 @@ impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
     type Reader = cp::recipe_book::Reader<'a>;
     type Builder = cp::recipe_book::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         let mut recipes = builder.reborrow().init_recipes(self.recipes.len() as u32);
         for (i, recipe) in self.recipes.iter().enumerate() {
@@ -527,9 +561,11 @@ impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for RecipeBook {
     type Message = pb::RecipeBook;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         for recipe in self.recipes.iter() {
@@ -550,14 +586,13 @@ impl bench_prost::Serialize for RecipeBook {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Player {
     pub game_type: GameType,
     pub previous_game_type: GameType,
@@ -589,8 +624,9 @@ pub struct Player {
     pub recipe_book: RecipeBook,
 }
 
+#[cfg(feature = "rkyv")]
 impl ArchivedPlayer {
-    pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut GameType> {
+    pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedGameType> {
         unsafe { self.map_unchecked_mut(|s| &mut s.game_type) }
     }
 
@@ -646,6 +682,7 @@ impl Generate for Player {
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Player {
     type Target = fb::Player<'a>;
 
@@ -730,6 +767,7 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Player {
     type Reader = cp::player::Reader<'a>;
     type Builder = cp::player::Builder<'a>;
@@ -812,6 +850,7 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Player {
     type Message = pb::Player;
 
@@ -871,27 +910,29 @@ impl bench_prost::Serialize for Player {
     }
 }
 
-#[derive(
-    abomonation_derive::Abomonation,
-    borsh::BorshSerialize, borsh::BorshDeserialize,
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize,
-    serde::Deserialize, serde::Serialize,
-    speedy::Readable, speedy::Writable,
-)]
-#[archive(derive(bytecheck::CheckBytes))]
+#[derive(Clone)]
+#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
+#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Players {
     pub players: Vec<Player>,
 }
 
+#[cfg(feature = "rkyv")]
 impl ArchivedPlayers {
     pub fn players_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Player>>> {
         unsafe { self.map_unchecked_mut(|s| &mut s.players) }
     }
 }
 
+#[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Players {
     type Target = fb::Players<'a>;
 
+    #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
         'a: 'b,
@@ -908,10 +949,12 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Players {
     }
 }
 
+#[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Players {
     type Reader = cp::players::Reader<'a>;
     type Builder = cp::players::Builder<'a>;
 
+    #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         let mut players = builder.reborrow().init_players(self.players.len() as u32);
         for (i, value) in self.players.iter().enumerate() {
@@ -920,9 +963,11 @@ impl<'a> bench_capnp::Serialize<'a> for Players {
     }
 }
 
+#[cfg(feature = "prost")]
 impl bench_prost::Serialize for Players {
     type Message = pb::Players;
 
+    #[inline]
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
         for player in self.players.iter() {

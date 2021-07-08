@@ -3,7 +3,7 @@ use criterion::{black_box, Criterion};
 
 pub fn bench<T, R>(name: &'static str, c: &mut Criterion, data: &T, read: R)
 where
-    T: Abomonation,
+    T: Abomonation + Clone,
     R: Fn(&T),
 {
     const BUFFER_LEN: usize = 10_000_000;
@@ -41,6 +41,15 @@ where
             unsafe {
                 let (data, _) = decode::<T>(black_box(&mut deserialize_buffer)).unwrap();
                 black_box(read(data));
+            }
+        })
+    });
+
+    group.bench_function("deserialize", |b| {
+        b.iter(|| {
+            unsafe {
+                let (data, _) = decode::<T>(black_box(&mut deserialize_buffer)).unwrap();
+                black_box((*data).clone());
             }
         })
     });

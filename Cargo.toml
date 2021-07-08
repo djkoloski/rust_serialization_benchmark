@@ -8,26 +8,47 @@ build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-abomonation = "0.7"
-abomonation_derive = "0.5"
-bincode = "1.3"
-borsh = "0.8"
-bytecheck = "0.4"
-capnp = "0.14"
+abomonation = { version = "0.7", optional = true }
+abomonation_derive = { version = "0.5", optional = true }
+bincode = { version = "1.3", optional = true }
+borsh = { version = "0.9", optional = true }
+bytecheck = { version = "0.6", optional = true }
+capnp = { version = "0.14", optional = true }
 criterion = "0.3"
-flatbuffers = "0.8"
+flatbuffers = { version = "2.0", optional = true }
 libflate = "1.0"
-nachricht-serde = "0.2"
-postcard = { version = "0.5", features = ["alloc"] }
-prost = "0.7"
+nachricht-serde = { version = "0.3", optional = true }
+postcard = { version = "0.7", features = ["alloc"], optional = true }
+prost = { version = "0.7", optional = true }
 rand = "0.8"
-rkyv = { version = "~0.6.1", features = ["validation"] }
-rmp-serde = "0.15"
-serde = { version = "1.0", features = ["derive"] }
-serde_cbor = "0.11"
-serde_json = "1.0"
-speedy = "0.7"
-ron = "0.6"
+rkyv = { version = "0.7.0", features = ["validation"], path = "../rkyv/rkyv", optional = true }
+rmp-serde = { version = "0.15", optional = true }
+ron = { version = "0.6", optional = true }
+serde = { version = "1.0", features = ["derive"], optional = true }
+serde_cbor = { version = "0.11", optional = true }
+serde_json = { version = "1.0", optional = true }
+speedy = { version = "0.7", optional = true }
+
+[features]
+default = [
+    "abomonation",
+    "abomonation_derive",
+    "bincode",
+    "borsh",
+    "bytecheck",
+    "capnp",
+    "flatbuffers",
+    "nachricht-serde",
+    "postcard",
+    "prost",
+    "rkyv",
+    "rmp-serde",
+    "ron",
+    "serde",
+    "serde_cbor",
+    "serde_json",
+    "speedy"
+]
 
 [dev-dependencies]
 rand_pcg = "0.3"
@@ -40,3 +61,7 @@ prost-build = { version = "0.7" }
 [[bench]]
 name = "bench"
 harness = false
+
+# Uncomment this to profile
+# [profile.bench]
+# debug = true

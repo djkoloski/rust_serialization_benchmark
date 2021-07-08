@@ -6,7 +6,7 @@ use std::mem;
 use std::cmp::Ordering;
 
 extern crate flatbuffers;
-use self::flatbuffers::EndianScalar;
+use self::flatbuffers::{EndianScalar, Follow};
 
 #[allow(unused_imports, dead_code)]
 pub mod log {
@@ -15,17 +15,29 @@ pub mod log {
   use std::cmp::Ordering;
 
   extern crate flatbuffers;
-  use self::flatbuffers::EndianScalar;
+  use self::flatbuffers::{EndianScalar, Follow};
 
 // struct Address, aligned to 1
-#[repr(C, align(1))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Address {
-  x0_: u8,
-  x1_: u8,
-  x2_: u8,
-  x3_: u8,
-} // pub struct Address
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Address(pub [u8; 4]);
+impl Default for Address { 
+  fn default() -> Self { 
+    Self([0; 4])
+  }
+}
+impl std::fmt::Debug for Address {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Address")
+      .field("x0", &self.x0())
+      .field("x1", &self.x1())
+      .field("x2", &self.x2())
+      .field("x3", &self.x3())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Address {}
 impl flatbuffers::SafeSliceAccess for Address {}
 impl<'a> flatbuffers::Follow<'a> for Address {
   type Inner = &'a Address;
@@ -63,33 +75,127 @@ impl<'b> flatbuffers::Push for &'b Address {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Address {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Address {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    x0: u8,
+    x1: u8,
+    x2: u8,
+    x3: u8,
+  ) -> Self {
+    let mut s = Self([0; 4]);
+    s.set_x0(x0);
+    s.set_x1(x1);
+    s.set_x2(x2);
+    s.set_x3(x3);
+    s
+  }
 
-impl Address {
-  pub fn new<'a>(_x0: u8, _x1: u8, _x2: u8, _x3: u8) -> Self {
-    Address {
-      x0_: _x0.to_little_endian(),
-      x1_: _x1.to_little_endian(),
-      x2_: _x2.to_little_endian(),
-      x3_: _x3.to_little_endian(),
+  pub fn x0(&self) -> u8 {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[0..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u8>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
 
+  pub fn set_x0(&mut self, x: u8) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u8 as *const u8,
+        self.0[0..].as_mut_ptr(),
+        core::mem::size_of::<u8>(),
+      );
     }
   }
-  pub fn x0<'a>(&'a self) -> u8 {
-    self.x0_.from_little_endian()
+
+  pub fn x1(&self) -> u8 {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[1..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u8>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn x1<'a>(&'a self) -> u8 {
-    self.x1_.from_little_endian()
+
+  pub fn set_x1(&mut self, x: u8) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u8 as *const u8,
+        self.0[1..].as_mut_ptr(),
+        core::mem::size_of::<u8>(),
+      );
+    }
   }
-  pub fn x2<'a>(&'a self) -> u8 {
-    self.x2_.from_little_endian()
+
+  pub fn x2(&self) -> u8 {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[2..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u8>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn x3<'a>(&'a self) -> u8 {
-    self.x3_.from_little_endian()
+
+  pub fn set_x2(&mut self, x: u8) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u8 as *const u8,
+        self.0[2..].as_mut_ptr(),
+        core::mem::size_of::<u8>(),
+      );
+    }
   }
+
+  pub fn x3(&self) -> u8 {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[3..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u8>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
+
+  pub fn set_x3(&mut self, x: u8) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u8 as *const u8,
+        self.0[3..].as_mut_ptr(),
+        core::mem::size_of::<u8>(),
+      );
+    }
+  }
+
 }
 
 pub enum LogOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Log<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -99,18 +205,14 @@ impl<'a> flatbuffers::Follow<'a> for Log<'a> {
     type Inner = Log<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Log<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Log {
-            _tab: table,
-        }
+        Log { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -165,12 +267,30 @@ impl<'a> Log<'a> {
   }
 }
 
+impl flatbuffers::Verifiable for Log<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<Address>(&"address", Self::VT_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"identity", Self::VT_IDENTITY, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"userid", Self::VT_USERID, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"date", Self::VT_DATE, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"request", Self::VT_REQUEST, true)?
+     .visit_field::<u16>(&"code", Self::VT_CODE, false)?
+     .visit_field::<u64>(&"size_", Self::VT_SIZE_, false)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct LogArgs<'a> {
-    pub address: Option<&'a  Address>,
-    pub identity: Option<flatbuffers::WIPOffset<&'a  str>>,
-    pub userid: Option<flatbuffers::WIPOffset<&'a  str>>,
-    pub date: Option<flatbuffers::WIPOffset<&'a  str>>,
-    pub request: Option<flatbuffers::WIPOffset<&'a  str>>,
+    pub address: Option<&'a Address>,
+    pub identity: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub userid: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub date: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub request: Option<flatbuffers::WIPOffset<&'a str>>,
     pub code: u16,
     pub size_: u64,
 }
@@ -194,7 +314,7 @@ pub struct LogBuilder<'a: 'b, 'b> {
 }
 impl<'a: 'b, 'b> LogBuilder<'a, 'b> {
   #[inline]
-  pub fn add_address(&mut self, address: &'b  Address) {
+  pub fn add_address(&mut self, address: &Address) {
     self.fbb_.push_slot_always::<&Address>(Log::VT_ADDRESS, address);
   }
   #[inline]
@@ -240,8 +360,21 @@ impl<'a: 'b, 'b> LogBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for Log<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Log");
+      ds.field("address", &self.address());
+      ds.field("identity", &self.identity());
+      ds.field("userid", &self.userid());
+      ds.field("date", &self.date());
+      ds.field("request", &self.request());
+      ds.field("code", &self.code());
+      ds.field("size_", &self.size_());
+      ds.finish()
+  }
+}
 pub enum LogsOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Logs<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -251,18 +384,14 @@ impl<'a> flatbuffers::Follow<'a> for Logs<'a> {
     type Inner = Logs<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Logs<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Logs {
-            _tab: table,
-        }
+        Logs { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -277,12 +406,24 @@ impl<'a> Logs<'a> {
 
   #[inline]
   pub fn logs(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log<'a>>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<flatbuffers::ForwardsUOffset<Log<'a>>>>>(Logs::VT_LOGS, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log>>>>(Logs::VT_LOGS, None).unwrap()
   }
 }
 
+impl flatbuffers::Verifiable for Logs<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Log>>>>(&"logs", Self::VT_LOGS, true)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct LogsArgs<'a> {
-    pub logs: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , flatbuffers::ForwardsUOffset<Log<'a >>>>>,
+    pub logs: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log<'a>>>>>,
 }
 impl<'a> Default for LogsArgs<'a> {
     #[inline]
@@ -317,5 +458,12 @@ impl<'a: 'b, 'b> LogsBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for Logs<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Logs");
+      ds.field("logs", &self.logs());
+      ds.finish()
+  }
+}
 }  // pub mod log
 

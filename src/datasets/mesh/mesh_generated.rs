@@ -6,7 +6,7 @@ use std::mem;
 use std::cmp::Ordering;
 
 extern crate flatbuffers;
-use self::flatbuffers::EndianScalar;
+use self::flatbuffers::{EndianScalar, Follow};
 
 #[allow(unused_imports, dead_code)]
 pub mod mesh {
@@ -15,16 +15,28 @@ pub mod mesh {
   use std::cmp::Ordering;
 
   extern crate flatbuffers;
-  use self::flatbuffers::EndianScalar;
+  use self::flatbuffers::{EndianScalar, Follow};
 
 // struct Vector3, aligned to 4
-#[repr(C, align(4))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Vector3 {
-  x_: f32,
-  y_: f32,
-  z_: f32,
-} // pub struct Vector3
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Vector3(pub [u8; 12]);
+impl Default for Vector3 { 
+  fn default() -> Self { 
+    Self([0; 12])
+  }
+}
+impl std::fmt::Debug for Vector3 {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Vector3")
+      .field("x", &self.x())
+      .field("y", &self.y())
+      .field("z", &self.z())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Vector3 {}
 impl flatbuffers::SafeSliceAccess for Vector3 {}
 impl<'a> flatbuffers::Follow<'a> for Vector3 {
   type Inner = &'a Vector3;
@@ -62,36 +74,121 @@ impl<'b> flatbuffers::Push for &'b Vector3 {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Vector3 {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Vector3 {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    x: f32,
+    y: f32,
+    z: f32,
+  ) -> Self {
+    let mut s = Self([0; 12]);
+    s.set_x(x);
+    s.set_y(y);
+    s.set_z(z);
+    s
+  }
 
-impl Vector3 {
-  pub fn new<'a>(_x: f32, _y: f32, _z: f32) -> Self {
-    Vector3 {
-      x_: _x.to_little_endian(),
-      y_: _y.to_little_endian(),
-      z_: _z.to_little_endian(),
+  pub fn x(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[0..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
 
+  pub fn set_x(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[0..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
     }
   }
-  pub fn x<'a>(&'a self) -> f32 {
-    self.x_.from_little_endian()
+
+  pub fn y(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[4..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn y<'a>(&'a self) -> f32 {
-    self.y_.from_little_endian()
+
+  pub fn set_y(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[4..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
+    }
   }
-  pub fn z<'a>(&'a self) -> f32 {
-    self.z_.from_little_endian()
+
+  pub fn z(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[8..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
+
+  pub fn set_z(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[8..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
+    }
+  }
+
 }
 
 // struct Triangle, aligned to 4
-#[repr(C, align(4))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Triangle {
-  v0_: Vector3,
-  v1_: Vector3,
-  v2_: Vector3,
-  normal_: Vector3,
-} // pub struct Triangle
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Triangle(pub [u8; 48]);
+impl Default for Triangle { 
+  fn default() -> Self { 
+    Self([0; 48])
+  }
+}
+impl std::fmt::Debug for Triangle {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Triangle")
+      .field("v0", &self.v0())
+      .field("v1", &self.v1())
+      .field("v2", &self.v2())
+      .field("normal", &self.normal())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Triangle {}
 impl flatbuffers::SafeSliceAccess for Triangle {}
 impl<'a> flatbuffers::Follow<'a> for Triangle {
   type Inner = &'a Triangle;
@@ -129,33 +226,67 @@ impl<'b> flatbuffers::Push for &'b Triangle {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Triangle {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Triangle {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    v0: &Vector3,
+    v1: &Vector3,
+    v2: &Vector3,
+    normal: &Vector3,
+  ) -> Self {
+    let mut s = Self([0; 48]);
+    s.set_v0(&v0);
+    s.set_v1(&v1);
+    s.set_v2(&v2);
+    s.set_normal(&normal);
+    s
+  }
 
-impl Triangle {
-  pub fn new<'a>(_v0: &'a Vector3, _v1: &'a Vector3, _v2: &'a Vector3, _normal: &'a Vector3) -> Self {
-    Triangle {
-      v0_: *_v0,
-      v1_: *_v1,
-      v2_: *_v2,
-      normal_: *_normal,
+  pub fn v0(&self) -> &Vector3 {
+    unsafe { &*(self.0[0..].as_ptr() as *const Vector3) }
+  }
 
-    }
+  pub fn set_v0(&mut self, x: &Vector3) {
+    self.0[0..0+12].copy_from_slice(&x.0)
   }
-  pub fn v0<'a>(&'a self) -> &'a Vector3 {
-    &self.v0_
+
+  pub fn v1(&self) -> &Vector3 {
+    unsafe { &*(self.0[12..].as_ptr() as *const Vector3) }
   }
-  pub fn v1<'a>(&'a self) -> &'a Vector3 {
-    &self.v1_
+
+  pub fn set_v1(&mut self, x: &Vector3) {
+    self.0[12..12+12].copy_from_slice(&x.0)
   }
-  pub fn v2<'a>(&'a self) -> &'a Vector3 {
-    &self.v2_
+
+  pub fn v2(&self) -> &Vector3 {
+    unsafe { &*(self.0[24..].as_ptr() as *const Vector3) }
   }
-  pub fn normal<'a>(&'a self) -> &'a Vector3 {
-    &self.normal_
+
+  pub fn set_v2(&mut self, x: &Vector3) {
+    self.0[24..24+12].copy_from_slice(&x.0)
   }
+
+  pub fn normal(&self) -> &Vector3 {
+    unsafe { &*(self.0[36..].as_ptr() as *const Vector3) }
+  }
+
+  pub fn set_normal(&mut self, x: &Vector3) {
+    self.0[36..36+12].copy_from_slice(&x.0)
+  }
+
 }
 
 pub enum MeshOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Mesh<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -165,18 +296,14 @@ impl<'a> flatbuffers::Follow<'a> for Mesh<'a> {
     type Inner = Mesh<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Mesh<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Mesh {
-            _tab: table,
-        }
+        Mesh { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -191,12 +318,24 @@ impl<'a> Mesh<'a> {
 
   #[inline]
   pub fn triangles(&self) -> &'a [Triangle] {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<Triangle>>>(Mesh::VT_TRIANGLES, None).map(|v| v.safe_slice() ).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, Triangle>>>(Mesh::VT_TRIANGLES, None).map(|v| v.safe_slice()).unwrap()
   }
 }
 
+impl flatbuffers::Verifiable for Mesh<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, Triangle>>>(&"triangles", Self::VT_TRIANGLES, true)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct MeshArgs<'a> {
-    pub triangles: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , Triangle>>>,
+    pub triangles: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, Triangle>>>,
 }
 impl<'a> Default for MeshArgs<'a> {
     #[inline]
@@ -231,16 +370,12 @@ impl<'a: 'b, 'b> MeshBuilder<'a, 'b> {
   }
 }
 
-#[inline]
-pub fn finish_mesh_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<Mesh<'a>>) {
-  fbb.finish(root, None);
-}
-
-#[inline]
-pub fn finish_size_prefixed_mesh_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<Mesh<'a>>) {
-  fbb.finish_size_prefixed(root, None);
+impl std::fmt::Debug for Mesh<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Mesh");
+      ds.field("triangles", &self.triangles());
+      ds.finish()
+  }
 }
 }  // pub mod mesh
 

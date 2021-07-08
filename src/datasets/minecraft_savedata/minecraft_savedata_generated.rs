@@ -6,7 +6,7 @@ use std::mem;
 use std::cmp::Ordering;
 
 extern crate flatbuffers;
-use self::flatbuffers::EndianScalar;
+use self::flatbuffers::{EndianScalar, Follow};
 
 #[allow(unused_imports, dead_code)]
 pub mod minecraft_savedata {
@@ -15,42 +15,67 @@ pub mod minecraft_savedata {
   use std::cmp::Ordering;
 
   extern crate flatbuffers;
-  use self::flatbuffers::EndianScalar;
+  use self::flatbuffers::{EndianScalar, Follow};
 
-#[allow(non_camel_case_types)]
-#[repr(i8)]
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
-pub enum GameType {
-  Survival = 0,
-  Creative = 1,
-  Adventure = 2,
-  Spectator = 3,
-
-}
-
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_GAME_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MAX_GAME_TYPE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_GAME_TYPE: [GameType; 4] = [
+  GameType::Survival,
+  GameType::Creative,
+  GameType::Adventure,
+  GameType::Spectator,
+];
 
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct GameType(pub i8);
+#[allow(non_upper_case_globals)]
+impl GameType {
+  pub const Survival: Self = Self(0);
+  pub const Creative: Self = Self(1);
+  pub const Adventure: Self = Self(2);
+  pub const Spectator: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Survival,
+    Self::Creative,
+    Self::Adventure,
+    Self::Spectator,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Survival => Some("Survival"),
+      Self::Creative => Some("Creative"),
+      Self::Adventure => Some("Adventure"),
+      Self::Spectator => Some("Spectator"),
+      _ => None,
+    }
+  }
+}
+impl std::fmt::Debug for GameType {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
 impl<'a> flatbuffers::Follow<'a> for GameType {
   type Inner = Self;
   #[inline]
   fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    flatbuffers::read_scalar_at::<Self>(buf, loc)
-  }
-}
-
-impl flatbuffers::EndianScalar for GameType {
-  #[inline]
-  fn to_little_endian(self) -> Self {
-    let n = i8::to_le(self as i8);
-    let p = &n as *const i8 as *const GameType;
-    unsafe { *p }
-  }
-  #[inline]
-  fn from_little_endian(self) -> Self {
-    let n = i8::from_le(self as i8);
-    let p = &n as *const i8 as *const GameType;
-    unsafe { *p }
+    let b = unsafe {
+      flatbuffers::read_scalar_at::<i8>(buf, loc)
+    };
+    Self(b)
   }
 }
 
@@ -58,44 +83,59 @@ impl flatbuffers::Push for GameType {
     type Output = GameType;
     #[inline]
     fn push(&self, dst: &mut [u8], _rest: &[u8]) {
-        flatbuffers::emplace_scalar::<GameType>(dst, *self);
+        unsafe { flatbuffers::emplace_scalar::<i8>(dst, self.0); }
     }
 }
 
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_GAME_TYPE:[GameType; 4] = [
-  GameType::Survival,
-  GameType::Creative,
-  GameType::Adventure,
-  GameType::Spectator
-];
-
-#[allow(non_camel_case_types)]
-pub const ENUM_NAMES_GAME_TYPE:[&'static str; 4] = [
-    "Survival",
-    "Creative",
-    "Adventure",
-    "Spectator"
-];
-
-pub fn enum_name_game_type(e: GameType) -> &'static str {
-  let index = e as i8;
-  ENUM_NAMES_GAME_TYPE[index as usize]
+impl flatbuffers::EndianScalar for GameType {
+  #[inline]
+  fn to_little_endian(self) -> Self {
+    let b = i8::to_le(self.0);
+    Self(b)
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(self) -> Self {
+    let b = i8::from_le(self.0);
+    Self(b)
+  }
 }
 
+impl<'a> flatbuffers::Verifiable for GameType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for GameType {}
 // struct Abilities, aligned to 4
-#[repr(C, align(4))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Abilities {
-  walk_speed_: f32,
-  fly_speed_: f32,
-  may_fly_: bool,
-  flying_: bool,
-  invulnerable_: bool,
-  may_build_: bool,
-  instabuild_: bool,
-  padding0__: u8,  padding1__: u16,
-} // pub struct Abilities
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Abilities(pub [u8; 16]);
+impl Default for Abilities { 
+  fn default() -> Self { 
+    Self([0; 16])
+  }
+}
+impl std::fmt::Debug for Abilities {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Abilities")
+      .field("walk_speed", &self.walk_speed())
+      .field("fly_speed", &self.fly_speed())
+      .field("may_fly", &self.may_fly())
+      .field("flying", &self.flying())
+      .field("invulnerable", &self.invulnerable())
+      .field("may_build", &self.may_build())
+      .field("instabuild", &self.instabuild())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Abilities {}
 impl flatbuffers::SafeSliceAccess for Abilities {}
 impl<'a> flatbuffers::Follow<'a> for Abilities {
   type Inner = &'a Abilities;
@@ -133,51 +173,219 @@ impl<'b> flatbuffers::Push for &'b Abilities {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Abilities {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Abilities {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    walk_speed: f32,
+    fly_speed: f32,
+    may_fly: bool,
+    flying: bool,
+    invulnerable: bool,
+    may_build: bool,
+    instabuild: bool,
+  ) -> Self {
+    let mut s = Self([0; 16]);
+    s.set_walk_speed(walk_speed);
+    s.set_fly_speed(fly_speed);
+    s.set_may_fly(may_fly);
+    s.set_flying(flying);
+    s.set_invulnerable(invulnerable);
+    s.set_may_build(may_build);
+    s.set_instabuild(instabuild);
+    s
+  }
 
-impl Abilities {
-  pub fn new<'a>(_walk_speed: f32, _fly_speed: f32, _may_fly: bool, _flying: bool, _invulnerable: bool, _may_build: bool, _instabuild: bool) -> Self {
-    Abilities {
-      walk_speed_: _walk_speed.to_little_endian(),
-      fly_speed_: _fly_speed.to_little_endian(),
-      may_fly_: _may_fly.to_little_endian(),
-      flying_: _flying.to_little_endian(),
-      invulnerable_: _invulnerable.to_little_endian(),
-      may_build_: _may_build.to_little_endian(),
-      instabuild_: _instabuild.to_little_endian(),
+  pub fn walk_speed(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[0..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
 
-      padding0__: 0,padding1__: 0,
+  pub fn set_walk_speed(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[0..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
     }
   }
-  pub fn walk_speed<'a>(&'a self) -> f32 {
-    self.walk_speed_.from_little_endian()
+
+  pub fn fly_speed(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[4..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn fly_speed<'a>(&'a self) -> f32 {
-    self.fly_speed_.from_little_endian()
+
+  pub fn set_fly_speed(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[4..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
+    }
   }
-  pub fn may_fly<'a>(&'a self) -> bool {
-    self.may_fly_.from_little_endian()
+
+  pub fn may_fly(&self) -> bool {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[8..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<bool>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn flying<'a>(&'a self) -> bool {
-    self.flying_.from_little_endian()
+
+  pub fn set_may_fly(&mut self, x: bool) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const bool as *const u8,
+        self.0[8..].as_mut_ptr(),
+        core::mem::size_of::<bool>(),
+      );
+    }
   }
-  pub fn invulnerable<'a>(&'a self) -> bool {
-    self.invulnerable_.from_little_endian()
+
+  pub fn flying(&self) -> bool {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[9..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<bool>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn may_build<'a>(&'a self) -> bool {
-    self.may_build_.from_little_endian()
+
+  pub fn set_flying(&mut self, x: bool) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const bool as *const u8,
+        self.0[9..].as_mut_ptr(),
+        core::mem::size_of::<bool>(),
+      );
+    }
   }
-  pub fn instabuild<'a>(&'a self) -> bool {
-    self.instabuild_.from_little_endian()
+
+  pub fn invulnerable(&self) -> bool {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[10..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<bool>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
+
+  pub fn set_invulnerable(&mut self, x: bool) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const bool as *const u8,
+        self.0[10..].as_mut_ptr(),
+        core::mem::size_of::<bool>(),
+      );
+    }
+  }
+
+  pub fn may_build(&self) -> bool {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[11..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<bool>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
+
+  pub fn set_may_build(&mut self, x: bool) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const bool as *const u8,
+        self.0[11..].as_mut_ptr(),
+        core::mem::size_of::<bool>(),
+      );
+    }
+  }
+
+  pub fn instabuild(&self) -> bool {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[12..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<bool>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
+
+  pub fn set_instabuild(&mut self, x: bool) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const bool as *const u8,
+        self.0[12..].as_mut_ptr(),
+        core::mem::size_of::<bool>(),
+      );
+    }
+  }
+
 }
 
 // struct Vector2f, aligned to 4
-#[repr(C, align(4))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Vector2f {
-  x_: f32,
-  y_: f32,
-} // pub struct Vector2f
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Vector2f(pub [u8; 8]);
+impl Default for Vector2f { 
+  fn default() -> Self { 
+    Self([0; 8])
+  }
+}
+impl std::fmt::Debug for Vector2f {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Vector2f")
+      .field("x", &self.x())
+      .field("y", &self.y())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Vector2f {}
 impl flatbuffers::SafeSliceAccess for Vector2f {}
 impl<'a> flatbuffers::Follow<'a> for Vector2f {
   type Inner = &'a Vector2f;
@@ -215,31 +423,95 @@ impl<'b> flatbuffers::Push for &'b Vector2f {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Vector2f {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Vector2f {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    x: f32,
+    y: f32,
+  ) -> Self {
+    let mut s = Self([0; 8]);
+    s.set_x(x);
+    s.set_y(y);
+    s
+  }
 
-impl Vector2f {
-  pub fn new<'a>(_x: f32, _y: f32) -> Self {
-    Vector2f {
-      x_: _x.to_little_endian(),
-      y_: _y.to_little_endian(),
+  pub fn x(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[0..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
 
+  pub fn set_x(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[0..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
     }
   }
-  pub fn x<'a>(&'a self) -> f32 {
-    self.x_.from_little_endian()
+
+  pub fn y(&self) -> f32 {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[4..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn y<'a>(&'a self) -> f32 {
-    self.y_.from_little_endian()
+
+  pub fn set_y(&mut self, x: f32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f32 as *const u8,
+        self.0[4..].as_mut_ptr(),
+        core::mem::size_of::<f32>(),
+      );
+    }
   }
+
 }
 
 // struct Vector3d, aligned to 8
-#[repr(C, align(8))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Vector3d {
-  x_: f64,
-  y_: f64,
-  z_: f64,
-} // pub struct Vector3d
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Vector3d(pub [u8; 24]);
+impl Default for Vector3d { 
+  fn default() -> Self { 
+    Self([0; 24])
+  }
+}
+impl std::fmt::Debug for Vector3d {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Vector3d")
+      .field("x", &self.x())
+      .field("y", &self.y())
+      .field("z", &self.z())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Vector3d {}
 impl flatbuffers::SafeSliceAccess for Vector3d {}
 impl<'a> flatbuffers::Follow<'a> for Vector3d {
   type Inner = &'a Vector3d;
@@ -277,36 +549,121 @@ impl<'b> flatbuffers::Push for &'b Vector3d {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Vector3d {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Vector3d {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    x: f64,
+    y: f64,
+    z: f64,
+  ) -> Self {
+    let mut s = Self([0; 24]);
+    s.set_x(x);
+    s.set_y(y);
+    s.set_z(z);
+    s
+  }
 
-impl Vector3d {
-  pub fn new<'a>(_x: f64, _y: f64, _z: f64) -> Self {
-    Vector3d {
-      x_: _x.to_little_endian(),
-      y_: _y.to_little_endian(),
-      z_: _z.to_little_endian(),
+  pub fn x(&self) -> f64 {
+    let mut mem = core::mem::MaybeUninit::<f64>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[0..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f64>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
 
+  pub fn set_x(&mut self, x: f64) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f64 as *const u8,
+        self.0[0..].as_mut_ptr(),
+        core::mem::size_of::<f64>(),
+      );
     }
   }
-  pub fn x<'a>(&'a self) -> f64 {
-    self.x_.from_little_endian()
+
+  pub fn y(&self) -> f64 {
+    let mut mem = core::mem::MaybeUninit::<f64>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[8..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f64>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn y<'a>(&'a self) -> f64 {
-    self.y_.from_little_endian()
+
+  pub fn set_y(&mut self, x: f64) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f64 as *const u8,
+        self.0[8..].as_mut_ptr(),
+        core::mem::size_of::<f64>(),
+      );
+    }
   }
-  pub fn z<'a>(&'a self) -> f64 {
-    self.z_.from_little_endian()
+
+  pub fn z(&self) -> f64 {
+    let mut mem = core::mem::MaybeUninit::<f64>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[16..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<f64>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
+
+  pub fn set_z(&mut self, x: f64) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const f64 as *const u8,
+        self.0[16..].as_mut_ptr(),
+        core::mem::size_of::<f64>(),
+      );
+    }
+  }
+
 }
 
 // struct Uuid, aligned to 4
-#[repr(C, align(4))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Uuid {
-  x0_: u32,
-  x1_: u32,
-  x2_: u32,
-  x3_: u32,
-} // pub struct Uuid
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Uuid(pub [u8; 16]);
+impl Default for Uuid { 
+  fn default() -> Self { 
+    Self([0; 16])
+  }
+}
+impl std::fmt::Debug for Uuid {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.debug_struct("Uuid")
+      .field("x0", &self.x0())
+      .field("x1", &self.x1())
+      .field("x2", &self.x2())
+      .field("x3", &self.x3())
+      .finish()
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for Uuid {}
 impl flatbuffers::SafeSliceAccess for Uuid {}
 impl<'a> flatbuffers::Follow<'a> for Uuid {
   type Inner = &'a Uuid;
@@ -344,33 +701,127 @@ impl<'b> flatbuffers::Push for &'b Uuid {
     }
 }
 
+impl<'a> flatbuffers::Verifiable for Uuid {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.in_buffer::<Self>(pos)
+  }
+}
+impl<'a> Uuid {
+  #[allow(clippy::too_many_arguments)]
+  pub fn new(
+    x0: u32,
+    x1: u32,
+    x2: u32,
+    x3: u32,
+  ) -> Self {
+    let mut s = Self([0; 16]);
+    s.set_x0(x0);
+    s.set_x1(x1);
+    s.set_x2(x2);
+    s.set_x3(x3);
+    s
+  }
 
-impl Uuid {
-  pub fn new<'a>(_x0: u32, _x1: u32, _x2: u32, _x3: u32) -> Self {
-    Uuid {
-      x0_: _x0.to_little_endian(),
-      x1_: _x1.to_little_endian(),
-      x2_: _x2.to_little_endian(),
-      x3_: _x3.to_little_endian(),
+  pub fn x0(&self) -> u32 {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[0..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
 
+  pub fn set_x0(&mut self, x: u32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u32 as *const u8,
+        self.0[0..].as_mut_ptr(),
+        core::mem::size_of::<u32>(),
+      );
     }
   }
-  pub fn x0<'a>(&'a self) -> u32 {
-    self.x0_.from_little_endian()
+
+  pub fn x1(&self) -> u32 {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[4..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn x1<'a>(&'a self) -> u32 {
-    self.x1_.from_little_endian()
+
+  pub fn set_x1(&mut self, x: u32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u32 as *const u8,
+        self.0[4..].as_mut_ptr(),
+        core::mem::size_of::<u32>(),
+      );
+    }
   }
-  pub fn x2<'a>(&'a self) -> u32 {
-    self.x2_.from_little_endian()
+
+  pub fn x2(&self) -> u32 {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[8..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
   }
-  pub fn x3<'a>(&'a self) -> u32 {
-    self.x3_.from_little_endian()
+
+  pub fn set_x2(&mut self, x: u32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u32 as *const u8,
+        self.0[8..].as_mut_ptr(),
+        core::mem::size_of::<u32>(),
+      );
+    }
   }
+
+  pub fn x3(&self) -> u32 {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        self.0[12..].as_ptr(),
+        mem.as_mut_ptr() as *mut u8,
+        core::mem::size_of::<u32>(),
+      );
+      mem.assume_init()
+    }.from_little_endian()
+  }
+
+  pub fn set_x3(&mut self, x: u32) {
+    let x_le = x.to_little_endian();
+    unsafe {
+      core::ptr::copy_nonoverlapping(
+        &x_le as *const u32 as *const u8,
+        self.0[12..].as_mut_ptr(),
+        core::mem::size_of::<u32>(),
+      );
+    }
+  }
+
 }
 
 pub enum ItemOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Item<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -380,18 +831,14 @@ impl<'a> flatbuffers::Follow<'a> for Item<'a> {
     type Inner = Item<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Item<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Item {
-            _tab: table,
-        }
+        Item { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -422,10 +869,24 @@ impl<'a> Item<'a> {
   }
 }
 
+impl flatbuffers::Verifiable for Item<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<i8>(&"count", Self::VT_COUNT, false)?
+     .visit_field::<u8>(&"slot", Self::VT_SLOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"id", Self::VT_ID, true)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct ItemArgs<'a> {
     pub count: i8,
     pub slot: u8,
-    pub id: Option<flatbuffers::WIPOffset<&'a  str>>,
+    pub id: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for ItemArgs<'a> {
     #[inline]
@@ -470,8 +931,17 @@ impl<'a: 'b, 'b> ItemBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for Item<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Item");
+      ds.field("count", &self.count());
+      ds.field("slot", &self.slot());
+      ds.field("id", &self.id());
+      ds.finish()
+  }
+}
 pub enum EntityOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Entity<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -481,18 +951,14 @@ impl<'a> flatbuffers::Follow<'a> for Entity<'a> {
     type Inner = Entity<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Entity<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Entity {
-            _tab: table,
-        }
+        Entity { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -601,11 +1067,38 @@ impl<'a> Entity<'a> {
   }
 }
 
+impl flatbuffers::Verifiable for Entity<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"id", Self::VT_ID, true)?
+     .visit_field::<Vector3d>(&"pos", Self::VT_POS, true)?
+     .visit_field::<Vector3d>(&"motion", Self::VT_MOTION, true)?
+     .visit_field::<Vector2f>(&"rotation", Self::VT_ROTATION, true)?
+     .visit_field::<f32>(&"fall_distance", Self::VT_FALL_DISTANCE, false)?
+     .visit_field::<u16>(&"fire", Self::VT_FIRE, false)?
+     .visit_field::<u16>(&"air", Self::VT_AIR, false)?
+     .visit_field::<bool>(&"on_ground", Self::VT_ON_GROUND, false)?
+     .visit_field::<bool>(&"no_gravity", Self::VT_NO_GRAVITY, false)?
+     .visit_field::<bool>(&"invulnerable", Self::VT_INVULNERABLE, false)?
+     .visit_field::<i32>(&"portal_cooldown", Self::VT_PORTAL_COOLDOWN, false)?
+     .visit_field::<Uuid>(&"uuid", Self::VT_UUID, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"custom_name", Self::VT_CUSTOM_NAME, false)?
+     .visit_field::<bool>(&"custom_name_visible", Self::VT_CUSTOM_NAME_VISIBLE, false)?
+     .visit_field::<bool>(&"silent", Self::VT_SILENT, false)?
+     .visit_field::<bool>(&"glowing", Self::VT_GLOWING, false)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct EntityArgs<'a> {
-    pub id: Option<flatbuffers::WIPOffset<&'a  str>>,
-    pub pos: Option<&'a  Vector3d>,
-    pub motion: Option<&'a  Vector3d>,
-    pub rotation: Option<&'a  Vector2f>,
+    pub id: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub pos: Option<&'a Vector3d>,
+    pub motion: Option<&'a Vector3d>,
+    pub rotation: Option<&'a Vector2f>,
     pub fall_distance: f32,
     pub fire: u16,
     pub air: u16,
@@ -613,8 +1106,8 @@ pub struct EntityArgs<'a> {
     pub no_gravity: bool,
     pub invulnerable: bool,
     pub portal_cooldown: i32,
-    pub uuid: Option<&'a  Uuid>,
-    pub custom_name: Option<flatbuffers::WIPOffset<&'a  str>>,
+    pub uuid: Option<&'a Uuid>,
+    pub custom_name: Option<flatbuffers::WIPOffset<&'a str>>,
     pub custom_name_visible: bool,
     pub silent: bool,
     pub glowing: bool,
@@ -652,15 +1145,15 @@ impl<'a: 'b, 'b> EntityBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Entity::VT_ID, id);
   }
   #[inline]
-  pub fn add_pos(&mut self, pos: &'b  Vector3d) {
+  pub fn add_pos(&mut self, pos: &Vector3d) {
     self.fbb_.push_slot_always::<&Vector3d>(Entity::VT_POS, pos);
   }
   #[inline]
-  pub fn add_motion(&mut self, motion: &'b  Vector3d) {
+  pub fn add_motion(&mut self, motion: &Vector3d) {
     self.fbb_.push_slot_always::<&Vector3d>(Entity::VT_MOTION, motion);
   }
   #[inline]
-  pub fn add_rotation(&mut self, rotation: &'b  Vector2f) {
+  pub fn add_rotation(&mut self, rotation: &Vector2f) {
     self.fbb_.push_slot_always::<&Vector2f>(Entity::VT_ROTATION, rotation);
   }
   #[inline]
@@ -692,7 +1185,7 @@ impl<'a: 'b, 'b> EntityBuilder<'a, 'b> {
     self.fbb_.push_slot::<i32>(Entity::VT_PORTAL_COOLDOWN, portal_cooldown, 0);
   }
   #[inline]
-  pub fn add_uuid(&mut self, uuid: &'b  Uuid) {
+  pub fn add_uuid(&mut self, uuid: &Uuid) {
     self.fbb_.push_slot_always::<&Uuid>(Entity::VT_UUID, uuid);
   }
   #[inline]
@@ -731,8 +1224,30 @@ impl<'a: 'b, 'b> EntityBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for Entity<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Entity");
+      ds.field("id", &self.id());
+      ds.field("pos", &self.pos());
+      ds.field("motion", &self.motion());
+      ds.field("rotation", &self.rotation());
+      ds.field("fall_distance", &self.fall_distance());
+      ds.field("fire", &self.fire());
+      ds.field("air", &self.air());
+      ds.field("on_ground", &self.on_ground());
+      ds.field("no_gravity", &self.no_gravity());
+      ds.field("invulnerable", &self.invulnerable());
+      ds.field("portal_cooldown", &self.portal_cooldown());
+      ds.field("uuid", &self.uuid());
+      ds.field("custom_name", &self.custom_name());
+      ds.field("custom_name_visible", &self.custom_name_visible());
+      ds.field("silent", &self.silent());
+      ds.field("glowing", &self.glowing());
+      ds.finish()
+  }
+}
 pub enum RecipeBookOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct RecipeBook<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -742,18 +1257,14 @@ impl<'a> flatbuffers::Follow<'a> for RecipeBook<'a> {
     type Inner = RecipeBook<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> RecipeBook<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        RecipeBook {
-            _tab: table,
-        }
+        RecipeBook { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -786,11 +1297,11 @@ impl<'a> RecipeBook<'a> {
 
   #[inline]
   pub fn recipes(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_RECIPES, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_RECIPES, None).unwrap()
   }
   #[inline]
   pub fn to_be_displayed(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_TO_BE_DISPLAYED, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_TO_BE_DISPLAYED, None).unwrap()
   }
   #[inline]
   pub fn is_filtering_craftable(&self) -> bool {
@@ -826,9 +1337,30 @@ impl<'a> RecipeBook<'a> {
   }
 }
 
+impl flatbuffers::Verifiable for RecipeBook<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>(&"recipes", Self::VT_RECIPES, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>(&"to_be_displayed", Self::VT_TO_BE_DISPLAYED, true)?
+     .visit_field::<bool>(&"is_filtering_craftable", Self::VT_IS_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_gui_open", Self::VT_IS_GUI_OPEN, false)?
+     .visit_field::<bool>(&"is_furnace_filtering_craftable", Self::VT_IS_FURNACE_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_furnace_gui_open", Self::VT_IS_FURNACE_GUI_OPEN, false)?
+     .visit_field::<bool>(&"is_blasting_furnace_filtering_craftable", Self::VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_blasting_furnace_gui_open", Self::VT_IS_BLASTING_FURNACE_GUI_OPEN, false)?
+     .visit_field::<bool>(&"is_smoker_filtering_craftable", Self::VT_IS_SMOKER_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_smoker_gui_open", Self::VT_IS_SMOKER_GUI_OPEN, false)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct RecipeBookArgs<'a> {
-    pub recipes: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , flatbuffers::ForwardsUOffset<&'a  str>>>>,
-    pub to_be_displayed: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , flatbuffers::ForwardsUOffset<&'a  str>>>>,
+    pub recipes: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub to_be_displayed: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub is_filtering_craftable: bool,
     pub is_gui_open: bool,
     pub is_furnace_filtering_craftable: bool,
@@ -917,8 +1449,24 @@ impl<'a: 'b, 'b> RecipeBookBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for RecipeBook<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("RecipeBook");
+      ds.field("recipes", &self.recipes());
+      ds.field("to_be_displayed", &self.to_be_displayed());
+      ds.field("is_filtering_craftable", &self.is_filtering_craftable());
+      ds.field("is_gui_open", &self.is_gui_open());
+      ds.field("is_furnace_filtering_craftable", &self.is_furnace_filtering_craftable());
+      ds.field("is_furnace_gui_open", &self.is_furnace_gui_open());
+      ds.field("is_blasting_furnace_filtering_craftable", &self.is_blasting_furnace_filtering_craftable());
+      ds.field("is_blasting_furnace_gui_open", &self.is_blasting_furnace_gui_open());
+      ds.field("is_smoker_filtering_craftable", &self.is_smoker_filtering_craftable());
+      ds.field("is_smoker_gui_open", &self.is_smoker_gui_open());
+      ds.finish()
+  }
+}
 pub enum VehicleOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Vehicle<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -928,18 +1476,14 @@ impl<'a> flatbuffers::Follow<'a> for Vehicle<'a> {
     type Inner = Vehicle<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Vehicle<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Vehicle {
-            _tab: table,
-        }
+        Vehicle { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -978,16 +1522,32 @@ impl<'a> Vehicle<'a> {
   }
   #[inline]
   pub fn entity(&self) -> Entity<'a> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<Entity<'a>>>(Vehicle::VT_ENTITY, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Vehicle::VT_ENTITY, None).unwrap()
   }
 }
 
+impl flatbuffers::Verifiable for Vehicle<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<u32>(&"param_0", Self::VT_PARAM_0, false)?
+     .visit_field::<u32>(&"param_1", Self::VT_PARAM_1, false)?
+     .visit_field::<u32>(&"param_2", Self::VT_PARAM_2, false)?
+     .visit_field::<u32>(&"param_3", Self::VT_PARAM_3, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>(&"entity", Self::VT_ENTITY, true)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct VehicleArgs<'a> {
     pub param_0: u32,
     pub param_1: u32,
     pub param_2: u32,
     pub param_3: u32,
-    pub entity: Option<flatbuffers::WIPOffset<Entity<'a >>>,
+    pub entity: Option<flatbuffers::WIPOffset<Entity<'a>>>,
 }
 impl<'a> Default for VehicleArgs<'a> {
     #[inline]
@@ -1042,8 +1602,19 @@ impl<'a: 'b, 'b> VehicleBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for Vehicle<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Vehicle");
+      ds.field("param_0", &self.param_0());
+      ds.field("param_1", &self.param_1());
+      ds.field("param_2", &self.param_2());
+      ds.field("param_3", &self.param_3());
+      ds.field("entity", &self.entity());
+      ds.finish()
+  }
+}
 pub enum PlayerOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Player<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -1053,18 +1624,14 @@ impl<'a> flatbuffers::Follow<'a> for Player<'a> {
     type Inner = Player<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Player<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Player {
-            _tab: table,
-        }
+        Player { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -1153,7 +1720,7 @@ impl<'a> Player<'a> {
   }
   #[inline]
   pub fn selected_item(&self) -> Item<'a> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<Item<'a>>>(Player::VT_SELECTED_ITEM, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<Item>>(Player::VT_SELECTED_ITEM, None).unwrap()
   }
   #[inline]
   pub fn spawn_dimension(&self) -> Option<&'a str> {
@@ -1209,11 +1776,11 @@ impl<'a> Player<'a> {
   }
   #[inline]
   pub fn inventory(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item<'a>>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<flatbuffers::ForwardsUOffset<Item<'a>>>>>(Player::VT_INVENTORY, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item>>>>(Player::VT_INVENTORY, None).unwrap()
   }
   #[inline]
   pub fn ender_items(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item<'a>>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<flatbuffers::ForwardsUOffset<Item<'a>>>>>(Player::VT_ENDER_ITEMS, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item>>>>(Player::VT_ENDER_ITEMS, None).unwrap()
   }
   #[inline]
   pub fn abilities(&self) -> &'a Abilities {
@@ -1225,15 +1792,15 @@ impl<'a> Player<'a> {
   }
   #[inline]
   pub fn root_vehicle(&self) -> Option<Vehicle<'a>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<Vehicle<'a>>>(Player::VT_ROOT_VEHICLE, None)
+    self._tab.get::<flatbuffers::ForwardsUOffset<Vehicle>>(Player::VT_ROOT_VEHICLE, None)
   }
   #[inline]
   pub fn shoulder_entity_left(&self) -> Option<Entity<'a>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<Entity<'a>>>(Player::VT_SHOULDER_ENTITY_LEFT, None)
+    self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Player::VT_SHOULDER_ENTITY_LEFT, None)
   }
   #[inline]
   pub fn shoulder_entity_right(&self) -> Option<Entity<'a>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<Entity<'a>>>(Player::VT_SHOULDER_ENTITY_RIGHT, None)
+    self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Player::VT_SHOULDER_ENTITY_RIGHT, None)
   }
   #[inline]
   pub fn seen_credits(&self) -> bool {
@@ -1241,18 +1808,57 @@ impl<'a> Player<'a> {
   }
   #[inline]
   pub fn recipe_book(&self) -> RecipeBook<'a> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<RecipeBook<'a>>>(Player::VT_RECIPE_BOOK, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<RecipeBook>>(Player::VT_RECIPE_BOOK, None).unwrap()
   }
 }
 
+impl flatbuffers::Verifiable for Player<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<GameType>(&"game_type", Self::VT_GAME_TYPE, false)?
+     .visit_field::<GameType>(&"previous_game_type", Self::VT_PREVIOUS_GAME_TYPE, false)?
+     .visit_field::<u64>(&"score", Self::VT_SCORE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"dimension", Self::VT_DIMENSION, true)?
+     .visit_field::<u32>(&"selected_item_slot", Self::VT_SELECTED_ITEM_SLOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Item>>(&"selected_item", Self::VT_SELECTED_ITEM, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"spawn_dimension", Self::VT_SPAWN_DIMENSION, false)?
+     .visit_field::<i64>(&"spawn_x", Self::VT_SPAWN_X, false)?
+     .visit_field::<i64>(&"spawn_y", Self::VT_SPAWN_Y, false)?
+     .visit_field::<i64>(&"spawn_z", Self::VT_SPAWN_Z, false)?
+     .visit_field::<bool>(&"spawn_forced", Self::VT_SPAWN_FORCED, false)?
+     .visit_field::<u16>(&"sleep_timer", Self::VT_SLEEP_TIMER, false)?
+     .visit_field::<f32>(&"food_exhaustion_level", Self::VT_FOOD_EXHAUSTION_LEVEL, false)?
+     .visit_field::<f32>(&"food_saturation_level", Self::VT_FOOD_SATURATION_LEVEL, false)?
+     .visit_field::<u32>(&"food_tick_timer", Self::VT_FOOD_TICK_TIMER, false)?
+     .visit_field::<u32>(&"xp_level", Self::VT_XP_LEVEL, false)?
+     .visit_field::<f32>(&"xp_p", Self::VT_XP_P, false)?
+     .visit_field::<i32>(&"xp_total", Self::VT_XP_TOTAL, false)?
+     .visit_field::<i32>(&"xp_seed", Self::VT_XP_SEED, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Item>>>>(&"inventory", Self::VT_INVENTORY, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Item>>>>(&"ender_items", Self::VT_ENDER_ITEMS, true)?
+     .visit_field::<Abilities>(&"abilities", Self::VT_ABILITIES, true)?
+     .visit_field::<Vector3d>(&"entered_nether_position", Self::VT_ENTERED_NETHER_POSITION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Vehicle>>(&"root_vehicle", Self::VT_ROOT_VEHICLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>(&"shoulder_entity_left", Self::VT_SHOULDER_ENTITY_LEFT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>(&"shoulder_entity_right", Self::VT_SHOULDER_ENTITY_RIGHT, false)?
+     .visit_field::<bool>(&"seen_credits", Self::VT_SEEN_CREDITS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RecipeBook>>(&"recipe_book", Self::VT_RECIPE_BOOK, true)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct PlayerArgs<'a> {
     pub game_type: GameType,
     pub previous_game_type: GameType,
     pub score: u64,
-    pub dimension: Option<flatbuffers::WIPOffset<&'a  str>>,
+    pub dimension: Option<flatbuffers::WIPOffset<&'a str>>,
     pub selected_item_slot: u32,
-    pub selected_item: Option<flatbuffers::WIPOffset<Item<'a >>>,
-    pub spawn_dimension: Option<flatbuffers::WIPOffset<&'a  str>>,
+    pub selected_item: Option<flatbuffers::WIPOffset<Item<'a>>>,
+    pub spawn_dimension: Option<flatbuffers::WIPOffset<&'a str>>,
     pub spawn_x: i64,
     pub spawn_y: i64,
     pub spawn_z: i64,
@@ -1265,15 +1871,15 @@ pub struct PlayerArgs<'a> {
     pub xp_p: f32,
     pub xp_total: i32,
     pub xp_seed: i32,
-    pub inventory: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , flatbuffers::ForwardsUOffset<Item<'a >>>>>,
-    pub ender_items: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , flatbuffers::ForwardsUOffset<Item<'a >>>>>,
-    pub abilities: Option<&'a  Abilities>,
-    pub entered_nether_position: Option<&'a  Vector3d>,
-    pub root_vehicle: Option<flatbuffers::WIPOffset<Vehicle<'a >>>,
-    pub shoulder_entity_left: Option<flatbuffers::WIPOffset<Entity<'a >>>,
-    pub shoulder_entity_right: Option<flatbuffers::WIPOffset<Entity<'a >>>,
+    pub inventory: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item<'a>>>>>,
+    pub ender_items: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item<'a>>>>>,
+    pub abilities: Option<&'a Abilities>,
+    pub entered_nether_position: Option<&'a Vector3d>,
+    pub root_vehicle: Option<flatbuffers::WIPOffset<Vehicle<'a>>>,
+    pub shoulder_entity_left: Option<flatbuffers::WIPOffset<Entity<'a>>>,
+    pub shoulder_entity_right: Option<flatbuffers::WIPOffset<Entity<'a>>>,
     pub seen_credits: bool,
-    pub recipe_book: Option<flatbuffers::WIPOffset<RecipeBook<'a >>>,
+    pub recipe_book: Option<flatbuffers::WIPOffset<RecipeBook<'a>>>,
 }
 impl<'a> Default for PlayerArgs<'a> {
     #[inline]
@@ -1400,11 +2006,11 @@ impl<'a: 'b, 'b> PlayerBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Player::VT_ENDER_ITEMS, ender_items);
   }
   #[inline]
-  pub fn add_abilities(&mut self, abilities: &'b  Abilities) {
+  pub fn add_abilities(&mut self, abilities: &Abilities) {
     self.fbb_.push_slot_always::<&Abilities>(Player::VT_ABILITIES, abilities);
   }
   #[inline]
-  pub fn add_entered_nether_position(&mut self, entered_nether_position: &'b  Vector3d) {
+  pub fn add_entered_nether_position(&mut self, entered_nether_position: &Vector3d) {
     self.fbb_.push_slot_always::<&Vector3d>(Player::VT_ENTERED_NETHER_POSITION, entered_nether_position);
   }
   #[inline]
@@ -1448,8 +2054,42 @@ impl<'a: 'b, 'b> PlayerBuilder<'a, 'b> {
   }
 }
 
+impl std::fmt::Debug for Player<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Player");
+      ds.field("game_type", &self.game_type());
+      ds.field("previous_game_type", &self.previous_game_type());
+      ds.field("score", &self.score());
+      ds.field("dimension", &self.dimension());
+      ds.field("selected_item_slot", &self.selected_item_slot());
+      ds.field("selected_item", &self.selected_item());
+      ds.field("spawn_dimension", &self.spawn_dimension());
+      ds.field("spawn_x", &self.spawn_x());
+      ds.field("spawn_y", &self.spawn_y());
+      ds.field("spawn_z", &self.spawn_z());
+      ds.field("spawn_forced", &self.spawn_forced());
+      ds.field("sleep_timer", &self.sleep_timer());
+      ds.field("food_exhaustion_level", &self.food_exhaustion_level());
+      ds.field("food_saturation_level", &self.food_saturation_level());
+      ds.field("food_tick_timer", &self.food_tick_timer());
+      ds.field("xp_level", &self.xp_level());
+      ds.field("xp_p", &self.xp_p());
+      ds.field("xp_total", &self.xp_total());
+      ds.field("xp_seed", &self.xp_seed());
+      ds.field("inventory", &self.inventory());
+      ds.field("ender_items", &self.ender_items());
+      ds.field("abilities", &self.abilities());
+      ds.field("entered_nether_position", &self.entered_nether_position());
+      ds.field("root_vehicle", &self.root_vehicle());
+      ds.field("shoulder_entity_left", &self.shoulder_entity_left());
+      ds.field("shoulder_entity_right", &self.shoulder_entity_right());
+      ds.field("seen_credits", &self.seen_credits());
+      ds.field("recipe_book", &self.recipe_book());
+      ds.finish()
+  }
+}
 pub enum PlayersOffset {}
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 
 pub struct Players<'a> {
   pub _tab: flatbuffers::Table<'a>,
@@ -1459,18 +2099,14 @@ impl<'a> flatbuffers::Follow<'a> for Players<'a> {
     type Inner = Players<'a>;
     #[inline]
     fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self {
-            _tab: flatbuffers::Table { buf: buf, loc: loc },
-        }
+        Self { _tab: flatbuffers::Table { buf, loc } }
     }
 }
 
 impl<'a> Players<'a> {
     #[inline]
     pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Players {
-            _tab: table,
-        }
+        Players { _tab: table }
     }
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
@@ -1485,12 +2121,24 @@ impl<'a> Players<'a> {
 
   #[inline]
   pub fn players(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player<'a>>> {
-    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<flatbuffers::ForwardsUOffset<Player<'a>>>>>(Players::VT_PLAYERS, None).unwrap()
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player>>>>(Players::VT_PLAYERS, None).unwrap()
   }
 }
 
+impl flatbuffers::Verifiable for Players<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Player>>>>(&"players", Self::VT_PLAYERS, true)?
+     .finish();
+    Ok(())
+  }
+}
 pub struct PlayersArgs<'a> {
-    pub players: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a , flatbuffers::ForwardsUOffset<Player<'a >>>>>,
+    pub players: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player<'a>>>>>,
 }
 impl<'a> Default for PlayersArgs<'a> {
     #[inline]
@@ -1525,16 +2173,12 @@ impl<'a: 'b, 'b> PlayersBuilder<'a, 'b> {
   }
 }
 
-#[inline]
-pub fn finish_players_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<Players<'a>>) {
-  fbb.finish(root, None);
-}
-
-#[inline]
-pub fn finish_size_prefixed_players_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<Players<'a>>) {
-  fbb.finish_size_prefixed(root, None);
+impl std::fmt::Debug for Players<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut ds = f.debug_struct("Players");
+      ds.field("players", &self.players());
+      ds.finish()
+  }
 }
 }  // pub mod minecraft_savedata
 
