@@ -45,7 +45,7 @@ where
         })
     });
 
-    group.bench_function("deserialize", |b| {
+    group.bench_function("deserialize (unvalidated)", |b| {
         b.iter(|| {
             unsafe {
                 let (data, _) = decode::<T>(black_box(&mut deserialize_buffer)).unwrap();

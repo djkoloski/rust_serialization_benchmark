@@ -105,11 +105,19 @@ where
         })
     });
 
-    group.bench_function("deserialize", |b| {
+    group.bench_function("deserialize (unvalidated)", |b| {
         b.iter(|| {
             let value = unsafe {
                 archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
             };
+            let deserialized: T = value.deserialize(&mut Infallible).unwrap();
+            black_box(deserialized);
+        })
+    });
+
+    group.bench_function("deserialize (validated)", |b| {
+        b.iter(|| {
+            let value = check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap();
             let deserialized: T = value.deserialize(&mut Infallible).unwrap();
             black_box(deserialized);
         })
