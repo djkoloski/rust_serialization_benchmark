@@ -32,6 +32,7 @@ use rkyv::Archived;
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -83,6 +84,18 @@ impl bench_prost::Serialize for Vector3 {
     }
 }
 
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<Vector3> for Vector3 {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Self>, usize) {
+        Vector3Pack {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+        }.pack(offset, output)
+    }
+}
+
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
@@ -90,6 +103,7 @@ impl bench_prost::Serialize for Vector3 {
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Triangle {
     pub v0: Vector3,
     pub v1: Vector3,
@@ -147,6 +161,19 @@ impl bench_prost::Serialize for Triangle {
         result.v2 = Some(self.v2.serialize_pb());
         result.normal = Some(self.normal.serialize_pb());
         result
+    }
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<Triangle> for &'_ Triangle {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Triangle>, usize) {
+        TrianglePack {
+            v0: self.v0,
+            v1: self.v1,
+            v2: self.v2,
+            normal: self.normal,
+        }.pack(offset, output)
     }
 }
 
@@ -214,5 +241,21 @@ impl bench_prost::Serialize for Mesh {
             result.triangles.push(triangle.serialize_pb());
         }
         result
+    }
+}
+
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct MeshSchema {
+    pub triangles: alkahest::Seq<Triangle>,
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<MeshSchema> for &'_ Mesh {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<MeshSchema>, usize) {
+        MeshSchemaPack {
+            triangles: self.triangles.iter(),
+        }.pack(offset, output)
     }
 }

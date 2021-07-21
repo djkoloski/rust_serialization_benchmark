@@ -32,6 +32,7 @@ use rkyv::Archived;
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Address {
     pub x0: u8,
     pub x1: u8,
@@ -87,6 +88,16 @@ impl bench_prost::Serialize for Address {
     }
 }
 
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<Address> for Address {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Address>, usize) {
+        AddressPack {
+            x0: self.x0, x1: self.x1, x2: self.x2, x3: self.x3,
+        }.pack(offset, output)
+    }
+}
+
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
@@ -117,6 +128,18 @@ impl ArchivedLog {
     pub fn size_pin(self: Pin<&mut Self>) -> Pin<&mut u64> {
         unsafe { self.map_unchecked_mut(|s| &mut s.size) }
     }
+}
+
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct LogSchema {
+    pub address: Address,
+    pub identity: alkahest::Bytes,
+    pub userid: alkahest::Bytes,
+    pub date: alkahest::Bytes,
+    pub request: alkahest::Bytes,
+    pub code: u16,
+    pub size: u64,
 }
 
 impl Generate for Log {
@@ -255,6 +278,22 @@ impl bench_prost::Serialize for Log {
     }
 }
 
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<LogSchema> for &'_ Log {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogSchema>, usize) {
+        LogSchemaPack {
+            address: self.address,
+            identity: self.identity.as_bytes(),
+            userid: self.userid.as_bytes(),
+            date: self.date.as_bytes(),
+            request: self.request.as_bytes(),
+            code: self.code,
+            size: self.size,
+        }.pack(offset, output)
+    }
+}
+
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
@@ -319,5 +358,21 @@ impl bench_prost::Serialize for Logs {
             result.logs.push(log.serialize_pb());
         }
         result
+    }
+}
+
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct LogsSchema {
+    pub logs: alkahest::Seq<LogSchema>,
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<LogsSchema> for &'_ Logs {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogsSchema>, usize) {
+        LogsSchemaPack {
+            logs: self.logs.iter(),
+        }.pack(offset, output)
     }
 }

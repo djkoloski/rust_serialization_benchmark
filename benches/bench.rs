@@ -30,6 +30,8 @@ use rust_serialization_benchmark::bench_cbor;
 use rust_serialization_benchmark::bench_serde_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+#[cfg(feature = "alkahest")]
+use rust_serialization_benchmark::bench_alkahest;
 
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
@@ -140,6 +142,19 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, read_alkahest_log);
+}
+
+#[cfg(feature = "alkahest")]
+fn read_alkahest_log<'a>(data: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::log::LogsSchema>) {
+    for log in data.logs {
+        black_box(&log.address);
+        black_box(log.code);
+        black_box(log.size);
+    }
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -239,6 +254,17 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, read_alkahest_mesh);
+}
+
+#[cfg(feature = "alkahest")]
+fn read_alkahest_mesh<'a>(mesh: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::mesh::MeshSchema>) {
+    for triangle in mesh.triangles {
+        black_box(&triangle.normal);
+    }
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -341,6 +367,16 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, read_alkahest_minecraft_savedata);
+}
+
+#[cfg(feature = "alkahest")]
+fn read_alkahest_minecraft_savedata<'a>(data: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::minecraft_savedata::PlayersSchema>) {
+    for player in data.players {
+        black_box(&player.game_type);
+    }
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {
