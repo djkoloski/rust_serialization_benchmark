@@ -26,6 +26,9 @@ pub mod bench_ron;
 pub mod bench_serde_json;
 #[cfg(feature = "speedy")]
 pub mod bench_speedy;
+#[cfg(feature = "alkahest")]
+pub mod bench_alkahest;
+
 pub mod datasets;
 
 use core::{mem, ops};

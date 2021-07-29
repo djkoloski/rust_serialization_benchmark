@@ -21,13 +21,15 @@ nachricht-serde = { version = "0.3", optional = true }
 postcard = { version = "0.7", features = ["alloc"], optional = true }
 prost = { version = "0.7", optional = true }
 rand = "0.8"
-rkyv = { version = "0.7.0", features = ["validation"], path = "../rkyv/rkyv", optional = true }
+rkyv = { version = "0.7.0", features = ["validation"], optional = true }
 rmp-serde = { version = "0.15", optional = true }
 ron = { version = "0.6", optional = true }
 serde = { version = "1.0", features = ["derive"], optional = true }
 serde_cbor = { version = "0.11", optional = true }
 serde_json = { version = "1.0", optional = true }
 speedy = { version = "0.7", optional = true }
+alkahest = { version = "0.1.4", optional = true, features = ["derive", "nightly"] } # "nightly" feature won't be required starting with rustc 1.55
+bytemuck = { version = "1.0" }
 
 [features]
 default = [
@@ -47,7 +49,8 @@ default = [
     "serde",
     "serde_cbor",
     "serde_json",
-    "speedy"
+    "speedy",
+    "alkahest"
 ]
 
 [dev-dependencies]
