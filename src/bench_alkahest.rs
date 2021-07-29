@@ -11,7 +11,8 @@ where
     let mut group = c.benchmark_group(format!("{}/alkahest", name));
 
     // This leak is required because of ICE in rustc if `R` has bound like this `for<'a> Fn(Unpacked<'a, T>)`.
-    let mut buffer = vec![0u64; 1 << 1 << 22];
+    const BUFFER_LEN: usize = 8_388_608;
+    let mut buffer = vec![0u64; BUFFER_LEN];
     let bytes: &mut [u8] = bytemuck::cast_slice_mut(&mut buffer[..]);
     let mut size = 0;
 
@@ -23,7 +24,7 @@ where
         })
     });
 
-    group.bench_function("access (validated)", |b| {
+    group.bench_function("access (validated on-demand with panic)", |b| {
         b.iter(|| {
             black_box(
                 alkahest::read::<T>(black_box(&bytes[..size]))
@@ -31,7 +32,7 @@ where
         })
     });
 
-    group.bench_function("read (validated)", |b| {
+    group.bench_function("read (validated on-demand with panic)", |b| {
         b.iter(|| {
             black_box(
                 read(alkahest::read::<T>(black_box(&bytes[..size])))

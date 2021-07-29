@@ -71,7 +71,7 @@ where
         })
     });
 
-    group.bench_function("access (validated)", |b| {
+    group.bench_function("access (validated upfront with error)", |b| {
         b.iter(|| {
             black_box(
                 check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap()
@@ -87,7 +87,7 @@ where
         })
     });
 
-    group.bench_function("read (validated)", |b| {
+    group.bench_function("read (validated upfront with error)", |b| {
         b.iter(|| {
             black_box(
                 read(check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap())
@@ -115,7 +115,7 @@ where
         })
     });
 
-    group.bench_function("deserialize (validated)", |b| {
+    group.bench_function("deserialize (validated upfront with error)", |b| {
         b.iter(|| {
             let value = check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap();
             let deserialized: T = value.deserialize(&mut Infallible).unwrap();

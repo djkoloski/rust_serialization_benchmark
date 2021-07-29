@@ -32,25 +32,25 @@ where
     fbb.finish(root, None);
     let deserialize_buffer = fbb.finished_data();
 
-    group.bench_function("access (unverified)", |b| {
+    group.bench_function("access (unvalidated)", |b| {
         b.iter(|| { unsafe {
             black_box(flatbuffers::root_unchecked::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer)))
         }})
     });
 
-    group.bench_function("access (verified)", |b| {
+    group.bench_function("access (validated upfront with error)", |b| {
         b.iter(|| {
             black_box(flatbuffers::root::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer)).unwrap())
         })
     });
 
-    group.bench_function("read (unverified)", |b| {
+    group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
             black_box(read_unverified(&black_box(deserialize_buffer)))
         })
     });
 
-    group.bench_function("read (verified)", |b| {
+    group.bench_function("read (validated upfront with error)", |b| {
         b.iter(|| {
             black_box(read_verified(&black_box(deserialize_buffer)))
         })
