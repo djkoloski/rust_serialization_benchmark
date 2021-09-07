@@ -56,8 +56,7 @@ where
         })
     });
 
-    println!("{}/flatbuffers/size {}", name, deserialize_buffer.len());
-    println!("{}/flatbuffers/zlib {}", name, crate::zlib_size(deserialize_buffer));
+    crate::bench_size(name, "flatbuffers", deserialize_buffer);
 
     group.finish();
 }

@@ -29,6 +29,7 @@ where
         })
     });
 
-    println!("{}/borsh/size {}", name, deserialize_buffer.len());
-    println!("{}/borsh/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    crate::bench_size(name, "borsh", deserialize_buffer.as_slice());
+
+    group.finish();
 }

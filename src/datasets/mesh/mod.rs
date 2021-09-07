@@ -188,11 +188,15 @@ pub struct Mesh {
 }
 
 #[cfg(feature = "rkyv")]
-impl ArchivedMesh {
-    pub fn triangles_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Triangle>>> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.triangles) }
+const _: () = {
+    use core::pin::Pin;
+
+    impl ArchivedMesh {
+        pub fn triangles_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Triangle>>> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.triangles) }
+        }
     }
-}
+};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Mesh {

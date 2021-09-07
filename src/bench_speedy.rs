@@ -41,8 +41,7 @@ where
         })
     });
 
-    println!("{}/speedy/size {}", name, deserialize_buffer.len());
-    println!("{}/speedy/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    crate::bench_size(name, "speedy", deserialize_buffer.as_slice());
 
     group.finish();
 }

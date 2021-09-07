@@ -41,8 +41,7 @@ where
         })
     });
 
-    println!("{}/prost/size {}", name, deserialize_buffer.len());
-    println!("{}/prost/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    crate::bench_size(name, "prost", deserialize_buffer.as_slice());
 
     group.finish();
 }

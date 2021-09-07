@@ -122,9 +122,8 @@ where
             black_box(deserialized);
         })
     });
-    
-    println!("{}/rkyv/size {}", name, deserialize_buffer.len());
-    println!("{}/rkyv/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+
+    crate::bench_size(name, "rkyv", deserialize_buffer.as_slice());
 
     group.finish();
 }

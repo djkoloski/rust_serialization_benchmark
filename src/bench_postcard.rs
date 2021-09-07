@@ -33,8 +33,7 @@ where
         })
     });
 
-    println!("{}/postcard/size {}", name, deserialize_buffer.len());
-    println!("{}/postcard/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    crate::bench_size(name, "postcard", deserialize_buffer.as_slice());
 
     group.finish();
 }

@@ -34,8 +34,7 @@ where
         })
     });
 
-    println!("{}/ron/size {}", name, deserialize_buffer.len());
-    println!("{}/ron/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    crate::bench_size(name, "ron", deserialize_buffer.as_slice());
 
     group.finish();
 }

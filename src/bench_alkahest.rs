@@ -40,8 +40,7 @@ where
         })
     });
 
-    println!("{}/alkahest/size {}", name, size);
-    println!("{}/alkahest/zlib {}", name, crate::zlib_size(&bytes[..size]));
+    crate::bench_size(name, "alkahest", &bytes[..size]);
 
     group.finish();
 }

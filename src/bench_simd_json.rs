@@ -40,8 +40,7 @@ where
         )
     });
 
-    println!("{}/simd-json/size {}", name, deserialize_buffer.len());
-    println!("{}/simd-json/zlib {}", name, crate::zlib_size(deserialize_buffer.as_slice()));
+    crate::bench_size(name, "simd-json", deserialize_buffer.as_slice());
 
     group.finish();
 }

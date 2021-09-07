@@ -135,8 +135,18 @@ pub fn generate_vec<R: Rng, T: Generate>(rng: &mut R, range: ops::Range<usize>) 
     result
 }
 
-pub fn zlib_size(mut bytes: &[u8]) -> usize {
+pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
+    println!("{}/{}/size {}", name, lib, bytes.len());
+    println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
+    println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
+}
+
+fn zlib_size(mut bytes: &[u8]) -> usize {
     let mut encoder = libflate::zlib::Encoder::new(Vec::new()).unwrap();
     std::io::copy(&mut bytes, &mut encoder).unwrap();
     encoder.finish().into_result().unwrap().len()
+}
+
+fn zstd_size(bytes: &[u8]) -> usize {
+    zstd::stream::encode_all(bytes, 0).unwrap().len()
 }
