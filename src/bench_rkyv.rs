@@ -95,10 +95,11 @@ where
         })
     });
 
+    let mut update_buffer = deserialize_buffer.clone();
     group.bench_function("update", |b| {
         b.iter(|| {
             let mut value = unsafe {
-                archived_value_mut::<T>(black_box(Pin::new_unchecked(deserialize_buffer.as_mut_slice())), black_box(pos))
+                archived_value_mut::<T>(black_box(Pin::new_unchecked(update_buffer.as_mut_slice())), black_box(pos))
             };
             update(value.as_mut());
             black_box(value);
@@ -123,7 +124,7 @@ where
         })
     });
 
-    crate::bench_size(name, "rkyv", deserialize_buffer.as_slice());
+    crate::bench_size(name, "rkyv", deserialize_buffer);
 
     group.finish();
 }
