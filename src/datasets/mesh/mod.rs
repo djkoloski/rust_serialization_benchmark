@@ -1,7 +1,8 @@
 #[cfg(feature = "capnp")]
 pub mod mesh_capnp;
 #[cfg(feature = "flatbuffers")]
-pub mod mesh_generated;
+#[path = "mesh_generated.rs"]
+pub mod mesh_fb;
 #[cfg(feature = "prost")]
 pub mod mesh_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
@@ -19,7 +20,7 @@ use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
 pub use mesh_capnp as cp;
 #[cfg(feature = "flatbuffers")]
-pub use mesh_generated::mesh as fb;
+pub use mesh_fb::mesh as fb;
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;

@@ -1,0 +1,20 @@
+struct Address {
+    uint32 x0;
+    uint32 x1;
+    uint32 x2;
+    uint32 x3;
+}
+
+struct Log {
+    Address address;
+    string identity;
+    string userid;
+    string date;
+    string request;
+    uint32 code;
+    uint64 size;
+}
+
+struct Logs {
+    Log[] logs_;
+}

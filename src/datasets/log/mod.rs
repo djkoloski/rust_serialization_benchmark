@@ -1,7 +1,10 @@
+#[cfg(feature = "bebop")]
+pub mod log_bebop;
 #[cfg(feature = "capnp")]
 pub mod log_capnp;
 #[cfg(feature = "flatbuffers")]
-pub mod log_generated;
+#[path = "log_generated.rs"]
+pub mod log_fb;
 #[cfg(feature = "prost")]
 pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
@@ -19,7 +22,7 @@ use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
 pub use log_capnp as cp;
 #[cfg(feature = "flatbuffers")]
-pub use log_generated::log as fb;
+pub use log_fb::log as fb;
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
