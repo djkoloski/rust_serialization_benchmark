@@ -42,6 +42,7 @@ zstd = "0.9"
 default = [
     "abomonation",
     "abomonation_derive",
+    "alkahest",
     "bebop",
     "bincode",
     "borsh",
