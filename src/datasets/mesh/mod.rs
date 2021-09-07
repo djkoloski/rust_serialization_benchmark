@@ -7,7 +7,6 @@ pub mod mesh_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
 }
 
-use core::pin::Pin;
 use crate::Generate;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;

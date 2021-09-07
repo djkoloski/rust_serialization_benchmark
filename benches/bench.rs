@@ -28,6 +28,8 @@ use rust_serialization_benchmark::bench_ron;
 use rust_serialization_benchmark::bench_cbor;
 #[cfg(feature = "serde_json")]
 use rust_serialization_benchmark::bench_serde_json;
+#[cfg(feature = "simd-json")]
+use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
 #[cfg(feature = "alkahest")]
@@ -139,6 +141,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
+
+    #[cfg(feature = "simd-json")]
+    bench_simd_json::bench(BENCH, c, &data);
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
@@ -252,6 +257,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
 
+    #[cfg(feature = "simd-json")]
+    bench_simd_json::bench(BENCH, c, &data);
+
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
 
@@ -364,6 +372,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
+
+    #[cfg(feature = "simd-json")]
+    bench_simd_json::bench(BENCH, c, &data);
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);

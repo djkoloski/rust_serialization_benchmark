@@ -7,7 +7,6 @@ pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
 }
 
-use core::pin::Pin;
 use crate::Generate;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -116,19 +115,23 @@ pub struct Log {
 }
 
 #[cfg(feature = "rkyv")]
-impl ArchivedLog {
-    pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedAddress> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.address) }
-    }
+const _: () = {
+    use core::pin::Pin;
 
-    pub fn code_pin(self: Pin<&mut Self>) -> Pin<&mut u16> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.code) }
-    }
+    impl ArchivedLog {
+        pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedAddress> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.address) }
+        }
 
-    pub fn size_pin(self: Pin<&mut Self>) -> Pin<&mut u64> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.size) }
+        pub fn code_pin(self: Pin<&mut Self>) -> Pin<&mut u16> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.code) }
+        }
+
+        pub fn size_pin(self: Pin<&mut Self>) -> Pin<&mut u64> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.size) }
+        }
     }
-}
+};
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
@@ -306,11 +309,15 @@ pub struct Logs {
 }
 
 #[cfg(feature = "rkyv")]
-impl ArchivedLogs {
-    pub fn logs_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Log>>> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.logs) }
+const _: () = {
+    use core::pin::Pin;
+
+    impl ArchivedLogs {
+        pub fn logs_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Log>>> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.logs) }
+        }
     }
-}
+};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Logs {

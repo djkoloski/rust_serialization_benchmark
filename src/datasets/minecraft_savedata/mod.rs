@@ -7,7 +7,6 @@ pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
 }
 
-use core::pin::Pin;
 use crate::{Generate, generate_vec};
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -756,23 +755,27 @@ pub struct Player {
 }
 
 #[cfg(feature = "rkyv")]
-impl ArchivedPlayer {
-    pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedGameType> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.game_type) }
-    }
+const _: () = {
+    use core::pin::Pin;
 
-    pub fn spawn_x_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.spawn_x) }
-    }
+    impl ArchivedPlayer {
+        pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedGameType> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.game_type) }
+        }
 
-    pub fn spawn_y_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.spawn_y) }
-    }
+        pub fn spawn_x_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_x) }
+        }
 
-    pub fn spawn_z_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.spawn_z) }
+        pub fn spawn_y_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_y) }
+        }
+
+        pub fn spawn_z_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_z) }
+        }
     }
-}
+};
 
 impl Generate for Player {
     fn generate<R: Rng>(rng: &mut R) -> Self {
@@ -1123,11 +1126,15 @@ pub struct Players {
 }
 
 #[cfg(feature = "rkyv")]
-impl ArchivedPlayers {
-    pub fn players_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Player>>> {
-        unsafe { self.map_unchecked_mut(|s| &mut s.players) }
+const _: () = {
+    use core::pin::Pin;
+
+    impl ArchivedPlayers {
+        pub fn players_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Player>>> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.players) }
+        }
     }
-}
+};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Players {

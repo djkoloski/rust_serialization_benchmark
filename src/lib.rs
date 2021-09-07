@@ -24,6 +24,8 @@ pub mod bench_rmp;
 pub mod bench_ron;
 #[cfg(feature = "serde_json")]
 pub mod bench_serde_json;
+#[cfg(feature = "simd-json")]
+pub mod bench_simd_json;
 #[cfg(feature = "speedy")]
 pub mod bench_speedy;
 #[cfg(feature = "alkahest")]
