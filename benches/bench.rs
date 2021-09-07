@@ -4,6 +4,8 @@ use rust_serialization_benchmark::generate_vec;
 
 #[cfg(feature = "abomonation")]
 use rust_serialization_benchmark::bench_abomonation;
+#[cfg(feature = "bebop")]
+use rust_serialization_benchmark::bench_bebop;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
 #[cfg(feature = "borsh")]
@@ -59,6 +61,9 @@ fn bench_log(c: &mut Criterion) {
             black_box(log.size);
         }
     });
+
+    #[cfg(feature = "bebop")]
+    bench_bebop::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);

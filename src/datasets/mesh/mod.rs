@@ -1,3 +1,5 @@
+#[cfg(feature = "bebop")]
+pub mod mesh_bebop;
 #[cfg(feature = "capnp")]
 pub mod mesh_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -9,6 +11,8 @@ pub mod mesh_prost {
 }
 
 use crate::Generate;
+#[cfg(feature = "bebop")]
+use crate::bench_bebop;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -17,6 +21,8 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
+#[cfg(feature = "bebop")]
+pub use mesh_bebop as bb;
 #[cfg(feature = "capnp")]
 pub use mesh_capnp as cp;
 #[cfg(feature = "flatbuffers")]
@@ -45,6 +51,29 @@ impl Generate for Vector3 {
             x: rand.gen(),
             y: rand.gen(),
             z: rand.gen(),
+        }
+    }
+}
+
+#[cfg(feature = "bebop")]
+impl<'a> bench_bebop::Serialize<'a> for Vector3 {
+    type Target = bb::Vector3;
+
+    #[inline]
+    fn populate_bb(&'a self) -> Self::Target {
+        bb::Vector3 {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+        }
+    }
+
+    #[inline]
+    fn depopulate_bb(target: Self::Target) -> Self {
+        Self {
+            x: target.x,
+            y: target.y,
+            z: target.z,
         }
     }
 }
@@ -118,6 +147,31 @@ impl Generate for Triangle {
             v1: Vector3::generate(rand),
             v2: Vector3::generate(rand),
             normal: Vector3::generate(rand),
+        }
+    }
+}
+
+#[cfg(feature = "bebop")]
+impl<'a> bench_bebop::Serialize<'a> for Triangle {
+    type Target = bb::Triangle;
+
+    #[inline]
+    fn populate_bb(&'a self) -> Self::Target {
+        bb::Triangle {
+            v0: bench_bebop::Serialize::populate_bb(&self.v0),
+            v1: bench_bebop::Serialize::populate_bb(&self.v1),
+            v2: bench_bebop::Serialize::populate_bb(&self.v2),
+            normal: bench_bebop::Serialize::populate_bb(&self.normal),
+        }
+    }
+
+    #[inline]
+    fn depopulate_bb(target: Self::Target) -> Self {
+        Self {
+            v0: bench_bebop::Serialize::depopulate_bb(target.v0),
+            v1: bench_bebop::Serialize::depopulate_bb(target.v1),
+            v2: bench_bebop::Serialize::depopulate_bb(target.v2),
+            normal: bench_bebop::Serialize::depopulate_bb(target.normal),
         }
     }
 }
@@ -198,6 +252,26 @@ const _: () = {
         }
     }
 };
+
+// #[cfg(feature = "bebop")]
+// impl<'a> bench_bebop::Serialize<'a> for Mesh {
+//     type Target = bb::Mesh<'a>;
+
+//     #[inline]
+//     fn populate_bb(&'a self) -> Self::Target {
+//         // TODO: how to fix this error?
+//         bb::Mesh {
+//             triangles: self.triangles.iter().map(bench_bebop::Serialize::populate_bb).collect(),
+//         }
+//     }
+
+//     #[inline]
+//     fn depopulate_bb(target: Self::Target) -> Self {
+//         Self {
+//             triangles: target.triangles.iter().map(bench_bebop::Serialize::depopulate_bb).collect(),
+//         }
+//     }
+// }
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Mesh {

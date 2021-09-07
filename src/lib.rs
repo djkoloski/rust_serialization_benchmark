@@ -1,5 +1,7 @@
 #[cfg(feature = "abomonation")]
 pub mod bench_abomonation;
+#[cfg(feature = "bebop")]
+pub mod bench_bebop;
 #[cfg(feature = "bincode")]
 pub mod bench_bincode;
 #[cfg(feature = "borsh")]

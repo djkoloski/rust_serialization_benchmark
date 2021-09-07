@@ -11,6 +11,8 @@ pub mod log_prost {
 }
 
 use crate::Generate;
+#[cfg(feature = "bebop")]
+use crate::bench_bebop;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -19,6 +21,8 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
+#[cfg(feature = "bebop")]
+pub use log_bebop as bb;
 #[cfg(feature = "capnp")]
 pub use log_capnp as cp;
 #[cfg(feature = "flatbuffers")]
@@ -58,6 +62,31 @@ impl Into<fb::Address> for Address {
     #[inline]
     fn into(self) -> fb::Address {
         fb::Address::new(self.x0, self.x1, self.x2, self.x3)
+    }
+}
+
+#[cfg(feature = "bebop")]
+impl<'a> bench_bebop::Serialize<'a> for Address {
+    type Target = bb::Address;
+
+    #[inline]
+    fn populate_bb(&'a self) -> Self::Target {
+        bb::Address {
+            x0: self.x0,
+            x1: self.x1,
+            x2: self.x2,
+            x3: self.x3,
+        }
+    }
+
+    #[inline]
+    fn depopulate_bb(target: Self::Target) -> Self {
+        Self {
+            x0: target.x0,
+            x1: target.x1,
+            x2: target.x2,
+            x3: target.x3,
+        }
     }
 }
 
@@ -222,6 +251,37 @@ impl Generate for Log {
     }
 }
 
+#[cfg(feature = "bebop")]
+impl<'a> bench_bebop::Serialize<'a> for Log {
+    type Target = bb::Log<'a>;
+
+    #[inline]
+    fn populate_bb(&'a self) -> Self::Target {
+        bb::Log {
+            address: self.address.populate_bb(),
+            identity: &self.identity,
+            userid: &self.userid,
+            date: &self.date,
+            request: &self.request,
+            code: self.code,
+            size: self.size,
+        }
+    }
+
+    #[inline]
+    fn depopulate_bb(target: Self::Target) -> Self {
+        Self {
+            address: bench_bebop::Serialize::depopulate_bb(target.address),
+            identity: target.identity.to_string(),
+            userid: target.userid.to_string(),
+            date: target.date.to_string(),
+            request: target.request.to_string(),
+            code: target.code,
+            size: target.size,
+        }
+    }
+}
+
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Log {
     type Target = fb::Log<'a>;
@@ -321,6 +381,25 @@ const _: () = {
         }
     }
 };
+
+#[cfg(feature = "bebop")]
+impl<'a> bench_bebop::Serialize<'a> for Logs {
+    type Target = bb::Logs<'a>;
+
+    #[inline]
+    fn populate_bb(&'a self) -> Self::Target {
+        bb::Logs {
+            logs_: self.logs.iter().map(bench_bebop::Serialize::populate_bb).collect(),
+        }
+    }
+
+    #[inline]
+    fn depopulate_bb(target: Self::Target) -> Self {
+        Self {
+            logs: target.logs_.drain(..).map(bench_bebop::Serialize::depopulate_bb).collect(),
+        }
+    }
+}
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Logs {

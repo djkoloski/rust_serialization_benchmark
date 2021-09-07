@@ -23,10 +23,10 @@ use ::bebop::FixedSized as _;
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
 pub struct Address {
-    pub x0: u32,
-    pub x1: u32,
-    pub x2: u32,
-    pub x3: u32,
+    pub x0: u8,
+    pub x1: u8,
+    pub x2: u8,
+    pub x3: u8,
 }
 
 impl ::bebop::FixedSized for Address {}
@@ -56,13 +56,13 @@ impl<'raw> ::bebop::SubRecord<'raw> for Address {
             return Err(::bebop::DeserializeError::MoreDataExpected(missing));
         }
 
-        let (read, v0) = <u32>::_deserialize_chained(&raw[i..])?;
+        let (read, v0) = <u8>::_deserialize_chained(&raw[i..])?;
         i += read;
-        let (read, v1) = <u32>::_deserialize_chained(&raw[i..])?;
+        let (read, v1) = <u8>::_deserialize_chained(&raw[i..])?;
         i += read;
-        let (read, v2) = <u32>::_deserialize_chained(&raw[i..])?;
+        let (read, v2) = <u8>::_deserialize_chained(&raw[i..])?;
         i += read;
-        let (read, v3) = <u32>::_deserialize_chained(&raw[i..])?;
+        let (read, v3) = <u8>::_deserialize_chained(&raw[i..])?;
         i += read;
 
         Ok((i, Self {
@@ -83,7 +83,7 @@ pub struct Log<'raw> {
     pub userid: &'raw str,
     pub date: &'raw str,
     pub request: &'raw str,
-    pub code: u32,
+    pub code: u16,
     pub size: u64,
 }
 
@@ -94,7 +94,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Log<'raw> {
         <&'raw str>::MIN_SERIALIZED_SIZE +
         <&'raw str>::MIN_SERIALIZED_SIZE +
         <&'raw str>::MIN_SERIALIZED_SIZE +
-        <u32>::MIN_SERIALIZED_SIZE +
+        <u16>::MIN_SERIALIZED_SIZE +
         <u64>::MIN_SERIALIZED_SIZE;
 
     #[inline]
@@ -137,7 +137,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Log<'raw> {
         i += read;
         let (read, v4) = <&'raw str>::_deserialize_chained(&raw[i..])?;
         i += read;
-        let (read, v5) = <u32>::_deserialize_chained(&raw[i..])?;
+        let (read, v5) = <u16>::_deserialize_chained(&raw[i..])?;
         i += read;
         let (read, v6) = <u64>::_deserialize_chained(&raw[i..])?;
         i += read;
