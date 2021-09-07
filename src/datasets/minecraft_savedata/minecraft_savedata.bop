@@ -1,0 +1,112 @@
+enum GameType {
+    SURVIVAL = 0;
+    CREATIVE = 1;
+    ADVENTURE = 2;
+    SPECTATOR = 3;
+}
+
+struct Item {
+    int32 count;
+    uint32 slot;
+    string id;
+}
+
+struct Abilities {
+    float32 walk_speed;
+    float32 fly_speed;
+    bool may_fly;
+    bool flying;
+    bool invulnerable;
+    bool may_build;
+    bool instabuild;
+}
+
+struct Vector3d {
+    float64 x;
+    float64 y;
+    float64 z;
+}
+
+struct Vector2f {
+    float32 x;
+    float32 y;
+}
+
+struct Uuid {
+    uint32 x0;
+    uint32 x1;
+    uint32 x2;
+    uint32 x3;
+}
+
+struct Entity {
+    string id;
+    Vector3d pos;
+    Vector3d motion;
+    Vector2f rotation;
+    float32 fall_distance;
+    uint32 fire;
+    uint32 air;
+    bool on_ground;
+    bool no_gravity;
+    bool invulnerable;
+    int32 portal_cooldown;
+    Uuid uuid;
+    string custom_name;
+    bool custom_name_visible;
+    bool silent;
+    bool glowing;
+}
+
+struct RecipeBook {
+    string[] recipes;
+    string[] to_be_displayed;
+    bool is_filtering_craftable;
+    bool is_gui_open;
+    bool is_furnace_filtering_craftable;
+    bool is_furnace_gui_open;
+    bool is_blasting_furnace_filtering_craftable;
+    bool is_blasting_furnace_gui_open;
+    bool is_smoker_filtering_craftable;
+    bool is_smoker_gui_open;
+}
+
+struct Vehicle {
+    Uuid uuid;
+    Entity entity;
+}
+
+struct Player {
+    GameType game_type;
+    GameType previous_game_type;
+    uint64 sore;
+    string dimension;
+    uint32 selected_item_slot;
+    Item selected_item;
+    string spawn_dimension;
+    int64 spawn_x;
+    int64 spawn_y;
+    int64 spawn_z;
+    bool spawn_forced;
+    uint32 sleep_timer;
+    float32 food_exhaustion_level;
+    float32 food_saturation_level;
+    uint32 food_tick_timer;
+    uint32 xp_level;
+    float32 xp_p;
+    int32 xp_total;
+    int32 xp_seed;
+    Item[] inventory;
+    Item[] ender_items;
+    Abilities abilities;
+    Vector3d entered_nether_position;
+    Vehicle root_vehicle;
+    Entity shoulder_entity_left;
+    Entity shoulder_entity_right;
+    bool seen_credits;
+    RecipeBook recipe_book;
+}
+
+struct Players {
+    Player[] players_;
+}

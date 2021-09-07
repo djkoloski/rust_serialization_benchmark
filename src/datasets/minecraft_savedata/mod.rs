@@ -1,7 +1,8 @@
 #[cfg(feature = "capnp")]
 pub mod minecraft_savedata_capnp;
 #[cfg(feature = "flatbuffers")]
-pub mod minecraft_savedata_generated;
+#[path = "minecraft_savedata_generated.rs"]
+pub mod minecraft_savedata_fb;
 #[cfg(feature = "prost")]
 pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
@@ -19,7 +20,7 @@ use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
 pub use minecraft_savedata_capnp as cp;
 #[cfg(feature = "flatbuffers")]
-pub use minecraft_savedata_generated::minecraft_savedata as fb;
+pub use minecraft_savedata_fb::minecraft_savedata as fb;
 #[cfg(feature = "prost")]
 use minecraft_savedata_prost as pb;
 use rand::Rng;
