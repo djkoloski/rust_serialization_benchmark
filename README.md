@@ -41,29 +41,32 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Serialize | Deserialize | Size | Zlib | Zstd |
 |---|--:|--:|--:|--:|--:|
-| abomonation | 238.13 us | <span title="unvalidated">*3.0620 ms\**</span> | 1705800 | 515079 | 406294 |
-| bincode | 503.32 us | 3.8133 ms | 1045784 | 374305 | 312658 |
-| borsh | 487.53 us | 3.7019 ms | 885780 | 363280 | 286948 |
-| capnp | 1.4651 ms | † | 1443216 | 509618 | 429784 |
-| cbor | 1.8000 ms | 7.8975 ms | 1407835 | 407372 | 325016 |
-| flatbuffers | 2.5576 ms | † | 1276368 | 469962 | 389885 |
-| nachricht | 4.1988 ms | 6.6114 ms | 926221 | 365209 | 304177 |
-| postcard | 669.02 us | 4.2904 ms | 765778 | 312739 | 265462 |
-| prost | <span title="populate + encode">*4.3176 ms\**</span> <span title="encode">*802.45 us\**</span> | 4.9419 ms | 764951 | 269811 | 228807 |
-| rkyv | 284.19 us | <span title="unvalidated">*4.3698 ms\**</span> <span title="validated upfront with error">*4.5608 ms\**</span> | 1011488 | 269353 | 209292 |
-| rmp | 1.8184 ms | 5.2791 ms | 784997 | 326654 | 278933 |
-| ron | 25.158 ms | 17.756 ms | 1607459 | 452648 | 351604 |
-| serde_json | 5.0376 ms | 10.132 ms | 1827461 | 474358 | 364177 |
-| speedy | 287.19 us | 3.3568 ms | 885780 | 363280 | 286948 |
+| abomonation | 243.31 us | <span title="unvalidated">*3.0194 ms\**</span> | 1705800 | 513562 | 405177 |
+| bincode | 503.86 us | 3.6906 ms | 1045784 | 374305 | 312658 |
+| borsh | 494.03 us | 3.6864 ms | 885780 | 363280 | 286948 |
+| capnp | 1.4638 ms | † | 1443216 | 509618 | 429784 |
+| cbor | 1.8176 ms | 8.0207 ms | 1407835 | 407372 | 325016 |
+| flatbuffers | 2.5609 ms | † | 1276368 | 469962 | 389885 |
+| nachricht | 4.4270 ms | 6.6325 ms | 926221 | 365209 | 304177 |
+| postcard | 655.47 us | 4.1709 ms | 765778 | 312739 | 265462 |
+| prost | <span title="populate + encode">*4.2579 ms\**</span> <span title="encode">*803.85 us\**</span> | 9.3070 ms | 764951 | 269811 | 228807 |
+| rkyv | 273.98 us | <span title="unvalidated">*2.6621 ms\**</span> <span title="validated upfront with error">*3.3296 ms\**</span> | 1011488 | 392809 | 332689 |
+| rmp | 1.8891 ms | 4.8509 ms | 784997 | 326654 | 278933 |
+| ron | 19.973 ms | 15.970 ms | 1607459 | 452648 | 351604 |
+| serde_json | 4.1749 ms | 9.0393 ms | 1827461 | 474358 | 364177 |
+| simd-json | 3.9858 ms | 8.7330 ms | 1827461 | 474358 | 364177 |
+| speedy | 244.39 us | 3.1232 ms | 885780 | 363280 | 286948 |
+| alkahest | 230.29 us | † | 1045784 | 454748 | 389910 |
 
 #### Zero-copy deserialization speed
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | <span title="unvalidated">*50.440 us\**</span> | <span title="unvalidated">*77.612 us\**</span> | ‡ |
-| capnp | <span title="validated on-demand with error">*162.82 ns\**</span> | <span title="validated on-demand with error">*582.53 us\**</span> | ‡ |
-| flatbuffers | <span title="unvalidated">*2.5706 ns\**</span> <span title="validated upfront with error">*2.0693 ms\**</span> | <span title="unvalidated">*142.61 us\**</span> <span title="validated upfront with error">*2.2841 ms\**</span> | ‡ |
-| rkyv | <span title="unvalidated">*1.3938 ns\**</span> <span title="validated upfront with error">*673.18 us\**</span> | <span title="unvalidated">*15.922 us\**</span> <span title="validated upfront with error">*894.41 us\**</span> | 65.606 us |
+| abomonation | <span title="unvalidated">*50.232 us\**</span> | <span title="unvalidated">*76.207 us\**</span> | ‡ |
+| capnp | <span title="validated on-demand with error">*161.94 ns\**</span> | <span title="validated on-demand with error">*578.83 us\**</span> | ‡ |
+| flatbuffers | <span title="unvalidated">*2.5782 ns\**</span> <span title="validated upfront with error">*2.1154 ms\**</span> | <span title="unvalidated">*140.18 us\**</span> <span title="validated upfront with error">*2.2021 ms\**</span> | ‡ |
+| rkyv | <span title="unvalidated">*1.2615 ns\**</span> <span title="validated upfront with error">*661.92 us\**</span> | <span title="unvalidated">*15.939 us\**</span> <span title="validated upfront with error">*676.06 us\**</span> | 55.117 us |
+| alkahest | <span title="validated on-demand with panic">*2.7880 ns\**</span> | <span title="validated on-demand with panic">*73.598 us\**</span> | ‡ |
 
 ### Comparison
 
@@ -73,29 +76,32 @@ Relative to best. Higher is better.
 
 | Format / Lib | Serialize | Deserialize | Size | Zlib | Zstd |
 |---|--:|--:|--:|--:|--:|
-| abomonation | 100.00% | <span title="unvalidated">*100.00%\**</span> | 44.84% | 52.29% | 51.51% |
-| bincode | 47.31% | 80.30% | 73.15% | 71.96% | 66.94% |
-| borsh | 48.84% | 82.71% | 86.36% | 74.14% | 72.94% |
-| capnp | 16.25% | † | 53.00% | 52.85% | 48.70% |
-| cbor | 13.23% | 38.77% | 54.34% | 66.12% | 64.39% |
-| flatbuffers | 9.31% | † | 59.93% | 57.31% | 53.68% |
-| nachricht | 5.67% | 46.31% | 82.59% | 73.75% | 68.81% |
-| postcard | 35.59% | 71.37% | 99.89% | 86.13% | 78.84% |
-| prost | <span title="populate + encode">*5.52%\**</span> <span title="encode">*29.68%\**</span> | 61.96% | 100.00% | 99.83% | 91.47% |
-| rkyv | 83.79% | <span title="unvalidated">*70.07%\**</span> <span title="validated upfront with error">*67.14%\**</span> | 75.63% | 100.00% | 100.00% |
-| rmp | 13.10% | 58.00% | 97.45% | 82.46% | 75.03% |
-| ron | 0.95% | 17.24% | 47.59% | 59.51% | 59.52% |
-| serde_json | 4.73% | 30.22% | 41.86% | 56.78% | 57.47% |
-| speedy | 82.92% | 91.22% | 86.36% | 74.14% | 72.94% |
+| abomonation | 94.65% | <span title="unvalidated">*88.17%\**</span> | 44.84% | 52.54% | 56.47% |
+| bincode | 45.71% | 72.13% | 73.15% | 72.08% | 73.18% |
+| borsh | 46.61% | 72.21% | 86.36% | 74.27% | 79.74% |
+| capnp | 15.73% | † | 53.00% | 52.94% | 53.24% |
+| cbor | 12.67% | 33.19% | 54.34% | 66.23% | 70.40% |
+| flatbuffers | 8.99% | † | 59.93% | 57.41% | 58.69% |
+| nachricht | 5.20% | 40.14% | 82.59% | 73.88% | 75.22% |
+| postcard | 35.13% | 63.83% | 99.89% | 86.27% | 86.19% |
+| prost | <span title="populate + encode">*5.41%\**</span> <span title="encode">*28.65%\**</span> | 28.60% | 100.00% | 100.00% | 100.00% |
+| rkyv | 84.05% | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*79.95%\**</span> | 75.63% | 68.69% | 68.78% |
+| rmp | 12.19% | 54.88% | 97.45% | 82.60% | 82.03% |
+| ron | 1.15% | 16.67% | 47.59% | 59.61% | 65.08% |
+| serde_json | 5.52% | 29.45% | 41.86% | 56.88% | 62.83% |
+| simd-json | 5.78% | 30.48% | 41.86% | 56.88% | 62.83% |
+| speedy | 94.23% | 85.24% | 86.36% | 74.27% | 79.74% |
+| alkahest | 100.00% | † | 73.15% | 59.33% | 58.68% |
 
 #### Zero-copy deserialization speed
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | <span title="unvalidated">*0.00%\**</span> | <span title="unvalidated">*20.51%\**</span> | ‡ |
-| capnp | <span title="validated on-demand with error">*0.86%\**</span> | <span title="validated on-demand with error">*2.73%\**</span> | ‡ |
-| flatbuffers | <span title="unvalidated">*54.22%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*11.16%\**</span> <span title="validated upfront with error">*0.70%\**</span> | ‡ |
-| rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*1.78%\**</span> | 100.00% |
+| abomonation | <span title="unvalidated">*0.00%\**</span> | <span title="unvalidated">*20.92%\**</span> | ‡ |
+| capnp | <span title="validated on-demand with error">*0.78%\**</span> | <span title="validated on-demand with error">*2.75%\**</span> | ‡ |
+| flatbuffers | <span title="unvalidated">*48.93%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*11.37%\**</span> <span title="validated upfront with error">*0.72%\**</span> | ‡ |
+| rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*2.36%\**</span> | 100.00% |
+| alkahest | <span title="validated on-demand with panic">*45.25%\**</span> | <span title="validated on-demand with panic">*21.66%\**</span> | ‡ |
 
 ## `mesh`
 
@@ -109,29 +115,32 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Serialize | Deserialize | Size | Zlib | Zstd |
 |---|--:|--:|--:|--:|--:|
-| abomonation | 378.32 us | <span title="unvalidated">*1.7598 ms\**</span> | 6000024 | 5380836 | 5345893 |
-| bincode | 6.2870 ms | 8.4397 ms | 6000008 | 5380823 | 5345885 |
-| borsh | 7.1556 ms | 9.2858 ms | 6000004 | 5380818 | 5345888 |
-| capnp | 23.198 ms | † | 14000088 | 6729881 | 6051413 |
-| cbor | 44.880 ms | 71.414 ms | 13122324 | 7527423 | 6761276 |
-| flatbuffers | 2.5647 ms | † | 6000024 | 5380800 | 5345925 |
-| nachricht | 70.778 ms | 40.043 ms | 10125030 | 7160144 | 6777986 |
-| postcard | 7.3187 ms | 11.549 ms | 6000003 | 5380817 | 5345893 |
-| prost | <span title="populate + encode">*21.699 ms\**</span> <span title="encode">*15.526 ms\**</span> | 18.932 ms | 8750000 | 6683814 | 6421721 |
-| rkyv | 1.0714 ms | <span title="unvalidated">*1.9899 ms\**</span> <span title="validated upfront with error">*1.9549 ms\**</span> | 6000008 | 4263104 | 4118396 |
-| rmp | 21.369 ms | 19.844 ms | 8125006 | 6496879 | 6391025 |
-| ron | 233.79 ms | 425.16 ms | 22192885 | 9009575 | 8147524 |
-| serde_json | 118.76 ms | 93.573 ms | 26192883 | 9612105 | 8595089 |
-| speedy | 759.24 us | 2.2069 ms | 6000004 | 5380818 | 5345888 |
+| abomonation | 354.66 us | <span title="unvalidated">*1.6373 ms\**</span> | 6000024 | 5380837 | 5345893 |
+| bincode | 4.4211 ms | 7.2785 ms | 6000008 | 5380823 | 5345885 |
+| borsh | 5.5438 ms | 8.6707 ms | 6000004 | 5380818 | 5345888 |
+| capnp | 21.868 ms | † | 14000088 | 6729881 | 6051413 |
+| cbor | 40.161 ms | 65.278 ms | 13122324 | 7527423 | 6761276 |
+| flatbuffers | 2.3313 ms | † | 6000024 | 5380800 | 5345925 |
+| nachricht | 68.632 ms | 35.435 ms | 10125030 | 7160144 | 6777986 |
+| postcard | 5.8628 ms | 10.125 ms | 6000003 | 5380817 | 5345893 |
+| prost | <span title="populate + encode">*21.149 ms\**</span> <span title="encode">*15.479 ms\**</span> | 17.809 ms | 8750000 | 6683814 | 6421721 |
+| rkyv | 727.16 us | <span title="unvalidated">*1.7844 ms\**</span> <span title="validated upfront with error">*1.7985 ms\**</span> | 6000008 | 5380822 | 5345887 |
+| rmp | 18.726 ms | 20.421 ms | 8125006 | 6496879 | 6391025 |
+| ron | 206.91 ms | 252.57 ms | 22192885 | 9009575 | 8147524 |
+| serde_json | 96.574 ms | 87.405 ms | 26192883 | 9612105 | 8595089 |
+| simd-json | 98.614 ms | 120.95 ms | 39152823 | 16587283 | 14555990 |
+| speedy | 654.29 us | 2.1691 ms | 6000004 | 5380818 | 5345888 |
+| alkahest | 625.40 us | † | 6000008 | 5380823 | 5345885 |
 
 #### Zero-copy deserialization speed
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | <span title="unvalidated">*2.5740 ns\**</span> | <span title="unvalidated">*182.95 us\**</span> | ‡ |
-| capnp | <span title="validated on-demand with error">*272.78 ns\**</span> | <span title="validated on-demand with error">*8.5077 ms\**</span> | ‡ |
-| flatbuffers | <span title="unvalidated">*2.7734 ns\**</span> <span title="validated upfront with error">*45.761 ns\**</span> | <span title="unvalidated">*147.77 us\**</span> <span title="validated upfront with error">*184.53 us\**</span> | ‡ |
-| rkyv | <span title="unvalidated">*1.4814 ns\**</span> <span title="validated upfront with error">*15.178 ns\**</span> | <span title="unvalidated">*38.461 us\**</span> <span title="validated upfront with error">*37.184 us\**</span> | 560.01 us |
+| abomonation | <span title="unvalidated">*2.4215 ns\**</span> | <span title="unvalidated">*176.41 us\**</span> | ‡ |
+| capnp | <span title="validated on-demand with error">*260.34 ns\**</span> | <span title="validated on-demand with error">*7.9093 ms\**</span> | ‡ |
+| flatbuffers | <span title="unvalidated">*2.6026 ns\**</span> <span title="validated upfront with error">*42.460 ns\**</span> | <span title="unvalidated">*174.82 us\**</span> <span title="validated upfront with error">*176.86 us\**</span> | ‡ |
+| rkyv | <span title="unvalidated">*1.2620 ns\**</span> <span title="validated upfront with error">*14.071 ns\**</span> | <span title="unvalidated">*34.963 us\**</span> <span title="validated upfront with error">*34.889 us\**</span> | 528.13 us |
+| alkahest | <span title="validated on-demand with panic">*2.7900 ns\**</span> | <span title="validated on-demand with panic">*69.741 us\**</span> | ‡ |
 
 ### Comparison
 
@@ -141,29 +150,32 @@ Relative to best. Higher is better.
 
 | Format / Lib | Serialize | Deserialize | Size | Zlib | Zstd |
 |---|--:|--:|--:|--:|--:|
-| abomonation | 100.00% | <span title="unvalidated">*100.00%\**</span> | 100.00% | 79.23% | 77.04% |
-| bincode | 6.02% | 20.85% | 100.00% | 79.23% | 77.04% |
-| borsh | 5.29% | 18.95% | 100.00% | 79.23% | 77.04% |
-| capnp | 1.63% | † | 42.86% | 63.35% | 68.06% |
-| cbor | 0.84% | 2.46% | 45.72% | 56.63% | 60.91% |
-| flatbuffers | 14.75% | † | 100.00% | 79.23% | 77.04% |
-| nachricht | 0.53% | 4.39% | 59.26% | 59.54% | 60.76% |
-| postcard | 5.17% | 15.24% | 100.00% | 79.23% | 77.04% |
-| prost | <span title="populate + encode">*1.74%\**</span> <span title="encode">*2.44%\**</span> | 9.30% | 68.57% | 63.78% | 64.13% |
-| rkyv | 35.31% | <span title="unvalidated">*88.44%\**</span> <span title="validated upfront with error">*90.02%\**</span> | 100.00% | 100.00% | 100.00% |
-| rmp | 1.77% | 8.87% | 73.85% | 65.62% | 64.44% |
-| ron | 0.16% | 0.41% | 27.04% | 47.32% | 50.55% |
-| serde_json | 0.32% | 1.88% | 22.91% | 44.35% | 47.92% |
-| speedy | 49.83% | 79.74% | 100.00% | 79.23% | 77.04% |
+| abomonation | 100.00% | <span title="unvalidated">*100.00%\**</span> | 100.00% | 100.00% | 100.00% |
+| bincode | 8.02% | 22.50% | 100.00% | 100.00% | 100.00% |
+| borsh | 6.40% | 18.88% | 100.00% | 100.00% | 100.00% |
+| capnp | 1.62% | † | 42.86% | 79.95% | 88.34% |
+| cbor | 0.88% | 2.51% | 45.72% | 71.48% | 79.07% |
+| flatbuffers | 15.21% | † | 100.00% | 100.00% | 100.00% |
+| nachricht | 0.52% | 4.62% | 59.26% | 75.15% | 78.87% |
+| postcard | 6.05% | 16.17% | 100.00% | 100.00% | 100.00% |
+| prost | <span title="populate + encode">*1.68%\**</span> <span title="encode">*2.29%\**</span> | 9.19% | 68.57% | 80.50% | 83.25% |
+| rkyv | 48.77% | <span title="unvalidated">*91.76%\**</span> <span title="validated upfront with error">*91.04%\**</span> | 100.00% | 100.00% | 100.00% |
+| rmp | 1.89% | 8.02% | 73.85% | 82.82% | 83.65% |
+| ron | 0.17% | 0.65% | 27.04% | 59.72% | 65.61% |
+| serde_json | 0.37% | 1.87% | 22.91% | 55.98% | 62.20% |
+| simd-json | 0.36% | 1.35% | 15.32% | 32.44% | 36.73% |
+| speedy | 54.21% | 75.48% | 100.00% | 100.00% | 100.00% |
+| alkahest | 56.71% | † | 100.00% | 100.00% | 100.00% |
 
 #### Zero-copy deserialization speed
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | <span title="unvalidated">*57.55%\**</span> | <span title="unvalidated">*20.32%\**</span> | ‡ |
-| capnp | <span title="validated on-demand with error">*0.54%\**</span> | <span title="validated on-demand with error">*0.44%\**</span> | ‡ |
-| flatbuffers | <span title="unvalidated">*53.41%\**</span> <span title="validated upfront with error">*3.24%\**</span> | <span title="unvalidated">*25.16%\**</span> <span title="validated upfront with error">*20.15%\**</span> | ‡ |
-| rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*9.76%\**</span> | <span title="unvalidated">*96.68%\**</span> <span title="validated upfront with error">*100.00%\**</span> | 100.00% |
+| abomonation | <span title="unvalidated">*52.12%\**</span> | <span title="unvalidated">*19.78%\**</span> | ‡ |
+| capnp | <span title="validated on-demand with error">*0.48%\**</span> | <span title="validated on-demand with error">*0.44%\**</span> | ‡ |
+| flatbuffers | <span title="unvalidated">*48.49%\**</span> <span title="validated upfront with error">*2.97%\**</span> | <span title="unvalidated">*19.96%\**</span> <span title="validated upfront with error">*19.73%\**</span> | ‡ |
+| rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*8.97%\**</span> | <span title="unvalidated">*99.79%\**</span> <span title="validated upfront with error">*100.00%\**</span> | 100.00% |
+| alkahest | <span title="validated on-demand with panic">*45.23%\**</span> | <span title="validated on-demand with panic">*50.03%\**</span> | ‡ |
 
 ## `minecraft_savedata`
 
@@ -177,29 +189,32 @@ For operations, time per iteration; for size, bytes. Lower is better.
 
 | Format / Lib | Serialize | Deserialize | Size | Zlib | Zstd |
 |---|--:|--:|--:|--:|--:|
-| abomonation | 350.58 us | <span title="unvalidated">*2.3909 ms\**</span> | 1290592 | 391564 | 330298 |
-| bincode | 700.63 us | 3.0317 ms | 569975 | 240897 | 232904 |
-| borsh | 684.69 us | 2.9562 ms | 446595 | 234395 | 210623 |
-| capnp | 824.57 us | † | 803896 | 336655 | 281557 |
-| cbor | 2.0083 ms | 7.6353 ms | 1109821 | 347562 | 275184 |
-| flatbuffers | 32.945 ms | † | 844168 | 346957 | 295321 |
-| nachricht | 6.8281 ms | 6.0832 ms | 535881 | 281994 | 250096 |
-| postcard | 797.33 us | 3.5766 ms | 356311 | 213270 | 199012 |
-| prost | <span title="populate + encode">*4.6071 ms\**</span> <span title="encode">*1.6830 ms\**</span> | 4.9262 ms | 596811 | 306728 | 270153 |
-| rkyv | 482.04 us | <span title="unvalidated">*2.1921 ms\**</span> <span title="validated upfront with error">*2.7561 ms\**</span> | 596952 | 241952 | 208634 |
-| rmp | 1.7659 ms | 4.2343 ms | 418025 | 244771 | 225969 |
-| ron | 11.007 ms | 17.413 ms | 1465229 | 439673 | 345438 |
-| serde_json | 4.3134 ms | 27.489 ms | 1623197 | 472162 | 361701 |
-| speedy | 445.41 us | 2.5104 ms | 449595 | 235136 | 210904 |
+| abomonation | 318.48 us | <span title="unvalidated">*2.3256 ms\**</span> | 1290592 | 391039 | 329656 |
+| bincode | 648.73 us | 3.0267 ms | 569975 | 240897 | 232904 |
+| borsh | 654.99 us | 2.9264 ms | 446595 | 234395 | 210623 |
+| capnp | 839.61 us | † | 803896 | 336655 | 281557 |
+| cbor | 1.8588 ms | 7.4703 ms | 1109821 | 347562 | 275184 |
+| flatbuffers | 32.824 ms | † | 844168 | 346957 | 295321 |
+| nachricht | 5.0638 ms | 6.0554 ms | 535881 | 281994 | 250096 |
+| postcard | 693.21 us | 3.5504 ms | 356311 | 213270 | 199012 |
+| prost | <span title="populate + encode">*4.5773 ms\**</span> <span title="encode">*1.7028 ms\**</span> | 8.2999 ms | 596811 | 306728 | 270153 |
+| rkyv | 464.84 us | <span title="unvalidated">*2.1732 ms\**</span> <span title="validated upfront with error">*2.7405 ms\**</span> | 596952 | 254571 | 220523 |
+| rmp | 1.6456 ms | 4.0537 ms | 418025 | 244771 | 225969 |
+| ron | 9.8878 ms | 16.211 ms | 1465229 | 439673 | 345438 |
+| serde_json | 4.2674 ms | 10.021 ms | 1623197 | 472162 | 361701 |
+| simd-json | 4.2821 ms | 7.9348 ms | 1663775 | 496275 | 385917 |
+| speedy | 395.82 us | 2.4622 ms | 449595 | 235136 | 210904 |
+| alkahest | 356.36 us | † | 667570 | 325536 | 320888 |
 
 #### Zero-copy deserialization speed
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | <span title="unvalidated">*54.133 us\**</span> | <span title="unvalidated">*55.392 us\**</span> | ‡ |
-| capnp | <span title="validated on-demand with error">*164.90 ns\**</span> | <span title="validated on-demand with error">*5.6618 us\**</span> | ‡ |
-| flatbuffers | <span title="unvalidated">*2.5801 ns\**</span> <span title="validated upfront with error">*2.5865 ms\**</span> | <span title="unvalidated">*3.8691 us\**</span> <span title="validated upfront with error">*2.5757 ms\**</span> | ‡ |
-| rkyv | <span title="unvalidated">*1.4017 ns\**</span> <span title="validated upfront with error">*534.35 us\**</span> | <span title="unvalidated">*158.39 ns\**</span> <span title="validated upfront with error">*535.21 us\**</span> | 4.6731 us |
+| abomonation | <span title="unvalidated">*53.965 us\**</span> | <span title="unvalidated">*56.694 us\**</span> | ‡ |
+| capnp | <span title="validated on-demand with error">*161.56 ns\**</span> | <span title="validated on-demand with error">*5.6220 us\**</span> | ‡ |
+| flatbuffers | <span title="unvalidated">*2.5715 ns\**</span> <span title="validated upfront with error">*2.6568 ms\**</span> | <span title="unvalidated">*4.4308 us\**</span> <span title="validated upfront with error">*2.5172 ms\**</span> | ‡ |
+| rkyv | <span title="unvalidated">*1.2619 ns\**</span> <span title="validated upfront with error">*532.21 us\**</span> | <span title="unvalidated">*147.27 ns\**</span> <span title="validated upfront with error">*533.86 us\**</span> | 4.7133 us |
+| alkahest | <span title="validated on-demand with panic">*2.7896 ns\**</span> | <span title="validated on-demand with panic">*29.070 us\**</span> | ‡ |
 
 ### Comparison
 
@@ -209,29 +224,32 @@ Relative to best. Higher is better.
 
 | Format / Lib | Serialize | Deserialize | Size | Zlib | Zstd |
 |---|--:|--:|--:|--:|--:|
-| abomonation | 100.00% | <span title="unvalidated">*91.69%\**</span> | 27.61% | 54.47% | 60.25% |
-| bincode | 50.04% | 72.31% | 62.51% | 88.53% | 85.45% |
-| borsh | 51.20% | 74.15% | 79.78% | 90.99% | 94.49% |
-| capnp | 42.52% | † | 44.32% | 63.35% | 70.68% |
-| cbor | 17.46% | 28.71% | 32.11% | 61.36% | 72.32% |
-| flatbuffers | 1.06% | † | 42.21% | 61.47% | 67.39% |
-| nachricht | 5.13% | 36.04% | 66.49% | 75.63% | 79.57% |
-| postcard | 43.97% | 61.29% | 100.00% | 100.00% | 100.00% |
-| prost | <span title="populate + encode">*7.61%\**</span> <span title="encode">*20.83%\**</span> | 44.50% | 59.70% | 69.53% | 73.67% |
-| rkyv | 72.73% | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*79.54%\**</span> | 59.69% | 88.15% | 95.39% |
-| rmp | 19.85% | 51.77% | 85.24% | 87.13% | 88.07% |
-| ron | 3.19% | 12.59% | 24.32% | 48.51% | 57.61% |
-| serde_json | 8.13% | 7.97% | 21.95% | 45.17% | 55.02% |
-| speedy | 78.71% | 87.32% | 79.25% | 90.70% | 94.36% |
+| abomonation | 100.00% | <span title="unvalidated">*93.45%\**</span> | 27.61% | 54.54% | 60.37% |
+| bincode | 49.09% | 71.80% | 62.51% | 88.53% | 85.45% |
+| borsh | 48.62% | 74.26% | 79.78% | 90.99% | 94.49% |
+| capnp | 37.93% | † | 44.32% | 63.35% | 70.68% |
+| cbor | 17.13% | 29.09% | 32.11% | 61.36% | 72.32% |
+| flatbuffers | 0.97% | † | 42.21% | 61.47% | 67.39% |
+| nachricht | 6.29% | 35.89% | 66.49% | 75.63% | 79.57% |
+| postcard | 45.94% | 61.21% | 100.00% | 100.00% | 100.00% |
+| prost | <span title="populate + encode">*6.96%\**</span> <span title="encode">*18.70%\**</span> | 26.18% | 59.70% | 69.53% | 73.67% |
+| rkyv | 68.51% | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*79.30%\**</span> | 59.69% | 83.78% | 90.25% |
+| rmp | 19.35% | 53.61% | 85.24% | 87.13% | 88.07% |
+| ron | 3.22% | 13.41% | 24.32% | 48.51% | 57.61% |
+| serde_json | 7.46% | 21.69% | 21.95% | 45.17% | 55.02% |
+| simd-json | 7.44% | 27.39% | 21.42% | 42.97% | 51.57% |
+| speedy | 80.46% | 88.26% | 79.25% | 90.70% | 94.36% |
+| alkahest | 89.37% | † | 53.37% | 65.51% | 62.02% |
 
 #### Zero-copy deserialization speed
 
 | Format / Lib | Access | Read | Update |
 |---|--:|--:|--:|
-| abomonation | <span title="unvalidated">*0.00%\**</span> | <span title="unvalidated">*0.29%\**</span> | ‡ |
-| capnp | <span title="validated on-demand with error">*0.85%\**</span> | <span title="validated on-demand with error">*2.80%\**</span> | ‡ |
-| flatbuffers | <span title="unvalidated">*54.33%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*4.09%\**</span> <span title="validated upfront with error">*0.01%\**</span> | ‡ |
+| abomonation | <span title="unvalidated">*0.00%\**</span> | <span title="unvalidated">*0.26%\**</span> | ‡ |
+| capnp | <span title="validated on-demand with error">*0.78%\**</span> | <span title="validated on-demand with error">*2.62%\**</span> | ‡ |
+| flatbuffers | <span title="unvalidated">*49.07%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*3.32%\**</span> <span title="validated upfront with error">*0.01%\**</span> | ‡ |
 | rkyv | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*0.00%\**</span> | <span title="unvalidated">*100.00%\**</span> <span title="validated upfront with error">*0.03%\**</span> | 100.00% |
+| alkahest | <span title="validated on-demand with panic">*45.24%\**</span> | <span title="validated on-demand with panic">*0.51%\**</span> | ‡ |
 
 ## Footnotes:
 
