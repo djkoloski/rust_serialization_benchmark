@@ -2,19 +2,13 @@ use bytecheck::CheckBytes;
 use core::pin::Pin;
 use criterion::{black_box, Criterion};
 use rkyv::{
-    archived_value,
-    archived_value_mut,
-    check_archived_value,
+    archived_value, archived_value_mut, check_archived_value,
     ser::{
-        serializers::{CompositeSerializer, AlignedSerializer, BufferScratch},
+        serializers::{AlignedSerializer, BufferScratch, CompositeSerializer},
         Serializer,
     },
     validation::validators::DefaultValidator,
-    AlignedVec,
-    Archive,
-    Deserialize,
-    Infallible,
-    Serialize,
+    AlignedVec, Archive, Deserialize, Infallible, Serialize,
 };
 
 pub type BenchSerializer<'a> = CompositeSerializer<
@@ -37,7 +31,9 @@ where
 
     let mut serialize_buffer = AlignedVec::with_capacity(BUFFER_LEN);
     let mut serialize_scratch = AlignedVec::with_capacity(SCRATCH_LEN);
-    unsafe { serialize_scratch.set_len(SCRATCH_LEN); }
+    unsafe {
+        serialize_scratch.set_len(SCRATCH_LEN);
+    }
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
@@ -48,9 +44,7 @@ where
                 BufferScratch::new(black_box(&mut serialize_scratch)),
                 Infallible,
             );
-            black_box(
-                serializer.serialize_value(black_box(data)).unwrap()
-            );
+            black_box(serializer.serialize_value(black_box(data)).unwrap());
         })
     });
 
@@ -74,7 +68,8 @@ where
     group.bench_function("access (validated upfront with error)", |b| {
         b.iter(|| {
             black_box(
-                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap()
+                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
+                    .unwrap(),
             );
         })
     });
@@ -82,16 +77,20 @@ where
     group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
             black_box(unsafe {
-                read(archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)))
+                read(archived_value::<T>(
+                    black_box(deserialize_buffer.as_ref()),
+                    black_box(pos),
+                ))
             });
         })
     });
 
     group.bench_function("read (validated upfront with error)", |b| {
         b.iter(|| {
-            black_box(
-                read(check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap())
-            );
+            black_box(read(
+                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
+                    .unwrap(),
+            ));
         })
     });
 
@@ -99,7 +98,10 @@ where
     group.bench_function("update", |b| {
         b.iter(|| {
             let mut value = unsafe {
-                archived_value_mut::<T>(black_box(Pin::new_unchecked(update_buffer.as_mut_slice())), black_box(pos))
+                archived_value_mut::<T>(
+                    black_box(Pin::new_unchecked(update_buffer.as_mut_slice())),
+                    black_box(pos),
+                )
             };
             update(value.as_mut());
             black_box(value);
@@ -118,7 +120,9 @@ where
 
     group.bench_function("deserialize (validated upfront with error)", |b| {
         b.iter(|| {
-            let value = check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos)).unwrap();
+            let value =
+                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
+                    .unwrap();
             let deserialized: T = value.deserialize(&mut Infallible).unwrap();
             black_box(deserialized);
         })

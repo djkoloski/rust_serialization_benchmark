@@ -74,7 +74,7 @@ struct RecipeBook {
 struct Player {
     gameType @0 :GameType;
     previousGameType @1 :GameType;
-    score @2 :UInt64;
+    score @2 :Int64;
     dimension @3 :Text;
     selectedItemSlot @4 :UInt32;
     selectedItem @5 :Item;

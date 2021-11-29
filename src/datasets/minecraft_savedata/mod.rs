@@ -8,13 +8,13 @@ pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
 }
 
-use crate::{Generate, generate_vec};
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+use crate::{generate_vec, Generate};
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -29,8 +29,14 @@ use rkyv::Archived;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -109,8 +115,14 @@ impl alkahest::Pack<GameType> for GameType {
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -201,15 +213,22 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
         ItemSchemaPack {
             count: self.count,
             slot: self.slot,
-            id: self.id.as_bytes()
-        }.pack(offset, output)
+            id: self.id.as_bytes(),
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -301,14 +320,21 @@ impl alkahest::Pack<Abilities> for Abilities {
             invulnerable: self.invulnerable,
             may_build: self.may_build,
             instabuild: self.instabuild,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -369,10 +395,13 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
     #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
     where
-    'a: 'b,
+        'a: 'b,
     {
         let id = fbb.create_string(&self.id);
-        let custom_name = self.custom_name.as_ref().map(|name| fbb.create_string(&name));
+        let custom_name = self
+            .custom_name
+            .as_ref()
+            .map(|name| fbb.create_string(&name));
 
         let pos = fb::Vector3d::new(self.pos.0, self.pos.1, self.pos.2);
         let motion = fb::Vector3d::new(self.motion.0, self.motion.1, self.motion.2);
@@ -537,14 +566,21 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
             custom_name_visible: self.custom_name_visible,
             silent: self.silent,
             glowing: self.glowing,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -624,7 +660,9 @@ impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
         builder.add_is_gui_open(self.is_gui_open);
         builder.add_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
         builder.add_is_furnace_gui_open(self.is_furnace_gui_open);
-        builder.add_is_blasting_furnace_filtering_craftable(self.is_blasting_furnace_filtering_craftable);
+        builder.add_is_blasting_furnace_filtering_craftable(
+            self.is_blasting_furnace_filtering_craftable,
+        );
         builder.add_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
         builder.add_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
         builder.add_is_smoker_gui_open(self.is_smoker_gui_open);
@@ -643,7 +681,9 @@ impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
         for (i, recipe) in self.recipes.iter().enumerate() {
             recipes.set(i as u32, recipe);
         }
-        let mut to_be_displayed = builder.reborrow().init_to_be_displayed(self.to_be_displayed.len() as u32);
+        let mut to_be_displayed = builder
+            .reborrow()
+            .init_to_be_displayed(self.to_be_displayed.len() as u32);
         for (i, name) in self.to_be_displayed.iter().enumerate() {
             to_be_displayed.set(i as u32, name);
         }
@@ -651,7 +691,9 @@ impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
         builder.set_is_gui_open(self.is_gui_open);
         builder.set_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
         builder.set_is_furnace_gui_open(self.is_furnace_gui_open);
-        builder.set_is_blasting_furnace_filtering_craftable(self.is_blasting_furnace_filtering_craftable);
+        builder.set_is_blasting_furnace_filtering_craftable(
+            self.is_blasting_furnace_filtering_craftable,
+        );
         builder.set_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
         builder.set_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
         builder.set_is_smoker_gui_open(self.is_smoker_gui_open);
@@ -675,7 +717,8 @@ impl bench_prost::Serialize for RecipeBook {
         result.is_gui_open = self.is_gui_open;
         result.is_furnace_filtering_craftable = self.is_furnace_filtering_craftable;
         result.is_furnace_gui_open = self.is_furnace_gui_open;
-        result.is_blasting_furnace_filtering_craftable = self.is_blasting_furnace_filtering_craftable;
+        result.is_blasting_furnace_filtering_craftable =
+            self.is_blasting_furnace_filtering_craftable;
         result.is_blasting_furnace_gui_open = self.is_blasting_furnace_gui_open;
         result.is_smoker_filtering_craftable = self.is_smoker_filtering_craftable;
         result.is_smoker_gui_open = self.is_smoker_gui_open;
@@ -713,21 +756,28 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
             is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
             is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
             is_smoker_gui_open: self.is_smoker_gui_open,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Player {
     pub game_type: GameType,
     pub previous_game_type: GameType,
-    pub score: u64,
+    pub score: i64,
     pub dimension: String,
     pub selected_item_slot: u32,
     pub selected_item: Item,
@@ -842,21 +892,30 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
         let ender_items = fbb.create_vector(&ender_items);
 
         let abilities = self.abilities.into();
-        let entered_nether_position = self.entered_nether_position.map(|p| {
-            fb::Vector3d::new(p.0, p.1, p.2)
-        });
+        let entered_nether_position = self
+            .entered_nether_position
+            .map(|p| fb::Vector3d::new(p.0, p.1, p.2));
         let root_vehicle = self.root_vehicle.as_ref().map(|v| {
             let entity = Some(v.1.serialize_fb(fbb));
-            fb::Vehicle::create(fbb, &fb::VehicleArgs {
-                param_0: v.0[0],
-                param_1: v.0[1],
-                param_2: v.0[2],
-                param_3: v.0[3],
-                entity,
-            })
+            fb::Vehicle::create(
+                fbb,
+                &fb::VehicleArgs {
+                    param_0: v.0[0],
+                    param_1: v.0[1],
+                    param_2: v.0[2],
+                    param_3: v.0[3],
+                    entity,
+                },
+            )
         });
-        let shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_fb(fbb));
-        let shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize_fb(fbb));
+        let shoulder_entity_left = self
+            .shoulder_entity_left
+            .as_ref()
+            .map(|e| e.serialize_fb(fbb));
+        let shoulder_entity_right = self
+            .shoulder_entity_right
+            .as_ref()
+            .map(|e| e.serialize_fb(fbb));
         let recipe_book = self.recipe_book.serialize_fb(fbb);
 
         let mut builder = fb::PlayerBuilder::new(fbb);
@@ -938,15 +997,20 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
         builder.set_xp_p(self.xp_p);
         builder.set_xp_total(self.xp_total);
         builder.set_xp_seed(self.xp_seed);
-        let mut inventory = builder.reborrow().init_inventory(self.inventory.len() as u32);
+        let mut inventory = builder
+            .reborrow()
+            .init_inventory(self.inventory.len() as u32);
         for (i, value) in self.inventory.iter().enumerate() {
             value.serialize_capnp(&mut inventory.reborrow().get(i as u32));
         }
-        let mut ender_items = builder.reborrow().init_ender_items(self.ender_items.len() as u32);
+        let mut ender_items = builder
+            .reborrow()
+            .init_ender_items(self.ender_items.len() as u32);
         for (i, value) in self.ender_items.iter().enumerate() {
             value.serialize_capnp(&mut ender_items.reborrow().get(i as u32));
         }
-        self.abilities.serialize_capnp(&mut builder.reborrow().init_abilities());
+        self.abilities
+            .serialize_capnp(&mut builder.reborrow().init_abilities());
         let mut entered_nether_position = builder.reborrow().init_entered_nether_position();
         if let Some(ref value) = self.entered_nether_position {
             let mut builder = entered_nether_position.init_some();
@@ -964,7 +1028,9 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
             uuid.set_x1(value.0[1]);
             uuid.set_x2(value.0[2]);
             uuid.set_x3(value.0[3]);
-            value.1.serialize_capnp(&mut builder.reborrow().init_entity());
+            value
+                .1
+                .serialize_capnp(&mut builder.reborrow().init_entity());
         } else {
             root_vehicle.set_none(());
         }
@@ -981,7 +1047,8 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
             shoulder_entity_right.set_none(());
         }
         builder.set_seen_credits(self.seen_credits);
-        self.recipe_book.serialize_capnp(&mut builder.reborrow().init_recipe_book());
+        self.recipe_book
+            .serialize_capnp(&mut builder.reborrow().init_recipe_book());
     }
 }
 
@@ -1038,7 +1105,10 @@ impl bench_prost::Serialize for Player {
             result
         });
         result.shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb());
-        result.shoulder_entity_right = self.shoulder_entity_right.as_ref().map(|e| e.serialize_pb());
+        result.shoulder_entity_right = self
+            .shoulder_entity_right
+            .as_ref()
+            .map(|e| e.serialize_pb());
         result.seen_credits = self.seen_credits;
         result.recipe_book = Some(self.recipe_book.serialize_pb());
         result
@@ -1050,7 +1120,7 @@ impl bench_prost::Serialize for Player {
 pub struct PlayerSchema {
     pub game_type: GameType,
     pub previous_game_type: GameType,
-    pub score: u64,
+    pub score: i64,
     pub dimension: alkahest::Bytes,
     pub selected_item_slot: u32,
     pub selected_item: ItemSchema,
@@ -1105,20 +1175,33 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
             inventory: self.inventory.iter(),
             ender_items: self.ender_items.iter(),
             abilities: self.abilities,
-            entered_nether_position: self.entered_nether_position.as_ref().map(|p| (p.0, p.1, p.2)),
-            root_vehicle: self.root_vehicle.as_ref().map(|(array, entity)| (array, entity)),
+            entered_nether_position: self
+                .entered_nether_position
+                .as_ref()
+                .map(|p| (p.0, p.1, p.2)),
+            root_vehicle: self
+                .root_vehicle
+                .as_ref()
+                .map(|(array, entity)| (array, entity)),
             shoulder_entity_left: self.shoulder_entity_left.as_ref(),
             shoulder_entity_right: self.shoulder_entity_right.as_ref(),
             seen_credits: self.seen_credits,
             recipe_book: &self.recipe_book,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -1197,6 +1280,7 @@ impl alkahest::Pack<PlayersSchema> for &'_ Players {
     fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayersSchema>, usize) {
         PlayersSchemaPack {
             players: self.players.iter(),
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }

@@ -4,12 +4,18 @@ use rust_serialization_benchmark::generate_vec;
 
 #[cfg(feature = "abomonation")]
 use rust_serialization_benchmark::bench_abomonation;
+#[cfg(feature = "alkahest")]
+use rust_serialization_benchmark::bench_alkahest;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
 #[cfg(feature = "borsh")]
 use rust_serialization_benchmark::bench_borsh;
+#[cfg(feature = "bson")]
+use rust_serialization_benchmark::bench_bson;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
+#[cfg(feature = "serde_cbor")]
+use rust_serialization_benchmark::bench_cbor;
 #[cfg(feature = "flatbuffers")]
 use rust_serialization_benchmark::bench_flatbuffers;
 #[cfg(feature = "nachricht-serde")]
@@ -24,16 +30,12 @@ use rust_serialization_benchmark::bench_rkyv;
 use rust_serialization_benchmark::bench_rmp;
 #[cfg(feature = "ron")]
 use rust_serialization_benchmark::bench_ron;
-#[cfg(feature = "serde_cbor")]
-use rust_serialization_benchmark::bench_cbor;
 #[cfg(feature = "serde_json")]
 use rust_serialization_benchmark::bench_serde_json;
 #[cfg(feature = "simd-json")]
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
-#[cfg(feature = "alkahest")]
-use rust_serialization_benchmark::bench_alkahest;
 
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
@@ -66,10 +68,16 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
+    #[cfg(feature = "bson")]
+    bench_bson::bench(BENCH, c, &data);
+
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
-        let message_reader = capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
-        let data = message_reader.get_root::<rust_serialization_benchmark::datasets::log::cp::logs::Reader>().unwrap();
+        let message_reader =
+            capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
+        let data = message_reader
+            .get_root::<rust_serialization_benchmark::datasets::log::cp::logs::Reader>()
+            .unwrap();
         for log in data.get_logs().unwrap().iter() {
             black_box(log.get_address().unwrap());
             black_box(log.get_code());
@@ -85,16 +93,20 @@ fn bench_log(c: &mut Criterion) {
         BENCH,
         c,
         &data,
-        |bytes| { unsafe {
-            let data = flatbuffers::root_unchecked::<rust_serialization_benchmark::datasets::log::fb::Logs>(bytes);
+        |bytes| unsafe {
+            let data = flatbuffers::root_unchecked::<
+                rust_serialization_benchmark::datasets::log::fb::Logs,
+            >(bytes);
             for log in data.logs().iter() {
                 black_box(log.address());
                 black_box(log.code());
                 black_box(log.size_());
             }
-        }},
+        },
         |bytes| {
-            let data = flatbuffers::root::<rust_serialization_benchmark::datasets::log::fb::Logs>(bytes).unwrap();
+            let data =
+                flatbuffers::root::<rust_serialization_benchmark::datasets::log::fb::Logs>(bytes)
+                    .unwrap();
             for log in data.logs().iter() {
                 black_box(log.address());
                 black_box(log.code());
@@ -113,7 +125,10 @@ fn bench_log(c: &mut Criterion) {
     bench_prost::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
-    bench_rkyv::bench(BENCH, c, &data, 
+    bench_rkyv::bench(
+        BENCH,
+        c,
+        &data,
         |data| {
             for log in data.logs.iter() {
                 black_box(&log.address);
@@ -126,11 +141,16 @@ fn bench_log(c: &mut Criterion) {
 
             for i in 0..logs.as_ref().logs.len() {
                 let mut log = logs.as_mut().logs_pin().index_pin(i);
-                *log.as_mut().address_pin() = ArchivedAddress { x0: 0, x1: 0, x2: 0, x3: 0 };
+                *log.as_mut().address_pin() = ArchivedAddress {
+                    x0: 0,
+                    x1: 0,
+                    x2: 0,
+                    x3: 0,
+                };
                 *log.as_mut().code_pin() = 200;
                 *log.as_mut().size_pin() = 0;
             }
-        }
+        },
     );
 
     #[cfg(feature = "rmp-serde")]
@@ -154,7 +174,9 @@ fn bench_log(c: &mut Criterion) {
 }
 
 #[cfg(feature = "alkahest")]
-fn read_alkahest_log<'a>(data: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::log::LogsSchema>) {
+fn read_alkahest_log<'a>(
+    data: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::log::LogsSchema>,
+) {
     for log in data.logs {
         black_box(&log.address);
         black_box(log.code);
@@ -191,10 +213,16 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
+    #[cfg(feature = "bson")]
+    bench_bson::bench(BENCH, c, &data);
+
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
-        let message_reader = capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
-        let data = message_reader.get_root::<rust_serialization_benchmark::datasets::mesh::cp::mesh::Reader>().unwrap();
+        let message_reader =
+            capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
+        let data = message_reader
+            .get_root::<rust_serialization_benchmark::datasets::mesh::cp::mesh::Reader>()
+            .unwrap();
         for triangle in data.get_triangles().unwrap().iter() {
             black_box(triangle.get_normal().unwrap());
         }
@@ -208,14 +236,18 @@ fn bench_mesh(c: &mut Criterion) {
         BENCH,
         c,
         &data,
-        |bytes| { unsafe {
-            let data = flatbuffers::root_unchecked::<rust_serialization_benchmark::datasets::mesh::fb::Mesh>(bytes);
+        |bytes| unsafe {
+            let data = flatbuffers::root_unchecked::<
+                rust_serialization_benchmark::datasets::mesh::fb::Mesh,
+            >(bytes);
             for triangle in data.triangles().iter() {
                 black_box(triangle.normal());
             }
-        }},
+        },
         |bytes| {
-            let data = flatbuffers::root::<rust_serialization_benchmark::datasets::mesh::fb::Mesh>(bytes).unwrap();
+            let data =
+                flatbuffers::root::<rust_serialization_benchmark::datasets::mesh::fb::Mesh>(bytes)
+                    .unwrap();
             for triangle in data.triangles().iter() {
                 black_box(triangle.normal());
             }
@@ -232,7 +264,10 @@ fn bench_mesh(c: &mut Criterion) {
     bench_prost::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
-    bench_rkyv::bench(BENCH, c, &data, 
+    bench_rkyv::bench(
+        BENCH,
+        c,
+        &data,
         |mesh| {
             for triangle in mesh.triangles.iter() {
                 black_box(&triangle.normal);
@@ -245,7 +280,7 @@ fn bench_mesh(c: &mut Criterion) {
                 triangle.normal.y = 0f32;
                 triangle.normal.z = 0f32;
             }
-        }
+        },
     );
 
     #[cfg(feature = "rmp-serde")]
@@ -269,7 +304,9 @@ fn bench_mesh(c: &mut Criterion) {
 }
 
 #[cfg(feature = "alkahest")]
-fn read_alkahest_mesh<'a>(mesh: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::mesh::MeshSchema>) {
+fn read_alkahest_mesh<'a>(
+    mesh: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::mesh::MeshSchema>,
+) {
     for triangle in mesh.triangles {
         black_box(&triangle.normal);
     }
@@ -304,9 +341,13 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
+    #[cfg(feature = "bson")]
+    bench_bson::bench(BENCH, c, &data);
+
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
-        let message_reader = capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
+        let message_reader =
+            capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
         let data = message_reader.get_root::<rust_serialization_benchmark::datasets::minecraft_savedata::cp::players::Reader>().unwrap();
         for player in data.get_players().unwrap().iter() {
             black_box(player.get_game_type().unwrap());
@@ -321,14 +362,19 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         BENCH,
         c,
         &data,
-        |bytes| { unsafe {
-            let data = flatbuffers::root_unchecked::<rust_serialization_benchmark::datasets::minecraft_savedata::fb::Players>(bytes);
+        |bytes| unsafe {
+            let data = flatbuffers::root_unchecked::<
+                rust_serialization_benchmark::datasets::minecraft_savedata::fb::Players,
+            >(bytes);
             for player in data.players().iter() {
                 black_box(player.game_type());
             }
-        }},
+        },
         |bytes| {
-            let data = flatbuffers::root::<rust_serialization_benchmark::datasets::minecraft_savedata::fb::Players>(bytes).unwrap();
+            let data = flatbuffers::root::<
+                rust_serialization_benchmark::datasets::minecraft_savedata::fb::Players,
+            >(bytes)
+            .unwrap();
             for player in data.players().iter() {
                 black_box(player.game_type());
             }
@@ -345,7 +391,10 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_prost::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
-    bench_rkyv::bench(BENCH, c, &data,
+    bench_rkyv::bench(
+        BENCH,
+        c,
+        &data,
         |data| {
             for player in data.players.iter() {
                 black_box(&player.game_type);
@@ -361,7 +410,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
                 *player.as_mut().spawn_y_pin() = 0;
                 *player.as_mut().spawn_z_pin() = 0;
             }
-        }
+        },
     );
 
     #[cfg(feature = "rmp-serde")]
@@ -384,7 +433,12 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 }
 
 #[cfg(feature = "alkahest")]
-fn read_alkahest_minecraft_savedata<'a>(data: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::minecraft_savedata::PlayersSchema>) {
+fn read_alkahest_minecraft_savedata<'a>(
+    data: alkahest::Unpacked<
+        'a,
+        rust_serialization_benchmark::datasets::minecraft_savedata::PlayersSchema,
+    >,
+) {
     for player in data.players {
         black_box(&player.game_type);
     }

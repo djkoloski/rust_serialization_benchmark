@@ -1707,8 +1707,8 @@ impl<'a> Player<'a> {
     self._tab.get::<GameType>(Player::VT_PREVIOUS_GAME_TYPE, Some(GameType::Survival)).unwrap()
   }
   #[inline]
-  pub fn score(&self) -> u64 {
-    self._tab.get::<u64>(Player::VT_SCORE, Some(0)).unwrap()
+  pub fn score(&self) -> i64 {
+    self._tab.get::<i64>(Player::VT_SCORE, Some(0)).unwrap()
   }
   #[inline]
   pub fn dimension(&self) -> &'a str {
@@ -1821,7 +1821,7 @@ impl flatbuffers::Verifiable for Player<'_> {
     v.visit_table(pos)?
      .visit_field::<GameType>(&"game_type", Self::VT_GAME_TYPE, false)?
      .visit_field::<GameType>(&"previous_game_type", Self::VT_PREVIOUS_GAME_TYPE, false)?
-     .visit_field::<u64>(&"score", Self::VT_SCORE, false)?
+     .visit_field::<i64>(&"score", Self::VT_SCORE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"dimension", Self::VT_DIMENSION, true)?
      .visit_field::<u32>(&"selected_item_slot", Self::VT_SELECTED_ITEM_SLOT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<Item>>(&"selected_item", Self::VT_SELECTED_ITEM, true)?
@@ -1854,7 +1854,7 @@ impl flatbuffers::Verifiable for Player<'_> {
 pub struct PlayerArgs<'a> {
     pub game_type: GameType,
     pub previous_game_type: GameType,
-    pub score: u64,
+    pub score: i64,
     pub dimension: Option<flatbuffers::WIPOffset<&'a str>>,
     pub selected_item_slot: u32,
     pub selected_item: Option<flatbuffers::WIPOffset<Item<'a>>>,
@@ -1930,8 +1930,8 @@ impl<'a: 'b, 'b> PlayerBuilder<'a, 'b> {
     self.fbb_.push_slot::<GameType>(Player::VT_PREVIOUS_GAME_TYPE, previous_game_type, GameType::Survival);
   }
   #[inline]
-  pub fn add_score(&mut self, score: u64) {
-    self.fbb_.push_slot::<u64>(Player::VT_SCORE, score, 0);
+  pub fn add_score(&mut self, score: i64) {
+    self.fbb_.push_slot::<i64>(Player::VT_SCORE, score, 0);
   }
   #[inline]
   pub fn add_dimension(&mut self, dimension: flatbuffers::WIPOffset<&'b  str>) {

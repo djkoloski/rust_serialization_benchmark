@@ -1,9 +1,13 @@
 #[cfg(feature = "abomonation")]
 pub mod bench_abomonation;
+#[cfg(feature = "alkahest")]
+pub mod bench_alkahest;
 #[cfg(feature = "bincode")]
 pub mod bench_bincode;
 #[cfg(feature = "borsh")]
 pub mod bench_borsh;
+#[cfg(feature = "bson")]
+pub mod bench_bson;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
 #[cfg(feature = "serde_cbor")]
@@ -28,8 +32,6 @@ pub mod bench_serde_json;
 pub mod bench_simd_json;
 #[cfg(feature = "speedy")]
 pub mod bench_speedy;
-#[cfg(feature = "alkahest")]
-pub mod bench_alkahest;
 
 pub mod datasets;
 
@@ -59,7 +61,7 @@ macro_rules! impl_generate {
                 rng.gen()
             }
         }
-    }
+    };
 }
 
 impl_generate!(u8);
@@ -114,7 +116,10 @@ macro_rules! impl_array {
     }
 }
 
-impl_array!(31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, );
+impl_array!(
+    31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
+    7, 6, 5, 4, 3, 2, 1, 0,
+);
 
 impl<T: Generate> Generate for Option<T> {
     fn generate<R: Rng>(rng: &mut R) -> Self {

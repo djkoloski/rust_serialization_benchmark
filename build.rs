@@ -36,7 +36,10 @@ fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
 fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     let mut prost_config = prost_build::Config::new();
     prost_config.protoc_arg("--experimental_allow_proto3_optional");
-    prost_config.compile_protos(&[format!("./src/datasets/{0}/{0}.proto", name).as_str()], &["src"])
+    prost_config.compile_protos(
+        &[format!("./src/datasets/{0}/{0}.proto", name).as_str()],
+        &["src"],
+    )
 }
 
 fn main() {

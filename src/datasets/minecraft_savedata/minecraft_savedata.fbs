@@ -79,7 +79,7 @@ table Vehicle {
 table Player {
     game_type: GameType;
     previous_game_type: GameType;
-    score: ulong;
+    score: long;
     dimension: string (required);
     selected_item_slot: uint;
     selected_item: Item (required);

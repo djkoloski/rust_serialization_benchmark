@@ -79,7 +79,7 @@ struct Vehicle {
 struct Player {
     GameType game_type;
     GameType previous_game_type;
-    uint64 sore;
+    int64 score;
     string dimension;
     uint32 selected_item_slot;
     Item selected_item;

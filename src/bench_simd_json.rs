@@ -1,5 +1,5 @@
+use criterion::{black_box, BatchSize, Criterion};
 use serde::{Deserialize, Serialize};
-use criterion::{BatchSize, black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
@@ -17,7 +17,7 @@ where
                     black_box(serialize_buffer.as_mut_slice()),
                     black_box(&data),
                 )
-                .unwrap()
+                .unwrap(),
             );
         })
     });
@@ -27,16 +27,14 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter_batched_ref(
-            || {
-                deserialize_buffer.clone()
-            },
+            || deserialize_buffer.clone(),
             |deserialize_buffer| {
                 black_box(
                     simd_json::serde::from_slice::<'_, T>(deserialize_buffer.as_mut_slice())
-                    .unwrap()
+                        .unwrap(),
                 );
             },
-            BatchSize::SmallInput
+            BatchSize::SmallInput,
         )
     });
 

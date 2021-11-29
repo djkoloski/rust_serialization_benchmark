@@ -1641,8 +1641,8 @@ pub mod player {
       ::capnp::traits::FromU16::from_u16(self.reader.get_data_field::<u16>(1))
     }
     #[inline]
-    pub fn get_score(self) -> u64 {
-      self.reader.get_data_field::<u64>(1)
+    pub fn get_score(self) -> i64 {
+      self.reader.get_data_field::<i64>(1)
     }
     #[inline]
     pub fn get_dimension(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
@@ -1821,12 +1821,12 @@ pub mod player {
       self.builder.set_data_field::<u16>(1, value as u16)
     }
     #[inline]
-    pub fn get_score(self) -> u64 {
-      self.builder.get_data_field::<u64>(1)
+    pub fn get_score(self) -> i64 {
+      self.builder.get_data_field::<i64>(1)
     }
     #[inline]
-    pub fn set_score(&mut self, value: u64)  {
-      self.builder.set_data_field::<u64>(1, value);
+    pub fn set_score(&mut self, value: i64)  {
+      self.builder.set_data_field::<i64>(1, value);
     }
     #[inline]
     pub fn get_dimension(self) -> ::capnp::Result<::capnp::text::Builder<'a>> {

@@ -20,9 +20,8 @@ where
     let mut serialize_buffer = Vec::new();
 
     let mut scratch_words = capnp::Word::allocate_zeroed_vec(BUFFER_LEN);
-    let mut allocator = ScratchSpaceHeapAllocator::new(
-        capnp::Word::words_to_bytes_mut(&mut scratch_words[..]),
-    );
+    let mut allocator =
+        ScratchSpaceHeapAllocator::new(capnp::Word::words_to_bytes_mut(&mut scratch_words[..]));
     group.bench_function("serialize", |b| {
         b.iter(|| {
             black_box(&mut serialize_buffer).clear();
@@ -40,7 +39,11 @@ where
     group.bench_function("access (validated on-demand with error)", |b| {
         b.iter(|| {
             black_box(&mut deserialize_buffer);
-            let message_reader = read_message_from_flat_slice(&mut deserialize_buffer.as_slice(), Default::default()).unwrap();
+            let message_reader = read_message_from_flat_slice(
+                &mut deserialize_buffer.as_slice(),
+                Default::default(),
+            )
+            .unwrap();
             let reader = message_reader.get_root::<T::Reader>().unwrap();
             black_box(reader);
         })

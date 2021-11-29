@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use criterion::{black_box, Criterion};
+use serde::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
@@ -13,11 +13,8 @@ where
     group.bench_function("serialize", |b| {
         b.iter(|| {
             black_box(
-                postcard::to_slice(
-                    black_box(&data),
-                    black_box(serialize_buffer.as_mut_slice()),
-                )
-                .unwrap()
+                postcard::to_slice(black_box(&data), black_box(serialize_buffer.as_mut_slice()))
+                    .unwrap(),
             );
         })
     });
@@ -26,10 +23,7 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(
-                postcard::from_bytes::<'_, T>(black_box(&deserialize_buffer))
-                .unwrap()
-            );
+            black_box(postcard::from_bytes::<'_, T>(black_box(&deserialize_buffer)).unwrap());
         })
     });
 

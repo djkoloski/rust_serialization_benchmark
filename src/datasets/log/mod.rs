@@ -10,13 +10,13 @@ pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
 }
 
-use crate::Generate;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+use crate::Generate;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -29,8 +29,14 @@ use rkyv::Archived;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -95,15 +101,25 @@ impl alkahest::Pack<Address> for Address {
     #[inline]
     fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Address>, usize) {
         AddressPack {
-            x0: self.x0, x1: self.x1, x2: self.x2, x3: self.x3,
-        }.pack(offset, output)
+            x0: self.x0,
+            x1: self.x1,
+            x2: self.x2,
+            x3: self.x3,
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -151,19 +167,10 @@ pub struct LogSchema {
 impl Generate for Log {
     fn generate<R: Rng>(rand: &mut R) -> Self {
         const USERID: [&'static str; 9] = [
-            "-",
-            "alice",
-            "bob",
-            "carmen",
-            "david",
-            "eric",
-            "frank",
-            "george",
-            "harry",
+            "-", "alice", "bob", "carmen", "david", "eric", "frank", "george", "harry",
         ];
         const MONTHS: [&'static str; 12] = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
         ];
         const TIMEZONE: [&'static str; 25] = [
             "-1200", "-1100", "-1000", "-0900", "-0800", "-0700", "-0600", "-0500", "-0400",
@@ -181,12 +188,10 @@ impl Generate for Log {
             TIMEZONE[rand.gen_range(0..25)],
         );
         const CODES: [u16; 63] = [
-            100, 101, 102, 103,
-            200, 201, 202, 203, 204, 205, 206, 207, 208, 226,
-            300, 301, 302, 303, 304, 305, 306, 307, 308,
-            400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416,
-            417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431, 451,
-            500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511,
+            100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302,
+            303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410,
+            411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431,
+            451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511,
         ];
         const METHODS: [&'static str; 5] = ["GET", "POST", "PUT", "UPDATE", "DELETE"];
         const ROUTES: [&'static str; 7] = [
@@ -198,12 +203,7 @@ impl Generate for Log {
             "/api/login",
             "/api/logout",
         ];
-        const PROTOCOLS: [&'static str; 4] = [
-            "HTTP/1.0",
-            "HTTP/1.1",
-            "HTTP/2",
-            "HTTP/3",
-        ];
+        const PROTOCOLS: [&'static str; 4] = ["HTTP/1.0", "HTTP/1.1", "HTTP/2", "HTTP/3"];
         let request = format!(
             "{} {} {}",
             METHODS[rand.gen_range(0..5)],
@@ -257,7 +257,8 @@ impl<'a> bench_capnp::Serialize<'a> for Log {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        self.address.serialize_capnp(&mut builder.reborrow().init_address());
+        self.address
+            .serialize_capnp(&mut builder.reborrow().init_address());
         builder.set_identity(&self.identity);
         builder.set_userid(&self.userid);
         builder.set_date(&self.date);
@@ -296,14 +297,21 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
             request: self.request.as_bytes(),
             code: self.code,
             size: self.size,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -383,6 +391,7 @@ impl alkahest::Pack<LogsSchema> for &'_ Logs {
     fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogsSchema>, usize) {
         LogsSchemaPack {
             logs: self.logs.iter(),
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }

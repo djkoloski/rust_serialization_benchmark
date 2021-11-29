@@ -1,4 +1,4 @@
-use borsh::{BorshSerialize, BorshDeserialize};
+use borsh::{BorshDeserialize, BorshSerialize};
 use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
@@ -14,7 +14,7 @@ where
         b.iter(|| {
             black_box(
                 data.serialize(black_box(&mut serialize_buffer.as_mut_slice()))
-                    .unwrap()
+                    .unwrap(),
             );
         })
     });
@@ -23,9 +23,7 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(
-                T::deserialize(&mut deserialize_buffer.as_slice()).unwrap()
-            );
+            black_box(T::deserialize(&mut deserialize_buffer.as_slice()).unwrap());
         })
     });
 

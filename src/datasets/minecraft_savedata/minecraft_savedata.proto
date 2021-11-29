@@ -83,7 +83,7 @@ message Vehicle {
 message Player {
     GameType game_type = 1;
     GameType previous_game_type = 2;
-    uint64 score = 3;
+    int64 score = 3;
     string dimension = 4;
     uint32 selected_item_slot = 5;
     Item selected_item = 6;

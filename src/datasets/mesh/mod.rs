@@ -8,13 +8,13 @@ pub mod mesh_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
 }
 
-use crate::Generate;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+use crate::Generate;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -27,8 +27,14 @@ use rkyv::Archived;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -92,14 +98,21 @@ impl alkahest::Pack<Vector3> for Vector3 {
             x: self.x,
             y: self.y,
             z: self.z,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -130,7 +143,7 @@ impl Into<fb::Triangle> for Triangle {
             &self.v0.into(),
             &self.v1.into(),
             &self.v2.into(),
-            &self.normal.into()
+            &self.normal.into(),
         )
     }
 }
@@ -145,7 +158,8 @@ impl<'a> bench_capnp::Serialize<'a> for Triangle {
         self.v0.serialize_capnp(&mut builder.reborrow().init_v0());
         self.v1.serialize_capnp(&mut builder.reborrow().init_v1());
         self.v2.serialize_capnp(&mut builder.reborrow().init_v2());
-        self.normal.serialize_capnp(&mut builder.reborrow().init_normal());
+        self.normal
+            .serialize_capnp(&mut builder.reborrow().init_normal());
     }
 }
 
@@ -173,14 +187,21 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
             v1: self.v1,
             v2: self.v2,
             normal: self.normal,
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "borsh", derive(borsh::BorshSerialize, borsh::BorshDeserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
@@ -227,7 +248,9 @@ impl<'a> bench_capnp::Serialize<'a> for Mesh {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        let mut mesh = builder.reborrow().init_triangles(self.triangles.len() as u32);
+        let mut mesh = builder
+            .reborrow()
+            .init_triangles(self.triangles.len() as u32);
         for (i, value) in self.triangles.iter().enumerate() {
             value.serialize_capnp(&mut mesh.reborrow().get(i as u32));
         }
@@ -260,6 +283,7 @@ impl alkahest::Pack<MeshSchema> for &'_ Mesh {
     fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<MeshSchema>, usize) {
         MeshSchemaPack {
             triangles: self.triangles.iter(),
-        }.pack(offset, output)
+        }
+        .pack(offset, output)
     }
 }

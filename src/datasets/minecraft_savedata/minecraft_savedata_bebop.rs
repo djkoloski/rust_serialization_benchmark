@@ -647,7 +647,7 @@ impl<'raw> ::bebop::Record<'raw> for Vehicle<'raw> {}
 pub struct Player<'raw> {
     pub game_type: GameType,
     pub previous_game_type: GameType,
-    pub sore: u64,
+    pub score: i64,
     pub dimension: &'raw str,
     pub selected_item_slot: u32,
     pub selected_item: Item<'raw>,
@@ -679,7 +679,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
     const MIN_SERIALIZED_SIZE: usize =
         <GameType>::MIN_SERIALIZED_SIZE +
         <GameType>::MIN_SERIALIZED_SIZE +
-        <u64>::MIN_SERIALIZED_SIZE +
+        <i64>::MIN_SERIALIZED_SIZE +
         <&'raw str>::MIN_SERIALIZED_SIZE +
         <u32>::MIN_SERIALIZED_SIZE +
         <Item<'raw>>::MIN_SERIALIZED_SIZE +
@@ -710,7 +710,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
     fn serialized_size(&self) -> usize {
         self.game_type.serialized_size() +
         self.previous_game_type.serialized_size() +
-        self.sore.serialized_size() +
+        self.score.serialized_size() +
         self.dimension.serialized_size() +
         self.selected_item_slot.serialized_size() +
         self.selected_item.serialized_size() +
@@ -742,7 +742,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
         Ok(
             self.game_type._serialize_chained(dest)? +
             self.previous_game_type._serialize_chained(dest)? +
-            self.sore._serialize_chained(dest)? +
+            self.score._serialize_chained(dest)? +
             self.dimension._serialize_chained(dest)? +
             self.selected_item_slot._serialize_chained(dest)? +
             self.selected_item._serialize_chained(dest)? +
@@ -782,7 +782,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
         i += read;
         let (read, v1) = <GameType>::_deserialize_chained(&raw[i..])?;
         i += read;
-        let (read, v2) = <u64>::_deserialize_chained(&raw[i..])?;
+        let (read, v2) = <i64>::_deserialize_chained(&raw[i..])?;
         i += read;
         let (read, v3) = <&'raw str>::_deserialize_chained(&raw[i..])?;
         i += read;
@@ -838,7 +838,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
         Ok((i, Self {
             game_type: v0,
             previous_game_type: v1,
-            sore: v2,
+            score: v2,
             dimension: v3,
             selected_item_slot: v4,
             selected_item: v5,

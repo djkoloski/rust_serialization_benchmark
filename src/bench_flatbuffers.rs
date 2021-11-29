@@ -9,8 +9,13 @@ pub trait Serialize<'a> {
         'a: 'b;
 }
 
-pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T, read_unverified: impl Fn(&[u8]), read_verified: impl Fn(&[u8]))
-where
+pub fn bench<T>(
+    name: &'static str,
+    c: &mut Criterion,
+    data: &T,
+    read_unverified: impl Fn(&[u8]),
+    read_verified: impl Fn(&[u8]),
+) where
     T: for<'a> Serialize<'a>,
 {
     const BUFFER_LEN: usize = 10_000_000;
@@ -33,27 +38,28 @@ where
     let deserialize_buffer = fbb.finished_data();
 
     group.bench_function("access (unvalidated)", |b| {
-        b.iter(|| { unsafe {
-            black_box(flatbuffers::root_unchecked::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer)))
-        }})
+        b.iter(|| unsafe {
+            black_box(flatbuffers::root_unchecked::<<T as Serialize<'_>>::Target>(
+                black_box(deserialize_buffer),
+            ))
+        })
     });
 
     group.bench_function("access (validated upfront with error)", |b| {
         b.iter(|| {
-            black_box(flatbuffers::root::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer)).unwrap())
+            black_box(
+                flatbuffers::root::<<T as Serialize<'_>>::Target>(black_box(deserialize_buffer))
+                    .unwrap(),
+            )
         })
     });
 
     group.bench_function("read (unvalidated)", |b| {
-        b.iter(|| {
-            black_box(read_unverified(&black_box(deserialize_buffer)))
-        })
+        b.iter(|| black_box(read_unverified(&black_box(deserialize_buffer))))
     });
 
     group.bench_function("read (validated upfront with error)", |b| {
-        b.iter(|| {
-            black_box(read_verified(&black_box(deserialize_buffer)))
-        })
+        b.iter(|| black_box(read_verified(&black_box(deserialize_buffer))))
     });
 
     crate::bench_size(name, "flatbuffers", deserialize_buffer);
