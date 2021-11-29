@@ -3,7 +3,7 @@
 //!
 //!
 //!   bebopc version:
-//!       2.3.0
+//!       2.3.1
 //!
 //!
 //!   bebopc source:
