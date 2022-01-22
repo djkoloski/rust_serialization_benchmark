@@ -29,6 +29,7 @@ fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
         lang: "rust",
         inputs: &[Path::new(&format!("./src/datasets/{0}/{0}.fbs", name))],
         out_dir: Path::new(&format!("./src/datasets/{}", name)),
+        extra: &["--gen-onefile"],
         ..Default::default()
     })
 }
