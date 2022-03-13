@@ -6,6 +6,8 @@ use rust_serialization_benchmark::generate_vec;
 use rust_serialization_benchmark::bench_abomonation;
 #[cfg(feature = "alkahest")]
 use rust_serialization_benchmark::bench_alkahest;
+#[cfg(feature = "serde_bare")]
+use rust_serialization_benchmark::bench_bare;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
 #[cfg(feature = "borsh")]
@@ -61,6 +63,9 @@ fn bench_log(c: &mut Criterion) {
             black_box(log.size);
         }
     });
+
+    #[cfg(feature = "serde_bare")]
+    bench_bare::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
@@ -207,6 +212,9 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
+    #[cfg(feature = "serde_bare")]
+    bench_bare::bench(BENCH, c, &data);
+
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
@@ -334,6 +342,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             black_box(player.game_type);
         }
     });
+
+    #[cfg(feature = "serde_bare")]
+    bench_bare::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
