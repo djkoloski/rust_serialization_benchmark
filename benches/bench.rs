@@ -38,6 +38,8 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+#[cfg(feature = "dlhn")]
+use rust_serialization_benchmark::bench_dlhn;
 
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
@@ -176,6 +178,9 @@ fn bench_log(c: &mut Criterion) {
     // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
     #[cfg(feature = "alkahest")]
     bench_alkahest::bench(BENCH, c, &data, read_alkahest_log);
+
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
 }
 
 #[cfg(feature = "alkahest")]
@@ -309,6 +314,9 @@ fn bench_mesh(c: &mut Criterion) {
     // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
     #[cfg(feature = "alkahest")]
     bench_alkahest::bench(BENCH, c, &data, read_alkahest_mesh);
+
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
 }
 
 #[cfg(feature = "alkahest")]
