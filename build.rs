@@ -6,6 +6,7 @@ fn bebop_compile_dataset(name: &'static str) {
     bebop_tools::build_schema(
         format!("./src/datasets/{0}/{0}.bop", name),
         format!("./src/datasets/{0}/{0}_bebop.rs", name),
+        &bebop_tools::BuildConfig::default(),
     );
 }
 
