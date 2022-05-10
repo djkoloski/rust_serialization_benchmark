@@ -84,6 +84,7 @@ impl<'a> flatbuffers::Verifiable for Address {
     v.in_buffer::<Self>(pos)
   }
 }
+
 impl<'a> Address {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -202,40 +203,42 @@ pub struct Log<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Log<'a> {
-    type Inner = Log<'a>;
-    #[inline]
-    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: flatbuffers::Table { buf, loc } }
-    }
+  type Inner = Log<'a>;
+  #[inline]
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
+  }
 }
 
 impl<'a> Log<'a> {
-    #[inline]
-    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Log { _tab: table }
-    }
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-        args: &'args LogArgs<'args>) -> flatbuffers::WIPOffset<Log<'bldr>> {
-      let mut builder = LogBuilder::new(_fbb);
-      builder.add_size_(args.size_);
-      if let Some(x) = args.request { builder.add_request(x); }
-      if let Some(x) = args.date { builder.add_date(x); }
-      if let Some(x) = args.userid { builder.add_userid(x); }
-      if let Some(x) = args.identity { builder.add_identity(x); }
-      if let Some(x) = args.address { builder.add_address(x); }
-      builder.add_code(args.code);
-      builder.finish()
-    }
+  pub const VT_ADDRESS: flatbuffers::VOffsetT = 4;
+  pub const VT_IDENTITY: flatbuffers::VOffsetT = 6;
+  pub const VT_USERID: flatbuffers::VOffsetT = 8;
+  pub const VT_DATE: flatbuffers::VOffsetT = 10;
+  pub const VT_REQUEST: flatbuffers::VOffsetT = 12;
+  pub const VT_CODE: flatbuffers::VOffsetT = 14;
+  pub const VT_SIZE_: flatbuffers::VOffsetT = 16;
 
-    pub const VT_ADDRESS: flatbuffers::VOffsetT = 4;
-    pub const VT_IDENTITY: flatbuffers::VOffsetT = 6;
-    pub const VT_USERID: flatbuffers::VOffsetT = 8;
-    pub const VT_DATE: flatbuffers::VOffsetT = 10;
-    pub const VT_REQUEST: flatbuffers::VOffsetT = 12;
-    pub const VT_CODE: flatbuffers::VOffsetT = 14;
-    pub const VT_SIZE_: flatbuffers::VOffsetT = 16;
+  #[inline]
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    Log { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args LogArgs<'args>
+  ) -> flatbuffers::WIPOffset<Log<'bldr>> {
+    let mut builder = LogBuilder::new(_fbb);
+    builder.add_size_(args.size_);
+    if let Some(x) = args.request { builder.add_request(x); }
+    if let Some(x) = args.date { builder.add_date(x); }
+    if let Some(x) = args.userid { builder.add_userid(x); }
+    if let Some(x) = args.identity { builder.add_identity(x); }
+    if let Some(x) = args.address { builder.add_address(x); }
+    builder.add_code(args.code);
+    builder.finish()
+  }
+
 
   #[inline]
   pub fn address(&self) -> Option<&'a Address> {
@@ -274,13 +277,13 @@ impl flatbuffers::Verifiable for Log<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<Address>(&"address", Self::VT_ADDRESS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"identity", Self::VT_IDENTITY, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"userid", Self::VT_USERID, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"date", Self::VT_DATE, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"request", Self::VT_REQUEST, true)?
-     .visit_field::<u16>(&"code", Self::VT_CODE, false)?
-     .visit_field::<u64>(&"size_", Self::VT_SIZE_, false)?
+     .visit_field::<Address>("address", Self::VT_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("identity", Self::VT_IDENTITY, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("userid", Self::VT_USERID, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("date", Self::VT_DATE, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("request", Self::VT_REQUEST, true)?
+     .visit_field::<u16>("code", Self::VT_CODE, false)?
+     .visit_field::<u64>("size_", Self::VT_SIZE_, false)?
      .finish();
     Ok(())
   }
@@ -295,19 +298,20 @@ pub struct LogArgs<'a> {
     pub size_: u64,
 }
 impl<'a> Default for LogArgs<'a> {
-    #[inline]
-    fn default() -> Self {
-        LogArgs {
-            address: None,
-            identity: None, // required field
-            userid: None, // required field
-            date: None, // required field
-            request: None, // required field
-            code: 0,
-            size_: 0,
-        }
+  #[inline]
+  fn default() -> Self {
+    LogArgs {
+      address: None,
+      identity: None, // required field
+      userid: None, // required field
+      date: None, // required field
+      request: None, // required field
+      code: 0,
+      size_: 0,
     }
+  }
 }
+
 pub struct LogBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
@@ -381,28 +385,30 @@ pub struct Logs<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Logs<'a> {
-    type Inner = Logs<'a>;
-    #[inline]
-    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: flatbuffers::Table { buf, loc } }
-    }
+  type Inner = Logs<'a>;
+  #[inline]
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
+  }
 }
 
 impl<'a> Logs<'a> {
-    #[inline]
-    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-        Logs { _tab: table }
-    }
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-        args: &'args LogsArgs<'args>) -> flatbuffers::WIPOffset<Logs<'bldr>> {
-      let mut builder = LogsBuilder::new(_fbb);
-      if let Some(x) = args.logs { builder.add_logs(x); }
-      builder.finish()
-    }
+  pub const VT_LOGS: flatbuffers::VOffsetT = 4;
 
-    pub const VT_LOGS: flatbuffers::VOffsetT = 4;
+  #[inline]
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    Logs { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args LogsArgs<'args>
+  ) -> flatbuffers::WIPOffset<Logs<'bldr>> {
+    let mut builder = LogsBuilder::new(_fbb);
+    if let Some(x) = args.logs { builder.add_logs(x); }
+    builder.finish()
+  }
+
 
   #[inline]
   pub fn logs(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log<'a>>> {
@@ -417,7 +423,7 @@ impl flatbuffers::Verifiable for Logs<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Log>>>>(&"logs", Self::VT_LOGS, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Log>>>>("logs", Self::VT_LOGS, true)?
      .finish();
     Ok(())
   }
@@ -426,13 +432,14 @@ pub struct LogsArgs<'a> {
     pub logs: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log<'a>>>>>,
 }
 impl<'a> Default for LogsArgs<'a> {
-    #[inline]
-    fn default() -> Self {
-        LogsArgs {
-            logs: None, // required field
-        }
+  #[inline]
+  fn default() -> Self {
+    LogsArgs {
+      logs: None, // required field
     }
+  }
 }
+
 pub struct LogsBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
