@@ -83,7 +83,6 @@ impl<'a> flatbuffers::Verifiable for Vector3 {
     v.in_buffer::<Self>(pos)
   }
 }
-
 impl<'a> Vector3 {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -236,7 +235,6 @@ impl<'a> flatbuffers::Verifiable for Triangle {
     v.in_buffer::<Self>(pos)
   }
 }
-
 impl<'a> Triangle {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -246,10 +244,10 @@ impl<'a> Triangle {
     normal: &Vector3,
   ) -> Self {
     let mut s = Self([0; 48]);
-    s.set_v0(v0);
-    s.set_v1(v1);
-    s.set_v2(v2);
-    s.set_normal(normal);
+    s.set_v0(&v0);
+    s.set_v1(&v1);
+    s.set_v2(&v2);
+    s.set_normal(&normal);
     s
   }
 
@@ -257,36 +255,32 @@ impl<'a> Triangle {
     unsafe { &*(self.0[0..].as_ptr() as *const Vector3) }
   }
 
-  #[allow(clippy::identity_op)]
   pub fn set_v0(&mut self, x: &Vector3) {
-    self.0[0..0 + 12].copy_from_slice(&x.0)
+    self.0[0..0+12].copy_from_slice(&x.0)
   }
 
   pub fn v1(&self) -> &Vector3 {
     unsafe { &*(self.0[12..].as_ptr() as *const Vector3) }
   }
 
-  #[allow(clippy::identity_op)]
   pub fn set_v1(&mut self, x: &Vector3) {
-    self.0[12..12 + 12].copy_from_slice(&x.0)
+    self.0[12..12+12].copy_from_slice(&x.0)
   }
 
   pub fn v2(&self) -> &Vector3 {
     unsafe { &*(self.0[24..].as_ptr() as *const Vector3) }
   }
 
-  #[allow(clippy::identity_op)]
   pub fn set_v2(&mut self, x: &Vector3) {
-    self.0[24..24 + 12].copy_from_slice(&x.0)
+    self.0[24..24+12].copy_from_slice(&x.0)
   }
 
   pub fn normal(&self) -> &Vector3 {
     unsafe { &*(self.0[36..].as_ptr() as *const Vector3) }
   }
 
-  #[allow(clippy::identity_op)]
   pub fn set_normal(&mut self, x: &Vector3) {
-    self.0[36..36 + 12].copy_from_slice(&x.0)
+    self.0[36..36+12].copy_from_slice(&x.0)
   }
 
 }
@@ -299,30 +293,28 @@ pub struct Mesh<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Mesh<'a> {
-  type Inner = Mesh<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = Mesh<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> Mesh<'a> {
-  pub const VT_TRIANGLES: flatbuffers::VOffsetT = 4;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        Mesh { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args MeshArgs<'args>) -> flatbuffers::WIPOffset<Mesh<'bldr>> {
+      let mut builder = MeshBuilder::new(_fbb);
+      if let Some(x) = args.triangles { builder.add_triangles(x); }
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Mesh { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args MeshArgs<'args>
-  ) -> flatbuffers::WIPOffset<Mesh<'bldr>> {
-    let mut builder = MeshBuilder::new(_fbb);
-    if let Some(x) = args.triangles { builder.add_triangles(x); }
-    builder.finish()
-  }
-
+    pub const VT_TRIANGLES: flatbuffers::VOffsetT = 4;
 
   #[inline]
   pub fn triangles(&self) -> &'a [Triangle] {
@@ -337,7 +329,7 @@ impl flatbuffers::Verifiable for Mesh<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, Triangle>>>("triangles", Self::VT_TRIANGLES, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, Triangle>>>(&"triangles", Self::VT_TRIANGLES, true)?
      .finish();
     Ok(())
   }
@@ -346,14 +338,13 @@ pub struct MeshArgs<'a> {
     pub triangles: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, Triangle>>>,
 }
 impl<'a> Default for MeshArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    MeshArgs {
-      triangles: None, // required field
+    #[inline]
+    fn default() -> Self {
+        MeshArgs {
+            triangles: None, // required field
+        }
     }
-  }
 }
-
 pub struct MeshBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,

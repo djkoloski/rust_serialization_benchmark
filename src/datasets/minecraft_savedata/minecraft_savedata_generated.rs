@@ -182,7 +182,6 @@ impl<'a> flatbuffers::Verifiable for Abilities {
     v.in_buffer::<Self>(pos)
   }
 }
-
 impl<'a> Abilities {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -433,7 +432,6 @@ impl<'a> flatbuffers::Verifiable for Vector2f {
     v.in_buffer::<Self>(pos)
   }
 }
-
 impl<'a> Vector2f {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -560,7 +558,6 @@ impl<'a> flatbuffers::Verifiable for Vector3d {
     v.in_buffer::<Self>(pos)
   }
 }
-
 impl<'a> Vector3d {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -713,7 +710,6 @@ impl<'a> flatbuffers::Verifiable for Uuid {
     v.in_buffer::<Self>(pos)
   }
 }
-
 impl<'a> Uuid {
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -832,34 +828,32 @@ pub struct Item<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Item<'a> {
-  type Inner = Item<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = Item<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> Item<'a> {
-  pub const VT_COUNT: flatbuffers::VOffsetT = 4;
-  pub const VT_SLOT: flatbuffers::VOffsetT = 6;
-  pub const VT_ID: flatbuffers::VOffsetT = 8;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        Item { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args ItemArgs<'args>) -> flatbuffers::WIPOffset<Item<'bldr>> {
+      let mut builder = ItemBuilder::new(_fbb);
+      if let Some(x) = args.id { builder.add_id(x); }
+      builder.add_slot(args.slot);
+      builder.add_count(args.count);
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Item { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args ItemArgs<'args>
-  ) -> flatbuffers::WIPOffset<Item<'bldr>> {
-    let mut builder = ItemBuilder::new(_fbb);
-    if let Some(x) = args.id { builder.add_id(x); }
-    builder.add_slot(args.slot);
-    builder.add_count(args.count);
-    builder.finish()
-  }
-
+    pub const VT_COUNT: flatbuffers::VOffsetT = 4;
+    pub const VT_SLOT: flatbuffers::VOffsetT = 6;
+    pub const VT_ID: flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub fn count(&self) -> i8 {
@@ -882,9 +876,9 @@ impl flatbuffers::Verifiable for Item<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<i8>("count", Self::VT_COUNT, false)?
-     .visit_field::<u8>("slot", Self::VT_SLOT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("id", Self::VT_ID, true)?
+     .visit_field::<i8>(&"count", Self::VT_COUNT, false)?
+     .visit_field::<u8>(&"slot", Self::VT_SLOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"id", Self::VT_ID, true)?
      .finish();
     Ok(())
   }
@@ -895,16 +889,15 @@ pub struct ItemArgs<'a> {
     pub id: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for ItemArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    ItemArgs {
-      count: 0,
-      slot: 0,
-      id: None, // required field
+    #[inline]
+    fn default() -> Self {
+        ItemArgs {
+            count: 0,
+            slot: 0,
+            id: None, // required field
+        }
     }
-  }
 }
-
 pub struct ItemBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
@@ -955,60 +948,58 @@ pub struct Entity<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Entity<'a> {
-  type Inner = Entity<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = Entity<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> Entity<'a> {
-  pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_POS: flatbuffers::VOffsetT = 6;
-  pub const VT_MOTION: flatbuffers::VOffsetT = 8;
-  pub const VT_ROTATION: flatbuffers::VOffsetT = 10;
-  pub const VT_FALL_DISTANCE: flatbuffers::VOffsetT = 12;
-  pub const VT_FIRE: flatbuffers::VOffsetT = 14;
-  pub const VT_AIR: flatbuffers::VOffsetT = 16;
-  pub const VT_ON_GROUND: flatbuffers::VOffsetT = 18;
-  pub const VT_NO_GRAVITY: flatbuffers::VOffsetT = 20;
-  pub const VT_INVULNERABLE: flatbuffers::VOffsetT = 22;
-  pub const VT_PORTAL_COOLDOWN: flatbuffers::VOffsetT = 24;
-  pub const VT_UUID: flatbuffers::VOffsetT = 26;
-  pub const VT_CUSTOM_NAME: flatbuffers::VOffsetT = 28;
-  pub const VT_CUSTOM_NAME_VISIBLE: flatbuffers::VOffsetT = 30;
-  pub const VT_SILENT: flatbuffers::VOffsetT = 32;
-  pub const VT_GLOWING: flatbuffers::VOffsetT = 34;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        Entity { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args EntityArgs<'args>) -> flatbuffers::WIPOffset<Entity<'bldr>> {
+      let mut builder = EntityBuilder::new(_fbb);
+      if let Some(x) = args.custom_name { builder.add_custom_name(x); }
+      if let Some(x) = args.uuid { builder.add_uuid(x); }
+      builder.add_portal_cooldown(args.portal_cooldown);
+      builder.add_fall_distance(args.fall_distance);
+      if let Some(x) = args.rotation { builder.add_rotation(x); }
+      if let Some(x) = args.motion { builder.add_motion(x); }
+      if let Some(x) = args.pos { builder.add_pos(x); }
+      if let Some(x) = args.id { builder.add_id(x); }
+      builder.add_air(args.air);
+      builder.add_fire(args.fire);
+      builder.add_glowing(args.glowing);
+      builder.add_silent(args.silent);
+      builder.add_custom_name_visible(args.custom_name_visible);
+      builder.add_invulnerable(args.invulnerable);
+      builder.add_no_gravity(args.no_gravity);
+      builder.add_on_ground(args.on_ground);
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Entity { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args EntityArgs<'args>
-  ) -> flatbuffers::WIPOffset<Entity<'bldr>> {
-    let mut builder = EntityBuilder::new(_fbb);
-    if let Some(x) = args.custom_name { builder.add_custom_name(x); }
-    if let Some(x) = args.uuid { builder.add_uuid(x); }
-    builder.add_portal_cooldown(args.portal_cooldown);
-    builder.add_fall_distance(args.fall_distance);
-    if let Some(x) = args.rotation { builder.add_rotation(x); }
-    if let Some(x) = args.motion { builder.add_motion(x); }
-    if let Some(x) = args.pos { builder.add_pos(x); }
-    if let Some(x) = args.id { builder.add_id(x); }
-    builder.add_air(args.air);
-    builder.add_fire(args.fire);
-    builder.add_glowing(args.glowing);
-    builder.add_silent(args.silent);
-    builder.add_custom_name_visible(args.custom_name_visible);
-    builder.add_invulnerable(args.invulnerable);
-    builder.add_no_gravity(args.no_gravity);
-    builder.add_on_ground(args.on_ground);
-    builder.finish()
-  }
-
+    pub const VT_ID: flatbuffers::VOffsetT = 4;
+    pub const VT_POS: flatbuffers::VOffsetT = 6;
+    pub const VT_MOTION: flatbuffers::VOffsetT = 8;
+    pub const VT_ROTATION: flatbuffers::VOffsetT = 10;
+    pub const VT_FALL_DISTANCE: flatbuffers::VOffsetT = 12;
+    pub const VT_FIRE: flatbuffers::VOffsetT = 14;
+    pub const VT_AIR: flatbuffers::VOffsetT = 16;
+    pub const VT_ON_GROUND: flatbuffers::VOffsetT = 18;
+    pub const VT_NO_GRAVITY: flatbuffers::VOffsetT = 20;
+    pub const VT_INVULNERABLE: flatbuffers::VOffsetT = 22;
+    pub const VT_PORTAL_COOLDOWN: flatbuffers::VOffsetT = 24;
+    pub const VT_UUID: flatbuffers::VOffsetT = 26;
+    pub const VT_CUSTOM_NAME: flatbuffers::VOffsetT = 28;
+    pub const VT_CUSTOM_NAME_VISIBLE: flatbuffers::VOffsetT = 30;
+    pub const VT_SILENT: flatbuffers::VOffsetT = 32;
+    pub const VT_GLOWING: flatbuffers::VOffsetT = 34;
 
   #[inline]
   pub fn id(&self) -> &'a str {
@@ -1083,22 +1074,22 @@ impl flatbuffers::Verifiable for Entity<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("id", Self::VT_ID, true)?
-     .visit_field::<Vector3d>("pos", Self::VT_POS, true)?
-     .visit_field::<Vector3d>("motion", Self::VT_MOTION, true)?
-     .visit_field::<Vector2f>("rotation", Self::VT_ROTATION, true)?
-     .visit_field::<f32>("fall_distance", Self::VT_FALL_DISTANCE, false)?
-     .visit_field::<u16>("fire", Self::VT_FIRE, false)?
-     .visit_field::<u16>("air", Self::VT_AIR, false)?
-     .visit_field::<bool>("on_ground", Self::VT_ON_GROUND, false)?
-     .visit_field::<bool>("no_gravity", Self::VT_NO_GRAVITY, false)?
-     .visit_field::<bool>("invulnerable", Self::VT_INVULNERABLE, false)?
-     .visit_field::<i32>("portal_cooldown", Self::VT_PORTAL_COOLDOWN, false)?
-     .visit_field::<Uuid>("uuid", Self::VT_UUID, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("custom_name", Self::VT_CUSTOM_NAME, false)?
-     .visit_field::<bool>("custom_name_visible", Self::VT_CUSTOM_NAME_VISIBLE, false)?
-     .visit_field::<bool>("silent", Self::VT_SILENT, false)?
-     .visit_field::<bool>("glowing", Self::VT_GLOWING, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"id", Self::VT_ID, true)?
+     .visit_field::<Vector3d>(&"pos", Self::VT_POS, true)?
+     .visit_field::<Vector3d>(&"motion", Self::VT_MOTION, true)?
+     .visit_field::<Vector2f>(&"rotation", Self::VT_ROTATION, true)?
+     .visit_field::<f32>(&"fall_distance", Self::VT_FALL_DISTANCE, false)?
+     .visit_field::<u16>(&"fire", Self::VT_FIRE, false)?
+     .visit_field::<u16>(&"air", Self::VT_AIR, false)?
+     .visit_field::<bool>(&"on_ground", Self::VT_ON_GROUND, false)?
+     .visit_field::<bool>(&"no_gravity", Self::VT_NO_GRAVITY, false)?
+     .visit_field::<bool>(&"invulnerable", Self::VT_INVULNERABLE, false)?
+     .visit_field::<i32>(&"portal_cooldown", Self::VT_PORTAL_COOLDOWN, false)?
+     .visit_field::<Uuid>(&"uuid", Self::VT_UUID, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"custom_name", Self::VT_CUSTOM_NAME, false)?
+     .visit_field::<bool>(&"custom_name_visible", Self::VT_CUSTOM_NAME_VISIBLE, false)?
+     .visit_field::<bool>(&"silent", Self::VT_SILENT, false)?
+     .visit_field::<bool>(&"glowing", Self::VT_GLOWING, false)?
      .finish();
     Ok(())
   }
@@ -1122,29 +1113,28 @@ pub struct EntityArgs<'a> {
     pub glowing: bool,
 }
 impl<'a> Default for EntityArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    EntityArgs {
-      id: None, // required field
-      pos: None, // required field
-      motion: None, // required field
-      rotation: None, // required field
-      fall_distance: 0.0,
-      fire: 0,
-      air: 0,
-      on_ground: false,
-      no_gravity: false,
-      invulnerable: false,
-      portal_cooldown: 0,
-      uuid: None, // required field
-      custom_name: None,
-      custom_name_visible: false,
-      silent: false,
-      glowing: false,
+    #[inline]
+    fn default() -> Self {
+        EntityArgs {
+            id: None, // required field
+            pos: None, // required field
+            motion: None, // required field
+            rotation: None, // required field
+            fall_distance: 0.0,
+            fire: 0,
+            air: 0,
+            on_ground: false,
+            no_gravity: false,
+            invulnerable: false,
+            portal_cooldown: 0,
+            uuid: None, // required field
+            custom_name: None,
+            custom_name_visible: false,
+            silent: false,
+            glowing: false,
+        }
     }
-  }
 }
-
 pub struct EntityBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
@@ -1264,48 +1254,46 @@ pub struct RecipeBook<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for RecipeBook<'a> {
-  type Inner = RecipeBook<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = RecipeBook<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> RecipeBook<'a> {
-  pub const VT_RECIPES: flatbuffers::VOffsetT = 4;
-  pub const VT_TO_BE_DISPLAYED: flatbuffers::VOffsetT = 6;
-  pub const VT_IS_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 8;
-  pub const VT_IS_GUI_OPEN: flatbuffers::VOffsetT = 10;
-  pub const VT_IS_FURNACE_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 12;
-  pub const VT_IS_FURNACE_GUI_OPEN: flatbuffers::VOffsetT = 14;
-  pub const VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 16;
-  pub const VT_IS_BLASTING_FURNACE_GUI_OPEN: flatbuffers::VOffsetT = 18;
-  pub const VT_IS_SMOKER_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 20;
-  pub const VT_IS_SMOKER_GUI_OPEN: flatbuffers::VOffsetT = 22;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        RecipeBook { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args RecipeBookArgs<'args>) -> flatbuffers::WIPOffset<RecipeBook<'bldr>> {
+      let mut builder = RecipeBookBuilder::new(_fbb);
+      if let Some(x) = args.to_be_displayed { builder.add_to_be_displayed(x); }
+      if let Some(x) = args.recipes { builder.add_recipes(x); }
+      builder.add_is_smoker_gui_open(args.is_smoker_gui_open);
+      builder.add_is_smoker_filtering_craftable(args.is_smoker_filtering_craftable);
+      builder.add_is_blasting_furnace_gui_open(args.is_blasting_furnace_gui_open);
+      builder.add_is_blasting_furnace_filtering_craftable(args.is_blasting_furnace_filtering_craftable);
+      builder.add_is_furnace_gui_open(args.is_furnace_gui_open);
+      builder.add_is_furnace_filtering_craftable(args.is_furnace_filtering_craftable);
+      builder.add_is_gui_open(args.is_gui_open);
+      builder.add_is_filtering_craftable(args.is_filtering_craftable);
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    RecipeBook { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args RecipeBookArgs<'args>
-  ) -> flatbuffers::WIPOffset<RecipeBook<'bldr>> {
-    let mut builder = RecipeBookBuilder::new(_fbb);
-    if let Some(x) = args.to_be_displayed { builder.add_to_be_displayed(x); }
-    if let Some(x) = args.recipes { builder.add_recipes(x); }
-    builder.add_is_smoker_gui_open(args.is_smoker_gui_open);
-    builder.add_is_smoker_filtering_craftable(args.is_smoker_filtering_craftable);
-    builder.add_is_blasting_furnace_gui_open(args.is_blasting_furnace_gui_open);
-    builder.add_is_blasting_furnace_filtering_craftable(args.is_blasting_furnace_filtering_craftable);
-    builder.add_is_furnace_gui_open(args.is_furnace_gui_open);
-    builder.add_is_furnace_filtering_craftable(args.is_furnace_filtering_craftable);
-    builder.add_is_gui_open(args.is_gui_open);
-    builder.add_is_filtering_craftable(args.is_filtering_craftable);
-    builder.finish()
-  }
-
+    pub const VT_RECIPES: flatbuffers::VOffsetT = 4;
+    pub const VT_TO_BE_DISPLAYED: flatbuffers::VOffsetT = 6;
+    pub const VT_IS_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 8;
+    pub const VT_IS_GUI_OPEN: flatbuffers::VOffsetT = 10;
+    pub const VT_IS_FURNACE_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 12;
+    pub const VT_IS_FURNACE_GUI_OPEN: flatbuffers::VOffsetT = 14;
+    pub const VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 16;
+    pub const VT_IS_BLASTING_FURNACE_GUI_OPEN: flatbuffers::VOffsetT = 18;
+    pub const VT_IS_SMOKER_FILTERING_CRAFTABLE: flatbuffers::VOffsetT = 20;
+    pub const VT_IS_SMOKER_GUI_OPEN: flatbuffers::VOffsetT = 22;
 
   #[inline]
   pub fn recipes(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>> {
@@ -1356,16 +1344,16 @@ impl flatbuffers::Verifiable for RecipeBook<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("recipes", Self::VT_RECIPES, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("to_be_displayed", Self::VT_TO_BE_DISPLAYED, true)?
-     .visit_field::<bool>("is_filtering_craftable", Self::VT_IS_FILTERING_CRAFTABLE, false)?
-     .visit_field::<bool>("is_gui_open", Self::VT_IS_GUI_OPEN, false)?
-     .visit_field::<bool>("is_furnace_filtering_craftable", Self::VT_IS_FURNACE_FILTERING_CRAFTABLE, false)?
-     .visit_field::<bool>("is_furnace_gui_open", Self::VT_IS_FURNACE_GUI_OPEN, false)?
-     .visit_field::<bool>("is_blasting_furnace_filtering_craftable", Self::VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE, false)?
-     .visit_field::<bool>("is_blasting_furnace_gui_open", Self::VT_IS_BLASTING_FURNACE_GUI_OPEN, false)?
-     .visit_field::<bool>("is_smoker_filtering_craftable", Self::VT_IS_SMOKER_FILTERING_CRAFTABLE, false)?
-     .visit_field::<bool>("is_smoker_gui_open", Self::VT_IS_SMOKER_GUI_OPEN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>(&"recipes", Self::VT_RECIPES, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>(&"to_be_displayed", Self::VT_TO_BE_DISPLAYED, true)?
+     .visit_field::<bool>(&"is_filtering_craftable", Self::VT_IS_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_gui_open", Self::VT_IS_GUI_OPEN, false)?
+     .visit_field::<bool>(&"is_furnace_filtering_craftable", Self::VT_IS_FURNACE_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_furnace_gui_open", Self::VT_IS_FURNACE_GUI_OPEN, false)?
+     .visit_field::<bool>(&"is_blasting_furnace_filtering_craftable", Self::VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_blasting_furnace_gui_open", Self::VT_IS_BLASTING_FURNACE_GUI_OPEN, false)?
+     .visit_field::<bool>(&"is_smoker_filtering_craftable", Self::VT_IS_SMOKER_FILTERING_CRAFTABLE, false)?
+     .visit_field::<bool>(&"is_smoker_gui_open", Self::VT_IS_SMOKER_GUI_OPEN, false)?
      .finish();
     Ok(())
   }
@@ -1383,23 +1371,22 @@ pub struct RecipeBookArgs<'a> {
     pub is_smoker_gui_open: bool,
 }
 impl<'a> Default for RecipeBookArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    RecipeBookArgs {
-      recipes: None, // required field
-      to_be_displayed: None, // required field
-      is_filtering_craftable: false,
-      is_gui_open: false,
-      is_furnace_filtering_craftable: false,
-      is_furnace_gui_open: false,
-      is_blasting_furnace_filtering_craftable: false,
-      is_blasting_furnace_gui_open: false,
-      is_smoker_filtering_craftable: false,
-      is_smoker_gui_open: false,
+    #[inline]
+    fn default() -> Self {
+        RecipeBookArgs {
+            recipes: None, // required field
+            to_be_displayed: None, // required field
+            is_filtering_craftable: false,
+            is_gui_open: false,
+            is_furnace_filtering_craftable: false,
+            is_furnace_gui_open: false,
+            is_blasting_furnace_filtering_craftable: false,
+            is_blasting_furnace_gui_open: false,
+            is_smoker_filtering_craftable: false,
+            is_smoker_gui_open: false,
+        }
     }
-  }
 }
-
 pub struct RecipeBookBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
@@ -1486,38 +1473,36 @@ pub struct Vehicle<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Vehicle<'a> {
-  type Inner = Vehicle<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = Vehicle<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> Vehicle<'a> {
-  pub const VT_PARAM_0: flatbuffers::VOffsetT = 4;
-  pub const VT_PARAM_1: flatbuffers::VOffsetT = 6;
-  pub const VT_PARAM_2: flatbuffers::VOffsetT = 8;
-  pub const VT_PARAM_3: flatbuffers::VOffsetT = 10;
-  pub const VT_ENTITY: flatbuffers::VOffsetT = 12;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        Vehicle { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args VehicleArgs<'args>) -> flatbuffers::WIPOffset<Vehicle<'bldr>> {
+      let mut builder = VehicleBuilder::new(_fbb);
+      if let Some(x) = args.entity { builder.add_entity(x); }
+      builder.add_param_3(args.param_3);
+      builder.add_param_2(args.param_2);
+      builder.add_param_1(args.param_1);
+      builder.add_param_0(args.param_0);
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Vehicle { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args VehicleArgs<'args>
-  ) -> flatbuffers::WIPOffset<Vehicle<'bldr>> {
-    let mut builder = VehicleBuilder::new(_fbb);
-    if let Some(x) = args.entity { builder.add_entity(x); }
-    builder.add_param_3(args.param_3);
-    builder.add_param_2(args.param_2);
-    builder.add_param_1(args.param_1);
-    builder.add_param_0(args.param_0);
-    builder.finish()
-  }
-
+    pub const VT_PARAM_0: flatbuffers::VOffsetT = 4;
+    pub const VT_PARAM_1: flatbuffers::VOffsetT = 6;
+    pub const VT_PARAM_2: flatbuffers::VOffsetT = 8;
+    pub const VT_PARAM_3: flatbuffers::VOffsetT = 10;
+    pub const VT_ENTITY: flatbuffers::VOffsetT = 12;
 
   #[inline]
   pub fn param_0(&self) -> u32 {
@@ -1548,11 +1533,11 @@ impl flatbuffers::Verifiable for Vehicle<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<u32>("param_0", Self::VT_PARAM_0, false)?
-     .visit_field::<u32>("param_1", Self::VT_PARAM_1, false)?
-     .visit_field::<u32>("param_2", Self::VT_PARAM_2, false)?
-     .visit_field::<u32>("param_3", Self::VT_PARAM_3, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>("entity", Self::VT_ENTITY, true)?
+     .visit_field::<u32>(&"param_0", Self::VT_PARAM_0, false)?
+     .visit_field::<u32>(&"param_1", Self::VT_PARAM_1, false)?
+     .visit_field::<u32>(&"param_2", Self::VT_PARAM_2, false)?
+     .visit_field::<u32>(&"param_3", Self::VT_PARAM_3, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>(&"entity", Self::VT_ENTITY, true)?
      .finish();
     Ok(())
   }
@@ -1565,18 +1550,17 @@ pub struct VehicleArgs<'a> {
     pub entity: Option<flatbuffers::WIPOffset<Entity<'a>>>,
 }
 impl<'a> Default for VehicleArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    VehicleArgs {
-      param_0: 0,
-      param_1: 0,
-      param_2: 0,
-      param_3: 0,
-      entity: None, // required field
+    #[inline]
+    fn default() -> Self {
+        VehicleArgs {
+            param_0: 0,
+            param_1: 0,
+            param_2: 0,
+            param_3: 0,
+            entity: None, // required field
+        }
     }
-  }
 }
-
 pub struct VehicleBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
@@ -1637,84 +1621,82 @@ pub struct Player<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Player<'a> {
-  type Inner = Player<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = Player<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> Player<'a> {
-  pub const VT_GAME_TYPE: flatbuffers::VOffsetT = 4;
-  pub const VT_PREVIOUS_GAME_TYPE: flatbuffers::VOffsetT = 6;
-  pub const VT_SCORE: flatbuffers::VOffsetT = 8;
-  pub const VT_DIMENSION: flatbuffers::VOffsetT = 10;
-  pub const VT_SELECTED_ITEM_SLOT: flatbuffers::VOffsetT = 12;
-  pub const VT_SELECTED_ITEM: flatbuffers::VOffsetT = 14;
-  pub const VT_SPAWN_DIMENSION: flatbuffers::VOffsetT = 16;
-  pub const VT_SPAWN_X: flatbuffers::VOffsetT = 18;
-  pub const VT_SPAWN_Y: flatbuffers::VOffsetT = 20;
-  pub const VT_SPAWN_Z: flatbuffers::VOffsetT = 22;
-  pub const VT_SPAWN_FORCED: flatbuffers::VOffsetT = 24;
-  pub const VT_SLEEP_TIMER: flatbuffers::VOffsetT = 26;
-  pub const VT_FOOD_EXHAUSTION_LEVEL: flatbuffers::VOffsetT = 28;
-  pub const VT_FOOD_SATURATION_LEVEL: flatbuffers::VOffsetT = 30;
-  pub const VT_FOOD_TICK_TIMER: flatbuffers::VOffsetT = 32;
-  pub const VT_XP_LEVEL: flatbuffers::VOffsetT = 34;
-  pub const VT_XP_P: flatbuffers::VOffsetT = 36;
-  pub const VT_XP_TOTAL: flatbuffers::VOffsetT = 38;
-  pub const VT_XP_SEED: flatbuffers::VOffsetT = 40;
-  pub const VT_INVENTORY: flatbuffers::VOffsetT = 42;
-  pub const VT_ENDER_ITEMS: flatbuffers::VOffsetT = 44;
-  pub const VT_ABILITIES: flatbuffers::VOffsetT = 46;
-  pub const VT_ENTERED_NETHER_POSITION: flatbuffers::VOffsetT = 48;
-  pub const VT_ROOT_VEHICLE: flatbuffers::VOffsetT = 50;
-  pub const VT_SHOULDER_ENTITY_LEFT: flatbuffers::VOffsetT = 52;
-  pub const VT_SHOULDER_ENTITY_RIGHT: flatbuffers::VOffsetT = 54;
-  pub const VT_SEEN_CREDITS: flatbuffers::VOffsetT = 56;
-  pub const VT_RECIPE_BOOK: flatbuffers::VOffsetT = 58;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        Player { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args PlayerArgs<'args>) -> flatbuffers::WIPOffset<Player<'bldr>> {
+      let mut builder = PlayerBuilder::new(_fbb);
+      builder.add_spawn_z(args.spawn_z);
+      builder.add_spawn_y(args.spawn_y);
+      builder.add_spawn_x(args.spawn_x);
+      builder.add_score(args.score);
+      if let Some(x) = args.recipe_book { builder.add_recipe_book(x); }
+      if let Some(x) = args.shoulder_entity_right { builder.add_shoulder_entity_right(x); }
+      if let Some(x) = args.shoulder_entity_left { builder.add_shoulder_entity_left(x); }
+      if let Some(x) = args.root_vehicle { builder.add_root_vehicle(x); }
+      if let Some(x) = args.entered_nether_position { builder.add_entered_nether_position(x); }
+      if let Some(x) = args.abilities { builder.add_abilities(x); }
+      if let Some(x) = args.ender_items { builder.add_ender_items(x); }
+      if let Some(x) = args.inventory { builder.add_inventory(x); }
+      builder.add_xp_seed(args.xp_seed);
+      builder.add_xp_total(args.xp_total);
+      builder.add_xp_p(args.xp_p);
+      builder.add_xp_level(args.xp_level);
+      builder.add_food_tick_timer(args.food_tick_timer);
+      builder.add_food_saturation_level(args.food_saturation_level);
+      builder.add_food_exhaustion_level(args.food_exhaustion_level);
+      if let Some(x) = args.spawn_dimension { builder.add_spawn_dimension(x); }
+      if let Some(x) = args.selected_item { builder.add_selected_item(x); }
+      builder.add_selected_item_slot(args.selected_item_slot);
+      if let Some(x) = args.dimension { builder.add_dimension(x); }
+      builder.add_sleep_timer(args.sleep_timer);
+      builder.add_seen_credits(args.seen_credits);
+      builder.add_spawn_forced(args.spawn_forced);
+      builder.add_previous_game_type(args.previous_game_type);
+      builder.add_game_type(args.game_type);
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Player { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args PlayerArgs<'args>
-  ) -> flatbuffers::WIPOffset<Player<'bldr>> {
-    let mut builder = PlayerBuilder::new(_fbb);
-    builder.add_spawn_z(args.spawn_z);
-    builder.add_spawn_y(args.spawn_y);
-    builder.add_spawn_x(args.spawn_x);
-    builder.add_score(args.score);
-    if let Some(x) = args.recipe_book { builder.add_recipe_book(x); }
-    if let Some(x) = args.shoulder_entity_right { builder.add_shoulder_entity_right(x); }
-    if let Some(x) = args.shoulder_entity_left { builder.add_shoulder_entity_left(x); }
-    if let Some(x) = args.root_vehicle { builder.add_root_vehicle(x); }
-    if let Some(x) = args.entered_nether_position { builder.add_entered_nether_position(x); }
-    if let Some(x) = args.abilities { builder.add_abilities(x); }
-    if let Some(x) = args.ender_items { builder.add_ender_items(x); }
-    if let Some(x) = args.inventory { builder.add_inventory(x); }
-    builder.add_xp_seed(args.xp_seed);
-    builder.add_xp_total(args.xp_total);
-    builder.add_xp_p(args.xp_p);
-    builder.add_xp_level(args.xp_level);
-    builder.add_food_tick_timer(args.food_tick_timer);
-    builder.add_food_saturation_level(args.food_saturation_level);
-    builder.add_food_exhaustion_level(args.food_exhaustion_level);
-    if let Some(x) = args.spawn_dimension { builder.add_spawn_dimension(x); }
-    if let Some(x) = args.selected_item { builder.add_selected_item(x); }
-    builder.add_selected_item_slot(args.selected_item_slot);
-    if let Some(x) = args.dimension { builder.add_dimension(x); }
-    builder.add_sleep_timer(args.sleep_timer);
-    builder.add_seen_credits(args.seen_credits);
-    builder.add_spawn_forced(args.spawn_forced);
-    builder.add_previous_game_type(args.previous_game_type);
-    builder.add_game_type(args.game_type);
-    builder.finish()
-  }
-
+    pub const VT_GAME_TYPE: flatbuffers::VOffsetT = 4;
+    pub const VT_PREVIOUS_GAME_TYPE: flatbuffers::VOffsetT = 6;
+    pub const VT_SCORE: flatbuffers::VOffsetT = 8;
+    pub const VT_DIMENSION: flatbuffers::VOffsetT = 10;
+    pub const VT_SELECTED_ITEM_SLOT: flatbuffers::VOffsetT = 12;
+    pub const VT_SELECTED_ITEM: flatbuffers::VOffsetT = 14;
+    pub const VT_SPAWN_DIMENSION: flatbuffers::VOffsetT = 16;
+    pub const VT_SPAWN_X: flatbuffers::VOffsetT = 18;
+    pub const VT_SPAWN_Y: flatbuffers::VOffsetT = 20;
+    pub const VT_SPAWN_Z: flatbuffers::VOffsetT = 22;
+    pub const VT_SPAWN_FORCED: flatbuffers::VOffsetT = 24;
+    pub const VT_SLEEP_TIMER: flatbuffers::VOffsetT = 26;
+    pub const VT_FOOD_EXHAUSTION_LEVEL: flatbuffers::VOffsetT = 28;
+    pub const VT_FOOD_SATURATION_LEVEL: flatbuffers::VOffsetT = 30;
+    pub const VT_FOOD_TICK_TIMER: flatbuffers::VOffsetT = 32;
+    pub const VT_XP_LEVEL: flatbuffers::VOffsetT = 34;
+    pub const VT_XP_P: flatbuffers::VOffsetT = 36;
+    pub const VT_XP_TOTAL: flatbuffers::VOffsetT = 38;
+    pub const VT_XP_SEED: flatbuffers::VOffsetT = 40;
+    pub const VT_INVENTORY: flatbuffers::VOffsetT = 42;
+    pub const VT_ENDER_ITEMS: flatbuffers::VOffsetT = 44;
+    pub const VT_ABILITIES: flatbuffers::VOffsetT = 46;
+    pub const VT_ENTERED_NETHER_POSITION: flatbuffers::VOffsetT = 48;
+    pub const VT_ROOT_VEHICLE: flatbuffers::VOffsetT = 50;
+    pub const VT_SHOULDER_ENTITY_LEFT: flatbuffers::VOffsetT = 52;
+    pub const VT_SHOULDER_ENTITY_RIGHT: flatbuffers::VOffsetT = 54;
+    pub const VT_SEEN_CREDITS: flatbuffers::VOffsetT = 56;
+    pub const VT_RECIPE_BOOK: flatbuffers::VOffsetT = 58;
 
   #[inline]
   pub fn game_type(&self) -> GameType {
@@ -1837,34 +1819,34 @@ impl flatbuffers::Verifiable for Player<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<GameType>("game_type", Self::VT_GAME_TYPE, false)?
-     .visit_field::<GameType>("previous_game_type", Self::VT_PREVIOUS_GAME_TYPE, false)?
-     .visit_field::<i64>("score", Self::VT_SCORE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("dimension", Self::VT_DIMENSION, true)?
-     .visit_field::<u32>("selected_item_slot", Self::VT_SELECTED_ITEM_SLOT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Item>>("selected_item", Self::VT_SELECTED_ITEM, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("spawn_dimension", Self::VT_SPAWN_DIMENSION, false)?
-     .visit_field::<i64>("spawn_x", Self::VT_SPAWN_X, false)?
-     .visit_field::<i64>("spawn_y", Self::VT_SPAWN_Y, false)?
-     .visit_field::<i64>("spawn_z", Self::VT_SPAWN_Z, false)?
-     .visit_field::<bool>("spawn_forced", Self::VT_SPAWN_FORCED, false)?
-     .visit_field::<u16>("sleep_timer", Self::VT_SLEEP_TIMER, false)?
-     .visit_field::<f32>("food_exhaustion_level", Self::VT_FOOD_EXHAUSTION_LEVEL, false)?
-     .visit_field::<f32>("food_saturation_level", Self::VT_FOOD_SATURATION_LEVEL, false)?
-     .visit_field::<u32>("food_tick_timer", Self::VT_FOOD_TICK_TIMER, false)?
-     .visit_field::<u32>("xp_level", Self::VT_XP_LEVEL, false)?
-     .visit_field::<f32>("xp_p", Self::VT_XP_P, false)?
-     .visit_field::<i32>("xp_total", Self::VT_XP_TOTAL, false)?
-     .visit_field::<i32>("xp_seed", Self::VT_XP_SEED, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Item>>>>("inventory", Self::VT_INVENTORY, true)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Item>>>>("ender_items", Self::VT_ENDER_ITEMS, true)?
-     .visit_field::<Abilities>("abilities", Self::VT_ABILITIES, true)?
-     .visit_field::<Vector3d>("entered_nether_position", Self::VT_ENTERED_NETHER_POSITION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Vehicle>>("root_vehicle", Self::VT_ROOT_VEHICLE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>("shoulder_entity_left", Self::VT_SHOULDER_ENTITY_LEFT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>("shoulder_entity_right", Self::VT_SHOULDER_ENTITY_RIGHT, false)?
-     .visit_field::<bool>("seen_credits", Self::VT_SEEN_CREDITS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<RecipeBook>>("recipe_book", Self::VT_RECIPE_BOOK, true)?
+     .visit_field::<GameType>(&"game_type", Self::VT_GAME_TYPE, false)?
+     .visit_field::<GameType>(&"previous_game_type", Self::VT_PREVIOUS_GAME_TYPE, false)?
+     .visit_field::<i64>(&"score", Self::VT_SCORE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"dimension", Self::VT_DIMENSION, true)?
+     .visit_field::<u32>(&"selected_item_slot", Self::VT_SELECTED_ITEM_SLOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Item>>(&"selected_item", Self::VT_SELECTED_ITEM, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>(&"spawn_dimension", Self::VT_SPAWN_DIMENSION, false)?
+     .visit_field::<i64>(&"spawn_x", Self::VT_SPAWN_X, false)?
+     .visit_field::<i64>(&"spawn_y", Self::VT_SPAWN_Y, false)?
+     .visit_field::<i64>(&"spawn_z", Self::VT_SPAWN_Z, false)?
+     .visit_field::<bool>(&"spawn_forced", Self::VT_SPAWN_FORCED, false)?
+     .visit_field::<u16>(&"sleep_timer", Self::VT_SLEEP_TIMER, false)?
+     .visit_field::<f32>(&"food_exhaustion_level", Self::VT_FOOD_EXHAUSTION_LEVEL, false)?
+     .visit_field::<f32>(&"food_saturation_level", Self::VT_FOOD_SATURATION_LEVEL, false)?
+     .visit_field::<u32>(&"food_tick_timer", Self::VT_FOOD_TICK_TIMER, false)?
+     .visit_field::<u32>(&"xp_level", Self::VT_XP_LEVEL, false)?
+     .visit_field::<f32>(&"xp_p", Self::VT_XP_P, false)?
+     .visit_field::<i32>(&"xp_total", Self::VT_XP_TOTAL, false)?
+     .visit_field::<i32>(&"xp_seed", Self::VT_XP_SEED, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Item>>>>(&"inventory", Self::VT_INVENTORY, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Item>>>>(&"ender_items", Self::VT_ENDER_ITEMS, true)?
+     .visit_field::<Abilities>(&"abilities", Self::VT_ABILITIES, true)?
+     .visit_field::<Vector3d>(&"entered_nether_position", Self::VT_ENTERED_NETHER_POSITION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Vehicle>>(&"root_vehicle", Self::VT_ROOT_VEHICLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>(&"shoulder_entity_left", Self::VT_SHOULDER_ENTITY_LEFT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Entity>>(&"shoulder_entity_right", Self::VT_SHOULDER_ENTITY_RIGHT, false)?
+     .visit_field::<bool>(&"seen_credits", Self::VT_SEEN_CREDITS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RecipeBook>>(&"recipe_book", Self::VT_RECIPE_BOOK, true)?
      .finish();
     Ok(())
   }
@@ -1900,41 +1882,40 @@ pub struct PlayerArgs<'a> {
     pub recipe_book: Option<flatbuffers::WIPOffset<RecipeBook<'a>>>,
 }
 impl<'a> Default for PlayerArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    PlayerArgs {
-      game_type: GameType::Survival,
-      previous_game_type: GameType::Survival,
-      score: 0,
-      dimension: None, // required field
-      selected_item_slot: 0,
-      selected_item: None, // required field
-      spawn_dimension: None,
-      spawn_x: 0,
-      spawn_y: 0,
-      spawn_z: 0,
-      spawn_forced: false,
-      sleep_timer: 0,
-      food_exhaustion_level: 0.0,
-      food_saturation_level: 0.0,
-      food_tick_timer: 0,
-      xp_level: 0,
-      xp_p: 0.0,
-      xp_total: 0,
-      xp_seed: 0,
-      inventory: None, // required field
-      ender_items: None, // required field
-      abilities: None, // required field
-      entered_nether_position: None,
-      root_vehicle: None,
-      shoulder_entity_left: None,
-      shoulder_entity_right: None,
-      seen_credits: false,
-      recipe_book: None, // required field
+    #[inline]
+    fn default() -> Self {
+        PlayerArgs {
+            game_type: GameType::Survival,
+            previous_game_type: GameType::Survival,
+            score: 0,
+            dimension: None, // required field
+            selected_item_slot: 0,
+            selected_item: None, // required field
+            spawn_dimension: None,
+            spawn_x: 0,
+            spawn_y: 0,
+            spawn_z: 0,
+            spawn_forced: false,
+            sleep_timer: 0,
+            food_exhaustion_level: 0.0,
+            food_saturation_level: 0.0,
+            food_tick_timer: 0,
+            xp_level: 0,
+            xp_p: 0.0,
+            xp_total: 0,
+            xp_seed: 0,
+            inventory: None, // required field
+            ender_items: None, // required field
+            abilities: None, // required field
+            entered_nether_position: None,
+            root_vehicle: None,
+            shoulder_entity_left: None,
+            shoulder_entity_right: None,
+            seen_credits: false,
+            recipe_book: None, // required field
+        }
     }
-  }
 }
-
 pub struct PlayerBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
@@ -2115,30 +2096,28 @@ pub struct Players<'a> {
 }
 
 impl<'a> flatbuffers::Follow<'a> for Players<'a> {
-  type Inner = Players<'a>;
-  #[inline]
-  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table { buf, loc } }
-  }
+    type Inner = Players<'a>;
+    #[inline]
+    fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: flatbuffers::Table { buf, loc } }
+    }
 }
 
 impl<'a> Players<'a> {
-  pub const VT_PLAYERS: flatbuffers::VOffsetT = 4;
+    #[inline]
+    pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+        Players { _tab: table }
+    }
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+        _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+        args: &'args PlayersArgs<'args>) -> flatbuffers::WIPOffset<Players<'bldr>> {
+      let mut builder = PlayersBuilder::new(_fbb);
+      if let Some(x) = args.players { builder.add_players(x); }
+      builder.finish()
+    }
 
-  #[inline]
-  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Players { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args PlayersArgs<'args>
-  ) -> flatbuffers::WIPOffset<Players<'bldr>> {
-    let mut builder = PlayersBuilder::new(_fbb);
-    if let Some(x) = args.players { builder.add_players(x); }
-    builder.finish()
-  }
-
+    pub const VT_PLAYERS: flatbuffers::VOffsetT = 4;
 
   #[inline]
   pub fn players(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player<'a>>> {
@@ -2153,7 +2132,7 @@ impl flatbuffers::Verifiable for Players<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Player>>>>("players", Self::VT_PLAYERS, true)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Player>>>>(&"players", Self::VT_PLAYERS, true)?
      .finish();
     Ok(())
   }
@@ -2162,14 +2141,13 @@ pub struct PlayersArgs<'a> {
     pub players: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player<'a>>>>>,
 }
 impl<'a> Default for PlayersArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    PlayersArgs {
-      players: None, // required field
+    #[inline]
+    fn default() -> Self {
+        PlayersArgs {
+            players: None, // required field
+        }
     }
-  }
 }
-
 pub struct PlayersBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
