@@ -1,0 +1,1539 @@
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+WARNING: HTML report generation will become a non-default optional feature in Criterion.rs 0.4.0.
+This feature is being moved to cargo-criterion (https://github.com/bheisler/cargo-criterion) and will be optional in a future version of Criterion.rs. To silence this warning, either switch to cargo-criterion or enable the 'html_reports' feature in your Cargo.toml.
+
+Gnuplot not found, using plotters backend
+Benchmarking log/abomonation/serialize
+Benchmarking log/abomonation/serialize: Warming up for 3.0000 s
+Benchmarking log/abomonation/serialize: Collecting 100 samples in estimated 5.4441 s (25k iterations)
+Benchmarking log/abomonation/serialize: Analyzing
+log/abomonation/serialize
+                        time:   [202.93 us 206.27 us 209.99 us]
+Found 16 outliers among 100 measurements (16.00%)
+  6 (6.00%) high mild
+  10 (10.00%) high severe
+Benchmarking log/abomonation/access (unvalidated)
+Benchmarking log/abomonation/access (unvalidated): Warming up for 3.0000 s
+Benchmarking log/abomonation/access (unvalidated): Collecting 100 samples in estimated 5.0876 s (146k iterations)
+Benchmarking log/abomonation/access (unvalidated): Analyzing
+log/abomonation/access (unvalidated)
+                        time:   [34.412 us 34.503 us 34.601 us]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+Benchmarking log/abomonation/read (unvalidated)
+Benchmarking log/abomonation/read (unvalidated): Warming up for 3.0000 s
+Benchmarking log/abomonation/read (unvalidated): Collecting 100 samples in estimated 5.0015 s (91k iterations)
+Benchmarking log/abomonation/read (unvalidated): Analyzing
+log/abomonation/read (unvalidated)
+                        time:   [54.791 us 54.890 us 54.998 us]
+Found 7 outliers among 100 measurements (7.00%)
+  6 (6.00%) high mild
+  1 (1.00%) high severe
+Benchmarking log/abomonation/deserialize (unvalidated)
+Benchmarking log/abomonation/deserialize (unvalidated): Warming up for 3.0000 s
+Benchmarking log/abomonation/deserialize (unvalidated): Collecting 100 samples in estimated 5.1774 s (1600 iterations)
+Benchmarking log/abomonation/deserialize (unvalidated): Analyzing
+log/abomonation/deserialize (unvalidated)
+                        time:   [2.9230 ms 2.9411 ms 2.9624 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high severe
+log/abomonation/size 1705800
+log/abomonation/zlib 515090
+log/abomonation/zstd 406498
+
+Benchmarking log/bare/serialize
+Benchmarking log/bare/serialize: Warming up for 3.0000 s
+Benchmarking log/bare/serialize: Collecting 100 samples in estimated 7.4194 s (10k iterations)
+Benchmarking log/bare/serialize: Analyzing
+log/bare/serialize      time:   [722.07 us 732.77 us 746.21 us]
+Found 20 outliers among 100 measurements (20.00%)
+  4 (4.00%) high mild
+  16 (16.00%) high severe
+Benchmarking log/bare/deserialize
+Benchmarking log/bare/deserialize: Warming up for 3.0000 s
+Benchmarking log/bare/deserialize: Collecting 100 samples in estimated 5.3242 s (1200 iterations)
+Benchmarking log/bare/deserialize: Analyzing
+log/bare/deserialize    time:   [4.4100 ms 4.4407 ms 4.4752 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) high mild
+  5 (5.00%) high severe
+log/bare/size 765778
+log/bare/zlib 312739
+log/bare/zstd 265462
+
+Benchmarking log/bincode/serialize
+Benchmarking log/bincode/serialize: Warming up for 3.0000 s
+Benchmarking log/bincode/serialize: Collecting 100 samples in estimated 5.6750 s (10k iterations)
+Benchmarking log/bincode/serialize: Analyzing
+log/bincode/serialize   time:   [556.05 us 564.72 us 574.62 us]
+Found 18 outliers among 100 measurements (18.00%)
+  18 (18.00%) high severe
+Benchmarking log/bincode/deserialize
+Benchmarking log/bincode/deserialize: Warming up for 3.0000 s
+Benchmarking log/bincode/deserialize: Collecting 100 samples in estimated 5.1062 s (1400 iterations)
+Benchmarking log/bincode/deserialize: Analyzing
+log/bincode/deserialize time:   [3.6223 ms 3.6424 ms 3.6648 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+log/bincode/size 1045784
+log/bincode/zlib 374305
+log/bincode/zstd 312658
+
+Benchmarking log/borsh/serialize
+Benchmarking log/borsh/serialize: Warming up for 3.0000 s
+Benchmarking log/borsh/serialize: Collecting 100 samples in estimated 6.8930 s (15k iterations)
+Benchmarking log/borsh/serialize: Analyzing
+log/borsh/serialize     time:   [453.63 us 477.96 us 504.45 us]
+Found 20 outliers among 100 measurements (20.00%)
+  2 (2.00%) high mild
+  18 (18.00%) high severe
+Benchmarking log/borsh/deserialize
+Benchmarking log/borsh/deserialize: Warming up for 3.0000 s
+Benchmarking log/borsh/deserialize: Collecting 100 samples in estimated 5.2266 s (1400 iterations)
+Benchmarking log/borsh/deserialize: Analyzing
+log/borsh/deserialize   time:   [3.7057 ms 3.7272 ms 3.7510 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+log/borsh/size 885780
+log/borsh/zlib 363280
+log/borsh/zstd 286948
+
+Benchmarking log/bson/serialize
+Benchmarking log/bson/serialize: Warming up for 3.0000 s
+Benchmarking log/bson/serialize: Collecting 100 samples in estimated 5.1763 s (1700 iterations)
+Benchmarking log/bson/serialize: Analyzing
+log/bson/serialize      time:   [3.1561 ms 3.2133 ms 3.2731 ms]
+Benchmarking log/bson/deserialize
+Benchmarking log/bson/deserialize: Warming up for 3.0000 s
+Benchmarking log/bson/deserialize: Collecting 100 samples in estimated 5.7278 s (500 iterations)
+Benchmarking log/bson/deserialize: Analyzing
+log/bson/deserialize    time:   [11.383 ms 11.432 ms 11.487 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+log/bson/size 1924682
+log/bson/zlib 537661
+log/bson/zstd 377489
+
+Benchmarking log/capnp/serialize
+Benchmarking log/capnp/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.1s, enable flat sampling, or reduce sample count to 60.
+Benchmarking log/capnp/serialize: Collecting 100 samples in estimated 6.1467 s (5050 iterations)
+Benchmarking log/capnp/serialize: Analyzing
+log/capnp/serialize     time:   [1.1925 ms 1.1955 ms 1.1989 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high mild
+Benchmarking log/capnp/access (validated on-demand with error)
+Benchmarking log/capnp/access (validated on-demand with error): Warming up for 3.0000 s
+Benchmarking log/capnp/access (validated on-demand with error): Collecting 100 samples in estimated 5.0006 s (31M iterations)
+Benchmarking log/capnp/access (validated on-demand with error): Analyzing
+log/capnp/access (validated on-demand with error)
+                        time:   [162.69 ns 163.14 ns 163.64 ns]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high severe
+Benchmarking log/capnp/read (validated on-demand with error)
+Benchmarking log/capnp/read (validated on-demand with error): Warming up for 3.0000 s
+Benchmarking log/capnp/read (validated on-demand with error): Collecting 100 samples in estimated 5.9688 s (10k iterations)
+Benchmarking log/capnp/read (validated on-demand with error): Analyzing
+log/capnp/read (validated on-demand with error)
+                        time:   [587.79 us 588.92 us 590.18 us]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+log/capnp/size 1443216
+log/capnp/zlib 509618
+log/capnp/zstd 429784
+
+Benchmarking log/cbor/serialize
+Benchmarking log/cbor/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 10.0s, enable flat sampling, or reduce sample count to 40.
+Benchmarking log/cbor/serialize: Collecting 100 samples in estimated 9.9799 s (5050 iterations)
+Benchmarking log/cbor/serialize: Analyzing
+log/cbor/serialize      time:   [1.9742 ms 2.0142 ms 2.0601 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  6 (6.00%) high mild
+  2 (2.00%) high severe
+Benchmarking log/cbor/deserialize
+Benchmarking log/cbor/deserialize: Warming up for 3.0000 s
+Benchmarking log/cbor/deserialize: Collecting 100 samples in estimated 5.3797 s (700 iterations)
+Benchmarking log/cbor/deserialize: Analyzing
+log/cbor/deserialize    time:   [8.4751 ms 8.8629 ms 9.3039 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  5 (5.00%) high mild
+  3 (3.00%) high severe
+log/cbor/size 1407835
+log/cbor/zlib 407372
+log/cbor/zstd 325016
+
+Benchmarking log/flatbuffers/serialize
+Benchmarking log/flatbuffers/serialize: Warming up for 3.0000 s
+Benchmarking log/flatbuffers/serialize: Collecting 100 samples in estimated 5.1583 s (1500 iterations)
+Benchmarking log/flatbuffers/serialize: Analyzing
+log/flatbuffers/serialize
+                        time:   [2.8032 ms 2.9258 ms 3.0538 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+Benchmarking log/flatbuffers/access (unvalidated)
+Benchmarking log/flatbuffers/access (unvalidated): Warming up for 3.0000 s
+Benchmarking log/flatbuffers/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (1.4B iterations)
+Benchmarking log/flatbuffers/access (unvalidated): Analyzing
+log/flatbuffers/access (unvalidated)
+                        time:   [3.4117 ns 3.4658 ns 3.5261 ns]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+Benchmarking log/flatbuffers/access (validated upfront with error)
+Benchmarking log/flatbuffers/access (validated upfront with error): Warming up for 3.0000 s
+Benchmarking log/flatbuffers/access (validated upfront with error): Collecting 100 samples in estimated 5.2078 s (1900 iterations)
+Benchmarking log/flatbuffers/access (validated upfront with error): Analyzing
+log/flatbuffers/access (validated upfront with error)
+                        time:   [2.4735 ms 2.5279 ms 2.5861 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high mild
+Benchmarking log/flatbuffers/read (unvalidated)
+Benchmarking log/flatbuffers/read (unvalidated): Warming up for 3.0000 s
+Benchmarking log/flatbuffers/read (unvalidated): Collecting 100 samples in estimated 5.3502 s (30k iterations)
+Benchmarking log/flatbuffers/read (unvalidated): Analyzing
+log/flatbuffers/read (unvalidated)
+                        time:   [152.12 us 159.89 us 167.66 us]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+Benchmarking log/flatbuffers/read (validated upfront with error)
+Benchmarking log/flatbuffers/read (validated upfront with error): Warming up for 3.0000 s
+Benchmarking log/flatbuffers/read (validated upfront with error): Collecting 100 samples in estimated 5.0952 s (1900 iterations)
+Benchmarking log/flatbuffers/read (validated upfront with error): Analyzing
+log/flatbuffers/read (validated upfront with error)
+                        time:   [2.8321 ms 2.8982 ms 2.9672 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+log/flatbuffers/size 1276368
+log/flatbuffers/zlib 469962
+log/flatbuffers/zstd 389885
+
+Benchmarking log/nachricht/serialize
+Benchmarking log/nachricht/serialize: Warming up for 3.0000 s
+Benchmarking log/nachricht/serialize: Collecting 100 samples in estimated 5.1151 s (800 iterations)
+Benchmarking log/nachricht/serialize: Analyzing
+log/nachricht/serialize time:   [8.9894 ms 9.4611 ms 9.9386 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking log/nachricht/deserialize
+Benchmarking log/nachricht/deserialize: Warming up for 3.0000 s
+Benchmarking log/nachricht/deserialize: Collecting 100 samples in estimated 5.3981 s (500 iterations)
+Benchmarking log/nachricht/deserialize: Analyzing
+log/nachricht/deserialize
+                        time:   [9.4379 ms 9.9223 ms 10.447 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+log/nachricht/size 926221
+log/nachricht/zlib 365209
+log/nachricht/zstd 304177
+
+Benchmarking log/postcard/serialize
+Benchmarking log/postcard/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.8s, enable flat sampling, or reduce sample count to 60.
+Benchmarking log/postcard/serialize: Collecting 100 samples in estimated 5.8071 s (5050 iterations)
+Benchmarking log/postcard/serialize: Analyzing
+log/postcard/serialize  time:   [679.94 us 728.75 us 786.70 us]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+Benchmarking log/postcard/deserialize
+Benchmarking log/postcard/deserialize: Warming up for 3.0000 s
+Benchmarking log/postcard/deserialize: Collecting 100 samples in estimated 5.1394 s (900 iterations)
+Benchmarking log/postcard/deserialize: Analyzing
+log/postcard/deserialize
+                        time:   [4.3088 ms 4.5128 ms 4.7356 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  7 (7.00%) high mild
+  4 (4.00%) high severe
+log/postcard/size 724953
+log/postcard/zlib 303462
+log/postcard/zstd 254408
+
+Benchmarking log/prost/serialize (populate + encode)
+Benchmarking log/prost/serialize (populate + encode): Warming up for 3.0000 s
+Benchmarking log/prost/serialize (populate + encode): Collecting 100 samples in estimated 5.3625 s (700 iterations)
+Benchmarking log/prost/serialize (populate + encode): Analyzing
+log/prost/serialize (populate + encode)
+                        time:   [6.3597 ms 6.5794 ms 6.8096 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  7 (7.00%) high mild
+Benchmarking log/prost/serialize (encode)
+Benchmarking log/prost/serialize (encode): Warming up for 3.0000 s
+Benchmarking log/prost/serialize (encode): Collecting 100 samples in estimated 9.0621 s (10k iterations)
+Benchmarking log/prost/serialize (encode): Analyzing
+log/prost/serialize (encode)
+                        time:   [820.76 us 842.49 us 866.95 us]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking log/prost/deserialize
+Benchmarking log/prost/deserialize: Warming up for 3.0000 s
+Benchmarking log/prost/deserialize: Collecting 100 samples in estimated 5.0473 s (600 iterations)
+Benchmarking log/prost/deserialize: Analyzing
+log/prost/deserialize   time:   [8.4611 ms 8.5569 ms 8.6728 ms]
+Found 16 outliers among 100 measurements (16.00%)
+  7 (7.00%) high mild
+  9 (9.00%) high severe
+log/prost/size 764951
+log/prost/zlib 269811
+log/prost/zstd 228807
+
+Benchmarking log/rkyv/serialize
+Benchmarking log/rkyv/serialize: Warming up for 3.0000 s
+Benchmarking log/rkyv/serialize: Collecting 100 samples in estimated 5.8114 s (20k iterations)
+Benchmarking log/rkyv/serialize: Analyzing
+log/rkyv/serialize      time:   [275.62 us 278.86 us 282.37 us]
+Found 16 outliers among 100 measurements (16.00%)
+  5 (5.00%) high mild
+  11 (11.00%) high severe
+Benchmarking log/rkyv/access (unvalidated)
+Benchmarking log/rkyv/access (unvalidated): Warming up for 3.0000 s
+Benchmarking log/rkyv/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (3.7B iterations)
+Benchmarking log/rkyv/access (unvalidated): Analyzing
+log/rkyv/access (unvalidated)
+                        time:   [1.3358 ns 1.3385 ns 1.3414 ns]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low severe
+  6 (6.00%) high mild
+  1 (1.00%) high severe
+Benchmarking log/rkyv/access (validated upfront with error)
+Benchmarking log/rkyv/access (validated upfront with error): Warming up for 3.0000 s
+Benchmarking log/rkyv/access (validated upfront with error): Collecting 100 samples in estimated 6.8461 s (10k iterations)
+Benchmarking log/rkyv/access (validated upfront with error): Analyzing
+log/rkyv/access (validated upfront with error)
+                        time:   [671.76 us 674.29 us 678.15 us]
+Found 7 outliers among 100 measurements (7.00%)
+  4 (4.00%) high mild
+  3 (3.00%) high severe
+Benchmarking log/rkyv/read (unvalidated)
+Benchmarking log/rkyv/read (unvalidated): Warming up for 3.0000 s
+Benchmarking log/rkyv/read (unvalidated): Collecting 100 samples in estimated 5.0734 s (318k iterations)
+Benchmarking log/rkyv/read (unvalidated): Analyzing
+log/rkyv/read (unvalidated)
+                        time:   [15.863 us 15.896 us 15.933 us]
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) high mild
+  3 (3.00%) high severe
+Benchmarking log/rkyv/read (validated upfront with error)
+Benchmarking log/rkyv/read (validated upfront with error): Warming up for 3.0000 s
+Benchmarking log/rkyv/read (validated upfront with error): Collecting 100 samples in estimated 6.9731 s (10k iterations)
+Benchmarking log/rkyv/read (validated upfront with error): Analyzing
+log/rkyv/read (validated upfront with error)
+                        time:   [687.66 us 689.44 us 691.54 us]
+Found 10 outliers among 100 measurements (10.00%)
+  7 (7.00%) high mild
+  3 (3.00%) high severe
+Benchmarking log/rkyv/update
+Benchmarking log/rkyv/update: Warming up for 3.0000 s
+Benchmarking log/rkyv/update: Collecting 100 samples in estimated 5.2653 s (86k iterations)
+Benchmarking log/rkyv/update: Analyzing
+log/rkyv/update         time:   [61.637 us 62.167 us 62.765 us]
+Found 21 outliers among 100 measurements (21.00%)
+  18 (18.00%) low severe
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking log/rkyv/deserialize (unvalidated)
+Benchmarking log/rkyv/deserialize (unvalidated): Warming up for 3.0000 s
+Benchmarking log/rkyv/deserialize (unvalidated): Collecting 100 samples in estimated 5.2669 s (1900 iterations)
+Benchmarking log/rkyv/deserialize (unvalidated): Analyzing
+log/rkyv/deserialize (unvalidated)
+                        time:   [2.7639 ms 2.7780 ms 2.7937 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) high mild
+  5 (5.00%) high severe
+Benchmarking log/rkyv/deserialize (validated upfront with error)
+Benchmarking log/rkyv/deserialize (validated upfront with error): Warming up for 3.0000 s
+Benchmarking log/rkyv/deserialize (validated upfront with error): Collecting 100 samples in estimated 5.2006 s (1500 iterations)
+Benchmarking log/rkyv/deserialize (validated upfront with error): Analyzing
+log/rkyv/deserialize (validated upfront with error)
+                        time:   [3.4302 ms 3.4473 ms 3.4668 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) high mild
+  7 (7.00%) high severe
+log/rkyv/size 1011488
+log/rkyv/zlib 392809
+log/rkyv/zstd 332689
+
+Benchmarking log/rmp/serialize
+Benchmarking log/rmp/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.1s, enable flat sampling, or reduce sample count to 50.
+Benchmarking log/rmp/serialize: Collecting 100 samples in estimated 7.0703 s (5050 iterations)
+Benchmarking log/rmp/serialize: Analyzing
+log/rmp/serialize       time:   [1.3774 ms 1.4008 ms 1.4281 ms]
+Found 14 outliers among 100 measurements (14.00%)
+  5 (5.00%) high mild
+  9 (9.00%) high severe
+Benchmarking log/rmp/deserialize
+Benchmarking log/rmp/deserialize: Warming up for 3.0000 s
+Benchmarking log/rmp/deserialize: Collecting 100 samples in estimated 5.0790 s (1100 iterations)
+Benchmarking log/rmp/deserialize: Analyzing
+log/rmp/deserialize     time:   [4.5999 ms 4.6204 ms 4.6437 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) high mild
+  7 (7.00%) high severe
+log/rmp/size 784997
+log/rmp/zlib 326654
+log/rmp/zstd 278933
+
+Benchmarking log/ron/serialize
+Benchmarking log/ron/serialize: Warming up for 3.0000 s
+Benchmarking log/ron/serialize: Collecting 100 samples in estimated 5.2566 s (300 iterations)
+Benchmarking log/ron/serialize: Analyzing
+log/ron/serialize       time:   [15.877 ms 16.245 ms 16.636 ms]
+Found 23 outliers among 100 measurements (23.00%)
+  23 (23.00%) high severe
+Benchmarking log/ron/deserialize
+Benchmarking log/ron/deserialize: Warming up for 3.0000 s
+Benchmarking log/ron/deserialize: Collecting 100 samples in estimated 6.0342 s (400 iterations)
+Benchmarking log/ron/deserialize: Analyzing
+log/ron/deserialize     time:   [15.046 ms 15.086 ms 15.133 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+log/ron/size 1607459
+log/ron/zlib 452648
+log/ron/zstd 351604
+
+Benchmarking log/serde_json/serialize
+Benchmarking log/serde_json/serialize: Warming up for 3.0000 s
+Benchmarking log/serde_json/serialize: Collecting 100 samples in estimated 5.3219 s (1300 iterations)
+Benchmarking log/serde_json/serialize: Analyzing
+log/serde_json/serialize
+                        time:   [3.9997 ms 4.0430 ms 4.0936 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  10 (10.00%) high severe
+Benchmarking log/serde_json/deserialize
+Benchmarking log/serde_json/deserialize: Warming up for 3.0000 s
+Benchmarking log/serde_json/deserialize: Collecting 100 samples in estimated 5.2512 s (600 iterations)
+Benchmarking log/serde_json/deserialize: Analyzing
+log/serde_json/deserialize
+                        time:   [8.6929 ms 8.7244 ms 8.7613 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  7 (7.00%) high mild
+  2 (2.00%) high severe
+log/serde_json/size 1827461
+log/serde_json/zlib 474358
+log/serde_json/zstd 364177
+
+Benchmarking log/simd-json/serialize
+Benchmarking log/simd-json/serialize: Warming up for 3.0000 s
+Benchmarking log/simd-json/serialize: Collecting 100 samples in estimated 5.1666 s (1300 iterations)
+Benchmarking log/simd-json/serialize: Analyzing
+log/simd-json/serialize time:   [3.8831 ms 3.9252 ms 3.9741 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  1 (1.00%) high mild
+  9 (9.00%) high severe
+Benchmarking log/simd-json/deserialize
+Benchmarking log/simd-json/deserialize: Warming up for 3.0000 s
+Benchmarking log/simd-json/deserialize: Collecting 100 samples in estimated 5.3763 s (600 iterations)
+Benchmarking log/simd-json/deserialize: Analyzing
+log/simd-json/deserialize
+                        time:   [9.0119 ms 9.5618 ms 10.193 ms]
+Found 18 outliers among 100 measurements (18.00%)
+  8 (8.00%) high mild
+  10 (10.00%) high severe
+log/simd-json/size 1827461
+log/simd-json/zlib 474358
+log/simd-json/zstd 364177
+
+Benchmarking log/speedy/serialize
+Benchmarking log/speedy/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.4s, enable flat sampling, or reduce sample count to 60.
+Benchmarking log/speedy/serialize: Collecting 100 samples in estimated 5.3742 s (5050 iterations)
+Benchmarking log/speedy/serialize: Analyzing
+log/speedy/serialize    time:   [673.00 us 729.59 us 785.72 us]
+Benchmarking log/speedy/deserialize
+Benchmarking log/speedy/deserialize: Warming up for 3.0000 s
+Benchmarking log/speedy/deserialize: Collecting 100 samples in estimated 5.3716 s (1200 iterations)
+Benchmarking log/speedy/deserialize: Analyzing
+log/speedy/deserialize  time:   [4.0998 ms 4.2750 ms 4.4682 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+log/speedy/size 885780
+log/speedy/zlib 363280
+log/speedy/zstd 286948
+
+Benchmarking log/alkahest/serialize
+Benchmarking log/alkahest/serialize: Warming up for 3.0000 s
+Benchmarking log/alkahest/serialize: Collecting 100 samples in estimated 6.9632 s (15k iterations)
+Benchmarking log/alkahest/serialize: Analyzing
+log/alkahest/serialize  time:   [337.30 us 361.56 us 390.03 us]
+Found 9 outliers among 100 measurements (9.00%)
+  8 (8.00%) high mild
+  1 (1.00%) high severe
+Benchmarking log/alkahest/access (validated on-demand with panic)
+Benchmarking log/alkahest/access (validated on-demand with panic): Warming up for 3.0000 s
+Benchmarking log/alkahest/access (validated on-demand with panic): Collecting 100 samples in estimated 5.0000 s (2.0B iterations)
+Benchmarking log/alkahest/access (validated on-demand with panic): Analyzing
+log/alkahest/access (validated on-demand with panic)
+                        time:   [2.3617 ns 2.4288 ns 2.5053 ns]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking log/alkahest/read (validated on-demand with panic)
+Benchmarking log/alkahest/read (validated on-demand with panic): Warming up for 3.0000 s
+Benchmarking log/alkahest/read (validated on-demand with panic): Collecting 100 samples in estimated 5.3328 s (56k iterations)
+Benchmarking log/alkahest/read (validated on-demand with panic): Analyzing
+log/alkahest/read (validated on-demand with panic)
+                        time:   [97.127 us 103.43 us 110.35 us]
+Found 14 outliers among 100 measurements (14.00%)
+  10 (10.00%) high mild
+  4 (4.00%) high severe
+log/alkahest/size 1045784
+log/alkahest/zlib 454748
+log/alkahest/zstd 389910
+
+Benchmarking log/dlhn/serialize
+Benchmarking log/dlhn/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.9s, enable flat sampling, or reduce sample count to 60.
+Benchmarking log/dlhn/serialize: Collecting 100 samples in estimated 6.8503 s (5050 iterations)
+Benchmarking log/dlhn/serialize: Analyzing
+log/dlhn/serialize      time:   [1.1423 ms 1.2252 ms 1.3160 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  7 (7.00%) high mild
+Benchmarking log/dlhn/deserialize
+Benchmarking log/dlhn/deserialize: Warming up for 3.0000 s
+Benchmarking log/dlhn/deserialize: Collecting 100 samples in estimated 5.1275 s (1000 iterations)
+Benchmarking log/dlhn/deserialize: Analyzing
+log/dlhn/deserialize    time:   [5.0779 ms 5.2271 ms 5.3935 ms]
+Found 13 outliers among 100 measurements (13.00%)
+  6 (6.00%) high mild
+  7 (7.00%) high severe
+log/dlhn/size 724953
+log/dlhn/zlib 302512
+log/dlhn/zstd 254382
+
+Benchmarking mesh/abomonation/serialize
+Benchmarking mesh/abomonation/serialize: Warming up for 3.0000 s
+Benchmarking mesh/abomonation/serialize: Collecting 100 samples in estimated 6.3767 s (20k iterations)
+Benchmarking mesh/abomonation/serialize: Analyzing
+mesh/abomonation/serialize
+                        time:   [328.46 us 335.48 us 342.97 us]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+Benchmarking mesh/abomonation/access (unvalidated)
+Benchmarking mesh/abomonation/access (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/abomonation/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (1.9B iterations)
+Benchmarking mesh/abomonation/access (unvalidated): Analyzing
+mesh/abomonation/access (unvalidated)
+                        time:   [2.5611 ns 2.6173 ns 2.6955 ns]
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) high mild
+  6 (6.00%) high severe
+Benchmarking mesh/abomonation/read (unvalidated)
+Benchmarking mesh/abomonation/read (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/abomonation/read (unvalidated): Collecting 100 samples in estimated 6.2119 s (25k iterations)
+Benchmarking mesh/abomonation/read (unvalidated): Analyzing
+mesh/abomonation/read (unvalidated)
+                        time:   [280.90 us 294.78 us 308.52 us]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking mesh/abomonation/deserialize (unvalidated)
+Benchmarking mesh/abomonation/deserialize (unvalidated): Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.7s, enable flat sampling, or reduce sample count to 50.
+Benchmarking mesh/abomonation/deserialize (unvalidated): Collecting 100 samples in estimated 8.7470 s (5050 iterations)
+Benchmarking mesh/abomonation/deserialize (unvalidated): Analyzing
+mesh/abomonation/deserialize (unvalidated)
+                        time:   [1.6567 ms 1.6834 ms 1.7138 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  8 (8.00%) high mild
+  1 (1.00%) high severe
+mesh/abomonation/size 6000024
+mesh/abomonation/zlib 5380836
+mesh/abomonation/zstd 5345893
+
+Benchmarking mesh/bare/serialize
+Benchmarking mesh/bare/serialize: Warming up for 3.0000 s
+Benchmarking mesh/bare/serialize: Collecting 100 samples in estimated 5.1568 s (800 iterations)
+Benchmarking mesh/bare/serialize: Analyzing
+mesh/bare/serialize     time:   [5.9019 ms 6.2228 ms 6.5689 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/bare/deserialize
+Benchmarking mesh/bare/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/bare/deserialize: Collecting 100 samples in estimated 5.8691 s (400 iterations)
+Benchmarking mesh/bare/deserialize: Analyzing
+mesh/bare/deserialize   time:   [14.109 ms 14.383 ms 14.702 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+mesh/bare/size 6000003
+mesh/bare/zlib 5380817
+mesh/bare/zstd 5345893
+
+Benchmarking mesh/bincode/serialize
+Benchmarking mesh/bincode/serialize: Warming up for 3.0000 s
+Benchmarking mesh/bincode/serialize: Collecting 100 samples in estimated 5.0406 s (600 iterations)
+Benchmarking mesh/bincode/serialize: Analyzing
+mesh/bincode/serialize  time:   [8.8676 ms 9.2662 ms 9.6812 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high mild
+Benchmarking mesh/bincode/deserialize
+Benchmarking mesh/bincode/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/bincode/deserialize: Collecting 100 samples in estimated 5.4577 s (600 iterations)
+Benchmarking mesh/bincode/deserialize: Analyzing
+mesh/bincode/deserialize
+                        time:   [9.2591 ms 9.3830 ms 9.5201 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+mesh/bincode/size 6000008
+mesh/bincode/zlib 5380823
+mesh/bincode/zstd 5345885
+
+Benchmarking mesh/borsh/serialize
+Benchmarking mesh/borsh/serialize: Warming up for 3.0000 s
+Benchmarking mesh/borsh/serialize: Collecting 100 samples in estimated 5.4182 s (600 iterations)
+Benchmarking mesh/borsh/serialize: Analyzing
+mesh/borsh/serialize    time:   [9.1297 ms 9.8756 ms 10.675 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking mesh/borsh/deserialize
+Benchmarking mesh/borsh/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/borsh/deserialize: Collecting 100 samples in estimated 5.4230 s (500 iterations)
+Benchmarking mesh/borsh/deserialize: Analyzing
+mesh/borsh/deserialize  time:   [10.530 ms 10.768 ms 11.050 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+mesh/borsh/size 6000004
+mesh/borsh/zlib 5380818
+mesh/borsh/zstd 5345888
+
+Benchmarking mesh/bson/serialize
+Benchmarking mesh/bson/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.6s, or reduce sample count to 60.
+Benchmarking mesh/bson/serialize: Collecting 100 samples in estimated 7.5961 s (100 iterations)
+Benchmarking mesh/bson/serialize: Analyzing
+mesh/bson/serialize     time:   [72.023 ms 74.425 ms 76.830 ms]
+Benchmarking mesh/bson/deserialize
+Benchmarking mesh/bson/deserialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 16.3s, or reduce sample count to 30.
+Benchmarking mesh/bson/deserialize: Collecting 100 samples in estimated 16.308 s (100 iterations)
+Benchmarking mesh/bson/deserialize: Analyzing
+mesh/bson/deserialize   time:   [154.26 ms 158.07 ms 162.40 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+mesh/bson/size 23013911
+mesh/bson/zlib 9211138
+mesh/bson/zstd 7501230
+
+Benchmarking mesh/capnp/serialize
+Benchmarking mesh/capnp/serialize: Warming up for 3.0000 s
+Benchmarking mesh/capnp/serialize: Collecting 100 samples in estimated 5.2093 s (200 iterations)
+Benchmarking mesh/capnp/serialize: Analyzing
+mesh/capnp/serialize    time:   [25.512 ms 25.993 ms 26.465 ms]
+Benchmarking mesh/capnp/access (validated on-demand with error)
+Benchmarking mesh/capnp/access (validated on-demand with error): Warming up for 3.0000 s
+Benchmarking mesh/capnp/access (validated on-demand with error): Collecting 100 samples in estimated 5.0001 s (16M iterations)
+Benchmarking mesh/capnp/access (validated on-demand with error): Analyzing
+mesh/capnp/access (validated on-demand with error)
+                        time:   [306.97 ns 313.83 ns 320.99 ns]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/capnp/read (validated on-demand with error)
+Benchmarking mesh/capnp/read (validated on-demand with error): Warming up for 3.0000 s
+Benchmarking mesh/capnp/read (validated on-demand with error): Collecting 100 samples in estimated 5.8772 s (600 iterations)
+Benchmarking mesh/capnp/read (validated on-demand with error): Analyzing
+mesh/capnp/read (validated on-demand with error)
+                        time:   [9.3847 ms 9.5382 ms 9.6978 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+mesh/capnp/size 14000088
+mesh/capnp/zlib 6729881
+mesh/capnp/zstd 6051413
+
+Benchmarking mesh/cbor/serialize
+Benchmarking mesh/cbor/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.5s, or reduce sample count to 90.
+Benchmarking mesh/cbor/serialize: Collecting 100 samples in estimated 5.4969 s (100 iterations)
+Benchmarking mesh/cbor/serialize: Analyzing
+mesh/cbor/serialize     time:   [51.752 ms 53.611 ms 55.631 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  6 (6.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/cbor/deserialize
+Benchmarking mesh/cbor/deserialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.5s, or reduce sample count to 60.
+Benchmarking mesh/cbor/deserialize: Collecting 100 samples in estimated 7.4843 s (100 iterations)
+Benchmarking mesh/cbor/deserialize: Analyzing
+mesh/cbor/deserialize   time:   [78.765 ms 81.163 ms 83.551 ms]
+mesh/cbor/size 13122324
+mesh/cbor/zlib 7527423
+mesh/cbor/zstd 6761276
+
+Benchmarking mesh/flatbuffers/serialize
+Benchmarking mesh/flatbuffers/serialize: Warming up for 3.0000 s
+Benchmarking mesh/flatbuffers/serialize: Collecting 100 samples in estimated 5.1707 s (1700 iterations)
+Benchmarking mesh/flatbuffers/serialize: Analyzing
+mesh/flatbuffers/serialize
+                        time:   [3.0656 ms 3.1408 ms 3.2190 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking mesh/flatbuffers/access (unvalidated)
+Benchmarking mesh/flatbuffers/access (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/flatbuffers/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (1.5B iterations)
+Benchmarking mesh/flatbuffers/access (unvalidated): Analyzing
+mesh/flatbuffers/access (unvalidated)
+                        time:   [3.3141 ns 3.3848 ns 3.4533 ns]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking mesh/flatbuffers/access (validated upfront with error)
+Benchmarking mesh/flatbuffers/access (validated upfront with error): Warming up for 3.0000 s
+Benchmarking mesh/flatbuffers/access (validated upfront with error): Collecting 100 samples in estimated 5.0000 s (111M iterations)
+Benchmarking mesh/flatbuffers/access (validated upfront with error): Analyzing
+mesh/flatbuffers/access (validated upfront with error)
+                        time:   [42.069 ns 43.346 ns 44.877 ns]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high severe
+Benchmarking mesh/flatbuffers/read (unvalidated)
+Benchmarking mesh/flatbuffers/read (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/flatbuffers/read (unvalidated): Collecting 100 samples in estimated 5.1172 s (30k iterations)
+Benchmarking mesh/flatbuffers/read (unvalidated): Analyzing
+mesh/flatbuffers/read (unvalidated)
+                        time:   [162.27 us 165.93 us 169.80 us]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking mesh/flatbuffers/read (validated upfront with error)
+Benchmarking mesh/flatbuffers/read (validated upfront with error): Warming up for 3.0000 s
+Benchmarking mesh/flatbuffers/read (validated upfront with error): Collecting 100 samples in estimated 5.2211 s (30k iterations)
+Benchmarking mesh/flatbuffers/read (validated upfront with error): Analyzing
+mesh/flatbuffers/read (validated upfront with error)
+                        time:   [172.84 us 177.54 us 182.62 us]
+mesh/flatbuffers/size 6000024
+mesh/flatbuffers/zlib 5380800
+mesh/flatbuffers/zstd 5345925
+
+Benchmarking mesh/nachricht/serialize
+Benchmarking mesh/nachricht/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.1s, or reduce sample count to 50.
+Benchmarking mesh/nachricht/serialize: Collecting 100 samples in estimated 9.1308 s (100 iterations)
+Benchmarking mesh/nachricht/serialize: Analyzing
+mesh/nachricht/serialize
+                        time:   [86.344 ms 91.385 ms 96.611 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking mesh/nachricht/deserialize
+Benchmarking mesh/nachricht/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/nachricht/deserialize: Collecting 100 samples in estimated 9.9913 s (200 iterations)
+Benchmarking mesh/nachricht/deserialize: Analyzing
+mesh/nachricht/deserialize
+                        time:   [47.547 ms 48.868 ms 50.240 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+mesh/nachricht/size 10125030
+mesh/nachricht/zlib 7160144
+mesh/nachricht/zstd 6777986
+
+Benchmarking mesh/postcard/serialize
+Benchmarking mesh/postcard/serialize: Warming up for 3.0000 s
+Benchmarking mesh/postcard/serialize: Collecting 100 samples in estimated 5.0751 s (2500 iterations)
+Benchmarking mesh/postcard/serialize: Analyzing
+mesh/postcard/serialize time:   [1.9239 ms 1.9607 ms 2.0018 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/postcard/deserialize
+Benchmarking mesh/postcard/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/postcard/deserialize: Collecting 100 samples in estimated 5.4422 s (700 iterations)
+Benchmarking mesh/postcard/deserialize: Analyzing
+mesh/postcard/deserialize
+                        time:   [7.6099 ms 7.7435 ms 7.8771 ms]
+mesh/postcard/size 6000003
+mesh/postcard/zlib 5380817
+mesh/postcard/zstd 5345893
+
+Benchmarking mesh/prost/serialize (populate + encode)
+Benchmarking mesh/prost/serialize (populate + encode): Warming up for 3.0000 s
+Benchmarking mesh/prost/serialize (populate + encode): Collecting 100 samples in estimated 6.1955 s (200 iterations)
+Benchmarking mesh/prost/serialize (populate + encode): Analyzing
+mesh/prost/serialize (populate + encode)
+                        time:   [30.143 ms 30.841 ms 31.586 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/prost/serialize (encode)
+Benchmarking mesh/prost/serialize (encode): Warming up for 3.0000 s
+Benchmarking mesh/prost/serialize (encode): Collecting 100 samples in estimated 5.7281 s (300 iterations)
+Benchmarking mesh/prost/serialize (encode): Analyzing
+mesh/prost/serialize (encode)
+                        time:   [18.536 ms 18.936 ms 19.368 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/prost/deserialize
+Benchmarking mesh/prost/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/prost/deserialize: Collecting 100 samples in estimated 5.9837 s (200 iterations)
+Benchmarking mesh/prost/deserialize: Analyzing
+mesh/prost/deserialize  time:   [27.648 ms 28.271 ms 28.944 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+mesh/prost/size 8750000
+mesh/prost/zlib 6683814
+mesh/prost/zstd 6421721
+
+Benchmarking mesh/rkyv/serialize
+Benchmarking mesh/rkyv/serialize: Warming up for 3.0000 s
+Benchmarking mesh/rkyv/serialize: Collecting 100 samples in estimated 9.9655 s (10k iterations)
+Benchmarking mesh/rkyv/serialize: Analyzing
+mesh/rkyv/serialize     time:   [997.84 us 1.0314 ms 1.0670 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  3 (3.00%) low mild
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/rkyv/access (unvalidated)
+Benchmarking mesh/rkyv/access (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/rkyv/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (3.1B iterations)
+Benchmarking mesh/rkyv/access (unvalidated): Analyzing
+mesh/rkyv/access (unvalidated)
+                        time:   [1.6462 ns 1.6973 ns 1.7504 ns]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+Benchmarking mesh/rkyv/access (validated upfront with error)
+Benchmarking mesh/rkyv/access (validated upfront with error): Warming up for 3.0000 s
+Benchmarking mesh/rkyv/access (validated upfront with error): Collecting 100 samples in estimated 5.0000 s (276M iterations)
+Benchmarking mesh/rkyv/access (validated upfront with error): Analyzing
+mesh/rkyv/access (validated upfront with error)
+                        time:   [15.856 ns 16.271 ns 16.738 ns]
+Found 13 outliers among 100 measurements (13.00%)
+  8 (8.00%) high mild
+  5 (5.00%) high severe
+Benchmarking mesh/rkyv/read (unvalidated)
+Benchmarking mesh/rkyv/read (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/rkyv/read (unvalidated): Collecting 100 samples in estimated 5.1944 s (111k iterations)
+Benchmarking mesh/rkyv/read (unvalidated): Analyzing
+mesh/rkyv/read (unvalidated)
+                        time:   [47.909 us 50.612 us 53.562 us]
+Found 10 outliers among 100 measurements (10.00%)
+  6 (6.00%) high mild
+  4 (4.00%) high severe
+Benchmarking mesh/rkyv/read (validated upfront with error)
+Benchmarking mesh/rkyv/read (validated upfront with error): Warming up for 3.0000 s
+Benchmarking mesh/rkyv/read (validated upfront with error): Collecting 100 samples in estimated 5.0976 s (106k iterations)
+Benchmarking mesh/rkyv/read (validated upfront with error): Analyzing
+mesh/rkyv/read (validated upfront with error)
+                        time:   [45.982 us 47.230 us 48.575 us]
+Found 10 outliers among 100 measurements (10.00%)
+  7 (7.00%) high mild
+  3 (3.00%) high severe
+Benchmarking mesh/rkyv/update
+Benchmarking mesh/rkyv/update: Warming up for 3.0000 s
+Benchmarking mesh/rkyv/update: Collecting 100 samples in estimated 7.8665 s (10k iterations)
+Benchmarking mesh/rkyv/update: Analyzing
+mesh/rkyv/update        time:   [721.54 us 745.11 us 774.90 us]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/rkyv/deserialize (unvalidated)
+Benchmarking mesh/rkyv/deserialize (unvalidated): Warming up for 3.0000 s
+Benchmarking mesh/rkyv/deserialize (unvalidated): Collecting 100 samples in estimated 5.1728 s (2500 iterations)
+Benchmarking mesh/rkyv/deserialize (unvalidated): Analyzing
+mesh/rkyv/deserialize (unvalidated)
+                        time:   [1.9917 ms 2.0368 ms 2.0868 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/rkyv/deserialize (validated upfront with error)
+Benchmarking mesh/rkyv/deserialize (validated upfront with error): Warming up for 3.0000 s
+Benchmarking mesh/rkyv/deserialize (validated upfront with error): Collecting 100 samples in estimated 5.1393 s (2500 iterations)
+Benchmarking mesh/rkyv/deserialize (validated upfront with error): Analyzing
+mesh/rkyv/deserialize (validated upfront with error)
+                        time:   [2.0243 ms 2.0824 ms 2.1481 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  6 (6.00%) high mild
+  1 (1.00%) high severe
+mesh/rkyv/size 6000008
+mesh/rkyv/zlib 5380822
+mesh/rkyv/zstd 5345887
+
+Benchmarking mesh/rmp/serialize
+Benchmarking mesh/rmp/serialize: Warming up for 3.0000 s
+Benchmarking mesh/rmp/serialize: Collecting 100 samples in estimated 6.1256 s (200 iterations)
+Benchmarking mesh/rmp/serialize: Analyzing
+mesh/rmp/serialize      time:   [28.254 ms 30.852 ms 33.691 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  8 (8.00%) high mild
+  2 (2.00%) high severe
+Benchmarking mesh/rmp/deserialize
+Benchmarking mesh/rmp/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/rmp/deserialize: Collecting 100 samples in estimated 5.1619 s (200 iterations)
+Benchmarking mesh/rmp/deserialize: Analyzing
+mesh/rmp/deserialize    time:   [24.959 ms 25.560 ms 26.218 ms]
+Found 12 outliers among 100 measurements (12.00%)
+  5 (5.00%) high mild
+  7 (7.00%) high severe
+mesh/rmp/size 8125006
+mesh/rmp/zlib 6496879
+mesh/rmp/zstd 6391025
+
+Benchmarking mesh/ron/serialize
+Benchmarking mesh/ron/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 25.8s, or reduce sample count to 10.
+Benchmarking mesh/ron/serialize: Collecting 100 samples in estimated 25.751 s (100 iterations)
+Benchmarking mesh/ron/serialize: Analyzing
+mesh/ron/serialize      time:   [270.54 ms 278.43 ms 286.87 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  6 (6.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/ron/deserialize
+Benchmarking mesh/ron/deserialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 28.5s, or reduce sample count to 10.
+Benchmarking mesh/ron/deserialize: Collecting 100 samples in estimated 28.527 s (100 iterations)
+Benchmarking mesh/ron/deserialize: Analyzing
+mesh/ron/deserialize    time:   [291.50 ms 296.14 ms 301.01 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+mesh/ron/size 22192885
+mesh/ron/zlib 9009575
+mesh/ron/zstd 8147524
+
+Benchmarking mesh/serde_json/serialize
+Benchmarking mesh/serde_json/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 16.0s, or reduce sample count to 30.
+Benchmarking mesh/serde_json/serialize: Collecting 100 samples in estimated 15.981 s (100 iterations)
+Benchmarking mesh/serde_json/serialize: Analyzing
+mesh/serde_json/serialize
+                        time:   [144.33 ms 150.80 ms 157.71 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+Benchmarking mesh/serde_json/deserialize
+Benchmarking mesh/serde_json/deserialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 10.0s, or reduce sample count to 40.
+Benchmarking mesh/serde_json/deserialize: Collecting 100 samples in estimated 10.034 s (100 iterations)
+Benchmarking mesh/serde_json/deserialize: Analyzing
+mesh/serde_json/deserialize
+                        time:   [97.487 ms 99.862 ms 102.51 ms]
+Found 12 outliers among 100 measurements (12.00%)
+  5 (5.00%) high mild
+  7 (7.00%) high severe
+mesh/serde_json/size 26192883
+mesh/serde_json/zlib 9612105
+mesh/serde_json/zstd 8595089
+
+Benchmarking mesh/simd-json/serialize
+Benchmarking mesh/simd-json/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 15.1s, or reduce sample count to 30.
+Benchmarking mesh/simd-json/serialize: Collecting 100 samples in estimated 15.135 s (100 iterations)
+Benchmarking mesh/simd-json/serialize: Analyzing
+mesh/simd-json/serialize
+                        time:   [142.27 ms 147.87 ms 153.71 ms]
+Benchmarking mesh/simd-json/deserialize
+Benchmarking mesh/simd-json/deserialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 15.2s, or reduce sample count to 30.
+Benchmarking mesh/simd-json/deserialize: Collecting 100 samples in estimated 15.206 s (100 iterations)
+Benchmarking mesh/simd-json/deserialize: Analyzing
+mesh/simd-json/deserialize
+                        time:   [136.23 ms 140.41 ms 145.21 ms]
+Found 13 outliers among 100 measurements (13.00%)
+  8 (8.00%) high mild
+  5 (5.00%) high severe
+mesh/simd-json/size 39152823
+mesh/simd-json/zlib 16587283
+mesh/simd-json/zstd 14555990
+
+Benchmarking mesh/speedy/serialize
+Benchmarking mesh/speedy/serialize: Warming up for 3.0000 s
+Benchmarking mesh/speedy/serialize: Collecting 100 samples in estimated 9.3452 s (10k iterations)
+Benchmarking mesh/speedy/serialize: Analyzing
+mesh/speedy/serialize   time:   [851.09 us 882.38 us 920.88 us]
+Found 10 outliers among 100 measurements (10.00%)
+  4 (4.00%) high mild
+  6 (6.00%) high severe
+Benchmarking mesh/speedy/deserialize
+Benchmarking mesh/speedy/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/speedy/deserialize: Collecting 100 samples in estimated 5.0991 s (1800 iterations)
+Benchmarking mesh/speedy/deserialize: Analyzing
+mesh/speedy/deserialize time:   [2.5464 ms 2.6292 ms 2.7263 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+mesh/speedy/size 6000004
+mesh/speedy/zlib 5380818
+mesh/speedy/zstd 5345888
+
+Benchmarking mesh/alkahest/serialize
+Benchmarking mesh/alkahest/serialize: Warming up for 3.0000 s
+Benchmarking mesh/alkahest/serialize: Collecting 100 samples in estimated 5.9686 s (10k iterations)
+Benchmarking mesh/alkahest/serialize: Analyzing
+mesh/alkahest/serialize time:   [496.16 us 501.32 us 506.59 us]
+Found 7 outliers among 100 measurements (7.00%)
+  7 (7.00%) high mild
+Benchmarking mesh/alkahest/access (validated on-demand with panic)
+Benchmarking mesh/alkahest/access (validated on-demand with panic): Warming up for 3.0000 s
+Benchmarking mesh/alkahest/access (validated on-demand with panic): Collecting 100 samples in estimated 5.0000 s (2.1B iterations)
+Benchmarking mesh/alkahest/access (validated on-demand with panic): Analyzing
+mesh/alkahest/access (validated on-demand with panic)
+                        time:   [2.3068 ns 2.3742 ns 2.4452 ns]
+Found 11 outliers among 100 measurements (11.00%)
+  9 (9.00%) high mild
+  2 (2.00%) high severe
+Benchmarking mesh/alkahest/read (validated on-demand with panic)
+Benchmarking mesh/alkahest/read (validated on-demand with panic): Warming up for 3.0000 s
+Benchmarking mesh/alkahest/read (validated on-demand with panic): Collecting 100 samples in estimated 5.1881 s (61k iterations)
+Benchmarking mesh/alkahest/read (validated on-demand with panic): Analyzing
+mesh/alkahest/read (validated on-demand with panic)
+                        time:   [83.780 us 86.893 us 90.333 us]
+Found 12 outliers among 100 measurements (12.00%)
+  9 (9.00%) high mild
+  3 (3.00%) high severe
+mesh/alkahest/size 6000008
+mesh/alkahest/zlib 5380823
+mesh/alkahest/zstd 5345885
+
+Benchmarking mesh/dlhn/serialize
+Benchmarking mesh/dlhn/serialize: Warming up for 3.0000 s
+Benchmarking mesh/dlhn/serialize: Collecting 100 samples in estimated 5.1256 s (600 iterations)
+Benchmarking mesh/dlhn/serialize: Analyzing
+mesh/dlhn/serialize     time:   [7.3532 ms 7.9378 ms 8.5661 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking mesh/dlhn/deserialize
+Benchmarking mesh/dlhn/deserialize: Warming up for 3.0000 s
+Benchmarking mesh/dlhn/deserialize: Collecting 100 samples in estimated 6.1042 s (400 iterations)
+Benchmarking mesh/dlhn/deserialize: Analyzing
+mesh/dlhn/deserialize   time:   [14.678 ms 15.058 ms 15.482 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  5 (5.00%) high mild
+  3 (3.00%) high severe
+mesh/dlhn/size 6000003
+mesh/dlhn/zlib 5380817
+mesh/dlhn/zstd 5345893
+
+Benchmarking minecraft_savedata/abomonation/serialize
+Benchmarking minecraft_savedata/abomonation/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/abomonation/serialize: Collecting 100 samples in estimated 5.1174 s (10k iterations)
+Benchmarking minecraft_savedata/abomonation/serialize: Analyzing
+minecraft_savedata/abomonation/serialize
+                        time:   [475.63 us 495.21 us 515.90 us]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking minecraft_savedata/abomonation/access (unvalidated)
+Benchmarking minecraft_savedata/abomonation/access (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/abomonation/access (unvalidated): Collecting 100 samples in estimated 5.0555 s (101k iterations)
+Benchmarking minecraft_savedata/abomonation/access (unvalidated): Analyzing
+minecraft_savedata/abomonation/access (unvalidated)
+                        time:   [48.665 us 51.214 us 54.420 us]
+Found 12 outliers among 100 measurements (12.00%)
+  5 (5.00%) high mild
+  7 (7.00%) high severe
+Benchmarking minecraft_savedata/abomonation/read (unvalidated)
+Benchmarking minecraft_savedata/abomonation/read (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/abomonation/read (unvalidated): Collecting 100 samples in estimated 5.2242 s (101k iterations)
+Benchmarking minecraft_savedata/abomonation/read (unvalidated): Analyzing
+minecraft_savedata/abomonation/read (unvalidated)
+                        time:   [47.134 us 48.362 us 49.853 us]
+Found 14 outliers among 100 measurements (14.00%)
+  6 (6.00%) high mild
+  8 (8.00%) high severe
+Benchmarking minecraft_savedata/abomonation/deserialize (unvalidated)
+Benchmarking minecraft_savedata/abomonation/deserialize (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/abomonation/deserialize (unvalidated): Collecting 100 samples in estimated 5.0539 s (1700 iterations)
+Benchmarking minecraft_savedata/abomonation/deserialize (unvalidated): Analyzing
+minecraft_savedata/abomonation/deserialize (unvalidated)
+                        time:   [2.8019 ms 2.9267 ms 3.0626 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  6 (6.00%) high mild
+  3 (3.00%) high severe
+minecraft_savedata/abomonation/size 1290592
+minecraft_savedata/abomonation/zlib 390628
+minecraft_savedata/abomonation/zstd 329822
+
+Benchmarking minecraft_savedata/bare/serialize
+Benchmarking minecraft_savedata/bare/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.9s, enable flat sampling, or reduce sample count to 50.
+Benchmarking minecraft_savedata/bare/serialize: Collecting 100 samples in estimated 7.9418 s (5050 iterations)
+Benchmarking minecraft_savedata/bare/serialize: Analyzing
+minecraft_savedata/bare/serialize
+                        time:   [1.5250 ms 1.6024 ms 1.6830 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking minecraft_savedata/bare/deserialize
+Benchmarking minecraft_savedata/bare/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/bare/deserialize: Collecting 100 samples in estimated 5.3718 s (1000 iterations)
+Benchmarking minecraft_savedata/bare/deserialize: Analyzing
+minecraft_savedata/bare/deserialize
+                        time:   [4.9947 ms 5.2197 ms 5.4665 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+minecraft_savedata/bare/size 356311
+minecraft_savedata/bare/zlib 213270
+minecraft_savedata/bare/zstd 199012
+
+Benchmarking minecraft_savedata/bincode/serialize
+Benchmarking minecraft_savedata/bincode/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.5s, enable flat sampling, or reduce sample count to 60.
+Benchmarking minecraft_savedata/bincode/serialize: Collecting 100 samples in estimated 6.4806 s (5050 iterations)
+Benchmarking minecraft_savedata/bincode/serialize: Analyzing
+minecraft_savedata/bincode/serialize
+                        time:   [1.3044 ms 1.4247 ms 1.5426 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking minecraft_savedata/bincode/deserialize
+Benchmarking minecraft_savedata/bincode/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/bincode/deserialize: Collecting 100 samples in estimated 5.0403 s (1400 iterations)
+Benchmarking minecraft_savedata/bincode/deserialize: Analyzing
+minecraft_savedata/bincode/deserialize
+                        time:   [3.8093 ms 3.9795 ms 4.1613 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+minecraft_savedata/bincode/size 569975
+minecraft_savedata/bincode/zlib 240897
+minecraft_savedata/bincode/zstd 232904
+
+Benchmarking minecraft_savedata/borsh/serialize
+Benchmarking minecraft_savedata/borsh/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.9s, enable flat sampling, or reduce sample count to 60.
+Benchmarking minecraft_savedata/borsh/serialize: Collecting 100 samples in estimated 5.9327 s (5050 iterations)
+Benchmarking minecraft_savedata/borsh/serialize: Analyzing
+minecraft_savedata/borsh/serialize
+                        time:   [1.2881 ms 1.3690 ms 1.4528 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking minecraft_savedata/borsh/deserialize
+Benchmarking minecraft_savedata/borsh/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/borsh/deserialize: Collecting 100 samples in estimated 5.3304 s (1500 iterations)
+Benchmarking minecraft_savedata/borsh/deserialize: Analyzing
+minecraft_savedata/borsh/deserialize
+                        time:   [3.6722 ms 3.8030 ms 3.9426 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+minecraft_savedata/borsh/size 446595
+minecraft_savedata/borsh/zlib 234395
+minecraft_savedata/borsh/zstd 210623
+
+Benchmarking minecraft_savedata/bson/serialize
+Benchmarking minecraft_savedata/bson/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/bson/serialize: Collecting 100 samples in estimated 5.0487 s (600 iterations)
+Benchmarking minecraft_savedata/bson/serialize: Analyzing
+minecraft_savedata/bson/serialize
+                        time:   [8.5107 ms 8.9111 ms 9.3315 ms]
+Benchmarking minecraft_savedata/bson/deserialize
+Benchmarking minecraft_savedata/bson/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/bson/deserialize: Collecting 100 samples in estimated 6.4167 s (400 iterations)
+Benchmarking minecraft_savedata/bson/deserialize: Analyzing
+minecraft_savedata/bson/deserialize
+                        time:   [16.465 ms 17.072 ms 17.719 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+minecraft_savedata/bson/size 1619653
+minecraft_savedata/bson/zlib 506953
+minecraft_savedata/bson/zstd 328780
+
+Benchmarking minecraft_savedata/capnp/serialize
+Benchmarking minecraft_savedata/capnp/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.5s, enable flat sampling, or reduce sample count to 60.
+Benchmarking minecraft_savedata/capnp/serialize: Collecting 100 samples in estimated 5.5490 s (5050 iterations)
+Benchmarking minecraft_savedata/capnp/serialize: Analyzing
+minecraft_savedata/capnp/serialize
+                        time:   [1.0149 ms 1.0548 ms 1.0982 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/capnp/access (validated on-demand with error)
+Benchmarking minecraft_savedata/capnp/access (validated on-demand with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/capnp/access (validated on-demand with error): Collecting 100 samples in estimated 5.0000 s (24M iterations)
+Benchmarking minecraft_savedata/capnp/access (validated on-demand with error): Analyzing
+minecraft_savedata/capnp/access (validated on-demand with error)
+                        time:   [206.93 ns 211.53 ns 216.62 ns]
+Found 9 outliers among 100 measurements (9.00%)
+  9 (9.00%) high mild
+Benchmarking minecraft_savedata/capnp/read (validated on-demand with error)
+Benchmarking minecraft_savedata/capnp/read (validated on-demand with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/capnp/read (validated on-demand with error): Collecting 100 samples in estimated 5.0281 s (813k iterations)
+Benchmarking minecraft_savedata/capnp/read (validated on-demand with error): Analyzing
+minecraft_savedata/capnp/read (validated on-demand with error)
+                        time:   [6.1572 us 6.3068 us 6.4705 us]
+Found 14 outliers among 100 measurements (14.00%)
+  3 (3.00%) high mild
+  11 (11.00%) high severe
+minecraft_savedata/capnp/size 803896
+minecraft_savedata/capnp/zlib 336655
+minecraft_savedata/capnp/zstd 281557
+
+Benchmarking minecraft_savedata/cbor/serialize
+Benchmarking minecraft_savedata/cbor/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/cbor/serialize: Collecting 100 samples in estimated 5.3514 s (1400 iterations)
+Benchmarking minecraft_savedata/cbor/serialize: Analyzing
+minecraft_savedata/cbor/serialize
+                        time:   [3.6581 ms 3.9529 ms 4.2622 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+Benchmarking minecraft_savedata/cbor/deserialize
+Benchmarking minecraft_savedata/cbor/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/cbor/deserialize: Collecting 100 samples in estimated 5.2817 s (600 iterations)
+Benchmarking minecraft_savedata/cbor/deserialize: Analyzing
+minecraft_savedata/cbor/deserialize
+                        time:   [8.7679 ms 9.0985 ms 9.4548 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  7 (7.00%) high mild
+minecraft_savedata/cbor/size 1109821
+minecraft_savedata/cbor/zlib 347812
+minecraft_savedata/cbor/zstd 275365
+
+Benchmarking minecraft_savedata/flatbuffers/serialize
+Benchmarking minecraft_savedata/flatbuffers/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/flatbuffers/serialize: Collecting 100 samples in estimated 7.8701 s (200 iterations)
+Benchmarking minecraft_savedata/flatbuffers/serialize: Analyzing
+minecraft_savedata/flatbuffers/serialize
+                        time:   [38.635 ms 39.963 ms 41.466 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  3 (3.00%) high mild
+  8 (8.00%) high severe
+Benchmarking minecraft_savedata/flatbuffers/access (unvalidated)
+Benchmarking minecraft_savedata/flatbuffers/access (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/flatbuffers/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (1.5B iterations)
+Benchmarking minecraft_savedata/flatbuffers/access (unvalidated): Analyzing
+minecraft_savedata/flatbuffers/access (unvalidated)
+                        time:   [3.2906 ns 3.3949 ns 3.5088 ns]
+Found 9 outliers among 100 measurements (9.00%)
+  8 (8.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/flatbuffers/access (validated upfront with error)
+Benchmarking minecraft_savedata/flatbuffers/access (validated upfront with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/flatbuffers/access (validated upfront with error): Collecting 100 samples in estimated 5.2342 s (1900 iterations)
+Benchmarking minecraft_savedata/flatbuffers/access (validated upfront with error): Analyzing
+minecraft_savedata/flatbuffers/access (validated upfront with error)
+                        time:   [2.6682 ms 2.7556 ms 2.8505 ms]
+Found 12 outliers among 100 measurements (12.00%)
+  11 (11.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/flatbuffers/read (unvalidated)
+Benchmarking minecraft_savedata/flatbuffers/read (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/flatbuffers/read (unvalidated): Collecting 100 samples in estimated 5.0101 s (1.1M iterations)
+Benchmarking minecraft_savedata/flatbuffers/read (unvalidated): Analyzing
+minecraft_savedata/flatbuffers/read (unvalidated)
+                        time:   [3.9987 us 4.1169 us 4.2563 us]
+Found 16 outliers among 100 measurements (16.00%)
+  10 (10.00%) high mild
+  6 (6.00%) high severe
+Benchmarking minecraft_savedata/flatbuffers/read (validated upfront with error)
+Benchmarking minecraft_savedata/flatbuffers/read (validated upfront with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/flatbuffers/read (validated upfront with error): Collecting 100 samples in estimated 5.2592 s (2000 iterations)
+Benchmarking minecraft_savedata/flatbuffers/read (validated upfront with error): Analyzing
+minecraft_savedata/flatbuffers/read (validated upfront with error)
+                        time:   [2.6909 ms 2.7745 ms 2.8625 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+minecraft_savedata/flatbuffers/size 844168
+minecraft_savedata/flatbuffers/zlib 346957
+minecraft_savedata/flatbuffers/zstd 295321
+
+Benchmarking minecraft_savedata/nachricht/serialize
+Benchmarking minecraft_savedata/nachricht/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/nachricht/serialize: Collecting 100 samples in estimated 5.7859 s (700 iterations)
+Benchmarking minecraft_savedata/nachricht/serialize: Analyzing
+minecraft_savedata/nachricht/serialize
+                        time:   [7.4066 ms 7.7520 ms 8.1146 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking minecraft_savedata/nachricht/deserialize
+Benchmarking minecraft_savedata/nachricht/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/nachricht/deserialize: Collecting 100 samples in estimated 5.4000 s (700 iterations)
+Benchmarking minecraft_savedata/nachricht/deserialize: Analyzing
+minecraft_savedata/nachricht/deserialize
+                        time:   [7.3293 ms 7.6250 ms 7.9506 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) high mild
+  2 (2.00%) high severe
+minecraft_savedata/nachricht/size 535875
+minecraft_savedata/nachricht/zlib 282125
+minecraft_savedata/nachricht/zstd 250252
+
+Benchmarking minecraft_savedata/postcard/serialize
+Benchmarking minecraft_savedata/postcard/serialize: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.1s, enable flat sampling, or reduce sample count to 70.
+Benchmarking minecraft_savedata/postcard/serialize: Collecting 100 samples in estimated 5.0743 s (5050 iterations)
+Benchmarking minecraft_savedata/postcard/serialize: Analyzing
+minecraft_savedata/postcard/serialize
+                        time:   [934.18 us 984.60 us 1.0409 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking minecraft_savedata/postcard/deserialize
+Benchmarking minecraft_savedata/postcard/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/postcard/deserialize: Collecting 100 samples in estimated 5.2719 s (1300 iterations)
+Benchmarking minecraft_savedata/postcard/deserialize: Analyzing
+minecraft_savedata/postcard/deserialize
+                        time:   [4.1323 ms 4.2912 ms 4.4591 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+minecraft_savedata/postcard/size 367489
+minecraft_savedata/postcard/zlib 222144
+minecraft_savedata/postcard/zstd 207844
+
+Benchmarking minecraft_savedata/prost/serialize (populate + encode)
+Benchmarking minecraft_savedata/prost/serialize (populate + encode): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/prost/serialize (populate + encode): Collecting 100 samples in estimated 5.5663 s (800 iterations)
+Benchmarking minecraft_savedata/prost/serialize (populate + encode): Analyzing
+minecraft_savedata/prost/serialize (populate + encode)
+                        time:   [6.8444 ms 7.0903 ms 7.3476 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking minecraft_savedata/prost/serialize (encode)
+Benchmarking minecraft_savedata/prost/serialize (encode): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/prost/serialize (encode): Collecting 100 samples in estimated 5.1184 s (2100 iterations)
+Benchmarking minecraft_savedata/prost/serialize (encode): Analyzing
+minecraft_savedata/prost/serialize (encode)
+                        time:   [2.1212 ms 2.1849 ms 2.2556 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+Benchmarking minecraft_savedata/prost/deserialize
+Benchmarking minecraft_savedata/prost/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/prost/deserialize: Collecting 100 samples in estimated 5.9601 s (600 iterations)
+Benchmarking minecraft_savedata/prost/deserialize: Analyzing
+minecraft_savedata/prost/deserialize
+                        time:   [9.2491 ms 9.5588 ms 9.8997 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+minecraft_savedata/prost/size 596811
+minecraft_savedata/prost/zlib 306728
+minecraft_savedata/prost/zstd 270153
+
+Benchmarking minecraft_savedata/rkyv/serialize
+Benchmarking minecraft_savedata/rkyv/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/serialize: Collecting 100 samples in estimated 7.5533 s (10k iterations)
+Benchmarking minecraft_savedata/rkyv/serialize: Analyzing
+minecraft_savedata/rkyv/serialize
+                        time:   [764.34 us 804.28 us 843.14 us]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking minecraft_savedata/rkyv/access (unvalidated)
+Benchmarking minecraft_savedata/rkyv/access (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/access (unvalidated): Collecting 100 samples in estimated 5.0000 s (2.9B iterations)
+Benchmarking minecraft_savedata/rkyv/access (unvalidated): Analyzing
+minecraft_savedata/rkyv/access (unvalidated)
+                        time:   [1.7812 ns 1.8186 ns 1.8595 ns]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+Benchmarking minecraft_savedata/rkyv/access (validated upfront with error)
+Benchmarking minecraft_savedata/rkyv/access (validated upfront with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/access (validated upfront with error): Collecting 100 samples in estimated 7.5428 s (10k iterations)
+Benchmarking minecraft_savedata/rkyv/access (validated upfront with error): Analyzing
+minecraft_savedata/rkyv/access (validated upfront with error)
+                        time:   [699.21 us 718.49 us 740.04 us]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking minecraft_savedata/rkyv/read (unvalidated)
+Benchmarking minecraft_savedata/rkyv/read (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/read (unvalidated): Collecting 100 samples in estimated 5.0007 s (24M iterations)
+Benchmarking minecraft_savedata/rkyv/read (unvalidated): Analyzing
+minecraft_savedata/rkyv/read (unvalidated)
+                        time:   [200.74 ns 209.12 ns 218.53 ns]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking minecraft_savedata/rkyv/read (validated upfront with error)
+Benchmarking minecraft_savedata/rkyv/read (validated upfront with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/read (validated upfront with error): Collecting 100 samples in estimated 6.7778 s (10k iterations)
+Benchmarking minecraft_savedata/rkyv/read (validated upfront with error): Analyzing
+minecraft_savedata/rkyv/read (validated upfront with error)
+                        time:   [646.87 us 663.16 us 681.50 us]
+Found 21 outliers among 100 measurements (21.00%)
+  9 (9.00%) high mild
+  12 (12.00%) high severe
+Benchmarking minecraft_savedata/rkyv/update
+Benchmarking minecraft_savedata/rkyv/update: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/update: Collecting 100 samples in estimated 5.0241 s (707k iterations)
+Benchmarking minecraft_savedata/rkyv/update: Analyzing
+minecraft_savedata/rkyv/update
+                        time:   [7.1442 us 7.2345 us 7.3279 us]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/rkyv/deserialize (unvalidated)
+Benchmarking minecraft_savedata/rkyv/deserialize (unvalidated): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/deserialize (unvalidated): Collecting 100 samples in estimated 5.1320 s (2200 iterations)
+Benchmarking minecraft_savedata/rkyv/deserialize (unvalidated): Analyzing
+minecraft_savedata/rkyv/deserialize (unvalidated)
+                        time:   [2.2841 ms 2.3283 ms 2.3785 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  2 (2.00%) high mild
+  8 (8.00%) high severe
+Benchmarking minecraft_savedata/rkyv/deserialize (validated upfront with error)
+Benchmarking minecraft_savedata/rkyv/deserialize (validated upfront with error): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rkyv/deserialize (validated upfront with error): Collecting 100 samples in estimated 5.1908 s (1600 iterations)
+Benchmarking minecraft_savedata/rkyv/deserialize (validated upfront with error): Analyzing
+minecraft_savedata/rkyv/deserialize (validated upfront with error)
+                        time:   [3.0164 ms 3.0605 ms 3.1066 ms]
+minecraft_savedata/rkyv/size 596952
+minecraft_savedata/rkyv/zlib 254571
+minecraft_savedata/rkyv/zstd 220523
+
+Benchmarking minecraft_savedata/rmp/serialize
+Benchmarking minecraft_savedata/rmp/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rmp/serialize: Collecting 100 samples in estimated 5.1965 s (2400 iterations)
+Benchmarking minecraft_savedata/rmp/serialize: Analyzing
+minecraft_savedata/rmp/serialize
+                        time:   [1.9965 ms 2.0642 ms 2.1379 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/rmp/deserialize
+Benchmarking minecraft_savedata/rmp/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/rmp/deserialize: Collecting 100 samples in estimated 5.1410 s (1100 iterations)
+Benchmarking minecraft_savedata/rmp/deserialize: Analyzing
+minecraft_savedata/rmp/deserialize
+                        time:   [4.7567 ms 4.8106 ms 4.8732 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  5 (5.00%) high mild
+  3 (3.00%) high severe
+minecraft_savedata/rmp/size 418025
+minecraft_savedata/rmp/zlib 244869
+minecraft_savedata/rmp/zstd 226158
+
+Benchmarking minecraft_savedata/ron/serialize
+Benchmarking minecraft_savedata/ron/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/ron/serialize: Collecting 100 samples in estimated 5.5497 s (500 iterations)
+Benchmarking minecraft_savedata/ron/serialize: Analyzing
+minecraft_savedata/ron/serialize
+                        time:   [11.286 ms 11.671 ms 12.086 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  7 (7.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/ron/deserialize
+Benchmarking minecraft_savedata/ron/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/ron/deserialize: Collecting 100 samples in estimated 5.5873 s (300 iterations)
+Benchmarking minecraft_savedata/ron/deserialize: Analyzing
+minecraft_savedata/ron/deserialize
+                        time:   [16.787 ms 17.051 ms 17.373 ms]
+Found 14 outliers among 100 measurements (14.00%)
+  2 (2.00%) high mild
+  12 (12.00%) high severe
+minecraft_savedata/ron/size 1465223
+minecraft_savedata/ron/zlib 439761
+minecraft_savedata/ron/zstd 345579
+
+Benchmarking minecraft_savedata/serde_json/serialize
+Benchmarking minecraft_savedata/serde_json/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/serde_json/serialize: Collecting 100 samples in estimated 5.2504 s (1000 iterations)
+Benchmarking minecraft_savedata/serde_json/serialize: Analyzing
+minecraft_savedata/serde_json/serialize
+                        time:   [4.9259 ms 5.0867 ms 5.2591 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high mild
+Benchmarking minecraft_savedata/serde_json/deserialize
+Benchmarking minecraft_savedata/serde_json/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/serde_json/deserialize: Collecting 100 samples in estimated 5.2697 s (500 iterations)
+Benchmarking minecraft_savedata/serde_json/deserialize: Analyzing
+minecraft_savedata/serde_json/deserialize
+                        time:   [10.585 ms 10.716 ms 10.862 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+minecraft_savedata/serde_json/size 1623191
+minecraft_savedata/serde_json/zlib 472275
+minecraft_savedata/serde_json/zstd 362019
+
+Benchmarking minecraft_savedata/simd-json/serialize
+Benchmarking minecraft_savedata/simd-json/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/simd-json/serialize: Collecting 100 samples in estimated 5.3727 s (900 iterations)
+Benchmarking minecraft_savedata/simd-json/serialize: Analyzing
+minecraft_savedata/simd-json/serialize
+                        time:   [5.4714 ms 5.6466 ms 5.8328 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking minecraft_savedata/simd-json/deserialize
+Benchmarking minecraft_savedata/simd-json/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/simd-json/deserialize: Collecting 100 samples in estimated 5.0584 s (500 iterations)
+Benchmarking minecraft_savedata/simd-json/deserialize: Analyzing
+minecraft_savedata/simd-json/deserialize
+                        time:   [9.4629 ms 9.5609 ms 9.6775 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  5 (5.00%) high mild
+  4 (4.00%) high severe
+minecraft_savedata/simd-json/size 1663769
+minecraft_savedata/simd-json/zlib 496401
+minecraft_savedata/simd-json/zstd 386208
+
+Benchmarking minecraft_savedata/speedy/serialize
+Benchmarking minecraft_savedata/speedy/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/speedy/serialize: Collecting 100 samples in estimated 5.5784 s (10k iterations)
+Benchmarking minecraft_savedata/speedy/serialize: Analyzing
+minecraft_savedata/speedy/serialize
+                        time:   [499.92 us 517.97 us 541.21 us]
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+Benchmarking minecraft_savedata/speedy/deserialize
+Benchmarking minecraft_savedata/speedy/deserialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/speedy/deserialize: Collecting 100 samples in estimated 5.1646 s (2000 iterations)
+Benchmarking minecraft_savedata/speedy/deserialize: Analyzing
+minecraft_savedata/speedy/deserialize
+                        time:   [2.5389 ms 2.5761 ms 2.6209 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  3 (3.00%) high mild
+  7 (7.00%) high severe
+minecraft_savedata/speedy/size 449595
+minecraft_savedata/speedy/zlib 235136
+minecraft_savedata/speedy/zstd 210904
+
+Benchmarking minecraft_savedata/alkahest/serialize
+Benchmarking minecraft_savedata/alkahest/serialize: Warming up for 3.0000 s
+Benchmarking minecraft_savedata/alkahest/serialize: Collecting 100 samples in estimated 6.5205 s (15k iterations)
+Benchmarking minecraft_savedata/alkahest/serialize: Analyzing
+minecraft_savedata/alkahest/serialize
+                        time:   [408.20 us 438.80 us 481.33 us]
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) high mild
+  5 (5.00%) high severe
+Benchmarking minecraft_savedata/alkahest/access (validated on-demand with panic)
+Benchmarking minecraft_savedata/alkahest/access (validated on-demand with panic): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/alkahest/access (validated on-demand with panic): Collecting 100 samples in estimated 5.0000 s (2.4B iterations)
+Benchmarking minecraft_savedata/alkahest/access (validated on-demand with panic): Analyzing
+minecraft_savedata/alkahest/access (validated on-demand with panic)
+                        time:   [2.1009 ns 2.1388 ns 2.1858 ns]
+Found 16 outliers among 100 measurements (16.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  13 (13.00%) high severe
+Benchmarking minecraft_savedata/alkahest/read (validated on-demand with panic)
+Benchmarking minecraft_savedata/alkahest/read (validated on-demand with panic): Warming up for 3.0000 s
+Benchmarking minecraft_savedata/alkahest/read (validated on-demand with panic): Collecting 100 samples in estimated 5.1365 s (162k iterations)
+Benchmarking minecraft_savedata/alkahest/read (validated on-demand with panic): Analyzing
+minecraft_savedata/alkahest/read (validated on-demand with panic)
+                        time:   [30.245 us 30.571 us 30.976 us]
+Found 16 outliers among 100 measurements (16.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  7 (7.00%) high mild
+  7 (7.00%) high severe
+minecraft_savedata/alkahest/size 667570
+minecraft_savedata/alkahest/zlib 325536
+minecraft_savedata/alkahest/zstd 320888
+
