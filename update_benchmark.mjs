@@ -12,7 +12,7 @@ function main() {
   const now = new Date()
   const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 
-  const results = child_process.execSync(`cargo bench --no-default-features --features "bytecheck rkyv"`).toString('utf-8')
+  const results = child_process.execSync(`cargo bench`).toString('utf-8')
   console.log(results)
   const resultsPath = `benchmark_results/${date}.txt`
   fs.writeFileSync(resultsPath, results)
@@ -24,8 +24,6 @@ function main() {
     DO_NOT_EDIT + formatTemplate(template, { date, results: format(results) })
   )
 }
-
-main()
 
 function parseUnit(unit) {
   switch (unit) {
@@ -142,8 +140,7 @@ const DATASET_DESCRIPTIONS = {
   minecraft_savedata: 'This data set is composed of Minecraft player saves that contain highly structured data.'
 }
 
-export default function(input) {
-
+function format(input) {
   let bench_times_re = /^([a-z_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\W+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s).*$/gm
   let bench_sizes_re = /^([a-z_\-]+)\/([a-z_\-]+)\/(size|zlib|zstd) (\d+)$/gm
 
@@ -241,3 +238,5 @@ ${zcdTables.comparison}
 
   return tables
 }
+
+main()

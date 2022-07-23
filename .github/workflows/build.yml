@@ -8,6 +8,9 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  CI: true
+
 jobs:
   build:
     name: build
@@ -52,7 +55,10 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
-          node update_benchmark.js
+          node update_benchmark.mjs
+
+          git add -A .
+          git commit -m "[gh-actions] Update benchmarks"
 
       - name: Push changes
         uses: ad-m/github-push-action@master

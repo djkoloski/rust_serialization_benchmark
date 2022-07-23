@@ -1,5 +1,7 @@
 use std::path::{Path, PathBuf};
 
+// TODO: re-enable bebop
+#[allow(dead_code)]
 fn bebop_compile_dataset(name: &'static str) {
     bebop_tools::download_bebopc(PathBuf::from("target").join("bebopc"));
 
@@ -47,7 +49,7 @@ fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
 fn main() {
     const DATASETS: [&str; 3] = ["log", "mesh", "minecraft_savedata"];
     for &name in DATASETS.iter() {
-        bebop_compile_dataset(name);
+        // bebop_compile_dataset(name);
         capnpc_compile_dataset(name).unwrap();
         flatc_compile_dataset(name).unwrap();
         prost_compile_dataset(name).unwrap();
