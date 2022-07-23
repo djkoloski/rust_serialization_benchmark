@@ -16,9 +16,9 @@
 
 #![allow(warnings)]
 
-use ::bebop::FixedSized as _;
-use ::core::convert::TryInto as _;
-use ::std::io::Write as _;
+use bebop::FixedSized as _;
+use core::convert::TryInto as _;
+use std::io::Write as _;
 
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
@@ -197,9 +197,9 @@ impl<'raw> ::bebop::Record<'raw> for Logs<'raw> {}
 pub mod owned {
     #![allow(warnings)]
 
-    use ::bebop::FixedSized as _;
-    use ::core::convert::TryInto as _;
-    use ::std::io::Write as _;
+    use bebop::FixedSized as _;
+    use core::convert::TryInto as _;
+    use std::io::Write as _;
 
     pub use super::Address;
 

@@ -48,9 +48,11 @@ jobs:
           mv flatc /usr/local/bin
 
           sudo apt-get install -y capnproto libprotobuf-dev
-          git config --global user.email "i@rmw.link"
-          git config --global user.name "github action"
-          ./build.sh
+
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
+          node update_benchmark.js
 
       - name: Push changes
         uses: ad-m/github-push-action@master

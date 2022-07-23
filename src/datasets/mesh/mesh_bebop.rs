@@ -16,9 +16,9 @@
 
 #![allow(warnings)]
 
-use ::std::io::Write as _;
-use ::core::convert::TryInto as _;
-use ::bebop::FixedSized as _;
+use bebop::FixedSized as _;
+use core::convert::TryInto as _;
+use std::io::Write as _;
 
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
@@ -41,11 +41,9 @@ impl<'raw> ::bebop::SubRecord<'raw> for Vector3 {
 
     #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-        Ok(
-            self.x._serialize_chained(dest)? +
-            self.y._serialize_chained(dest)? +
-            self.z._serialize_chained(dest)?
-        )
+        Ok(self.x._serialize_chained(dest)?
+            + self.y._serialize_chained(dest)?
+            + self.z._serialize_chained(dest)?)
     }
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
@@ -62,11 +60,14 @@ impl<'raw> ::bebop::SubRecord<'raw> for Vector3 {
         let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
         i += read;
 
-        Ok((i, Self {
-            x: v0,
-            y: v1,
-            z: v2,
-        }))
+        Ok((
+            i,
+            Self {
+                x: v0,
+                y: v1,
+                z: v2,
+            },
+        ))
     }
 }
 
@@ -94,12 +95,10 @@ impl<'raw> ::bebop::SubRecord<'raw> for Triangle {
 
     #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-        Ok(
-            self.v0._serialize_chained(dest)? +
-            self.v1._serialize_chained(dest)? +
-            self.v2._serialize_chained(dest)? +
-            self.normal._serialize_chained(dest)?
-        )
+        Ok(self.v0._serialize_chained(dest)?
+            + self.v1._serialize_chained(dest)?
+            + self.v2._serialize_chained(dest)?
+            + self.normal._serialize_chained(dest)?)
     }
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
@@ -118,12 +117,15 @@ impl<'raw> ::bebop::SubRecord<'raw> for Triangle {
         let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
         i += read;
 
-        Ok((i, Self {
-            v0: v0,
-            v1: v1,
-            v2: v2,
-            normal: v3,
-        }))
+        Ok((
+            i,
+            Self {
+                v0: v0,
+                v1: v1,
+                v2: v2,
+                normal: v3,
+            },
+        ))
     }
 }
 
@@ -135,8 +137,7 @@ pub struct Mesh<'raw> {
 }
 
 impl<'raw> ::bebop::SubRecord<'raw> for Mesh<'raw> {
-    const MIN_SERIALIZED_SIZE: usize =
-        <::bebop::SliceWrapper<'raw, Triangle>>::MIN_SERIALIZED_SIZE;
+    const MIN_SERIALIZED_SIZE: usize = <::bebop::SliceWrapper<'raw, Triangle>>::MIN_SERIALIZED_SIZE;
 
     #[inline]
     fn serialized_size(&self) -> usize {
@@ -145,9 +146,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Mesh<'raw> {
 
     #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-        Ok(
-            self.triangles._serialize_chained(dest)?
-        )
+        Ok(self.triangles._serialize_chained(dest)?)
     }
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
@@ -160,9 +159,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Mesh<'raw> {
         let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
         i += read;
 
-        Ok((i, Self {
-            triangles: v0,
-        }))
+        Ok((i, Self { triangles: v0 }))
     }
 }
 
@@ -172,9 +169,9 @@ impl<'raw> ::bebop::Record<'raw> for Mesh<'raw> {}
 pub mod owned {
     #![allow(warnings)]
 
-    use ::std::io::Write as _;
-    use ::core::convert::TryInto as _;
-    use ::bebop::FixedSized as _;
+    use bebop::FixedSized as _;
+    use core::convert::TryInto as _;
+    use std::io::Write as _;
 
     pub use super::Vector3;
 
@@ -194,8 +191,7 @@ pub mod owned {
     }
 
     impl<'raw> ::bebop::SubRecord<'raw> for Mesh {
-        const MIN_SERIALIZED_SIZE: usize =
-            <::std::vec::Vec<Triangle>>::MIN_SERIALIZED_SIZE;
+        const MIN_SERIALIZED_SIZE: usize = <::std::vec::Vec<Triangle>>::MIN_SERIALIZED_SIZE;
 
         #[inline]
         fn serialized_size(&self) -> usize {
@@ -203,10 +199,11 @@ pub mod owned {
         }
 
         #[allow(unaligned_references)]
-        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-            Ok(
-                self.triangles._serialize_chained(dest)?
-            )
+        fn _serialize_chained<W: ::std::io::Write>(
+            &self,
+            dest: &mut W,
+        ) -> ::bebop::SeResult<usize> {
+            Ok(self.triangles._serialize_chained(dest)?)
         }
 
         fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
@@ -219,10 +216,9 @@ pub mod owned {
             let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
             i += read;
 
-            Ok((i, Self {
-                triangles: v0,
-            }))
+            Ok((i, Self { triangles: v0 }))
         }
     }
 
-    impl<'raw> ::bebop::Record<'raw> for Mesh {}}
+    impl<'raw> ::bebop::Record<'raw> for Mesh {}
+}
