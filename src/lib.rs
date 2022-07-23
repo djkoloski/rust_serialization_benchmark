@@ -14,6 +14,8 @@ pub mod bench_bson;
 pub mod bench_capnp;
 #[cfg(feature = "serde_cbor")]
 pub mod bench_cbor;
+#[cfg(feature = "dlhn")]
+pub mod bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 pub mod bench_flatbuffers;
 #[cfg(feature = "nachricht-serde")]
@@ -34,37 +36,34 @@ pub mod bench_serde_json;
 pub mod bench_simd_json;
 #[cfg(feature = "speedy")]
 pub mod bench_speedy;
-#[cfg(feature = "dlhn")]
-pub mod bench_dlhn;
 pub mod datasets;
 
 use core::{mem, ops};
+
 use rand::Rng;
 
 pub trait Generate {
-    fn generate<R: Rng>(rng: &mut R) -> Self;
+  fn generate<R: Rng>(rng: &mut R) -> Self;
 }
 
 impl Generate for () {
-    fn generate<R: Rng>(_: &mut R) -> Self {
-        ()
-    }
+  fn generate<R: Rng>(_: &mut R) -> Self {}
 }
 
 impl Generate for bool {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        rng.gen_bool(0.5)
-    }
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    rng.gen_bool(0.5)
+  }
 }
 
 macro_rules! impl_generate {
-    ($ty:ty) => {
-        impl Generate for $ty {
-            fn generate<R: Rng>(rng: &mut R) -> Self {
-                rng.gen()
-            }
-        }
-    };
+  ($ty:ty) => {
+    impl Generate for $ty {
+      fn generate<R: Rng>(rng: &mut R) -> Self {
+        rng.gen()
+      }
+    }
+  };
 }
 
 impl_generate!(u8);
@@ -120,41 +119,41 @@ macro_rules! impl_array {
 }
 
 impl_array!(
-    31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
-    7, 6, 5, 4, 3, 2, 1, 0,
+  31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7,
+  6, 5, 4, 3, 2, 1, 0,
 );
 
 impl<T: Generate> Generate for Option<T> {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        if rng.gen_bool(0.5) {
-            Some(T::generate(rng))
-        } else {
-            None
-        }
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    if rng.gen_bool(0.5) {
+      Some(T::generate(rng))
+    } else {
+      None
     }
+  }
 }
 
 pub fn generate_vec<R: Rng, T: Generate>(rng: &mut R, range: ops::Range<usize>) -> Vec<T> {
-    let len = rng.gen_range(range);
-    let mut result = Vec::with_capacity(len);
-    for _ in 0..len {
-        result.push(T::generate(rng));
-    }
-    result
+  let len = rng.gen_range(range);
+  let mut result = Vec::with_capacity(len);
+  for _ in 0..len {
+    result.push(T::generate(rng));
+  }
+  result
 }
 
 pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
-    println!("{}/{}/size {}", name, lib, bytes.len());
-    println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
-    println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
+  println!("{}/{}/size {}", name, lib, bytes.len());
+  println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
+  println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
 }
 
 fn zlib_size(mut bytes: &[u8]) -> usize {
-    let mut encoder = libflate::zlib::Encoder::new(Vec::new()).unwrap();
-    std::io::copy(&mut bytes, &mut encoder).unwrap();
-    encoder.finish().into_result().unwrap().len()
+  let mut encoder = libflate::zlib::Encoder::new(Vec::new()).unwrap();
+  std::io::copy(&mut bytes, &mut encoder).unwrap();
+  encoder.finish().into_result().unwrap().len()
 }
 
 fn zstd_size(bytes: &[u8]) -> usize {
-    zstd::stream::encode_all(bytes, 0).unwrap().len()
+  zstd::stream::encode_all(bytes, 0).unwrap().len()
 }

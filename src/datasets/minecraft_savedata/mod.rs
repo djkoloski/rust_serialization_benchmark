@@ -5,16 +5,9 @@ pub mod minecraft_savedata_capnp;
 pub mod minecraft_savedata_fb;
 #[cfg(feature = "prost")]
 pub mod minecraft_savedata_prost {
-    include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
+  include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
 }
 
-#[cfg(feature = "capnp")]
-use crate::bench_capnp;
-#[cfg(feature = "flatbuffers")]
-use crate::bench_flatbuffers;
-#[cfg(feature = "prost")]
-use crate::bench_prost;
-use crate::{generate_vec, Generate};
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -27,15 +20,23 @@ use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
 
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+use crate::{generate_vec, Generate};
+
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -43,1244 +44,1243 @@ use rkyv::Archived;
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[repr(u8)]
 pub enum GameType {
-    Survival,
-    Creative,
-    Adventure,
-    Spectator,
+  Survival,
+  Creative,
+  Adventure,
+  Spectator,
 }
 
 impl Generate for GameType {
-    fn generate<R: Rng>(rand: &mut R) -> Self {
-        match rand.gen_range(0..4) {
-            0 => GameType::Survival,
-            1 => GameType::Creative,
-            2 => GameType::Adventure,
-            3 => GameType::Spectator,
-            _ => unreachable!(),
-        }
+  fn generate<R: Rng>(rand: &mut R) -> Self {
+    match rand.gen_range(0..4) {
+      0 => GameType::Survival,
+      1 => GameType::Creative,
+      2 => GameType::Adventure,
+      3 => GameType::Spectator,
+      _ => unreachable!(),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl Into<fb::GameType> for GameType {
-    #[inline]
-    fn into(self) -> fb::GameType {
-        match self {
-            GameType::Survival => fb::GameType::Survival,
-            GameType::Creative => fb::GameType::Creative,
-            GameType::Adventure => fb::GameType::Adventure,
-            GameType::Spectator => fb::GameType::Spectator,
-        }
+  #[inline]
+  fn into(self) -> fb::GameType {
+    match self {
+      GameType::Survival => fb::GameType::Survival,
+      GameType::Creative => fb::GameType::Creative,
+      GameType::Adventure => fb::GameType::Adventure,
+      GameType::Spectator => fb::GameType::Spectator,
     }
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl Into<cp::GameType> for GameType {
-    #[inline]
-    fn into(self) -> cp::GameType {
-        match self {
-            GameType::Survival => cp::GameType::Survival,
-            GameType::Creative => cp::GameType::Creative,
-            GameType::Adventure => cp::GameType::Adventure,
-            GameType::Spectator => cp::GameType::Spectator,
-        }
+  #[inline]
+  fn into(self) -> cp::GameType {
+    match self {
+      GameType::Survival => cp::GameType::Survival,
+      GameType::Creative => cp::GameType::Creative,
+      GameType::Adventure => cp::GameType::Adventure,
+      GameType::Spectator => cp::GameType::Spectator,
     }
+  }
 }
 
 #[cfg(feature = "prost")]
 impl Into<pb::GameType> for GameType {
-    #[inline]
-    fn into(self) -> pb::GameType {
-        match self {
-            GameType::Survival => pb::GameType::Survival,
-            GameType::Creative => pb::GameType::Creative,
-            GameType::Adventure => pb::GameType::Adventure,
-            GameType::Spectator => pb::GameType::Spectator,
-        }
+  #[inline]
+  fn into(self) -> pb::GameType {
+    match self {
+      GameType::Survival => pb::GameType::Survival,
+      GameType::Creative => pb::GameType::Creative,
+      GameType::Adventure => pb::GameType::Adventure,
+      GameType::Spectator => pb::GameType::Spectator,
     }
+  }
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<GameType> for GameType {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<GameType>, usize) {
-        match self {
-            GameType::Survival => GameTypeSurvivalPack.pack(offset, output),
-            GameType::Creative => GameTypeCreativePack.pack(offset, output),
-            GameType::Adventure => GameTypeAdventurePack.pack(offset, output),
-            GameType::Spectator => GameTypeSpectatorPack.pack(offset, output),
-        }
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<GameType>, usize) {
+    match self {
+      GameType::Survival => GameTypeSurvivalPack.pack(offset, output),
+      GameType::Creative => GameTypeCreativePack.pack(offset, output),
+      GameType::Adventure => GameTypeAdventurePack.pack(offset, output),
+      GameType::Spectator => GameTypeSpectatorPack.pack(offset, output),
     }
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Item {
-    pub count: i8,
-    pub slot: u8,
-    pub id: String,
+  pub count: i8,
+  pub slot: u8,
+  pub id: String,
 }
 
 impl Generate for Item {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        const IDS: [&'static str; 8] = [
-            "dirt",
-            "stone",
-            "pickaxe",
-            "sand",
-            "gravel",
-            "shovel",
-            "chestplate",
-            "steak",
-        ];
-        Self {
-            count: rng.gen(),
-            slot: rng.gen(),
-            id: IDS[rng.gen_range(0..IDS.len())].to_string(),
-        }
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    const IDS: [&str; 8] = [
+      "dirt",
+      "stone",
+      "pickaxe",
+      "sand",
+      "gravel",
+      "shovel",
+      "chestplate",
+      "steak",
+    ];
+    Self {
+      count: rng.gen(),
+      slot: rng.gen(),
+      id: IDS[rng.gen_range(0..IDS.len())].to_string(),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Item {
-    type Target = fb::Item<'a>;
+  type Target = fb::Item<'a>;
 
-    #[inline]
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let id = fbb.create_string(&self.id);
+  #[inline]
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let id = fbb.create_string(&self.id);
 
-        let mut builder = fb::ItemBuilder::new(fbb);
-        builder.add_count(self.count);
-        builder.add_slot(self.slot);
-        builder.add_id(id);
-        builder.finish()
-    }
+    let mut builder = fb::ItemBuilder::new(fbb);
+    builder.add_count(self.count);
+    builder.add_slot(self.slot);
+    builder.add_id(id);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Item {
-    type Reader = cp::item::Reader<'a>;
-    type Builder = cp::item::Builder<'a>;
+  type Reader = cp::item::Reader<'a>;
+  type Builder = cp::item::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        builder.set_count(self.count);
-        builder.set_slot(self.slot);
-        builder.set_id(&self.id);
-    }
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    builder.set_count(self.count);
+    builder.set_slot(self.slot);
+    builder.set_id(&self.id);
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Item {
-    type Message = pb::Item;
+  type Message = pb::Item;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.count = self.count as i32;
-        result.slot = self.slot as u32;
-        result.id = self.id.clone();
-        result
-    }
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    result.count = self.count as i32;
+    result.slot = self.slot as u32;
+    result.id = self.id.clone();
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct ItemSchema {
-    pub count: i8,
-    pub slot: u8,
-    pub id: alkahest::Bytes,
+  pub count: i8,
+  pub slot: u8,
+  pub id: alkahest::Bytes,
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<ItemSchema> for &'_ Item {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<ItemSchema>, usize) {
-        ItemSchemaPack {
-            count: self.count,
-            slot: self.slot,
-            id: self.id.as_bytes(),
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<ItemSchema>, usize) {
+    ItemSchemaPack {
+      count: self.count,
+      slot: self.slot,
+      id: self.id.as_bytes(),
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Abilities {
-    pub walk_speed: f32,
-    pub fly_speed: f32,
-    pub may_fly: bool,
-    pub flying: bool,
-    pub invulnerable: bool,
-    pub may_build: bool,
-    pub instabuild: bool,
+  pub walk_speed: f32,
+  pub fly_speed: f32,
+  pub may_fly: bool,
+  pub flying: bool,
+  pub invulnerable: bool,
+  pub may_build: bool,
+  pub instabuild: bool,
 }
 
 impl Generate for Abilities {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        Self {
-            walk_speed: rng.gen(),
-            fly_speed: rng.gen(),
-            may_fly: rng.gen_bool(0.5),
-            flying: rng.gen_bool(0.5),
-            invulnerable: rng.gen_bool(0.5),
-            may_build: rng.gen_bool(0.5),
-            instabuild: rng.gen_bool(0.5),
-        }
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    Self {
+      walk_speed: rng.gen(),
+      fly_speed: rng.gen(),
+      may_fly: rng.gen_bool(0.5),
+      flying: rng.gen_bool(0.5),
+      invulnerable: rng.gen_bool(0.5),
+      may_build: rng.gen_bool(0.5),
+      instabuild: rng.gen_bool(0.5),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl Into<fb::Abilities> for Abilities {
-    #[inline]
-    fn into(self) -> fb::Abilities {
-        fb::Abilities::new(
-            self.walk_speed,
-            self.fly_speed,
-            self.may_fly,
-            self.flying,
-            self.invulnerable,
-            self.may_build,
-            self.instabuild,
-        )
-    }
+  #[inline]
+  fn into(self) -> fb::Abilities {
+    fb::Abilities::new(
+      self.walk_speed,
+      self.fly_speed,
+      self.may_fly,
+      self.flying,
+      self.invulnerable,
+      self.may_build,
+      self.instabuild,
+    )
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Abilities {
-    type Reader = cp::abilities::Reader<'a>;
-    type Builder = cp::abilities::Builder<'a>;
+  type Reader = cp::abilities::Reader<'a>;
+  type Builder = cp::abilities::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        builder.set_walk_speed(self.walk_speed);
-        builder.set_fly_speed(self.fly_speed);
-        builder.set_may_fly(self.may_fly);
-        builder.set_flying(self.flying);
-        builder.set_invulnerable(self.invulnerable);
-        builder.set_may_build(self.may_build);
-        builder.set_instabuild(self.instabuild);
-    }
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    builder.set_walk_speed(self.walk_speed);
+    builder.set_fly_speed(self.fly_speed);
+    builder.set_may_fly(self.may_fly);
+    builder.set_flying(self.flying);
+    builder.set_invulnerable(self.invulnerable);
+    builder.set_may_build(self.may_build);
+    builder.set_instabuild(self.instabuild);
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Abilities {
-    type Message = pb::Abilities;
+  type Message = pb::Abilities;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.walk_speed = self.walk_speed;
-        result.fly_speed = self.fly_speed;
-        result.may_fly = self.may_fly;
-        result.flying = self.flying;
-        result.invulnerable = self.invulnerable;
-        result.may_build = self.may_build;
-        result.instabuild = self.instabuild;
-        result
-    }
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    result.walk_speed = self.walk_speed;
+    result.fly_speed = self.fly_speed;
+    result.may_fly = self.may_fly;
+    result.flying = self.flying;
+    result.invulnerable = self.invulnerable;
+    result.may_build = self.may_build;
+    result.instabuild = self.instabuild;
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Abilities> for Abilities {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Abilities>, usize) {
-        AbilitiesPack {
-            walk_speed: self.walk_speed,
-            fly_speed: self.fly_speed,
-            may_fly: self.may_fly,
-            flying: self.flying,
-            invulnerable: self.invulnerable,
-            may_build: self.may_build,
-            instabuild: self.instabuild,
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Abilities>, usize) {
+    AbilitiesPack {
+      walk_speed: self.walk_speed,
+      fly_speed: self.fly_speed,
+      may_fly: self.may_fly,
+      flying: self.flying,
+      invulnerable: self.invulnerable,
+      may_build: self.may_build,
+      instabuild: self.instabuild,
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Entity {
-    pub id: String,
-    pub pos: (f64, f64, f64),
-    pub motion: (f64, f64, f64),
-    pub rotation: (f32, f32),
-    pub fall_distance: f32,
-    pub fire: u16,
-    pub air: u16,
-    pub on_ground: bool,
-    pub no_gravity: bool,
-    pub invulnerable: bool,
-    pub portal_cooldown: i32,
-    pub uuid: [u32; 4],
-    pub custom_name: Option<String>,
-    pub custom_name_visible: bool,
-    pub silent: bool,
-    pub glowing: bool,
+  pub id: String,
+  pub pos: (f64, f64, f64),
+  pub motion: (f64, f64, f64),
+  pub rotation: (f32, f32),
+  pub fall_distance: f32,
+  pub fire: u16,
+  pub air: u16,
+  pub on_ground: bool,
+  pub no_gravity: bool,
+  pub invulnerable: bool,
+  pub portal_cooldown: i32,
+  pub uuid: [u32; 4],
+  pub custom_name: Option<String>,
+  pub custom_name_visible: bool,
+  pub silent: bool,
+  pub glowing: bool,
 }
 
 impl Generate for Entity {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        const IDS: [&'static str; 8] = [
-            "cow", "sheep", "zombie", "skeleton", "spider", "creeper", "parrot", "bee",
-        ];
-        const CUSTOM_NAMES: [&'static str; 8] = [
-            "rainbow", "princess", "steve", "johnny", "missy", "coward", "fairy", "howard",
-        ];
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    const IDS: [&str; 8] = [
+      "cow", "sheep", "zombie", "skeleton", "spider", "creeper", "parrot", "bee",
+    ];
+    const CUSTOM_NAMES: [&str; 8] = [
+      "rainbow", "princess", "steve", "johnny", "missy", "coward", "fairy", "howard",
+    ];
 
-        Self {
-            id: IDS[rng.gen_range(0..IDS.len())].to_string(),
-            pos: <(f64, f64, f64) as Generate>::generate(rng),
-            motion: <(f64, f64, f64) as Generate>::generate(rng),
-            rotation: <(f32, f32) as Generate>::generate(rng),
-            fall_distance: rng.gen(),
-            fire: rng.gen(),
-            air: rng.gen(),
-            on_ground: rng.gen_bool(0.5),
-            no_gravity: rng.gen_bool(0.5),
-            invulnerable: rng.gen_bool(0.5),
-            portal_cooldown: rng.gen(),
-            uuid: <[u32; 4] as Generate>::generate(rng),
-            custom_name: <Option<()> as Generate>::generate(rng)
-                .map(|_| CUSTOM_NAMES[rng.gen_range(0..CUSTOM_NAMES.len())].to_string()),
-            custom_name_visible: rng.gen_bool(0.5),
-            silent: rng.gen_bool(0.5),
-            glowing: rng.gen_bool(0.5),
-        }
+    Self {
+      id: IDS[rng.gen_range(0..IDS.len())].to_string(),
+      pos: <(f64, f64, f64) as Generate>::generate(rng),
+      motion: <(f64, f64, f64) as Generate>::generate(rng),
+      rotation: <(f32, f32) as Generate>::generate(rng),
+      fall_distance: rng.gen(),
+      fire: rng.gen(),
+      air: rng.gen(),
+      on_ground: rng.gen_bool(0.5),
+      no_gravity: rng.gen_bool(0.5),
+      invulnerable: rng.gen_bool(0.5),
+      portal_cooldown: rng.gen(),
+      uuid: <[u32; 4] as Generate>::generate(rng),
+      custom_name: <Option<()> as Generate>::generate(rng)
+        .map(|_| CUSTOM_NAMES[rng.gen_range(0..CUSTOM_NAMES.len())].to_string()),
+      custom_name_visible: rng.gen_bool(0.5),
+      silent: rng.gen_bool(0.5),
+      glowing: rng.gen_bool(0.5),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
-    type Target = fb::Entity<'a>;
+  type Target = fb::Entity<'a>;
 
-    #[inline]
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let id = fbb.create_string(&self.id);
-        let custom_name = self
-            .custom_name
-            .as_ref()
-            .map(|name| fbb.create_string(&name));
+  #[inline]
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let id = fbb.create_string(&self.id);
+    let custom_name = self
+      .custom_name
+      .as_ref()
+      .map(|name| fbb.create_string(name));
 
-        let pos = fb::Vector3d::new(self.pos.0, self.pos.1, self.pos.2);
-        let motion = fb::Vector3d::new(self.motion.0, self.motion.1, self.motion.2);
-        let rotation = fb::Vector2f::new(self.rotation.0, self.rotation.1);
-        let uuid = fb::Uuid::new(self.uuid[0], self.uuid[1], self.uuid[2], self.uuid[3]);
+    let pos = fb::Vector3d::new(self.pos.0, self.pos.1, self.pos.2);
+    let motion = fb::Vector3d::new(self.motion.0, self.motion.1, self.motion.2);
+    let rotation = fb::Vector2f::new(self.rotation.0, self.rotation.1);
+    let uuid = fb::Uuid::new(self.uuid[0], self.uuid[1], self.uuid[2], self.uuid[3]);
 
-        let mut builder = fb::EntityBuilder::new(fbb);
-        builder.add_id(id);
-        builder.add_pos(&pos);
-        builder.add_motion(&motion);
-        builder.add_rotation(&rotation);
-        builder.add_fall_distance(self.fall_distance);
-        builder.add_fire(self.fire);
-        builder.add_air(self.air);
-        builder.add_on_ground(self.on_ground);
-        builder.add_no_gravity(self.no_gravity);
-        builder.add_invulnerable(self.invulnerable);
-        builder.add_portal_cooldown(self.portal_cooldown);
-        builder.add_uuid(&uuid);
-        if let Some(custom_name) = custom_name {
-            builder.add_custom_name(custom_name);
-        }
-        builder.add_custom_name_visible(self.custom_name_visible);
-        builder.add_silent(self.silent);
-        builder.add_glowing(self.glowing);
-        builder.finish()
+    let mut builder = fb::EntityBuilder::new(fbb);
+    builder.add_id(id);
+    builder.add_pos(&pos);
+    builder.add_motion(&motion);
+    builder.add_rotation(&rotation);
+    builder.add_fall_distance(self.fall_distance);
+    builder.add_fire(self.fire);
+    builder.add_air(self.air);
+    builder.add_on_ground(self.on_ground);
+    builder.add_no_gravity(self.no_gravity);
+    builder.add_invulnerable(self.invulnerable);
+    builder.add_portal_cooldown(self.portal_cooldown);
+    builder.add_uuid(&uuid);
+    if let Some(custom_name) = custom_name {
+      builder.add_custom_name(custom_name);
     }
+    builder.add_custom_name_visible(self.custom_name_visible);
+    builder.add_silent(self.silent);
+    builder.add_glowing(self.glowing);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Entity {
-    type Reader = cp::entity::Reader<'a>;
-    type Builder = cp::entity::Builder<'a>;
+  type Reader = cp::entity::Reader<'a>;
+  type Builder = cp::entity::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        builder.set_id(&self.id);
-        let mut pos = builder.reborrow().init_pos();
-        pos.set_x(self.pos.0);
-        pos.set_y(self.pos.1);
-        pos.set_z(self.pos.2);
-        let mut motion = builder.reborrow().init_motion();
-        motion.set_x(self.motion.0);
-        motion.set_y(self.motion.1);
-        motion.set_z(self.motion.2);
-        let mut rotation = builder.reborrow().init_rotation();
-        rotation.set_x(self.rotation.0);
-        rotation.set_y(self.rotation.1);
-        builder.set_fall_distance(self.fall_distance);
-        builder.set_fire(self.fire);
-        builder.set_air(self.air);
-        builder.set_on_ground(self.on_ground);
-        builder.set_no_gravity(self.no_gravity);
-        builder.set_invulnerable(self.invulnerable);
-        builder.set_portal_cooldown(self.portal_cooldown);
-        let mut uuid = builder.reborrow().init_uuid();
-        uuid.set_x0(self.uuid[0]);
-        uuid.set_x1(self.uuid[1]);
-        uuid.set_x2(self.uuid[2]);
-        uuid.set_x3(self.uuid[3]);
-        if let Some(ref custom_name) = self.custom_name {
-            builder.set_custom_name(custom_name);
-        }
-        builder.set_custom_name_visible(self.custom_name_visible);
-        builder.set_silent(self.silent);
-        builder.set_glowing(self.glowing);
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    builder.set_id(&self.id);
+    let mut pos = builder.reborrow().init_pos();
+    pos.set_x(self.pos.0);
+    pos.set_y(self.pos.1);
+    pos.set_z(self.pos.2);
+    let mut motion = builder.reborrow().init_motion();
+    motion.set_x(self.motion.0);
+    motion.set_y(self.motion.1);
+    motion.set_z(self.motion.2);
+    let mut rotation = builder.reborrow().init_rotation();
+    rotation.set_x(self.rotation.0);
+    rotation.set_y(self.rotation.1);
+    builder.set_fall_distance(self.fall_distance);
+    builder.set_fire(self.fire);
+    builder.set_air(self.air);
+    builder.set_on_ground(self.on_ground);
+    builder.set_no_gravity(self.no_gravity);
+    builder.set_invulnerable(self.invulnerable);
+    builder.set_portal_cooldown(self.portal_cooldown);
+    let mut uuid = builder.reborrow().init_uuid();
+    uuid.set_x0(self.uuid[0]);
+    uuid.set_x1(self.uuid[1]);
+    uuid.set_x2(self.uuid[2]);
+    uuid.set_x3(self.uuid[3]);
+    if let Some(ref custom_name) = self.custom_name {
+      builder.set_custom_name(custom_name);
     }
+    builder.set_custom_name_visible(self.custom_name_visible);
+    builder.set_silent(self.silent);
+    builder.set_glowing(self.glowing);
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Entity {
-    type Message = pb::Entity;
+  type Message = pb::Entity;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.id = self.id.clone();
-        result.pos = Some({
-            let mut result = pb::Vector3d::default();
-            result.x = self.pos.0;
-            result.y = self.pos.1;
-            result.z = self.pos.2;
-            result
-        });
-        result.motion = Some({
-            let mut result = pb::Vector3d::default();
-            result.x = self.motion.0;
-            result.y = self.motion.1;
-            result.z = self.motion.2;
-            result
-        });
-        result.rotation = Some({
-            let mut result = pb::Vector2f::default();
-            result.x = self.rotation.0;
-            result.y = self.rotation.1;
-            result
-        });
-        result.fall_distance = self.fall_distance;
-        result.fire = self.fire as u32;
-        result.air = self.air as u32;
-        result.on_ground = self.on_ground;
-        result.no_gravity = self.no_gravity;
-        result.invulnerable = self.invulnerable;
-        result.portal_cooldown = self.portal_cooldown;
-        result.uuid = Some({
-            let mut result = pb::Uuid::default();
-            result.x0 = self.uuid[0];
-            result.x1 = self.uuid[1];
-            result.x2 = self.uuid[2];
-            result.x3 = self.uuid[3];
-            result
-        });
-        if let Some(ref custom_name) = self.custom_name {
-            result.custom_name = Some(custom_name.clone());
-        }
-        result.custom_name_visible = self.custom_name_visible;
-        result.silent = self.silent;
-        result.glowing = self.glowing;
-        result
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    result.id = self.id.clone();
+    result.pos = Some({
+      let mut result = pb::Vector3d::default();
+      result.x = self.pos.0;
+      result.y = self.pos.1;
+      result.z = self.pos.2;
+      result
+    });
+    result.motion = Some({
+      let mut result = pb::Vector3d::default();
+      result.x = self.motion.0;
+      result.y = self.motion.1;
+      result.z = self.motion.2;
+      result
+    });
+    result.rotation = Some({
+      let mut result = pb::Vector2f::default();
+      result.x = self.rotation.0;
+      result.y = self.rotation.1;
+      result
+    });
+    result.fall_distance = self.fall_distance;
+    result.fire = self.fire as u32;
+    result.air = self.air as u32;
+    result.on_ground = self.on_ground;
+    result.no_gravity = self.no_gravity;
+    result.invulnerable = self.invulnerable;
+    result.portal_cooldown = self.portal_cooldown;
+    result.uuid = Some({
+      let mut result = pb::Uuid::default();
+      result.x0 = self.uuid[0];
+      result.x1 = self.uuid[1];
+      result.x2 = self.uuid[2];
+      result.x3 = self.uuid[3];
+      result
+    });
+    if let Some(ref custom_name) = self.custom_name {
+      result.custom_name = Some(custom_name.clone());
     }
+    result.custom_name_visible = self.custom_name_visible;
+    result.silent = self.silent;
+    result.glowing = self.glowing;
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct EntitySchema {
-    pub id: alkahest::Bytes,
-    pub pos: (f64, f64, f64),
-    pub motion: (f64, f64, f64),
-    pub rotation: (f32, f32),
-    pub fall_distance: f32,
-    pub fire: u16,
-    pub air: u16,
-    pub on_ground: bool,
-    pub no_gravity: bool,
-    pub invulnerable: bool,
-    pub portal_cooldown: i32,
-    pub uuid: [u32; 4],
-    pub custom_name: Option<alkahest::Bytes>,
-    pub custom_name_visible: bool,
-    pub silent: bool,
-    pub glowing: bool,
+  pub id: alkahest::Bytes,
+  pub pos: (f64, f64, f64),
+  pub motion: (f64, f64, f64),
+  pub rotation: (f32, f32),
+  pub fall_distance: f32,
+  pub fire: u16,
+  pub air: u16,
+  pub on_ground: bool,
+  pub no_gravity: bool,
+  pub invulnerable: bool,
+  pub portal_cooldown: i32,
+  pub uuid: [u32; 4],
+  pub custom_name: Option<alkahest::Bytes>,
+  pub custom_name_visible: bool,
+  pub silent: bool,
+  pub glowing: bool,
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<EntitySchema> for &'_ Entity {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<EntitySchema>, usize) {
-        EntitySchemaPack {
-            id: self.id.as_bytes(),
-            pos: (self.pos.0, self.pos.1, self.pos.2),
-            motion: (self.motion.0, self.motion.1, self.motion.2),
-            rotation: (self.rotation.0, self.rotation.1),
-            fall_distance: self.fall_distance,
-            fire: self.fire,
-            air: self.air,
-            on_ground: self.on_ground,
-            no_gravity: self.no_gravity,
-            invulnerable: self.invulnerable,
-            portal_cooldown: self.portal_cooldown,
-            uuid: self.uuid,
-            custom_name: self.custom_name.as_ref().map(|s| s.as_bytes()),
-            custom_name_visible: self.custom_name_visible,
-            silent: self.silent,
-            glowing: self.glowing,
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<EntitySchema>, usize) {
+    EntitySchemaPack {
+      id: self.id.as_bytes(),
+      pos: (self.pos.0, self.pos.1, self.pos.2),
+      motion: (self.motion.0, self.motion.1, self.motion.2),
+      rotation: (self.rotation.0, self.rotation.1),
+      fall_distance: self.fall_distance,
+      fire: self.fire,
+      air: self.air,
+      on_ground: self.on_ground,
+      no_gravity: self.no_gravity,
+      invulnerable: self.invulnerable,
+      portal_cooldown: self.portal_cooldown,
+      uuid: self.uuid,
+      custom_name: self.custom_name.as_ref().map(|s| s.as_bytes()),
+      custom_name_visible: self.custom_name_visible,
+      silent: self.silent,
+      glowing: self.glowing,
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct RecipeBook {
-    pub recipes: Vec<String>,
-    pub to_be_displayed: Vec<String>,
-    pub is_filtering_craftable: bool,
-    pub is_gui_open: bool,
-    pub is_furnace_filtering_craftable: bool,
-    pub is_furnace_gui_open: bool,
-    pub is_blasting_furnace_filtering_craftable: bool,
-    pub is_blasting_furnace_gui_open: bool,
-    pub is_smoker_filtering_craftable: bool,
-    pub is_smoker_gui_open: bool,
+  pub recipes: Vec<String>,
+  pub to_be_displayed: Vec<String>,
+  pub is_filtering_craftable: bool,
+  pub is_gui_open: bool,
+  pub is_furnace_filtering_craftable: bool,
+  pub is_furnace_gui_open: bool,
+  pub is_blasting_furnace_filtering_craftable: bool,
+  pub is_blasting_furnace_gui_open: bool,
+  pub is_smoker_filtering_craftable: bool,
+  pub is_smoker_gui_open: bool,
 }
 
 impl Generate for RecipeBook {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        const RECIPES: [&'static str; 8] = [
-            "pickaxe",
-            "torch",
-            "bow",
-            "crafting table",
-            "furnace",
-            "shears",
-            "arrow",
-            "tnt",
-        ];
-        const MAX_RECIPES: usize = 30;
-        const MAX_DISPLAYED_RECIPES: usize = 10;
-        Self {
-            recipes: generate_vec::<_, ()>(rng, 0..MAX_RECIPES)
-                .iter()
-                .map(|_| RECIPES[rng.gen_range(0..RECIPES.len())].to_string())
-                .collect(),
-            to_be_displayed: generate_vec::<_, ()>(rng, 0..MAX_DISPLAYED_RECIPES)
-                .iter()
-                .map(|_| RECIPES[rng.gen_range(0..RECIPES.len())].to_string())
-                .collect(),
-            is_filtering_craftable: rng.gen_bool(0.5),
-            is_gui_open: rng.gen_bool(0.5),
-            is_furnace_filtering_craftable: rng.gen_bool(0.5),
-            is_furnace_gui_open: rng.gen_bool(0.5),
-            is_blasting_furnace_filtering_craftable: rng.gen_bool(0.5),
-            is_blasting_furnace_gui_open: rng.gen_bool(0.5),
-            is_smoker_filtering_craftable: rng.gen_bool(0.5),
-            is_smoker_gui_open: rng.gen_bool(0.5),
-        }
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    const RECIPES: [&str; 8] = [
+      "pickaxe",
+      "torch",
+      "bow",
+      "crafting table",
+      "furnace",
+      "shears",
+      "arrow",
+      "tnt",
+    ];
+    const MAX_RECIPES: usize = 30;
+    const MAX_DISPLAYED_RECIPES: usize = 10;
+    Self {
+      recipes: generate_vec::<_, ()>(rng, 0..MAX_RECIPES)
+        .iter()
+        .map(|_| RECIPES[rng.gen_range(0..RECIPES.len())].to_string())
+        .collect(),
+      to_be_displayed: generate_vec::<_, ()>(rng, 0..MAX_DISPLAYED_RECIPES)
+        .iter()
+        .map(|_| RECIPES[rng.gen_range(0..RECIPES.len())].to_string())
+        .collect(),
+      is_filtering_craftable: rng.gen_bool(0.5),
+      is_gui_open: rng.gen_bool(0.5),
+      is_furnace_filtering_craftable: rng.gen_bool(0.5),
+      is_furnace_gui_open: rng.gen_bool(0.5),
+      is_blasting_furnace_filtering_craftable: rng.gen_bool(0.5),
+      is_blasting_furnace_gui_open: rng.gen_bool(0.5),
+      is_smoker_filtering_craftable: rng.gen_bool(0.5),
+      is_smoker_gui_open: rng.gen_bool(0.5),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for RecipeBook {
-    type Target = fb::RecipeBook<'a>;
+  type Target = fb::RecipeBook<'a>;
 
-    #[inline]
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let mut recipes = Vec::new();
-        for recipe in self.recipes.iter() {
-            recipes.push(fbb.create_string(recipe));
-        }
-        let recipes = fbb.create_vector(&recipes);
-
-        let mut to_be_displayed = Vec::new();
-        for name in self.to_be_displayed.iter() {
-            to_be_displayed.push(fbb.create_string(name));
-        }
-        let to_be_displayed = fbb.create_vector(&to_be_displayed);
-
-        let mut builder = fb::RecipeBookBuilder::new(fbb);
-        builder.add_recipes(recipes);
-        builder.add_to_be_displayed(to_be_displayed);
-        builder.add_is_filtering_craftable(self.is_filtering_craftable);
-        builder.add_is_gui_open(self.is_gui_open);
-        builder.add_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
-        builder.add_is_furnace_gui_open(self.is_furnace_gui_open);
-        builder.add_is_blasting_furnace_filtering_craftable(
-            self.is_blasting_furnace_filtering_craftable,
-        );
-        builder.add_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
-        builder.add_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
-        builder.add_is_smoker_gui_open(self.is_smoker_gui_open);
-        builder.finish()
+  #[inline]
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let mut recipes = Vec::new();
+    for recipe in self.recipes.iter() {
+      recipes.push(fbb.create_string(recipe));
     }
+    let recipes = fbb.create_vector(&recipes);
+
+    let mut to_be_displayed = Vec::new();
+    for name in self.to_be_displayed.iter() {
+      to_be_displayed.push(fbb.create_string(name));
+    }
+    let to_be_displayed = fbb.create_vector(&to_be_displayed);
+
+    let mut builder = fb::RecipeBookBuilder::new(fbb);
+    builder.add_recipes(recipes);
+    builder.add_to_be_displayed(to_be_displayed);
+    builder.add_is_filtering_craftable(self.is_filtering_craftable);
+    builder.add_is_gui_open(self.is_gui_open);
+    builder.add_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
+    builder.add_is_furnace_gui_open(self.is_furnace_gui_open);
+    builder
+      .add_is_blasting_furnace_filtering_craftable(self.is_blasting_furnace_filtering_craftable);
+    builder.add_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
+    builder.add_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
+    builder.add_is_smoker_gui_open(self.is_smoker_gui_open);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
-    type Reader = cp::recipe_book::Reader<'a>;
-    type Builder = cp::recipe_book::Builder<'a>;
+  type Reader = cp::recipe_book::Reader<'a>;
+  type Builder = cp::recipe_book::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        let mut recipes = builder.reborrow().init_recipes(self.recipes.len() as u32);
-        for (i, recipe) in self.recipes.iter().enumerate() {
-            recipes.set(i as u32, recipe);
-        }
-        let mut to_be_displayed = builder
-            .reborrow()
-            .init_to_be_displayed(self.to_be_displayed.len() as u32);
-        for (i, name) in self.to_be_displayed.iter().enumerate() {
-            to_be_displayed.set(i as u32, name);
-        }
-        builder.set_is_filtering_craftable(self.is_filtering_craftable);
-        builder.set_is_gui_open(self.is_gui_open);
-        builder.set_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
-        builder.set_is_furnace_gui_open(self.is_furnace_gui_open);
-        builder.set_is_blasting_furnace_filtering_craftable(
-            self.is_blasting_furnace_filtering_craftable,
-        );
-        builder.set_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
-        builder.set_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
-        builder.set_is_smoker_gui_open(self.is_smoker_gui_open);
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    let mut recipes = builder.reborrow().init_recipes(self.recipes.len() as u32);
+    for (i, recipe) in self.recipes.iter().enumerate() {
+      recipes.set(i as u32, recipe);
     }
+    let mut to_be_displayed = builder
+      .reborrow()
+      .init_to_be_displayed(self.to_be_displayed.len() as u32);
+    for (i, name) in self.to_be_displayed.iter().enumerate() {
+      to_be_displayed.set(i as u32, name);
+    }
+    builder.set_is_filtering_craftable(self.is_filtering_craftable);
+    builder.set_is_gui_open(self.is_gui_open);
+    builder.set_is_furnace_filtering_craftable(self.is_furnace_filtering_craftable);
+    builder.set_is_furnace_gui_open(self.is_furnace_gui_open);
+    builder
+      .set_is_blasting_furnace_filtering_craftable(self.is_blasting_furnace_filtering_craftable);
+    builder.set_is_blasting_furnace_gui_open(self.is_blasting_furnace_gui_open);
+    builder.set_is_smoker_filtering_craftable(self.is_smoker_filtering_craftable);
+    builder.set_is_smoker_gui_open(self.is_smoker_gui_open);
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for RecipeBook {
-    type Message = pb::RecipeBook;
+  type Message = pb::RecipeBook;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for recipe in self.recipes.iter() {
-            result.recipes.push(recipe.clone());
-        }
-        for tbd in self.to_be_displayed.iter() {
-            result.to_be_displayed.push(tbd.clone());
-        }
-        result.is_filtering_craftable = self.is_filtering_craftable;
-        result.is_gui_open = self.is_gui_open;
-        result.is_furnace_filtering_craftable = self.is_furnace_filtering_craftable;
-        result.is_furnace_gui_open = self.is_furnace_gui_open;
-        result.is_blasting_furnace_filtering_craftable =
-            self.is_blasting_furnace_filtering_craftable;
-        result.is_blasting_furnace_gui_open = self.is_blasting_furnace_gui_open;
-        result.is_smoker_filtering_craftable = self.is_smoker_filtering_craftable;
-        result.is_smoker_gui_open = self.is_smoker_gui_open;
-        result
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    for recipe in self.recipes.iter() {
+      result.recipes.push(recipe.clone());
     }
+    for tbd in self.to_be_displayed.iter() {
+      result.to_be_displayed.push(tbd.clone());
+    }
+    result.is_filtering_craftable = self.is_filtering_craftable;
+    result.is_gui_open = self.is_gui_open;
+    result.is_furnace_filtering_craftable = self.is_furnace_filtering_craftable;
+    result.is_furnace_gui_open = self.is_furnace_gui_open;
+    result.is_blasting_furnace_filtering_craftable = self.is_blasting_furnace_filtering_craftable;
+    result.is_blasting_furnace_gui_open = self.is_blasting_furnace_gui_open;
+    result.is_smoker_filtering_craftable = self.is_smoker_filtering_craftable;
+    result.is_smoker_gui_open = self.is_smoker_gui_open;
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct RecipeBookSchema {
-    pub recipes: alkahest::Seq<alkahest::Bytes>,
-    pub to_be_displayed: alkahest::Seq<alkahest::Bytes>,
-    pub is_filtering_craftable: bool,
-    pub is_gui_open: bool,
-    pub is_furnace_filtering_craftable: bool,
-    pub is_furnace_gui_open: bool,
-    pub is_blasting_furnace_filtering_craftable: bool,
-    pub is_blasting_furnace_gui_open: bool,
-    pub is_smoker_filtering_craftable: bool,
-    pub is_smoker_gui_open: bool,
+  pub recipes: alkahest::Seq<alkahest::Bytes>,
+  pub to_be_displayed: alkahest::Seq<alkahest::Bytes>,
+  pub is_filtering_craftable: bool,
+  pub is_gui_open: bool,
+  pub is_furnace_filtering_craftable: bool,
+  pub is_furnace_gui_open: bool,
+  pub is_blasting_furnace_filtering_craftable: bool,
+  pub is_blasting_furnace_gui_open: bool,
+  pub is_smoker_filtering_craftable: bool,
+  pub is_smoker_gui_open: bool,
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<RecipeBookSchema>, usize) {
-        RecipeBookSchemaPack {
-            recipes: self.recipes.iter().map(|s| s.as_bytes()),
-            to_be_displayed: self.to_be_displayed.iter().map(|s| s.as_bytes()),
-            is_filtering_craftable: self.is_filtering_craftable,
-            is_gui_open: self.is_gui_open,
-            is_furnace_filtering_craftable: self.is_furnace_filtering_craftable,
-            is_furnace_gui_open: self.is_furnace_gui_open,
-            is_blasting_furnace_filtering_craftable: self.is_blasting_furnace_filtering_craftable,
-            is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
-            is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
-            is_smoker_gui_open: self.is_smoker_gui_open,
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<RecipeBookSchema>, usize) {
+    RecipeBookSchemaPack {
+      recipes: self.recipes.iter().map(|s| s.as_bytes()),
+      to_be_displayed: self.to_be_displayed.iter().map(|s| s.as_bytes()),
+      is_filtering_craftable: self.is_filtering_craftable,
+      is_gui_open: self.is_gui_open,
+      is_furnace_filtering_craftable: self.is_furnace_filtering_craftable,
+      is_furnace_gui_open: self.is_furnace_gui_open,
+      is_blasting_furnace_filtering_craftable: self.is_blasting_furnace_filtering_craftable,
+      is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
+      is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
+      is_smoker_gui_open: self.is_smoker_gui_open,
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Player {
-    pub game_type: GameType,
-    pub previous_game_type: GameType,
-    pub score: i64,
-    pub dimension: String,
-    pub selected_item_slot: u32,
-    pub selected_item: Item,
-    pub spawn_dimension: Option<String>,
-    pub spawn_x: i64,
-    pub spawn_y: i64,
-    pub spawn_z: i64,
-    pub spawn_forced: Option<bool>,
-    pub sleep_timer: u16,
-    pub food_exhaustion_level: f32,
-    pub food_saturation_level: f32,
-    pub food_tick_timer: u32,
-    pub xp_level: u32,
-    pub xp_p: f32,
-    pub xp_total: i32,
-    pub xp_seed: i32,
-    pub inventory: Vec<Item>,
-    pub ender_items: Vec<Item>,
-    pub abilities: Abilities,
-    pub entered_nether_position: Option<(f64, f64, f64)>,
-    pub root_vehicle: Option<([u32; 4], Entity)>,
-    pub shoulder_entity_left: Option<Entity>,
-    pub shoulder_entity_right: Option<Entity>,
-    pub seen_credits: bool,
-    pub recipe_book: RecipeBook,
+  pub game_type: GameType,
+  pub previous_game_type: GameType,
+  pub score: i64,
+  pub dimension: String,
+  pub selected_item_slot: u32,
+  pub selected_item: Item,
+  pub spawn_dimension: Option<String>,
+  pub spawn_x: i64,
+  pub spawn_y: i64,
+  pub spawn_z: i64,
+  pub spawn_forced: Option<bool>,
+  pub sleep_timer: u16,
+  pub food_exhaustion_level: f32,
+  pub food_saturation_level: f32,
+  pub food_tick_timer: u32,
+  pub xp_level: u32,
+  pub xp_p: f32,
+  pub xp_total: i32,
+  pub xp_seed: i32,
+  pub inventory: Vec<Item>,
+  pub ender_items: Vec<Item>,
+  pub abilities: Abilities,
+  pub entered_nether_position: Option<(f64, f64, f64)>,
+  pub root_vehicle: Option<([u32; 4], Entity)>,
+  pub shoulder_entity_left: Option<Entity>,
+  pub shoulder_entity_right: Option<Entity>,
+  pub seen_credits: bool,
+  pub recipe_book: RecipeBook,
 }
 
 #[cfg(feature = "rkyv")]
 const _: () = {
-    use core::pin::Pin;
+  use core::pin::Pin;
 
-    impl ArchivedPlayer {
-        pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedGameType> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.game_type) }
-        }
-
-        pub fn spawn_x_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_x) }
-        }
-
-        pub fn spawn_y_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_y) }
-        }
-
-        pub fn spawn_z_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_z) }
-        }
+  impl ArchivedPlayer {
+    pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedGameType> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.game_type) }
     }
+
+    pub fn spawn_x_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.spawn_x) }
+    }
+
+    pub fn spawn_y_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.spawn_y) }
+    }
+
+    pub fn spawn_z_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.spawn_z) }
+    }
+  }
 };
 
 impl Generate for Player {
-    fn generate<R: Rng>(rng: &mut R) -> Self {
-        const DIMENSIONS: [&'static str; 3] = ["overworld", "nether", "end"];
-        const MAX_ITEMS: usize = 40;
-        const MAX_ENDER_ITEMS: usize = 27;
-        Self {
-            game_type: GameType::generate(rng),
-            previous_game_type: GameType::generate(rng),
-            score: rng.gen(),
-            dimension: DIMENSIONS[rng.gen_range(0..DIMENSIONS.len())].to_string(),
-            selected_item_slot: rng.gen(),
-            selected_item: Item::generate(rng),
-            spawn_dimension: <Option<()> as Generate>::generate(rng)
-                .map(|_| DIMENSIONS[rng.gen_range(0..DIMENSIONS.len())].to_string()),
-            spawn_x: rng.gen(),
-            spawn_y: rng.gen(),
-            spawn_z: rng.gen(),
-            spawn_forced: <Option<bool> as Generate>::generate(rng),
-            sleep_timer: rng.gen(),
-            food_exhaustion_level: rng.gen(),
-            food_saturation_level: rng.gen(),
-            food_tick_timer: rng.gen(),
-            xp_level: rng.gen(),
-            xp_p: rng.gen(),
-            xp_total: rng.gen(),
-            xp_seed: rng.gen(),
-            inventory: generate_vec(rng, 0..MAX_ITEMS),
-            ender_items: generate_vec(rng, 0..MAX_ENDER_ITEMS),
-            abilities: Abilities::generate(rng),
-            entered_nether_position: <Option<(f64, f64, f64)> as Generate>::generate(rng),
-            root_vehicle: <Option<([u32; 4], Entity)> as Generate>::generate(rng),
-            shoulder_entity_left: <Option<Entity> as Generate>::generate(rng),
-            shoulder_entity_right: <Option<Entity> as Generate>::generate(rng),
-            seen_credits: rng.gen_bool(0.5),
-            recipe_book: RecipeBook::generate(rng),
-        }
+  fn generate<R: Rng>(rng: &mut R) -> Self {
+    const DIMENSIONS: [&str; 3] = ["overworld", "nether", "end"];
+    const MAX_ITEMS: usize = 40;
+    const MAX_ENDER_ITEMS: usize = 27;
+    Self {
+      game_type: GameType::generate(rng),
+      previous_game_type: GameType::generate(rng),
+      score: rng.gen(),
+      dimension: DIMENSIONS[rng.gen_range(0..DIMENSIONS.len())].to_string(),
+      selected_item_slot: rng.gen(),
+      selected_item: Item::generate(rng),
+      spawn_dimension: <Option<()> as Generate>::generate(rng)
+        .map(|_| DIMENSIONS[rng.gen_range(0..DIMENSIONS.len())].to_string()),
+      spawn_x: rng.gen(),
+      spawn_y: rng.gen(),
+      spawn_z: rng.gen(),
+      spawn_forced: <Option<bool> as Generate>::generate(rng),
+      sleep_timer: rng.gen(),
+      food_exhaustion_level: rng.gen(),
+      food_saturation_level: rng.gen(),
+      food_tick_timer: rng.gen(),
+      xp_level: rng.gen(),
+      xp_p: rng.gen(),
+      xp_total: rng.gen(),
+      xp_seed: rng.gen(),
+      inventory: generate_vec(rng, 0..MAX_ITEMS),
+      ender_items: generate_vec(rng, 0..MAX_ENDER_ITEMS),
+      abilities: Abilities::generate(rng),
+      entered_nether_position: <Option<(f64, f64, f64)> as Generate>::generate(rng),
+      root_vehicle: <Option<([u32; 4], Entity)> as Generate>::generate(rng),
+      shoulder_entity_left: <Option<Entity> as Generate>::generate(rng),
+      shoulder_entity_right: <Option<Entity> as Generate>::generate(rng),
+      seen_credits: rng.gen_bool(0.5),
+      recipe_book: RecipeBook::generate(rng),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Player {
-    type Target = fb::Player<'a>;
+  type Target = fb::Player<'a>;
 
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let dimension = fbb.create_string(&self.dimension);
-        let selected_item = self.selected_item.serialize_fb(fbb);
-        let spawn_dimension = self.spawn_dimension.as_ref().map(|d| fbb.create_string(d));
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let dimension = fbb.create_string(&self.dimension);
+    let selected_item = self.selected_item.serialize_fb(fbb);
+    let spawn_dimension = self.spawn_dimension.as_ref().map(|d| fbb.create_string(d));
 
-        let mut inventory = Vec::new();
-        for inventory_item in self.inventory.iter() {
-            inventory.push(inventory_item.serialize_fb(fbb));
-        }
-        let inventory = fbb.create_vector(&inventory);
-
-        let mut ender_items = Vec::new();
-        for ender_item in self.ender_items.iter() {
-            ender_items.push(ender_item.serialize_fb(fbb));
-        }
-        let ender_items = fbb.create_vector(&ender_items);
-
-        let abilities = self.abilities.into();
-        let entered_nether_position = self
-            .entered_nether_position
-            .map(|p| fb::Vector3d::new(p.0, p.1, p.2));
-        let root_vehicle = self.root_vehicle.as_ref().map(|v| {
-            let entity = Some(v.1.serialize_fb(fbb));
-            fb::Vehicle::create(
-                fbb,
-                &fb::VehicleArgs {
-                    param_0: v.0[0],
-                    param_1: v.0[1],
-                    param_2: v.0[2],
-                    param_3: v.0[3],
-                    entity,
-                },
-            )
-        });
-        let shoulder_entity_left = self
-            .shoulder_entity_left
-            .as_ref()
-            .map(|e| e.serialize_fb(fbb));
-        let shoulder_entity_right = self
-            .shoulder_entity_right
-            .as_ref()
-            .map(|e| e.serialize_fb(fbb));
-        let recipe_book = self.recipe_book.serialize_fb(fbb);
-
-        let mut builder = fb::PlayerBuilder::new(fbb);
-        builder.add_game_type(self.game_type.into());
-        builder.add_previous_game_type(self.previous_game_type.into());
-        builder.add_score(self.score);
-        builder.add_dimension(dimension);
-        builder.add_selected_item_slot(self.selected_item_slot);
-        builder.add_selected_item(selected_item);
-        if let Some(spawn_dimension) = spawn_dimension {
-            builder.add_spawn_dimension(spawn_dimension);
-        }
-        builder.add_spawn_x(self.spawn_x);
-        builder.add_spawn_y(self.spawn_y);
-        builder.add_spawn_z(self.spawn_z);
-        builder.add_spawn_forced(self.spawn_forced.unwrap_or(false));
-        builder.add_sleep_timer(self.sleep_timer);
-        builder.add_food_exhaustion_level(self.food_exhaustion_level);
-        builder.add_food_saturation_level(self.food_saturation_level);
-        builder.add_food_tick_timer(self.food_tick_timer);
-        builder.add_xp_level(self.xp_level);
-        builder.add_xp_p(self.xp_p);
-        builder.add_xp_total(self.xp_total);
-        builder.add_xp_seed(self.xp_seed);
-        builder.add_inventory(inventory);
-        builder.add_ender_items(ender_items);
-        builder.add_abilities(&abilities);
-        if let Some(ref entered_nether_position) = entered_nether_position {
-            builder.add_entered_nether_position(&entered_nether_position);
-        }
-        if let Some(root_vehicle) = root_vehicle {
-            builder.add_root_vehicle(root_vehicle);
-        }
-        if let Some(shoulder_entity_left) = shoulder_entity_left {
-            builder.add_shoulder_entity_left(shoulder_entity_left);
-        }
-        if let Some(shoulder_entity_right) = shoulder_entity_right {
-            builder.add_shoulder_entity_right(shoulder_entity_right);
-        }
-        builder.add_seen_credits(self.seen_credits);
-        builder.add_recipe_book(recipe_book);
-        builder.finish()
+    let mut inventory = Vec::new();
+    for inventory_item in self.inventory.iter() {
+      inventory.push(inventory_item.serialize_fb(fbb));
     }
+    let inventory = fbb.create_vector(&inventory);
+
+    let mut ender_items = Vec::new();
+    for ender_item in self.ender_items.iter() {
+      ender_items.push(ender_item.serialize_fb(fbb));
+    }
+    let ender_items = fbb.create_vector(&ender_items);
+
+    let abilities = self.abilities.into();
+    let entered_nether_position = self
+      .entered_nether_position
+      .map(|p| fb::Vector3d::new(p.0, p.1, p.2));
+    let root_vehicle = self.root_vehicle.as_ref().map(|v| {
+      let entity = Some(v.1.serialize_fb(fbb));
+      fb::Vehicle::create(
+        fbb,
+        &fb::VehicleArgs {
+          param_0: v.0[0],
+          param_1: v.0[1],
+          param_2: v.0[2],
+          param_3: v.0[3],
+          entity,
+        },
+      )
+    });
+    let shoulder_entity_left = self
+      .shoulder_entity_left
+      .as_ref()
+      .map(|e| e.serialize_fb(fbb));
+    let shoulder_entity_right = self
+      .shoulder_entity_right
+      .as_ref()
+      .map(|e| e.serialize_fb(fbb));
+    let recipe_book = self.recipe_book.serialize_fb(fbb);
+
+    let mut builder = fb::PlayerBuilder::new(fbb);
+    builder.add_game_type(self.game_type.into());
+    builder.add_previous_game_type(self.previous_game_type.into());
+    builder.add_score(self.score);
+    builder.add_dimension(dimension);
+    builder.add_selected_item_slot(self.selected_item_slot);
+    builder.add_selected_item(selected_item);
+    if let Some(spawn_dimension) = spawn_dimension {
+      builder.add_spawn_dimension(spawn_dimension);
+    }
+    builder.add_spawn_x(self.spawn_x);
+    builder.add_spawn_y(self.spawn_y);
+    builder.add_spawn_z(self.spawn_z);
+    builder.add_spawn_forced(self.spawn_forced.unwrap_or(false));
+    builder.add_sleep_timer(self.sleep_timer);
+    builder.add_food_exhaustion_level(self.food_exhaustion_level);
+    builder.add_food_saturation_level(self.food_saturation_level);
+    builder.add_food_tick_timer(self.food_tick_timer);
+    builder.add_xp_level(self.xp_level);
+    builder.add_xp_p(self.xp_p);
+    builder.add_xp_total(self.xp_total);
+    builder.add_xp_seed(self.xp_seed);
+    builder.add_inventory(inventory);
+    builder.add_ender_items(ender_items);
+    builder.add_abilities(&abilities);
+    if let Some(ref entered_nether_position) = entered_nether_position {
+      builder.add_entered_nether_position(entered_nether_position);
+    }
+    if let Some(root_vehicle) = root_vehicle {
+      builder.add_root_vehicle(root_vehicle);
+    }
+    if let Some(shoulder_entity_left) = shoulder_entity_left {
+      builder.add_shoulder_entity_left(shoulder_entity_left);
+    }
+    if let Some(shoulder_entity_right) = shoulder_entity_right {
+      builder.add_shoulder_entity_right(shoulder_entity_right);
+    }
+    builder.add_seen_credits(self.seen_credits);
+    builder.add_recipe_book(recipe_book);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Player {
-    type Reader = cp::player::Reader<'a>;
-    type Builder = cp::player::Builder<'a>;
+  type Reader = cp::player::Reader<'a>;
+  type Builder = cp::player::Builder<'a>;
 
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        builder.set_game_type(self.game_type.into());
-        builder.set_previous_game_type(self.previous_game_type.into());
-        builder.set_score(self.score);
-        builder.set_dimension(&self.dimension);
-        let mut selected_item = builder.reborrow().init_selected_item();
-        self.selected_item.serialize_capnp(&mut selected_item);
-        let mut spawn_dimension = builder.reborrow().init_spawn_dimension();
-        if let Some(ref value) = self.spawn_dimension {
-            spawn_dimension.set_some(value);
-        } else {
-            spawn_dimension.set_none(());
-        }
-        let mut spawn = builder.reborrow().init_spawn();
-        spawn.set_x(self.spawn_x);
-        spawn.set_y(self.spawn_y);
-        spawn.set_z(self.spawn_z);
-        let mut spawn_forced = builder.reborrow().init_spawn_forced();
-        if let Some(ref value) = self.spawn_forced {
-            spawn_forced.set_some(*value);
-        } else {
-            spawn_forced.set_none(());
-        }
-        builder.set_sleep_timer(self.sleep_timer);
-        builder.set_food_exhaustion_level(self.food_exhaustion_level);
-        builder.set_food_saturation_level(self.food_saturation_level);
-        builder.set_food_tick_timer(self.food_tick_timer);
-        builder.set_xp_level(self.xp_level);
-        builder.set_xp_p(self.xp_p);
-        builder.set_xp_total(self.xp_total);
-        builder.set_xp_seed(self.xp_seed);
-        let mut inventory = builder
-            .reborrow()
-            .init_inventory(self.inventory.len() as u32);
-        for (i, value) in self.inventory.iter().enumerate() {
-            value.serialize_capnp(&mut inventory.reborrow().get(i as u32));
-        }
-        let mut ender_items = builder
-            .reborrow()
-            .init_ender_items(self.ender_items.len() as u32);
-        for (i, value) in self.ender_items.iter().enumerate() {
-            value.serialize_capnp(&mut ender_items.reborrow().get(i as u32));
-        }
-        self.abilities
-            .serialize_capnp(&mut builder.reborrow().init_abilities());
-        let mut entered_nether_position = builder.reborrow().init_entered_nether_position();
-        if let Some(ref value) = self.entered_nether_position {
-            let mut builder = entered_nether_position.init_some();
-            builder.set_x(value.0);
-            builder.set_y(value.1);
-            builder.set_z(value.2);
-        } else {
-            entered_nether_position.set_none(());
-        }
-        let mut root_vehicle = builder.reborrow().init_root_vehicle();
-        if let Some(ref value) = self.root_vehicle {
-            let mut builder = root_vehicle.init_some();
-            let mut uuid = builder.reborrow().init_uuid();
-            uuid.set_x0(value.0[0]);
-            uuid.set_x1(value.0[1]);
-            uuid.set_x2(value.0[2]);
-            uuid.set_x3(value.0[3]);
-            value
-                .1
-                .serialize_capnp(&mut builder.reborrow().init_entity());
-        } else {
-            root_vehicle.set_none(());
-        }
-        let mut shoulder_entity_left = builder.reborrow().init_shoulder_entity_left();
-        if let Some(ref value) = self.shoulder_entity_left {
-            value.serialize_capnp(&mut shoulder_entity_left.init_some());
-        } else {
-            shoulder_entity_left.set_none(());
-        }
-        let mut shoulder_entity_right = builder.reborrow().init_shoulder_entity_right();
-        if let Some(ref value) = self.shoulder_entity_right {
-            value.serialize_capnp(&mut shoulder_entity_right.init_some());
-        } else {
-            shoulder_entity_right.set_none(());
-        }
-        builder.set_seen_credits(self.seen_credits);
-        self.recipe_book
-            .serialize_capnp(&mut builder.reborrow().init_recipe_book());
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    builder.set_game_type(self.game_type.into());
+    builder.set_previous_game_type(self.previous_game_type.into());
+    builder.set_score(self.score);
+    builder.set_dimension(&self.dimension);
+    let mut selected_item = builder.reborrow().init_selected_item();
+    self.selected_item.serialize_capnp(&mut selected_item);
+    let mut spawn_dimension = builder.reborrow().init_spawn_dimension();
+    if let Some(ref value) = self.spawn_dimension {
+      spawn_dimension.set_some(value);
+    } else {
+      spawn_dimension.set_none(());
     }
+    let mut spawn = builder.reborrow().init_spawn();
+    spawn.set_x(self.spawn_x);
+    spawn.set_y(self.spawn_y);
+    spawn.set_z(self.spawn_z);
+    let mut spawn_forced = builder.reborrow().init_spawn_forced();
+    if let Some(ref value) = self.spawn_forced {
+      spawn_forced.set_some(*value);
+    } else {
+      spawn_forced.set_none(());
+    }
+    builder.set_sleep_timer(self.sleep_timer);
+    builder.set_food_exhaustion_level(self.food_exhaustion_level);
+    builder.set_food_saturation_level(self.food_saturation_level);
+    builder.set_food_tick_timer(self.food_tick_timer);
+    builder.set_xp_level(self.xp_level);
+    builder.set_xp_p(self.xp_p);
+    builder.set_xp_total(self.xp_total);
+    builder.set_xp_seed(self.xp_seed);
+    let mut inventory = builder
+      .reborrow()
+      .init_inventory(self.inventory.len() as u32);
+    for (i, value) in self.inventory.iter().enumerate() {
+      value.serialize_capnp(&mut inventory.reborrow().get(i as u32));
+    }
+    let mut ender_items = builder
+      .reborrow()
+      .init_ender_items(self.ender_items.len() as u32);
+    for (i, value) in self.ender_items.iter().enumerate() {
+      value.serialize_capnp(&mut ender_items.reborrow().get(i as u32));
+    }
+    self
+      .abilities
+      .serialize_capnp(&mut builder.reborrow().init_abilities());
+    let mut entered_nether_position = builder.reborrow().init_entered_nether_position();
+    if let Some(ref value) = self.entered_nether_position {
+      let mut builder = entered_nether_position.init_some();
+      builder.set_x(value.0);
+      builder.set_y(value.1);
+      builder.set_z(value.2);
+    } else {
+      entered_nether_position.set_none(());
+    }
+    let mut root_vehicle = builder.reborrow().init_root_vehicle();
+    if let Some(ref value) = self.root_vehicle {
+      let mut builder = root_vehicle.init_some();
+      let mut uuid = builder.reborrow().init_uuid();
+      uuid.set_x0(value.0[0]);
+      uuid.set_x1(value.0[1]);
+      uuid.set_x2(value.0[2]);
+      uuid.set_x3(value.0[3]);
+      value
+        .1
+        .serialize_capnp(&mut builder.reborrow().init_entity());
+    } else {
+      root_vehicle.set_none(());
+    }
+    let mut shoulder_entity_left = builder.reborrow().init_shoulder_entity_left();
+    if let Some(ref value) = self.shoulder_entity_left {
+      value.serialize_capnp(&mut shoulder_entity_left.init_some());
+    } else {
+      shoulder_entity_left.set_none(());
+    }
+    let mut shoulder_entity_right = builder.reborrow().init_shoulder_entity_right();
+    if let Some(ref value) = self.shoulder_entity_right {
+      value.serialize_capnp(&mut shoulder_entity_right.init_some());
+    } else {
+      shoulder_entity_right.set_none(());
+    }
+    builder.set_seen_credits(self.seen_credits);
+    self
+      .recipe_book
+      .serialize_capnp(&mut builder.reborrow().init_recipe_book());
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Player {
-    type Message = pb::Player;
+  type Message = pb::Player;
 
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.game_type = self.game_type as i32;
-        result.previous_game_type = self.previous_game_type as i32;
-        result.score = self.score;
-        result.dimension = self.dimension.clone();
-        result.selected_item_slot = self.selected_item_slot;
-        result.selected_item = Some(self.selected_item.serialize_pb());
-        result.spawn_dimension = self.spawn_dimension.clone();
-        result.spawn_x = self.spawn_x;
-        result.spawn_y = self.spawn_y;
-        result.spawn_z = self.spawn_z;
-        result.spawn_forced = self.spawn_forced;
-        result.sleep_timer = self.sleep_timer as u32;
-        result.food_exhaustion_level = self.food_exhaustion_level;
-        result.food_saturation_level = self.food_saturation_level;
-        result.food_tick_timer = self.food_tick_timer;
-        result.xp_level = self.xp_level as u32;
-        result.xp_p = self.xp_p;
-        result.xp_total = self.xp_total;
-        result.xp_seed = self.xp_seed;
-        for item in self.inventory.iter() {
-            result.inventory.push(item.serialize_pb());
-        }
-        for item in self.ender_items.iter() {
-            result.ender_items.push(item.serialize_pb());
-        }
-        result.abilities = Some(self.abilities.serialize_pb());
-        result.entered_nether_position = self.entered_nether_position.map(|p| {
-            let mut result = pb::Vector3d::default();
-            result.x = p.0;
-            result.y = p.1;
-            result.z = p.2;
-            result
-        });
-        result.root_vehicle = self.root_vehicle.as_ref().map(|v| {
-            let mut result = pb::Vehicle::default();
-            result.uuid = Some({
-                let mut result = pb::Uuid::default();
-                result.x0 = v.0[0];
-                result.x1 = v.0[1];
-                result.x2 = v.0[2];
-                result.x3 = v.0[3];
-                result
-            });
-            result.entity = Some(v.1.serialize_pb());
-            result
-        });
-        result.shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb());
-        result.shoulder_entity_right = self
-            .shoulder_entity_right
-            .as_ref()
-            .map(|e| e.serialize_pb());
-        result.seen_credits = self.seen_credits;
-        result.recipe_book = Some(self.recipe_book.serialize_pb());
-        result
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    result.game_type = self.game_type as i32;
+    result.previous_game_type = self.previous_game_type as i32;
+    result.score = self.score;
+    result.dimension = self.dimension.clone();
+    result.selected_item_slot = self.selected_item_slot;
+    result.selected_item = Some(self.selected_item.serialize_pb());
+    result.spawn_dimension = self.spawn_dimension.clone();
+    result.spawn_x = self.spawn_x;
+    result.spawn_y = self.spawn_y;
+    result.spawn_z = self.spawn_z;
+    result.spawn_forced = self.spawn_forced;
+    result.sleep_timer = self.sleep_timer as u32;
+    result.food_exhaustion_level = self.food_exhaustion_level;
+    result.food_saturation_level = self.food_saturation_level;
+    result.food_tick_timer = self.food_tick_timer;
+    result.xp_level = self.xp_level as u32;
+    result.xp_p = self.xp_p;
+    result.xp_total = self.xp_total;
+    result.xp_seed = self.xp_seed;
+    for item in self.inventory.iter() {
+      result.inventory.push(item.serialize_pb());
     }
+    for item in self.ender_items.iter() {
+      result.ender_items.push(item.serialize_pb());
+    }
+    result.abilities = Some(self.abilities.serialize_pb());
+    result.entered_nether_position = self.entered_nether_position.map(|p| {
+      let mut result = pb::Vector3d::default();
+      result.x = p.0;
+      result.y = p.1;
+      result.z = p.2;
+      result
+    });
+    result.root_vehicle = self.root_vehicle.as_ref().map(|v| {
+      let mut result = pb::Vehicle::default();
+      result.uuid = Some({
+        let mut result = pb::Uuid::default();
+        result.x0 = v.0[0];
+        result.x1 = v.0[1];
+        result.x2 = v.0[2];
+        result.x3 = v.0[3];
+        result
+      });
+      result.entity = Some(v.1.serialize_pb());
+      result
+    });
+    result.shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb());
+    result.shoulder_entity_right = self
+      .shoulder_entity_right
+      .as_ref()
+      .map(|e| e.serialize_pb());
+    result.seen_credits = self.seen_credits;
+    result.recipe_book = Some(self.recipe_book.serialize_pb());
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct PlayerSchema {
-    pub game_type: GameType,
-    pub previous_game_type: GameType,
-    pub score: i64,
-    pub dimension: alkahest::Bytes,
-    pub selected_item_slot: u32,
-    pub selected_item: ItemSchema,
-    pub spawn_dimension: Option<alkahest::Bytes>,
-    pub spawn_x: i64,
-    pub spawn_y: i64,
-    pub spawn_z: i64,
-    pub spawn_forced: Option<bool>,
-    pub sleep_timer: u16,
-    pub food_exhaustion_level: f32,
-    pub food_saturation_level: f32,
-    pub food_tick_timer: u32,
-    pub xp_level: u32,
-    pub xp_p: f32,
-    pub xp_total: i32,
-    pub xp_seed: i32,
-    pub inventory: alkahest::Seq<ItemSchema>,
-    pub ender_items: alkahest::Seq<ItemSchema>,
-    pub abilities: Abilities,
-    pub entered_nether_position: Option<(f64, f64, f64)>,
-    pub root_vehicle: Option<([u32; 4], EntitySchema)>,
-    pub shoulder_entity_left: Option<EntitySchema>,
-    pub shoulder_entity_right: Option<EntitySchema>,
-    pub seen_credits: bool,
-    pub recipe_book: RecipeBookSchema,
+  pub game_type: GameType,
+  pub previous_game_type: GameType,
+  pub score: i64,
+  pub dimension: alkahest::Bytes,
+  pub selected_item_slot: u32,
+  pub selected_item: ItemSchema,
+  pub spawn_dimension: Option<alkahest::Bytes>,
+  pub spawn_x: i64,
+  pub spawn_y: i64,
+  pub spawn_z: i64,
+  pub spawn_forced: Option<bool>,
+  pub sleep_timer: u16,
+  pub food_exhaustion_level: f32,
+  pub food_saturation_level: f32,
+  pub food_tick_timer: u32,
+  pub xp_level: u32,
+  pub xp_p: f32,
+  pub xp_total: i32,
+  pub xp_seed: i32,
+  pub inventory: alkahest::Seq<ItemSchema>,
+  pub ender_items: alkahest::Seq<ItemSchema>,
+  pub abilities: Abilities,
+  pub entered_nether_position: Option<(f64, f64, f64)>,
+  pub root_vehicle: Option<([u32; 4], EntitySchema)>,
+  pub shoulder_entity_left: Option<EntitySchema>,
+  pub shoulder_entity_right: Option<EntitySchema>,
+  pub seen_credits: bool,
+  pub recipe_book: RecipeBookSchema,
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<PlayerSchema> for &'_ Player {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayerSchema>, usize) {
-        PlayerSchemaPack {
-            game_type: self.game_type,
-            previous_game_type: self.previous_game_type,
-            score: self.score,
-            dimension: self.dimension.as_bytes(),
-            selected_item_slot: self.selected_item_slot,
-            selected_item: &self.selected_item,
-            spawn_dimension: self.spawn_dimension.as_ref().map(|s| s.as_bytes()),
-            spawn_x: self.spawn_x,
-            spawn_y: self.spawn_y,
-            spawn_z: self.spawn_z,
-            spawn_forced: self.spawn_forced,
-            sleep_timer: self.sleep_timer,
-            food_exhaustion_level: self.food_exhaustion_level,
-            food_saturation_level: self.food_saturation_level,
-            food_tick_timer: self.food_tick_timer,
-            xp_level: self.xp_level,
-            xp_p: self.xp_p,
-            xp_total: self.xp_total,
-            xp_seed: self.xp_seed,
-            inventory: self.inventory.iter(),
-            ender_items: self.ender_items.iter(),
-            abilities: self.abilities,
-            entered_nether_position: self
-                .entered_nether_position
-                .as_ref()
-                .map(|p| (p.0, p.1, p.2)),
-            root_vehicle: self
-                .root_vehicle
-                .as_ref()
-                .map(|(array, entity)| (array, entity)),
-            shoulder_entity_left: self.shoulder_entity_left.as_ref(),
-            shoulder_entity_right: self.shoulder_entity_right.as_ref(),
-            seen_credits: self.seen_credits,
-            recipe_book: &self.recipe_book,
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayerSchema>, usize) {
+    PlayerSchemaPack {
+      game_type: self.game_type,
+      previous_game_type: self.previous_game_type,
+      score: self.score,
+      dimension: self.dimension.as_bytes(),
+      selected_item_slot: self.selected_item_slot,
+      selected_item: &self.selected_item,
+      spawn_dimension: self.spawn_dimension.as_ref().map(|s| s.as_bytes()),
+      spawn_x: self.spawn_x,
+      spawn_y: self.spawn_y,
+      spawn_z: self.spawn_z,
+      spawn_forced: self.spawn_forced,
+      sleep_timer: self.sleep_timer,
+      food_exhaustion_level: self.food_exhaustion_level,
+      food_saturation_level: self.food_saturation_level,
+      food_tick_timer: self.food_tick_timer,
+      xp_level: self.xp_level,
+      xp_p: self.xp_p,
+      xp_total: self.xp_total,
+      xp_seed: self.xp_seed,
+      inventory: self.inventory.iter(),
+      ender_items: self.ender_items.iter(),
+      abilities: self.abilities,
+      entered_nether_position: self
+        .entered_nether_position
+        .as_ref()
+        .map(|p| (p.0, p.1, p.2)),
+      root_vehicle: self
+        .root_vehicle
+        .as_ref()
+        .map(|(array, entity)| (array, entity)),
+      shoulder_entity_left: self.shoulder_entity_left.as_ref(),
+      shoulder_entity_right: self.shoulder_entity_right.as_ref(),
+      seen_credits: self.seen_credits,
+      recipe_book: &self.recipe_book,
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Players {
-    pub players: Vec<Player>,
+  pub players: Vec<Player>,
 }
 
 #[cfg(feature = "rkyv")]
 const _: () = {
-    use core::pin::Pin;
+  use core::pin::Pin;
 
-    impl ArchivedPlayers {
-        pub fn players_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Player>>> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.players) }
-        }
+  impl ArchivedPlayers {
+    pub fn players_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Player>>> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.players) }
     }
+  }
 };
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Players {
-    type Target = fb::Players<'a>;
+  type Target = fb::Players<'a>;
 
-    #[inline]
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let mut players = Vec::new();
-        for player in self.players.iter() {
-            players.push(player.serialize_fb(fbb));
-        }
-        let players = fbb.create_vector(&players);
-
-        let mut builder = fb::PlayersBuilder::new(fbb);
-        builder.add_players(players);
-        builder.finish()
+  #[inline]
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let mut players = Vec::new();
+    for player in self.players.iter() {
+      players.push(player.serialize_fb(fbb));
     }
+    let players = fbb.create_vector(&players);
+
+    let mut builder = fb::PlayersBuilder::new(fbb);
+    builder.add_players(players);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Players {
-    type Reader = cp::players::Reader<'a>;
-    type Builder = cp::players::Builder<'a>;
+  type Reader = cp::players::Reader<'a>;
+  type Builder = cp::players::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        let mut players = builder.reborrow().init_players(self.players.len() as u32);
-        for (i, value) in self.players.iter().enumerate() {
-            value.serialize_capnp(&mut players.reborrow().get(i as u32));
-        }
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    let mut players = builder.reborrow().init_players(self.players.len() as u32);
+    for (i, value) in self.players.iter().enumerate() {
+      value.serialize_capnp(&mut players.reborrow().get(i as u32));
     }
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Players {
-    type Message = pb::Players;
+  type Message = pb::Players;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for player in self.players.iter() {
-            result.players.push(player.serialize_pb());
-        }
-        result
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    for player in self.players.iter() {
+      result.players.push(player.serialize_pb());
     }
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct PlayersSchema {
-    pub players: alkahest::Seq<PlayerSchema>,
+  pub players: alkahest::Seq<PlayerSchema>,
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<PlayersSchema> for &'_ Players {
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayersSchema>, usize) {
-        PlayersSchemaPack {
-            players: self.players.iter(),
-        }
-        .pack(offset, output)
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayersSchema>, usize) {
+    PlayersSchemaPack {
+      players: self.players.iter(),
     }
+    .pack(offset, output)
+  }
 }

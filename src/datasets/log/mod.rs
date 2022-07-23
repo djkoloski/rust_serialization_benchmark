@@ -7,16 +7,9 @@ pub mod log_capnp;
 pub mod log_fb;
 #[cfg(feature = "prost")]
 pub mod log_prost {
-    include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
+  include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
 }
 
-#[cfg(feature = "capnp")]
-use crate::bench_capnp;
-#[cfg(feature = "flatbuffers")]
-use crate::bench_flatbuffers;
-#[cfg(feature = "prost")]
-use crate::bench_prost;
-use crate::Generate;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -27,371 +20,380 @@ use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
 
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+use crate::Generate;
+
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Address {
-    pub x0: u8,
-    pub x1: u8,
-    pub x2: u8,
-    pub x3: u8,
+  pub x0: u8,
+  pub x1: u8,
+  pub x2: u8,
+  pub x3: u8,
 }
 
 impl Generate for Address {
-    fn generate<R: Rng>(rand: &mut R) -> Self {
-        Self {
-            x0: rand.gen_range(0..=255),
-            x1: rand.gen_range(0..=255),
-            x2: rand.gen_range(0..=255),
-            x3: rand.gen_range(0..=255),
-        }
+  fn generate<R: Rng>(rand: &mut R) -> Self {
+    Self {
+      x0: rand.gen_range(0..=255),
+      x1: rand.gen_range(0..=255),
+      x2: rand.gen_range(0..=255),
+      x3: rand.gen_range(0..=255),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl Into<fb::Address> for Address {
-    #[inline]
-    fn into(self) -> fb::Address {
-        fb::Address::new(self.x0, self.x1, self.x2, self.x3)
-    }
+  #[inline]
+  fn into(self) -> fb::Address {
+    fb::Address::new(self.x0, self.x1, self.x2, self.x3)
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Address {
-    type Reader = cp::address::Reader<'a>;
-    type Builder = cp::address::Builder<'a>;
+  type Reader = cp::address::Reader<'a>;
+  type Builder = cp::address::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        builder.set_x0(self.x0);
-        builder.set_x1(self.x1);
-        builder.set_x2(self.x2);
-        builder.set_x3(self.x3);
-    }
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    builder.set_x0(self.x0);
+    builder.set_x1(self.x1);
+    builder.set_x2(self.x2);
+    builder.set_x3(self.x3);
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Address {
-    type Message = log_prost::Address;
+  type Message = log_prost::Address;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.x0 = self.x0 as u32;
-        result.x1 = self.x1 as u32;
-        result.x2 = self.x2 as u32;
-        result.x3 = self.x3 as u32;
-        result
-    }
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    result.x0 = self.x0 as u32;
+    result.x1 = self.x1 as u32;
+    result.x2 = self.x2 as u32;
+    result.x3 = self.x3 as u32;
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Address> for Address {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Address>, usize) {
-        AddressPack {
-            x0: self.x0,
-            x1: self.x1,
-            x2: self.x2,
-            x3: self.x3,
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Address>, usize) {
+    AddressPack {
+      x0: self.x0,
+      x1: self.x1,
+      x2: self.x2,
+      x3: self.x3,
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Log {
-    pub address: Address,
-    pub identity: String,
-    pub userid: String,
-    pub date: String,
-    pub request: String,
-    pub code: u16,
-    pub size: u64,
+  pub address: Address,
+  pub identity: String,
+  pub userid: String,
+  pub date: String,
+  pub request: String,
+  pub code: u16,
+  pub size: u64,
 }
 
 #[cfg(feature = "rkyv")]
 const _: () = {
-    use core::pin::Pin;
+  use core::pin::Pin;
 
-    impl ArchivedLog {
-        pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedAddress> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.address) }
-        }
-
-        pub fn code_pin(self: Pin<&mut Self>) -> Pin<&mut u16> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.code) }
-        }
-
-        pub fn size_pin(self: Pin<&mut Self>) -> Pin<&mut u64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.size) }
-        }
+  impl ArchivedLog {
+    pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedAddress> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.address) }
     }
+
+    pub fn code_pin(self: Pin<&mut Self>) -> Pin<&mut u16> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.code) }
+    }
+
+    pub fn size_pin(self: Pin<&mut Self>) -> Pin<&mut u64> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.size) }
+    }
+  }
 };
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct LogSchema {
-    pub address: Address,
-    pub identity: alkahest::Bytes,
-    pub userid: alkahest::Bytes,
-    pub date: alkahest::Bytes,
-    pub request: alkahest::Bytes,
-    pub code: u16,
-    pub size: u64,
+  pub address: Address,
+  pub identity: alkahest::Bytes,
+  pub userid: alkahest::Bytes,
+  pub date: alkahest::Bytes,
+  pub request: alkahest::Bytes,
+  pub code: u16,
+  pub size: u64,
 }
 
 impl Generate for Log {
-    fn generate<R: Rng>(rand: &mut R) -> Self {
-        const USERID: [&'static str; 9] = [
-            "-", "alice", "bob", "carmen", "david", "eric", "frank", "george", "harry",
-        ];
-        const MONTHS: [&'static str; 12] = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-        ];
-        const TIMEZONE: [&'static str; 25] = [
-            "-1200", "-1100", "-1000", "-0900", "-0800", "-0700", "-0600", "-0500", "-0400",
-            "-0300", "-0200", "-0100", "+0000", "+0100", "+0200", "+0300", "+0400", "+0500",
-            "+0600", "+0700", "+0800", "+0900", "+1000", "+1100", "+1200",
-        ];
-        let date = format!(
-            "{}/{}/{}:{}:{}:{} {}",
-            rand.gen_range(1..=28),
-            MONTHS[rand.gen_range(0..12)],
-            rand.gen_range(1970..=2021),
-            rand.gen_range(0..24),
-            rand.gen_range(0..60),
-            rand.gen_range(0..60),
-            TIMEZONE[rand.gen_range(0..25)],
-        );
-        const CODES: [u16; 63] = [
-            100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302,
-            303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410,
-            411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431,
-            451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511,
-        ];
-        const METHODS: [&'static str; 5] = ["GET", "POST", "PUT", "UPDATE", "DELETE"];
-        const ROUTES: [&'static str; 7] = [
-            "/favicon.ico",
-            "/css/index.css",
-            "/css/font-awsome.min.css",
-            "/img/logo-full.svg",
-            "/img/splash.jpg",
-            "/api/login",
-            "/api/logout",
-        ];
-        const PROTOCOLS: [&'static str; 4] = ["HTTP/1.0", "HTTP/1.1", "HTTP/2", "HTTP/3"];
-        let request = format!(
-            "{} {} {}",
-            METHODS[rand.gen_range(0..5)],
-            ROUTES[rand.gen_range(0..7)],
-            PROTOCOLS[rand.gen_range(0..4)],
-        );
-        Self {
-            address: Address::generate(rand),
-            identity: "-".into(),
-            userid: USERID[rand.gen_range(0..USERID.len())].into(),
-            date,
-            request,
-            code: CODES[rand.gen_range(0..CODES.len())],
-            size: rand.gen_range(0..100_000_000),
-        }
+  fn generate<R: Rng>(rand: &mut R) -> Self {
+    const USERID: [&str; 9] = [
+      "-", "alice", "bob", "carmen", "david", "eric", "frank", "george", "harry",
+    ];
+    const MONTHS: [&str; 12] = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    const TIMEZONE: [&str; 25] = [
+      "-1200", "-1100", "-1000", "-0900", "-0800", "-0700", "-0600", "-0500", "-0400", "-0300",
+      "-0200", "-0100", "+0000", "+0100", "+0200", "+0300", "+0400", "+0500", "+0600", "+0700",
+      "+0800", "+0900", "+1000", "+1100", "+1200",
+    ];
+    let date = format!(
+      "{}/{}/{}:{}:{}:{} {}",
+      rand.gen_range(1..=28),
+      MONTHS[rand.gen_range(0..12)],
+      rand.gen_range(1970..=2021),
+      rand.gen_range(0..24),
+      rand.gen_range(0..60),
+      rand.gen_range(0..60),
+      TIMEZONE[rand.gen_range(0..25)],
+    );
+    const CODES: [u16; 63] = [
+      100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303,
+      304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412,
+      413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431, 451, 500, 501,
+      502, 503, 504, 505, 506, 507, 508, 510, 511,
+    ];
+    const METHODS: [&str; 5] = ["GET", "POST", "PUT", "UPDATE", "DELETE"];
+    const ROUTES: [&str; 7] = [
+      "/favicon.ico",
+      "/css/index.css",
+      "/css/font-awsome.min.css",
+      "/img/logo-full.svg",
+      "/img/splash.jpg",
+      "/api/login",
+      "/api/logout",
+    ];
+    const PROTOCOLS: [&str; 4] = ["HTTP/1.0", "HTTP/1.1", "HTTP/2", "HTTP/3"];
+    let request = format!(
+      "{} {} {}",
+      METHODS[rand.gen_range(0..5)],
+      ROUTES[rand.gen_range(0..7)],
+      PROTOCOLS[rand.gen_range(0..4)],
+    );
+    Self {
+      address: Address::generate(rand),
+      identity: "-".into(),
+      userid: USERID[rand.gen_range(0..USERID.len())].into(),
+      date,
+      request,
+      code: CODES[rand.gen_range(0..CODES.len())],
+      size: rand.gen_range(0..100_000_000),
     }
+  }
 }
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Log {
-    type Target = fb::Log<'a>;
+  type Target = fb::Log<'a>;
 
-    #[inline]
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let address = self.address.into();
+  #[inline]
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let address = self.address.into();
 
-        let identity = fbb.create_string(&self.identity);
-        let userid = fbb.create_string(&self.userid);
-        let date = fbb.create_string(&self.date);
-        let request = fbb.create_string(&self.request);
+    let identity = fbb.create_string(&self.identity);
+    let userid = fbb.create_string(&self.userid);
+    let date = fbb.create_string(&self.date);
+    let request = fbb.create_string(&self.request);
 
-        let mut builder = fb::LogBuilder::new(fbb);
-        builder.add_address(&address);
-        builder.add_identity(identity);
-        builder.add_userid(userid);
-        builder.add_date(date);
-        builder.add_request(request);
-        builder.add_code(self.code);
-        builder.add_size_(self.size);
-        builder.finish()
-    }
+    let mut builder = fb::LogBuilder::new(fbb);
+    builder.add_address(&address);
+    builder.add_identity(identity);
+    builder.add_userid(userid);
+    builder.add_date(date);
+    builder.add_request(request);
+    builder.add_code(self.code);
+    builder.add_size_(self.size);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Log {
-    type Reader = cp::log::Reader<'a>;
-    type Builder = cp::log::Builder<'a>;
+  type Reader = cp::log::Reader<'a>;
+  type Builder = cp::log::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        self.address
-            .serialize_capnp(&mut builder.reborrow().init_address());
-        builder.set_identity(&self.identity);
-        builder.set_userid(&self.userid);
-        builder.set_date(&self.date);
-        builder.set_request(&self.request);
-        builder.set_code(self.code);
-        builder.set_size(self.size);
-    }
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    self
+      .address
+      .serialize_capnp(&mut builder.reborrow().init_address());
+    builder.set_identity(&self.identity);
+    builder.set_userid(&self.userid);
+    builder.set_date(&self.date);
+    builder.set_request(&self.request);
+    builder.set_code(self.code);
+    builder.set_size(self.size);
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Log {
-    type Message = log_prost::Log;
+  type Message = log_prost::Log;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.identity = self.identity.clone();
-        result.userid = self.userid.clone();
-        result.date = self.date.clone();
-        result.request = self.request.clone();
-        result.code = self.code as u32;
-        result.size = self.size;
-        result
-    }
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    result.identity = self.identity.clone();
+    result.userid = self.userid.clone();
+    result.date = self.date.clone();
+    result.request = self.request.clone();
+    result.code = self.code as u32;
+    result.size = self.size;
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<LogSchema> for &'_ Log {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogSchema>, usize) {
-        LogSchemaPack {
-            address: self.address,
-            identity: self.identity.as_bytes(),
-            userid: self.userid.as_bytes(),
-            date: self.date.as_bytes(),
-            request: self.request.as_bytes(),
-            code: self.code,
-            size: self.size,
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogSchema>, usize) {
+    LogSchemaPack {
+      address: self.address,
+      identity: self.identity.as_bytes(),
+      userid: self.userid.as_bytes(),
+      date: self.date.as_bytes(),
+      request: self.request.as_bytes(),
+      code: self.code,
+      size: self.size,
     }
+    .pack(offset, output)
+  }
 }
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+  feature = "borsh",
+  derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+  feature = "rkyv",
+  derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Logs {
-    pub logs: Vec<Log>,
+  pub logs: Vec<Log>,
 }
 
 #[cfg(feature = "rkyv")]
 const _: () = {
-    use core::pin::Pin;
+  use core::pin::Pin;
 
-    impl ArchivedLogs {
-        pub fn logs_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Log>>> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.logs) }
-        }
+  impl ArchivedLogs {
+    pub fn logs_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Log>>> {
+      unsafe { self.map_unchecked_mut(|s| &mut s.logs) }
     }
+  }
 };
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Logs {
-    type Target = fb::Logs<'a>;
+  type Target = fb::Logs<'a>;
 
-    #[inline]
-    fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
-    {
-        let mut logs = Vec::new();
-        for log in self.logs.iter() {
-            logs.push(log.serialize_fb(fbb));
-        }
-        let logs = fbb.create_vector(&logs);
-
-        let mut builder = fb::LogsBuilder::new(fbb);
-        builder.add_logs(logs);
-        builder.finish()
+  #[inline]
+  fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
+  where
+    'a: 'b,
+  {
+    let mut logs = Vec::new();
+    for log in self.logs.iter() {
+      logs.push(log.serialize_fb(fbb));
     }
+    let logs = fbb.create_vector(&logs);
+
+    let mut builder = fb::LogsBuilder::new(fbb);
+    builder.add_logs(logs);
+    builder.finish()
+  }
 }
 
 #[cfg(feature = "capnp")]
 impl<'a> bench_capnp::Serialize<'a> for Logs {
-    type Reader = cp::logs::Reader<'a>;
-    type Builder = cp::logs::Builder<'a>;
+  type Reader = cp::logs::Reader<'a>;
+  type Builder = cp::logs::Builder<'a>;
 
-    #[inline]
-    fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        let mut logs = builder.reborrow().init_logs(self.logs.len() as u32);
-        for (i, value) in self.logs.iter().enumerate() {
-            value.serialize_capnp(&mut logs.reborrow().get(i as u32));
-        }
+  #[inline]
+  fn serialize_capnp(&self, builder: &mut Self::Builder) {
+    let mut logs = builder.reborrow().init_logs(self.logs.len() as u32);
+    for (i, value) in self.logs.iter().enumerate() {
+      value.serialize_capnp(&mut logs.reborrow().get(i as u32));
     }
+  }
 }
 
 #[cfg(feature = "prost")]
 impl bench_prost::Serialize for Logs {
-    type Message = log_prost::Logs;
+  type Message = log_prost::Logs;
 
-    #[inline]
-    fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for log in self.logs.iter() {
-            result.logs.push(log.serialize_pb());
-        }
-        result
+  #[inline]
+  fn serialize_pb(&self) -> Self::Message {
+    let mut result = Self::Message::default();
+    for log in self.logs.iter() {
+      result.logs.push(log.serialize_pb());
     }
+    result
+  }
 }
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct LogsSchema {
-    pub logs: alkahest::Seq<LogSchema>,
+  pub logs: alkahest::Seq<LogSchema>,
 }
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<LogsSchema> for &'_ Logs {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogsSchema>, usize) {
-        LogsSchemaPack {
-            logs: self.logs.iter(),
-        }
-        .pack(offset, output)
+  #[inline]
+  fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogsSchema>, usize) {
+    LogsSchemaPack {
+      logs: self.logs.iter(),
     }
+    .pack(offset, output)
+  }
 }

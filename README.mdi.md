@@ -1,5 +1,3 @@
-<!-- EDIT /home/runner/work/rust_serialization_benchmark/rust_serialization_benchmark/README.md -->
-
 # Rust serialization benchmark
 
 The goal of these benchmarks is to provide thorough and complete benchmarks for various rust
@@ -29,7 +27,6 @@ Zero-copy deserialization libraries have an additional set of benchmarks:
 
 Some benchmark results may be italicized and followed by an asterisk. Mouse over these for more details on what situation was benchmarked. Other footnotes are located at the bottom.
 
-## Last updated: 2022-07-23
+## Last updated: `> ./.date`
 
-<!-- EDIT /home/runner/work/rust_serialization_benchmark/rust_serialization_benchmark/result.md -->
-
+> ./result.md
