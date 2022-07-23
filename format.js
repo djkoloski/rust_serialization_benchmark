@@ -115,7 +115,7 @@ const DATASET_DESCRIPTIONS = {
 
 export default function(input) {
 
-  let bench_times_re = /^([a-z_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\W+time:   \[\d+\.\d+ [unm]s (\d+\.\d+ [unm]s).*$/gm
+  let bench_times_re = /^([a-z_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\W+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s).*$/gm
   let bench_sizes_re = /^([a-z_\-]+)\/([a-z_\-]+)\/(size|zlib|zstd) (\d+)$/gm
 
   let results = {}
