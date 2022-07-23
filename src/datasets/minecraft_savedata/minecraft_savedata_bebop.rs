@@ -16,120 +16,118 @@
 
 #![allow(warnings)]
 
-use ::bebop::FixedSized as _;
-use ::core::convert::TryInto as _;
 use ::std::io::Write as _;
+use ::core::convert::TryInto as _;
+use ::bebop::FixedSized as _;
 
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum GameType {
-  Survival = 0,
-  Creative = 1,
-  Adventure = 2,
-  Spectator = 3,
+    Survival = 0,
+    Creative = 1,
+    Adventure = 2,
+    Spectator = 3,
 }
 
 impl ::core::convert::TryFrom<u32> for GameType {
-  type Error = ::bebop::DeserializeError;
+    type Error = ::bebop::DeserializeError;
 
-  fn try_from(value: u32) -> ::bebop::DeResult<Self> {
-    match value {
-      0 => Ok(GameType::Survival),
-      1 => Ok(GameType::Creative),
-      2 => Ok(GameType::Adventure),
-      3 => Ok(GameType::Spectator),
-      d => Err(::bebop::DeserializeError::InvalidEnumDiscriminator(
-        d.into(),
-      )),
+    fn try_from(value: u32) -> ::bebop::DeResult<Self> {
+        match value {
+            0 => Ok(GameType::Survival),
+            1 => Ok(GameType::Creative),
+            2 => Ok(GameType::Adventure),
+            3 => Ok(GameType::Spectator),
+            d => Err(::bebop::DeserializeError::InvalidEnumDiscriminator(d.into())),
+        }
     }
-  }
 }
 
 impl ::core::convert::From<GameType> for u32 {
-  fn from(value: GameType) -> Self {
-    match value {
-      GameType::Survival => 0,
-      GameType::Creative => 1,
-      GameType::Adventure => 2,
-      GameType::Spectator => 3,
+    fn from(value: GameType) -> Self {
+        match value {
+            GameType::Survival => 0,
+            GameType::Creative => 1,
+            GameType::Adventure => 2,
+            GameType::Spectator => 3,
+        }
     }
-  }
 }
 
 impl ::bebop::SubRecord<'_> for GameType {
-  const MIN_SERIALIZED_SIZE: usize = ::std::mem::size_of::<u32>();
-  const EXACT_SERIALIZED_SIZE: Option<usize> = Some(::std::mem::size_of::<u32>());
+    const MIN_SERIALIZED_SIZE: usize = ::std::mem::size_of::<u32>();
+    const EXACT_SERIALIZED_SIZE: Option<usize> = Some(::std::mem::size_of::<u32>());
 
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    ::std::mem::size_of::<u32>()
-  }
+    #[inline]
+    fn serialized_size(&self) -> usize { ::std::mem::size_of::<u32>() }
 
-  #[inline]
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    u32::from(*self)._serialize_chained(dest)
-  }
+    #[inline]
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        u32::from(*self)._serialize_chained(dest)
+    }
 
-  #[inline]
-  fn _deserialize_chained(raw: &[u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let (n, v) = u32::_deserialize_chained(raw)?;
-    Ok((n, v.try_into()?))
-  }
+    #[inline]
+    fn _deserialize_chained(raw: &[u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let (n, v) = u32::_deserialize_chained(raw)?;
+        Ok((n, v.try_into()?))
+    }
 }
 
 impl ::bebop::FixedSized for GameType {
-  const SERIALIZED_SIZE: usize = ::std::mem::size_of::<u32>();
+    const SERIALIZED_SIZE: usize = ::std::mem::size_of::<u32>();
 }
+
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Item<'raw> {
-  pub count: i32,
-  pub slot: u32,
-  pub id: &'raw str,
+    pub count: i32,
+    pub slot: u32,
+    pub id: &'raw str,
 }
 
 impl<'raw> ::bebop::SubRecord<'raw> for Item<'raw> {
-  const MIN_SERIALIZED_SIZE: usize =
-    <i32>::MIN_SERIALIZED_SIZE + <u32>::MIN_SERIALIZED_SIZE + <&'raw str>::MIN_SERIALIZED_SIZE;
+    const MIN_SERIALIZED_SIZE: usize =
+        <i32>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <&'raw str>::MIN_SERIALIZED_SIZE;
 
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    self.count.serialized_size() + self.slot.serialized_size() + self.id.serialized_size()
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.count._serialize_chained(dest)?
-        + self.slot._serialize_chained(dest)?
-        + self.id._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        self.count.serialized_size() +
+        self.slot.serialized_size() +
+        self.id.serialized_size()
     }
 
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.count._serialize_chained(dest)? +
+            self.slot._serialize_chained(dest)? +
+            self.id._serialize_chained(dest)?
+        )
+    }
 
-    Ok((
-      i,
-      Self {
-        count: v0,
-        slot: v1,
-        id: v2,
-      },
-    ))
-  }
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            count: v0,
+            slot: v1,
+            id: v2,
+        }))
+    }
 }
 
 impl<'raw> ::bebop::Record<'raw> for Item<'raw> {}
@@ -137,74 +135,71 @@ impl<'raw> ::bebop::Record<'raw> for Item<'raw> {}
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
 pub struct Abilities {
-  pub walk_speed: f32,
-  pub fly_speed: f32,
-  pub may_fly: bool,
-  pub flying: bool,
-  pub invulnerable: bool,
-  pub may_build: bool,
-  pub instabuild: bool,
+    pub walk_speed: f32,
+    pub fly_speed: f32,
+    pub may_fly: bool,
+    pub flying: bool,
+    pub invulnerable: bool,
+    pub may_build: bool,
+    pub instabuild: bool,
 }
 
 impl ::bebop::FixedSized for Abilities {}
 
 impl<'raw> ::bebop::SubRecord<'raw> for Abilities {
-  const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
-  const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
+    const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
+    const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
 
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    Self::SERIALIZED_SIZE
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.walk_speed._serialize_chained(dest)?
-        + self.fly_speed._serialize_chained(dest)?
-        + self.may_fly._serialize_chained(dest)?
-        + self.flying._serialize_chained(dest)?
-        + self.invulnerable._serialize_chained(dest)?
-        + self.may_build._serialize_chained(dest)?
-        + self.instabuild._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        Self::SERIALIZED_SIZE
     }
 
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.walk_speed._serialize_chained(dest)? +
+            self.fly_speed._serialize_chained(dest)? +
+            self.may_fly._serialize_chained(dest)? +
+            self.flying._serialize_chained(dest)? +
+            self.invulnerable._serialize_chained(dest)? +
+            self.may_build._serialize_chained(dest)? +
+            self.instabuild._serialize_chained(dest)?
+        )
+    }
 
-    Ok((
-      i,
-      Self {
-        walk_speed: v0,
-        fly_speed: v1,
-        may_fly: v2,
-        flying: v3,
-        invulnerable: v4,
-        may_build: v5,
-        instabuild: v6,
-      },
-    ))
-  }
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            walk_speed: v0,
+            fly_speed: v1,
+            may_fly: v2,
+            flying: v3,
+            invulnerable: v4,
+            may_build: v5,
+            instabuild: v6,
+        }))
+    }
 }
 
 impl<'raw> ::bebop::Record<'raw> for Abilities {}
@@ -212,54 +207,51 @@ impl<'raw> ::bebop::Record<'raw> for Abilities {}
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
 pub struct Vector3D {
-  pub x: f64,
-  pub y: f64,
-  pub z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl ::bebop::FixedSized for Vector3D {}
 
 impl<'raw> ::bebop::SubRecord<'raw> for Vector3D {
-  const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
-  const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
+    const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
+    const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
 
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    Self::SERIALIZED_SIZE
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.x._serialize_chained(dest)?
-        + self.y._serialize_chained(dest)?
-        + self.z._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        Self::SERIALIZED_SIZE
     }
 
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.x._serialize_chained(dest)? +
+            self.y._serialize_chained(dest)? +
+            self.z._serialize_chained(dest)?
+        )
+    }
 
-    Ok((
-      i,
-      Self {
-        x: v0,
-        y: v1,
-        z: v2,
-      },
-    ))
-  }
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            x: v0,
+            y: v1,
+            z: v2,
+        }))
+    }
 }
 
 impl<'raw> ::bebop::Record<'raw> for Vector3D {}
@@ -267,40 +259,46 @@ impl<'raw> ::bebop::Record<'raw> for Vector3D {}
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
 pub struct Vector2F {
-  pub x: f32,
-  pub y: f32,
+    pub x: f32,
+    pub y: f32,
 }
 
 impl ::bebop::FixedSized for Vector2F {}
 
 impl<'raw> ::bebop::SubRecord<'raw> for Vector2F {
-  const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
-  const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
+    const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
+    const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
 
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    Self::SERIALIZED_SIZE
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(self.x._serialize_chained(dest)? + self.y._serialize_chained(dest)?)
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        Self::SERIALIZED_SIZE
     }
 
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.x._serialize_chained(dest)? +
+            self.y._serialize_chained(dest)?
+        )
+    }
 
-    Ok((i, Self { x: v0, y: v1 }))
-  }
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            x: v0,
+            y: v1,
+        }))
+    }
 }
 
 impl<'raw> ::bebop::Record<'raw> for Vector2F {}
@@ -308,706 +306,63 @@ impl<'raw> ::bebop::Record<'raw> for Vector2F {}
 #[derive(Clone, Debug, PartialEq, Copy)]
 #[repr(packed)]
 pub struct Uuid {
-  pub x0: u32,
-  pub x1: u32,
-  pub x2: u32,
-  pub x3: u32,
+    pub x0: u32,
+    pub x1: u32,
+    pub x2: u32,
+    pub x3: u32,
 }
 
 impl ::bebop::FixedSized for Uuid {}
 
 impl<'raw> ::bebop::SubRecord<'raw> for Uuid {
-  const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
-  const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
+    const MIN_SERIALIZED_SIZE: usize = Self::SERIALIZED_SIZE;
+    const EXACT_SERIALIZED_SIZE: Option<usize> = Some(Self::SERIALIZED_SIZE);
 
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    Self::SERIALIZED_SIZE
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.x0._serialize_chained(dest)?
-        + self.x1._serialize_chained(dest)?
-        + self.x2._serialize_chained(dest)?
-        + self.x3._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        Self::SERIALIZED_SIZE
     }
 
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.x0._serialize_chained(dest)? +
+            self.x1._serialize_chained(dest)? +
+            self.x2._serialize_chained(dest)? +
+            self.x3._serialize_chained(dest)?
+        )
+    }
 
-    Ok((
-      i,
-      Self {
-        x0: v0,
-        x1: v1,
-        x2: v2,
-        x3: v3,
-      },
-    ))
-  }
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            x0: v0,
+            x1: v1,
+            x2: v2,
+            x3: v3,
+        }))
+    }
 }
 
 impl<'raw> ::bebop::Record<'raw> for Uuid {}
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Entity<'raw> {
-  pub id: &'raw str,
-  pub pos: Vector3d,
-  pub motion: Vector3d,
-  pub rotation: Vector2f,
-  pub fall_distance: f32,
-  pub fire: u32,
-  pub air: u32,
-  pub on_ground: bool,
-  pub no_gravity: bool,
-  pub invulnerable: bool,
-  pub portal_cooldown: i32,
-  pub uuid: Uuid,
-  pub custom_name: &'raw str,
-  pub custom_name_visible: bool,
-  pub silent: bool,
-  pub glowing: bool,
-}
-
-impl<'raw> ::bebop::SubRecord<'raw> for Entity<'raw> {
-  const MIN_SERIALIZED_SIZE: usize = <&'raw str>::MIN_SERIALIZED_SIZE
-    + <Vector3d>::MIN_SERIALIZED_SIZE
-    + <Vector3d>::MIN_SERIALIZED_SIZE
-    + <Vector2f>::MIN_SERIALIZED_SIZE
-    + <f32>::MIN_SERIALIZED_SIZE
-    + <u32>::MIN_SERIALIZED_SIZE
-    + <u32>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <i32>::MIN_SERIALIZED_SIZE
-    + <Uuid>::MIN_SERIALIZED_SIZE
-    + <&'raw str>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE;
-
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    self.id.serialized_size()
-      + self.pos.serialized_size()
-      + self.motion.serialized_size()
-      + self.rotation.serialized_size()
-      + self.fall_distance.serialized_size()
-      + self.fire.serialized_size()
-      + self.air.serialized_size()
-      + self.on_ground.serialized_size()
-      + self.no_gravity.serialized_size()
-      + self.invulnerable.serialized_size()
-      + self.portal_cooldown.serialized_size()
-      + self.uuid.serialized_size()
-      + self.custom_name.serialized_size()
-      + self.custom_name_visible.serialized_size()
-      + self.silent.serialized_size()
-      + self.glowing.serialized_size()
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.id._serialize_chained(dest)?
-        + self.pos._serialize_chained(dest)?
-        + self.motion._serialize_chained(dest)?
-        + self.rotation._serialize_chained(dest)?
-        + self.fall_distance._serialize_chained(dest)?
-        + self.fire._serialize_chained(dest)?
-        + self.air._serialize_chained(dest)?
-        + self.on_ground._serialize_chained(dest)?
-        + self.no_gravity._serialize_chained(dest)?
-        + self.invulnerable._serialize_chained(dest)?
-        + self.portal_cooldown._serialize_chained(dest)?
-        + self.uuid._serialize_chained(dest)?
-        + self.custom_name._serialize_chained(dest)?
-        + self.custom_name_visible._serialize_chained(dest)?
-        + self.silent._serialize_chained(dest)?
-        + self.glowing._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-    }
-
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-
-    Ok((
-      i,
-      Self {
-        id: v0,
-        pos: v1,
-        motion: v2,
-        rotation: v3,
-        fall_distance: v4,
-        fire: v5,
-        air: v6,
-        on_ground: v7,
-        no_gravity: v8,
-        invulnerable: v9,
-        portal_cooldown: v10,
-        uuid: v11,
-        custom_name: v12,
-        custom_name_visible: v13,
-        silent: v14,
-        glowing: v15,
-      },
-    ))
-  }
-}
-
-impl<'raw> ::bebop::Record<'raw> for Entity<'raw> {}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct RecipeBook<'raw> {
-  pub recipes: ::std::vec::Vec<&'raw str>,
-  pub to_be_displayed: ::std::vec::Vec<&'raw str>,
-  pub is_filtering_craftable: bool,
-  pub is_gui_open: bool,
-  pub is_furnace_filtering_craftable: bool,
-  pub is_furnace_gui_open: bool,
-  pub is_blasting_furnace_filtering_craftable: bool,
-  pub is_blasting_furnace_gui_open: bool,
-  pub is_smoker_filtering_craftable: bool,
-  pub is_smoker_gui_open: bool,
-}
-
-impl<'raw> ::bebop::SubRecord<'raw> for RecipeBook<'raw> {
-  const MIN_SERIALIZED_SIZE: usize = <::std::vec::Vec<&'raw str>>::MIN_SERIALIZED_SIZE
-    + <::std::vec::Vec<&'raw str>>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE;
-
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    self.recipes.serialized_size()
-      + self.to_be_displayed.serialized_size()
-      + self.is_filtering_craftable.serialized_size()
-      + self.is_gui_open.serialized_size()
-      + self.is_furnace_filtering_craftable.serialized_size()
-      + self.is_furnace_gui_open.serialized_size()
-      + self
-        .is_blasting_furnace_filtering_craftable
-        .serialized_size()
-      + self.is_blasting_furnace_gui_open.serialized_size()
-      + self.is_smoker_filtering_craftable.serialized_size()
-      + self.is_smoker_gui_open.serialized_size()
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.recipes._serialize_chained(dest)?
-        + self.to_be_displayed._serialize_chained(dest)?
-        + self.is_filtering_craftable._serialize_chained(dest)?
-        + self.is_gui_open._serialize_chained(dest)?
-        + self
-          .is_furnace_filtering_craftable
-          ._serialize_chained(dest)?
-        + self.is_furnace_gui_open._serialize_chained(dest)?
-        + self
-          .is_blasting_furnace_filtering_craftable
-          ._serialize_chained(dest)?
-        + self.is_blasting_furnace_gui_open._serialize_chained(dest)?
-        + self
-          .is_smoker_filtering_craftable
-          ._serialize_chained(dest)?
-        + self.is_smoker_gui_open._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-    }
-
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-
-    Ok((
-      i,
-      Self {
-        recipes: v0,
-        to_be_displayed: v1,
-        is_filtering_craftable: v2,
-        is_gui_open: v3,
-        is_furnace_filtering_craftable: v4,
-        is_furnace_gui_open: v5,
-        is_blasting_furnace_filtering_craftable: v6,
-        is_blasting_furnace_gui_open: v7,
-        is_smoker_filtering_craftable: v8,
-        is_smoker_gui_open: v9,
-      },
-    ))
-  }
-}
-
-impl<'raw> ::bebop::Record<'raw> for RecipeBook<'raw> {}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct Vehicle<'raw> {
-  pub uuid: Uuid,
-  pub entity: Entity<'raw>,
-}
-
-impl<'raw> ::bebop::SubRecord<'raw> for Vehicle<'raw> {
-  const MIN_SERIALIZED_SIZE: usize =
-    <Uuid>::MIN_SERIALIZED_SIZE + <Entity<'raw>>::MIN_SERIALIZED_SIZE;
-
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    self.uuid.serialized_size() + self.entity.serialized_size()
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(self.uuid._serialize_chained(dest)? + self.entity._serialize_chained(dest)?)
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-    }
-
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-
-    Ok((
-      i,
-      Self {
-        uuid: v0,
-        entity: v1,
-      },
-    ))
-  }
-}
-
-impl<'raw> ::bebop::Record<'raw> for Vehicle<'raw> {}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct Player<'raw> {
-  pub game_type: GameType,
-  pub previous_game_type: GameType,
-  pub score: i64,
-  pub dimension: &'raw str,
-  pub selected_item_slot: u32,
-  pub selected_item: Item<'raw>,
-  pub spawn_dimension: &'raw str,
-  pub spawn_x: i64,
-  pub spawn_y: i64,
-  pub spawn_z: i64,
-  pub spawn_forced: bool,
-  pub sleep_timer: u32,
-  pub food_exhaustion_level: f32,
-  pub food_saturation_level: f32,
-  pub food_tick_timer: u32,
-  pub xp_level: u32,
-  pub xp_p: f32,
-  pub xp_total: i32,
-  pub xp_seed: i32,
-  pub inventory: ::std::vec::Vec<Item<'raw>>,
-  pub ender_items: ::std::vec::Vec<Item<'raw>>,
-  pub abilities: Abilities,
-  pub entered_nether_position: Vector3d,
-  pub root_vehicle: Vehicle<'raw>,
-  pub shoulder_entity_left: Entity<'raw>,
-  pub shoulder_entity_right: Entity<'raw>,
-  pub seen_credits: bool,
-  pub recipe_book: RecipeBook<'raw>,
-}
-
-impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
-  const MIN_SERIALIZED_SIZE: usize = <GameType>::MIN_SERIALIZED_SIZE
-    + <GameType>::MIN_SERIALIZED_SIZE
-    + <i64>::MIN_SERIALIZED_SIZE
-    + <&'raw str>::MIN_SERIALIZED_SIZE
-    + <u32>::MIN_SERIALIZED_SIZE
-    + <Item<'raw>>::MIN_SERIALIZED_SIZE
-    + <&'raw str>::MIN_SERIALIZED_SIZE
-    + <i64>::MIN_SERIALIZED_SIZE
-    + <i64>::MIN_SERIALIZED_SIZE
-    + <i64>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <u32>::MIN_SERIALIZED_SIZE
-    + <f32>::MIN_SERIALIZED_SIZE
-    + <f32>::MIN_SERIALIZED_SIZE
-    + <u32>::MIN_SERIALIZED_SIZE
-    + <u32>::MIN_SERIALIZED_SIZE
-    + <f32>::MIN_SERIALIZED_SIZE
-    + <i32>::MIN_SERIALIZED_SIZE
-    + <i32>::MIN_SERIALIZED_SIZE
-    + <::std::vec::Vec<Item<'raw>>>::MIN_SERIALIZED_SIZE
-    + <::std::vec::Vec<Item<'raw>>>::MIN_SERIALIZED_SIZE
-    + <Abilities>::MIN_SERIALIZED_SIZE
-    + <Vector3d>::MIN_SERIALIZED_SIZE
-    + <Vehicle<'raw>>::MIN_SERIALIZED_SIZE
-    + <Entity<'raw>>::MIN_SERIALIZED_SIZE
-    + <Entity<'raw>>::MIN_SERIALIZED_SIZE
-    + <bool>::MIN_SERIALIZED_SIZE
-    + <RecipeBook<'raw>>::MIN_SERIALIZED_SIZE;
-
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    self.game_type.serialized_size()
-      + self.previous_game_type.serialized_size()
-      + self.score.serialized_size()
-      + self.dimension.serialized_size()
-      + self.selected_item_slot.serialized_size()
-      + self.selected_item.serialized_size()
-      + self.spawn_dimension.serialized_size()
-      + self.spawn_x.serialized_size()
-      + self.spawn_y.serialized_size()
-      + self.spawn_z.serialized_size()
-      + self.spawn_forced.serialized_size()
-      + self.sleep_timer.serialized_size()
-      + self.food_exhaustion_level.serialized_size()
-      + self.food_saturation_level.serialized_size()
-      + self.food_tick_timer.serialized_size()
-      + self.xp_level.serialized_size()
-      + self.xp_p.serialized_size()
-      + self.xp_total.serialized_size()
-      + self.xp_seed.serialized_size()
-      + self.inventory.serialized_size()
-      + self.ender_items.serialized_size()
-      + self.abilities.serialized_size()
-      + self.entered_nether_position.serialized_size()
-      + self.root_vehicle.serialized_size()
-      + self.shoulder_entity_left.serialized_size()
-      + self.shoulder_entity_right.serialized_size()
-      + self.seen_credits.serialized_size()
-      + self.recipe_book.serialized_size()
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(
-      self.game_type._serialize_chained(dest)?
-        + self.previous_game_type._serialize_chained(dest)?
-        + self.score._serialize_chained(dest)?
-        + self.dimension._serialize_chained(dest)?
-        + self.selected_item_slot._serialize_chained(dest)?
-        + self.selected_item._serialize_chained(dest)?
-        + self.spawn_dimension._serialize_chained(dest)?
-        + self.spawn_x._serialize_chained(dest)?
-        + self.spawn_y._serialize_chained(dest)?
-        + self.spawn_z._serialize_chained(dest)?
-        + self.spawn_forced._serialize_chained(dest)?
-        + self.sleep_timer._serialize_chained(dest)?
-        + self.food_exhaustion_level._serialize_chained(dest)?
-        + self.food_saturation_level._serialize_chained(dest)?
-        + self.food_tick_timer._serialize_chained(dest)?
-        + self.xp_level._serialize_chained(dest)?
-        + self.xp_p._serialize_chained(dest)?
-        + self.xp_total._serialize_chained(dest)?
-        + self.xp_seed._serialize_chained(dest)?
-        + self.inventory._serialize_chained(dest)?
-        + self.ender_items._serialize_chained(dest)?
-        + self.abilities._serialize_chained(dest)?
-        + self.entered_nether_position._serialize_chained(dest)?
-        + self.root_vehicle._serialize_chained(dest)?
-        + self.shoulder_entity_left._serialize_chained(dest)?
-        + self.shoulder_entity_right._serialize_chained(dest)?
-        + self.seen_credits._serialize_chained(dest)?
-        + self.recipe_book._serialize_chained(dest)?,
-    )
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-    }
-
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v16) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v17) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v18) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v19) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v20) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v21) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v22) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v23) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v24) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v25) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v26) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-    let (read, v27) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-
-    Ok((
-      i,
-      Self {
-        game_type: v0,
-        previous_game_type: v1,
-        score: v2,
-        dimension: v3,
-        selected_item_slot: v4,
-        selected_item: v5,
-        spawn_dimension: v6,
-        spawn_x: v7,
-        spawn_y: v8,
-        spawn_z: v9,
-        spawn_forced: v10,
-        sleep_timer: v11,
-        food_exhaustion_level: v12,
-        food_saturation_level: v13,
-        food_tick_timer: v14,
-        xp_level: v15,
-        xp_p: v16,
-        xp_total: v17,
-        xp_seed: v18,
-        inventory: v19,
-        ender_items: v20,
-        abilities: v21,
-        entered_nether_position: v22,
-        root_vehicle: v23,
-        shoulder_entity_left: v24,
-        shoulder_entity_right: v25,
-        seen_credits: v26,
-        recipe_book: v27,
-      },
-    ))
-  }
-}
-
-impl<'raw> ::bebop::Record<'raw> for Player<'raw> {}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct Players<'raw> {
-  pub players_: ::std::vec::Vec<Player<'raw>>,
-}
-
-impl<'raw> ::bebop::SubRecord<'raw> for Players<'raw> {
-  const MIN_SERIALIZED_SIZE: usize = <::std::vec::Vec<Player<'raw>>>::MIN_SERIALIZED_SIZE;
-
-  #[inline]
-  fn serialized_size(&self) -> usize {
-    self.players_.serialized_size()
-  }
-
-  #[allow(unaligned_references)]
-  fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-    Ok(self.players_._serialize_chained(dest)?)
-  }
-
-  fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-    let mut i = 0;
-    if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-      let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-      return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-    }
-
-    let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-    i += read;
-
-    Ok((i, Self { players_: v0 }))
-  }
-}
-
-impl<'raw> ::bebop::Record<'raw> for Players<'raw> {}
-
-#[cfg(feature = "bebop-owned-all")]
-pub mod owned {
-  #![allow(warnings)]
-
-  use ::bebop::FixedSized as _;
-  use ::core::convert::TryInto as _;
-  use ::std::io::Write as _;
-
-  pub use super::GameType;
-
-  #[derive(Clone, Debug, PartialEq)]
-  pub struct Item {
-    pub count: i32,
-    pub slot: u32,
-    pub id: String,
-  }
-
-  impl<'raw> ::core::convert::From<super::Item<'raw>> for Item {
-    fn from(value: super::Item) -> Self {
-      Self {
-        count: value.count,
-        slot: value.slot,
-        id: value.id.into(),
-      }
-    }
-  }
-
-  impl<'raw> ::bebop::SubRecord<'raw> for Item {
-    const MIN_SERIALIZED_SIZE: usize =
-      <i32>::MIN_SERIALIZED_SIZE + <u32>::MIN_SERIALIZED_SIZE + <String>::MIN_SERIALIZED_SIZE;
-
-    #[inline]
-    fn serialized_size(&self) -> usize {
-      self.count.serialized_size() + self.slot.serialized_size() + self.id.serialized_size()
-    }
-
-    #[allow(unaligned_references)]
-    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-      Ok(
-        self.count._serialize_chained(dest)?
-          + self.slot._serialize_chained(dest)?
-          + self.id._serialize_chained(dest)?,
-      )
-    }
-
-    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-      let mut i = 0;
-      if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-        let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-        return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-      }
-
-      let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-
-      Ok((
-        i,
-        Self {
-          count: v0,
-          slot: v1,
-          id: v2,
-        },
-      ))
-    }
-  }
-
-  impl<'raw> ::bebop::Record<'raw> for Item {}
-
-  pub use super::{Abilities, Uuid, Vector2F, Vector3D};
-
-  #[derive(Clone, Debug, PartialEq)]
-  pub struct Entity {
-    pub id: String,
+    pub id: &'raw str,
     pub pos: Vector3d,
     pub motion: Vector3d,
     pub rotation: Vector2f,
@@ -1019,165 +374,140 @@ pub mod owned {
     pub invulnerable: bool,
     pub portal_cooldown: i32,
     pub uuid: Uuid,
-    pub custom_name: String,
+    pub custom_name: &'raw str,
     pub custom_name_visible: bool,
     pub silent: bool,
     pub glowing: bool,
-  }
+}
 
-  impl<'raw> ::core::convert::From<super::Entity<'raw>> for Entity {
-    fn from(value: super::Entity) -> Self {
-      Self {
-        id: value.id.into(),
-        pos: value.pos,
-        motion: value.motion,
-        rotation: value.rotation,
-        fall_distance: value.fall_distance,
-        fire: value.fire,
-        air: value.air,
-        on_ground: value.on_ground,
-        no_gravity: value.no_gravity,
-        invulnerable: value.invulnerable,
-        portal_cooldown: value.portal_cooldown,
-        uuid: value.uuid,
-        custom_name: value.custom_name.into(),
-        custom_name_visible: value.custom_name_visible,
-        silent: value.silent,
-        glowing: value.glowing,
-      }
-    }
-  }
-
-  impl<'raw> ::bebop::SubRecord<'raw> for Entity {
-    const MIN_SERIALIZED_SIZE: usize = <String>::MIN_SERIALIZED_SIZE
-      + <Vector3d>::MIN_SERIALIZED_SIZE
-      + <Vector3d>::MIN_SERIALIZED_SIZE
-      + <Vector2f>::MIN_SERIALIZED_SIZE
-      + <f32>::MIN_SERIALIZED_SIZE
-      + <u32>::MIN_SERIALIZED_SIZE
-      + <u32>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <i32>::MIN_SERIALIZED_SIZE
-      + <Uuid>::MIN_SERIALIZED_SIZE
-      + <String>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE;
+impl<'raw> ::bebop::SubRecord<'raw> for Entity<'raw> {
+    const MIN_SERIALIZED_SIZE: usize =
+        <&'raw str>::MIN_SERIALIZED_SIZE +
+        <Vector3d>::MIN_SERIALIZED_SIZE +
+        <Vector3d>::MIN_SERIALIZED_SIZE +
+        <Vector2f>::MIN_SERIALIZED_SIZE +
+        <f32>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <i32>::MIN_SERIALIZED_SIZE +
+        <Uuid>::MIN_SERIALIZED_SIZE +
+        <&'raw str>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE;
 
     #[inline]
     fn serialized_size(&self) -> usize {
-      self.id.serialized_size()
-        + self.pos.serialized_size()
-        + self.motion.serialized_size()
-        + self.rotation.serialized_size()
-        + self.fall_distance.serialized_size()
-        + self.fire.serialized_size()
-        + self.air.serialized_size()
-        + self.on_ground.serialized_size()
-        + self.no_gravity.serialized_size()
-        + self.invulnerable.serialized_size()
-        + self.portal_cooldown.serialized_size()
-        + self.uuid.serialized_size()
-        + self.custom_name.serialized_size()
-        + self.custom_name_visible.serialized_size()
-        + self.silent.serialized_size()
-        + self.glowing.serialized_size()
+        self.id.serialized_size() +
+        self.pos.serialized_size() +
+        self.motion.serialized_size() +
+        self.rotation.serialized_size() +
+        self.fall_distance.serialized_size() +
+        self.fire.serialized_size() +
+        self.air.serialized_size() +
+        self.on_ground.serialized_size() +
+        self.no_gravity.serialized_size() +
+        self.invulnerable.serialized_size() +
+        self.portal_cooldown.serialized_size() +
+        self.uuid.serialized_size() +
+        self.custom_name.serialized_size() +
+        self.custom_name_visible.serialized_size() +
+        self.silent.serialized_size() +
+        self.glowing.serialized_size()
     }
 
     #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-      Ok(
-        self.id._serialize_chained(dest)?
-          + self.pos._serialize_chained(dest)?
-          + self.motion._serialize_chained(dest)?
-          + self.rotation._serialize_chained(dest)?
-          + self.fall_distance._serialize_chained(dest)?
-          + self.fire._serialize_chained(dest)?
-          + self.air._serialize_chained(dest)?
-          + self.on_ground._serialize_chained(dest)?
-          + self.no_gravity._serialize_chained(dest)?
-          + self.invulnerable._serialize_chained(dest)?
-          + self.portal_cooldown._serialize_chained(dest)?
-          + self.uuid._serialize_chained(dest)?
-          + self.custom_name._serialize_chained(dest)?
-          + self.custom_name_visible._serialize_chained(dest)?
-          + self.silent._serialize_chained(dest)?
-          + self.glowing._serialize_chained(dest)?,
-      )
+        Ok(
+            self.id._serialize_chained(dest)? +
+            self.pos._serialize_chained(dest)? +
+            self.motion._serialize_chained(dest)? +
+            self.rotation._serialize_chained(dest)? +
+            self.fall_distance._serialize_chained(dest)? +
+            self.fire._serialize_chained(dest)? +
+            self.air._serialize_chained(dest)? +
+            self.on_ground._serialize_chained(dest)? +
+            self.no_gravity._serialize_chained(dest)? +
+            self.invulnerable._serialize_chained(dest)? +
+            self.portal_cooldown._serialize_chained(dest)? +
+            self.uuid._serialize_chained(dest)? +
+            self.custom_name._serialize_chained(dest)? +
+            self.custom_name_visible._serialize_chained(dest)? +
+            self.silent._serialize_chained(dest)? +
+            self.glowing._serialize_chained(dest)?
+        )
     }
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-      let mut i = 0;
-      if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-        let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-        return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-      }
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
 
-      let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
 
-      Ok((
-        i,
-        Self {
-          id: v0,
-          pos: v1,
-          motion: v2,
-          rotation: v3,
-          fall_distance: v4,
-          fire: v5,
-          air: v6,
-          on_ground: v7,
-          no_gravity: v8,
-          invulnerable: v9,
-          portal_cooldown: v10,
-          uuid: v11,
-          custom_name: v12,
-          custom_name_visible: v13,
-          silent: v14,
-          glowing: v15,
-        },
-      ))
+        Ok((i, Self {
+            id: v0,
+            pos: v1,
+            motion: v2,
+            rotation: v3,
+            fall_distance: v4,
+            fire: v5,
+            air: v6,
+            on_ground: v7,
+            no_gravity: v8,
+            invulnerable: v9,
+            portal_cooldown: v10,
+            uuid: v11,
+            custom_name: v12,
+            custom_name_visible: v13,
+            silent: v14,
+            glowing: v15,
+        }))
     }
-  }
+}
 
-  impl<'raw> ::bebop::Record<'raw> for Entity {}
+impl<'raw> ::bebop::Record<'raw> for Entity<'raw> {}
 
-  #[derive(Clone, Debug, PartialEq)]
-  pub struct RecipeBook {
-    pub recipes: ::std::vec::Vec<String>,
-    pub to_be_displayed: ::std::vec::Vec<String>,
+#[derive(Clone, Debug, PartialEq)]
+pub struct RecipeBook<'raw> {
+    pub recipes: ::std::vec::Vec<&'raw str>,
+    pub to_be_displayed: ::std::vec::Vec<&'raw str>,
     pub is_filtering_craftable: bool,
     pub is_gui_open: bool,
     pub is_furnace_filtering_craftable: bool,
@@ -1186,192 +516,151 @@ pub mod owned {
     pub is_blasting_furnace_gui_open: bool,
     pub is_smoker_filtering_craftable: bool,
     pub is_smoker_gui_open: bool,
-  }
+}
 
-  impl<'raw> ::core::convert::From<super::RecipeBook<'raw>> for RecipeBook {
-    fn from(value: super::RecipeBook) -> Self {
-      Self {
-        recipes: value
-          .recipes
-          .into_iter()
-          .map(|value| value.into())
-          .collect(),
-        to_be_displayed: value
-          .to_be_displayed
-          .into_iter()
-          .map(|value| value.into())
-          .collect(),
-        is_filtering_craftable: value.is_filtering_craftable,
-        is_gui_open: value.is_gui_open,
-        is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
-        is_furnace_gui_open: value.is_furnace_gui_open,
-        is_blasting_furnace_filtering_craftable: value.is_blasting_furnace_filtering_craftable,
-        is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
-        is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
-        is_smoker_gui_open: value.is_smoker_gui_open,
-      }
-    }
-  }
-
-  impl<'raw> ::bebop::SubRecord<'raw> for RecipeBook {
-    const MIN_SERIALIZED_SIZE: usize = <::std::vec::Vec<String>>::MIN_SERIALIZED_SIZE
-      + <::std::vec::Vec<String>>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE;
+impl<'raw> ::bebop::SubRecord<'raw> for RecipeBook<'raw> {
+    const MIN_SERIALIZED_SIZE: usize =
+        <::std::vec::Vec<&'raw str>>::MIN_SERIALIZED_SIZE +
+        <::std::vec::Vec<&'raw str>>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE;
 
     #[inline]
     fn serialized_size(&self) -> usize {
-      self.recipes.serialized_size()
-        + self.to_be_displayed.serialized_size()
-        + self.is_filtering_craftable.serialized_size()
-        + self.is_gui_open.serialized_size()
-        + self.is_furnace_filtering_craftable.serialized_size()
-        + self.is_furnace_gui_open.serialized_size()
-        + self
-          .is_blasting_furnace_filtering_craftable
-          .serialized_size()
-        + self.is_blasting_furnace_gui_open.serialized_size()
-        + self.is_smoker_filtering_craftable.serialized_size()
-        + self.is_smoker_gui_open.serialized_size()
+        self.recipes.serialized_size() +
+        self.to_be_displayed.serialized_size() +
+        self.is_filtering_craftable.serialized_size() +
+        self.is_gui_open.serialized_size() +
+        self.is_furnace_filtering_craftable.serialized_size() +
+        self.is_furnace_gui_open.serialized_size() +
+        self.is_blasting_furnace_filtering_craftable.serialized_size() +
+        self.is_blasting_furnace_gui_open.serialized_size() +
+        self.is_smoker_filtering_craftable.serialized_size() +
+        self.is_smoker_gui_open.serialized_size()
     }
 
     #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-      Ok(
-        self.recipes._serialize_chained(dest)?
-          + self.to_be_displayed._serialize_chained(dest)?
-          + self.is_filtering_craftable._serialize_chained(dest)?
-          + self.is_gui_open._serialize_chained(dest)?
-          + self
-            .is_furnace_filtering_craftable
-            ._serialize_chained(dest)?
-          + self.is_furnace_gui_open._serialize_chained(dest)?
-          + self
-            .is_blasting_furnace_filtering_craftable
-            ._serialize_chained(dest)?
-          + self.is_blasting_furnace_gui_open._serialize_chained(dest)?
-          + self
-            .is_smoker_filtering_craftable
-            ._serialize_chained(dest)?
-          + self.is_smoker_gui_open._serialize_chained(dest)?,
-      )
+        Ok(
+            self.recipes._serialize_chained(dest)? +
+            self.to_be_displayed._serialize_chained(dest)? +
+            self.is_filtering_craftable._serialize_chained(dest)? +
+            self.is_gui_open._serialize_chained(dest)? +
+            self.is_furnace_filtering_craftable._serialize_chained(dest)? +
+            self.is_furnace_gui_open._serialize_chained(dest)? +
+            self.is_blasting_furnace_filtering_craftable._serialize_chained(dest)? +
+            self.is_blasting_furnace_gui_open._serialize_chained(dest)? +
+            self.is_smoker_filtering_craftable._serialize_chained(dest)? +
+            self.is_smoker_gui_open._serialize_chained(dest)?
+        )
     }
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-      let mut i = 0;
-      if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-        let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-        return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-      }
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
 
-      let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
 
-      Ok((
-        i,
-        Self {
-          recipes: v0,
-          to_be_displayed: v1,
-          is_filtering_craftable: v2,
-          is_gui_open: v3,
-          is_furnace_filtering_craftable: v4,
-          is_furnace_gui_open: v5,
-          is_blasting_furnace_filtering_craftable: v6,
-          is_blasting_furnace_gui_open: v7,
-          is_smoker_filtering_craftable: v8,
-          is_smoker_gui_open: v9,
-        },
-      ))
+        Ok((i, Self {
+            recipes: v0,
+            to_be_displayed: v1,
+            is_filtering_craftable: v2,
+            is_gui_open: v3,
+            is_furnace_filtering_craftable: v4,
+            is_furnace_gui_open: v5,
+            is_blasting_furnace_filtering_craftable: v6,
+            is_blasting_furnace_gui_open: v7,
+            is_smoker_filtering_craftable: v8,
+            is_smoker_gui_open: v9,
+        }))
     }
-  }
+}
 
-  impl<'raw> ::bebop::Record<'raw> for RecipeBook {}
+impl<'raw> ::bebop::Record<'raw> for RecipeBook<'raw> {}
 
-  #[derive(Clone, Debug, PartialEq)]
-  pub struct Vehicle {
+#[derive(Clone, Debug, PartialEq)]
+pub struct Vehicle<'raw> {
     pub uuid: Uuid,
-    pub entity: Entity,
-  }
+    pub entity: Entity<'raw>,
+}
 
-  impl<'raw> ::core::convert::From<super::Vehicle<'raw>> for Vehicle {
-    fn from(value: super::Vehicle) -> Self {
-      Self {
-        uuid: value.uuid,
-        entity: value.entity.into(),
-      }
-    }
-  }
-
-  impl<'raw> ::bebop::SubRecord<'raw> for Vehicle {
-    const MIN_SERIALIZED_SIZE: usize = <Uuid>::MIN_SERIALIZED_SIZE + <Entity>::MIN_SERIALIZED_SIZE;
+impl<'raw> ::bebop::SubRecord<'raw> for Vehicle<'raw> {
+    const MIN_SERIALIZED_SIZE: usize =
+        <Uuid>::MIN_SERIALIZED_SIZE +
+        <Entity<'raw>>::MIN_SERIALIZED_SIZE;
 
     #[inline]
     fn serialized_size(&self) -> usize {
-      self.uuid.serialized_size() + self.entity.serialized_size()
+        self.uuid.serialized_size() +
+        self.entity.serialized_size()
     }
 
     #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-      Ok(self.uuid._serialize_chained(dest)? + self.entity._serialize_chained(dest)?)
+        Ok(
+            self.uuid._serialize_chained(dest)? +
+            self.entity._serialize_chained(dest)?
+        )
     }
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-      let mut i = 0;
-      if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-        let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-        return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-      }
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
 
-      let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
 
-      Ok((
-        i,
-        Self {
-          uuid: v0,
-          entity: v1,
-        },
-      ))
+        Ok((i, Self {
+            uuid: v0,
+            entity: v1,
+        }))
     }
-  }
+}
 
-  impl<'raw> ::bebop::Record<'raw> for Vehicle {}
+impl<'raw> ::bebop::Record<'raw> for Vehicle<'raw> {}
 
-  #[derive(Clone, Debug, PartialEq)]
-  pub struct Player {
+#[derive(Clone, Debug, PartialEq)]
+pub struct Player<'raw> {
     pub game_type: GameType,
     pub previous_game_type: GameType,
     pub score: i64,
-    pub dimension: String,
+    pub dimension: &'raw str,
     pub selected_item_slot: u32,
-    pub selected_item: Item,
-    pub spawn_dimension: String,
+    pub selected_item: Item<'raw>,
+    pub spawn_dimension: &'raw str,
     pub spawn_x: i64,
     pub spawn_y: i64,
     pub spawn_z: i64,
@@ -1384,301 +673,980 @@ pub mod owned {
     pub xp_p: f32,
     pub xp_total: i32,
     pub xp_seed: i32,
-    pub inventory: ::std::vec::Vec<Item>,
-    pub ender_items: ::std::vec::Vec<Item>,
+    pub inventory: ::std::vec::Vec<Item<'raw>>,
+    pub ender_items: ::std::vec::Vec<Item<'raw>>,
     pub abilities: Abilities,
     pub entered_nether_position: Vector3d,
-    pub root_vehicle: Vehicle,
-    pub shoulder_entity_left: Entity,
-    pub shoulder_entity_right: Entity,
+    pub root_vehicle: Vehicle<'raw>,
+    pub shoulder_entity_left: Entity<'raw>,
+    pub shoulder_entity_right: Entity<'raw>,
     pub seen_credits: bool,
-    pub recipe_book: RecipeBook,
-  }
-
-  impl<'raw> ::core::convert::From<super::Player<'raw>> for Player {
-    fn from(value: super::Player) -> Self {
-      Self {
-        game_type: value.game_type,
-        previous_game_type: value.previous_game_type,
-        score: value.score,
-        dimension: value.dimension.into(),
-        selected_item_slot: value.selected_item_slot,
-        selected_item: value.selected_item.into(),
-        spawn_dimension: value.spawn_dimension.into(),
-        spawn_x: value.spawn_x,
-        spawn_y: value.spawn_y,
-        spawn_z: value.spawn_z,
-        spawn_forced: value.spawn_forced,
-        sleep_timer: value.sleep_timer,
-        food_exhaustion_level: value.food_exhaustion_level,
-        food_saturation_level: value.food_saturation_level,
-        food_tick_timer: value.food_tick_timer,
-        xp_level: value.xp_level,
-        xp_p: value.xp_p,
-        xp_total: value.xp_total,
-        xp_seed: value.xp_seed,
-        inventory: value
-          .inventory
-          .into_iter()
-          .map(|value| value.into())
-          .collect(),
-        ender_items: value
-          .ender_items
-          .into_iter()
-          .map(|value| value.into())
-          .collect(),
-        abilities: value.abilities,
-        entered_nether_position: value.entered_nether_position,
-        root_vehicle: value.root_vehicle.into(),
-        shoulder_entity_left: value.shoulder_entity_left.into(),
-        shoulder_entity_right: value.shoulder_entity_right.into(),
-        seen_credits: value.seen_credits,
-        recipe_book: value.recipe_book.into(),
-      }
-    }
-  }
-
-  impl<'raw> ::bebop::SubRecord<'raw> for Player {
-    const MIN_SERIALIZED_SIZE: usize = <GameType>::MIN_SERIALIZED_SIZE
-      + <GameType>::MIN_SERIALIZED_SIZE
-      + <i64>::MIN_SERIALIZED_SIZE
-      + <String>::MIN_SERIALIZED_SIZE
-      + <u32>::MIN_SERIALIZED_SIZE
-      + <Item>::MIN_SERIALIZED_SIZE
-      + <String>::MIN_SERIALIZED_SIZE
-      + <i64>::MIN_SERIALIZED_SIZE
-      + <i64>::MIN_SERIALIZED_SIZE
-      + <i64>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <u32>::MIN_SERIALIZED_SIZE
-      + <f32>::MIN_SERIALIZED_SIZE
-      + <f32>::MIN_SERIALIZED_SIZE
-      + <u32>::MIN_SERIALIZED_SIZE
-      + <u32>::MIN_SERIALIZED_SIZE
-      + <f32>::MIN_SERIALIZED_SIZE
-      + <i32>::MIN_SERIALIZED_SIZE
-      + <i32>::MIN_SERIALIZED_SIZE
-      + <::std::vec::Vec<Item>>::MIN_SERIALIZED_SIZE
-      + <::std::vec::Vec<Item>>::MIN_SERIALIZED_SIZE
-      + <Abilities>::MIN_SERIALIZED_SIZE
-      + <Vector3d>::MIN_SERIALIZED_SIZE
-      + <Vehicle>::MIN_SERIALIZED_SIZE
-      + <Entity>::MIN_SERIALIZED_SIZE
-      + <Entity>::MIN_SERIALIZED_SIZE
-      + <bool>::MIN_SERIALIZED_SIZE
-      + <RecipeBook>::MIN_SERIALIZED_SIZE;
-
-    #[inline]
-    fn serialized_size(&self) -> usize {
-      self.game_type.serialized_size()
-        + self.previous_game_type.serialized_size()
-        + self.score.serialized_size()
-        + self.dimension.serialized_size()
-        + self.selected_item_slot.serialized_size()
-        + self.selected_item.serialized_size()
-        + self.spawn_dimension.serialized_size()
-        + self.spawn_x.serialized_size()
-        + self.spawn_y.serialized_size()
-        + self.spawn_z.serialized_size()
-        + self.spawn_forced.serialized_size()
-        + self.sleep_timer.serialized_size()
-        + self.food_exhaustion_level.serialized_size()
-        + self.food_saturation_level.serialized_size()
-        + self.food_tick_timer.serialized_size()
-        + self.xp_level.serialized_size()
-        + self.xp_p.serialized_size()
-        + self.xp_total.serialized_size()
-        + self.xp_seed.serialized_size()
-        + self.inventory.serialized_size()
-        + self.ender_items.serialized_size()
-        + self.abilities.serialized_size()
-        + self.entered_nether_position.serialized_size()
-        + self.root_vehicle.serialized_size()
-        + self.shoulder_entity_left.serialized_size()
-        + self.shoulder_entity_right.serialized_size()
-        + self.seen_credits.serialized_size()
-        + self.recipe_book.serialized_size()
-    }
-
-    #[allow(unaligned_references)]
-    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-      Ok(
-        self.game_type._serialize_chained(dest)?
-          + self.previous_game_type._serialize_chained(dest)?
-          + self.score._serialize_chained(dest)?
-          + self.dimension._serialize_chained(dest)?
-          + self.selected_item_slot._serialize_chained(dest)?
-          + self.selected_item._serialize_chained(dest)?
-          + self.spawn_dimension._serialize_chained(dest)?
-          + self.spawn_x._serialize_chained(dest)?
-          + self.spawn_y._serialize_chained(dest)?
-          + self.spawn_z._serialize_chained(dest)?
-          + self.spawn_forced._serialize_chained(dest)?
-          + self.sleep_timer._serialize_chained(dest)?
-          + self.food_exhaustion_level._serialize_chained(dest)?
-          + self.food_saturation_level._serialize_chained(dest)?
-          + self.food_tick_timer._serialize_chained(dest)?
-          + self.xp_level._serialize_chained(dest)?
-          + self.xp_p._serialize_chained(dest)?
-          + self.xp_total._serialize_chained(dest)?
-          + self.xp_seed._serialize_chained(dest)?
-          + self.inventory._serialize_chained(dest)?
-          + self.ender_items._serialize_chained(dest)?
-          + self.abilities._serialize_chained(dest)?
-          + self.entered_nether_position._serialize_chained(dest)?
-          + self.root_vehicle._serialize_chained(dest)?
-          + self.shoulder_entity_left._serialize_chained(dest)?
-          + self.shoulder_entity_right._serialize_chained(dest)?
-          + self.seen_credits._serialize_chained(dest)?
-          + self.recipe_book._serialize_chained(dest)?,
-      )
-    }
-
-    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-      let mut i = 0;
-      if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-        let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-        return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-      }
-
-      let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v16) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v17) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v18) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v19) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v20) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v21) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v22) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v23) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v24) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v25) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v26) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-      let (read, v27) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-
-      Ok((
-        i,
-        Self {
-          game_type: v0,
-          previous_game_type: v1,
-          score: v2,
-          dimension: v3,
-          selected_item_slot: v4,
-          selected_item: v5,
-          spawn_dimension: v6,
-          spawn_x: v7,
-          spawn_y: v8,
-          spawn_z: v9,
-          spawn_forced: v10,
-          sleep_timer: v11,
-          food_exhaustion_level: v12,
-          food_saturation_level: v13,
-          food_tick_timer: v14,
-          xp_level: v15,
-          xp_p: v16,
-          xp_total: v17,
-          xp_seed: v18,
-          inventory: v19,
-          ender_items: v20,
-          abilities: v21,
-          entered_nether_position: v22,
-          root_vehicle: v23,
-          shoulder_entity_left: v24,
-          shoulder_entity_right: v25,
-          seen_credits: v26,
-          recipe_book: v27,
-        },
-      ))
-    }
-  }
-
-  impl<'raw> ::bebop::Record<'raw> for Player {}
-
-  #[derive(Clone, Debug, PartialEq)]
-  pub struct Players {
-    pub players_: ::std::vec::Vec<Player>,
-  }
-
-  impl<'raw> ::core::convert::From<super::Players<'raw>> for Players {
-    fn from(value: super::Players) -> Self {
-      Self {
-        players_: value
-          .players_
-          .into_iter()
-          .map(|value| value.into())
-          .collect(),
-      }
-    }
-  }
-
-  impl<'raw> ::bebop::SubRecord<'raw> for Players {
-    const MIN_SERIALIZED_SIZE: usize = <::std::vec::Vec<Player>>::MIN_SERIALIZED_SIZE;
-
-    #[inline]
-    fn serialized_size(&self) -> usize {
-      self.players_.serialized_size()
-    }
-
-    #[allow(unaligned_references)]
-    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-      Ok(self.players_._serialize_chained(dest)?)
-    }
-
-    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
-      let mut i = 0;
-      if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
-        let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
-        return Err(::bebop::DeserializeError::MoreDataExpected(missing));
-      }
-
-      let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
-      i += read;
-
-      Ok((i, Self { players_: v0 }))
-    }
-  }
-
-  impl<'raw> ::bebop::Record<'raw> for Players {}
+    pub recipe_book: RecipeBook<'raw>,
 }
+
+impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
+    const MIN_SERIALIZED_SIZE: usize =
+        <GameType>::MIN_SERIALIZED_SIZE +
+        <GameType>::MIN_SERIALIZED_SIZE +
+        <i64>::MIN_SERIALIZED_SIZE +
+        <&'raw str>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <Item<'raw>>::MIN_SERIALIZED_SIZE +
+        <&'raw str>::MIN_SERIALIZED_SIZE +
+        <i64>::MIN_SERIALIZED_SIZE +
+        <i64>::MIN_SERIALIZED_SIZE +
+        <i64>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <f32>::MIN_SERIALIZED_SIZE +
+        <f32>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <u32>::MIN_SERIALIZED_SIZE +
+        <f32>::MIN_SERIALIZED_SIZE +
+        <i32>::MIN_SERIALIZED_SIZE +
+        <i32>::MIN_SERIALIZED_SIZE +
+        <::std::vec::Vec<Item<'raw>>>::MIN_SERIALIZED_SIZE +
+        <::std::vec::Vec<Item<'raw>>>::MIN_SERIALIZED_SIZE +
+        <Abilities>::MIN_SERIALIZED_SIZE +
+        <Vector3d>::MIN_SERIALIZED_SIZE +
+        <Vehicle<'raw>>::MIN_SERIALIZED_SIZE +
+        <Entity<'raw>>::MIN_SERIALIZED_SIZE +
+        <Entity<'raw>>::MIN_SERIALIZED_SIZE +
+        <bool>::MIN_SERIALIZED_SIZE +
+        <RecipeBook<'raw>>::MIN_SERIALIZED_SIZE;
+
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        self.game_type.serialized_size() +
+        self.previous_game_type.serialized_size() +
+        self.score.serialized_size() +
+        self.dimension.serialized_size() +
+        self.selected_item_slot.serialized_size() +
+        self.selected_item.serialized_size() +
+        self.spawn_dimension.serialized_size() +
+        self.spawn_x.serialized_size() +
+        self.spawn_y.serialized_size() +
+        self.spawn_z.serialized_size() +
+        self.spawn_forced.serialized_size() +
+        self.sleep_timer.serialized_size() +
+        self.food_exhaustion_level.serialized_size() +
+        self.food_saturation_level.serialized_size() +
+        self.food_tick_timer.serialized_size() +
+        self.xp_level.serialized_size() +
+        self.xp_p.serialized_size() +
+        self.xp_total.serialized_size() +
+        self.xp_seed.serialized_size() +
+        self.inventory.serialized_size() +
+        self.ender_items.serialized_size() +
+        self.abilities.serialized_size() +
+        self.entered_nether_position.serialized_size() +
+        self.root_vehicle.serialized_size() +
+        self.shoulder_entity_left.serialized_size() +
+        self.shoulder_entity_right.serialized_size() +
+        self.seen_credits.serialized_size() +
+        self.recipe_book.serialized_size()
+    }
+
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.game_type._serialize_chained(dest)? +
+            self.previous_game_type._serialize_chained(dest)? +
+            self.score._serialize_chained(dest)? +
+            self.dimension._serialize_chained(dest)? +
+            self.selected_item_slot._serialize_chained(dest)? +
+            self.selected_item._serialize_chained(dest)? +
+            self.spawn_dimension._serialize_chained(dest)? +
+            self.spawn_x._serialize_chained(dest)? +
+            self.spawn_y._serialize_chained(dest)? +
+            self.spawn_z._serialize_chained(dest)? +
+            self.spawn_forced._serialize_chained(dest)? +
+            self.sleep_timer._serialize_chained(dest)? +
+            self.food_exhaustion_level._serialize_chained(dest)? +
+            self.food_saturation_level._serialize_chained(dest)? +
+            self.food_tick_timer._serialize_chained(dest)? +
+            self.xp_level._serialize_chained(dest)? +
+            self.xp_p._serialize_chained(dest)? +
+            self.xp_total._serialize_chained(dest)? +
+            self.xp_seed._serialize_chained(dest)? +
+            self.inventory._serialize_chained(dest)? +
+            self.ender_items._serialize_chained(dest)? +
+            self.abilities._serialize_chained(dest)? +
+            self.entered_nether_position._serialize_chained(dest)? +
+            self.root_vehicle._serialize_chained(dest)? +
+            self.shoulder_entity_left._serialize_chained(dest)? +
+            self.shoulder_entity_right._serialize_chained(dest)? +
+            self.seen_credits._serialize_chained(dest)? +
+            self.recipe_book._serialize_chained(dest)?
+        )
+    }
+
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v16) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v17) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v18) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v19) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v20) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v21) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v22) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v23) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v24) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v25) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v26) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+        let (read, v27) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            game_type: v0,
+            previous_game_type: v1,
+            score: v2,
+            dimension: v3,
+            selected_item_slot: v4,
+            selected_item: v5,
+            spawn_dimension: v6,
+            spawn_x: v7,
+            spawn_y: v8,
+            spawn_z: v9,
+            spawn_forced: v10,
+            sleep_timer: v11,
+            food_exhaustion_level: v12,
+            food_saturation_level: v13,
+            food_tick_timer: v14,
+            xp_level: v15,
+            xp_p: v16,
+            xp_total: v17,
+            xp_seed: v18,
+            inventory: v19,
+            ender_items: v20,
+            abilities: v21,
+            entered_nether_position: v22,
+            root_vehicle: v23,
+            shoulder_entity_left: v24,
+            shoulder_entity_right: v25,
+            seen_credits: v26,
+            recipe_book: v27,
+        }))
+    }
+}
+
+impl<'raw> ::bebop::Record<'raw> for Player<'raw> {}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Players<'raw> {
+    pub players_: ::std::vec::Vec<Player<'raw>>,
+}
+
+impl<'raw> ::bebop::SubRecord<'raw> for Players<'raw> {
+    const MIN_SERIALIZED_SIZE: usize =
+        <::std::vec::Vec<Player<'raw>>>::MIN_SERIALIZED_SIZE;
+
+    #[inline]
+    fn serialized_size(&self) -> usize {
+        self.players_.serialized_size()
+    }
+
+    #[allow(unaligned_references)]
+    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+        Ok(
+            self.players_._serialize_chained(dest)?
+        )
+    }
+
+    fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+        let mut i = 0;
+        if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+            let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+            return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+        }
+
+        let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+        i += read;
+
+        Ok((i, Self {
+            players_: v0,
+        }))
+    }
+}
+
+impl<'raw> ::bebop::Record<'raw> for Players<'raw> {}
+
+#[cfg(feature = "bebop-owned-all")]
+pub mod owned {
+    #![allow(warnings)]
+
+    use ::std::io::Write as _;
+    use ::core::convert::TryInto as _;
+    use ::bebop::FixedSized as _;
+
+    pub use super::GameType;
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct Item {
+        pub count: i32,
+        pub slot: u32,
+        pub id: String,
+    }
+
+    impl<'raw> ::core::convert::From<super::Item<'raw>> for Item {
+        fn from(value: super::Item) -> Self {
+            Self {
+                count: value.count,
+                slot: value.slot,
+                id: value.id.into(),
+            }
+        }
+    }
+
+    impl<'raw> ::bebop::SubRecord<'raw> for Item {
+        const MIN_SERIALIZED_SIZE: usize =
+            <i32>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <String>::MIN_SERIALIZED_SIZE;
+
+        #[inline]
+        fn serialized_size(&self) -> usize {
+            self.count.serialized_size() +
+            self.slot.serialized_size() +
+            self.id.serialized_size()
+        }
+
+        #[allow(unaligned_references)]
+        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+            Ok(
+                self.count._serialize_chained(dest)? +
+                self.slot._serialize_chained(dest)? +
+                self.id._serialize_chained(dest)?
+            )
+        }
+
+        fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+            let mut i = 0;
+            if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+                let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+                return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+            }
+
+            let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+
+            Ok((i, Self {
+                count: v0,
+                slot: v1,
+                id: v2,
+            }))
+        }
+    }
+
+    impl<'raw> ::bebop::Record<'raw> for Item {}
+
+    pub use super::Abilities;
+
+    pub use super::Vector3D;
+
+    pub use super::Vector2F;
+
+    pub use super::Uuid;
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct Entity {
+        pub id: String,
+        pub pos: Vector3d,
+        pub motion: Vector3d,
+        pub rotation: Vector2f,
+        pub fall_distance: f32,
+        pub fire: u32,
+        pub air: u32,
+        pub on_ground: bool,
+        pub no_gravity: bool,
+        pub invulnerable: bool,
+        pub portal_cooldown: i32,
+        pub uuid: Uuid,
+        pub custom_name: String,
+        pub custom_name_visible: bool,
+        pub silent: bool,
+        pub glowing: bool,
+    }
+
+    impl<'raw> ::core::convert::From<super::Entity<'raw>> for Entity {
+        fn from(value: super::Entity) -> Self {
+            Self {
+                id: value.id.into(),
+                pos: value.pos,
+                motion: value.motion,
+                rotation: value.rotation,
+                fall_distance: value.fall_distance,
+                fire: value.fire,
+                air: value.air,
+                on_ground: value.on_ground,
+                no_gravity: value.no_gravity,
+                invulnerable: value.invulnerable,
+                portal_cooldown: value.portal_cooldown,
+                uuid: value.uuid,
+                custom_name: value.custom_name.into(),
+                custom_name_visible: value.custom_name_visible,
+                silent: value.silent,
+                glowing: value.glowing,
+            }
+        }
+    }
+
+    impl<'raw> ::bebop::SubRecord<'raw> for Entity {
+        const MIN_SERIALIZED_SIZE: usize =
+            <String>::MIN_SERIALIZED_SIZE +
+            <Vector3d>::MIN_SERIALIZED_SIZE +
+            <Vector3d>::MIN_SERIALIZED_SIZE +
+            <Vector2f>::MIN_SERIALIZED_SIZE +
+            <f32>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <i32>::MIN_SERIALIZED_SIZE +
+            <Uuid>::MIN_SERIALIZED_SIZE +
+            <String>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE;
+
+        #[inline]
+        fn serialized_size(&self) -> usize {
+            self.id.serialized_size() +
+            self.pos.serialized_size() +
+            self.motion.serialized_size() +
+            self.rotation.serialized_size() +
+            self.fall_distance.serialized_size() +
+            self.fire.serialized_size() +
+            self.air.serialized_size() +
+            self.on_ground.serialized_size() +
+            self.no_gravity.serialized_size() +
+            self.invulnerable.serialized_size() +
+            self.portal_cooldown.serialized_size() +
+            self.uuid.serialized_size() +
+            self.custom_name.serialized_size() +
+            self.custom_name_visible.serialized_size() +
+            self.silent.serialized_size() +
+            self.glowing.serialized_size()
+        }
+
+        #[allow(unaligned_references)]
+        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+            Ok(
+                self.id._serialize_chained(dest)? +
+                self.pos._serialize_chained(dest)? +
+                self.motion._serialize_chained(dest)? +
+                self.rotation._serialize_chained(dest)? +
+                self.fall_distance._serialize_chained(dest)? +
+                self.fire._serialize_chained(dest)? +
+                self.air._serialize_chained(dest)? +
+                self.on_ground._serialize_chained(dest)? +
+                self.no_gravity._serialize_chained(dest)? +
+                self.invulnerable._serialize_chained(dest)? +
+                self.portal_cooldown._serialize_chained(dest)? +
+                self.uuid._serialize_chained(dest)? +
+                self.custom_name._serialize_chained(dest)? +
+                self.custom_name_visible._serialize_chained(dest)? +
+                self.silent._serialize_chained(dest)? +
+                self.glowing._serialize_chained(dest)?
+            )
+        }
+
+        fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+            let mut i = 0;
+            if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+                let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+                return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+            }
+
+            let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+
+            Ok((i, Self {
+                id: v0,
+                pos: v1,
+                motion: v2,
+                rotation: v3,
+                fall_distance: v4,
+                fire: v5,
+                air: v6,
+                on_ground: v7,
+                no_gravity: v8,
+                invulnerable: v9,
+                portal_cooldown: v10,
+                uuid: v11,
+                custom_name: v12,
+                custom_name_visible: v13,
+                silent: v14,
+                glowing: v15,
+            }))
+        }
+    }
+
+    impl<'raw> ::bebop::Record<'raw> for Entity {}
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct RecipeBook {
+        pub recipes: ::std::vec::Vec<String>,
+        pub to_be_displayed: ::std::vec::Vec<String>,
+        pub is_filtering_craftable: bool,
+        pub is_gui_open: bool,
+        pub is_furnace_filtering_craftable: bool,
+        pub is_furnace_gui_open: bool,
+        pub is_blasting_furnace_filtering_craftable: bool,
+        pub is_blasting_furnace_gui_open: bool,
+        pub is_smoker_filtering_craftable: bool,
+        pub is_smoker_gui_open: bool,
+    }
+
+    impl<'raw> ::core::convert::From<super::RecipeBook<'raw>> for RecipeBook {
+        fn from(value: super::RecipeBook) -> Self {
+            Self {
+                recipes: value.recipes.into_iter().map(|value| value.into()).collect(),
+                to_be_displayed: value.to_be_displayed.into_iter().map(|value| value.into()).collect(),
+                is_filtering_craftable: value.is_filtering_craftable,
+                is_gui_open: value.is_gui_open,
+                is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
+                is_furnace_gui_open: value.is_furnace_gui_open,
+                is_blasting_furnace_filtering_craftable: value.is_blasting_furnace_filtering_craftable,
+                is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
+                is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
+                is_smoker_gui_open: value.is_smoker_gui_open,
+            }
+        }
+    }
+
+    impl<'raw> ::bebop::SubRecord<'raw> for RecipeBook {
+        const MIN_SERIALIZED_SIZE: usize =
+            <::std::vec::Vec<String>>::MIN_SERIALIZED_SIZE +
+            <::std::vec::Vec<String>>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE;
+
+        #[inline]
+        fn serialized_size(&self) -> usize {
+            self.recipes.serialized_size() +
+            self.to_be_displayed.serialized_size() +
+            self.is_filtering_craftable.serialized_size() +
+            self.is_gui_open.serialized_size() +
+            self.is_furnace_filtering_craftable.serialized_size() +
+            self.is_furnace_gui_open.serialized_size() +
+            self.is_blasting_furnace_filtering_craftable.serialized_size() +
+            self.is_blasting_furnace_gui_open.serialized_size() +
+            self.is_smoker_filtering_craftable.serialized_size() +
+            self.is_smoker_gui_open.serialized_size()
+        }
+
+        #[allow(unaligned_references)]
+        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+            Ok(
+                self.recipes._serialize_chained(dest)? +
+                self.to_be_displayed._serialize_chained(dest)? +
+                self.is_filtering_craftable._serialize_chained(dest)? +
+                self.is_gui_open._serialize_chained(dest)? +
+                self.is_furnace_filtering_craftable._serialize_chained(dest)? +
+                self.is_furnace_gui_open._serialize_chained(dest)? +
+                self.is_blasting_furnace_filtering_craftable._serialize_chained(dest)? +
+                self.is_blasting_furnace_gui_open._serialize_chained(dest)? +
+                self.is_smoker_filtering_craftable._serialize_chained(dest)? +
+                self.is_smoker_gui_open._serialize_chained(dest)?
+            )
+        }
+
+        fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+            let mut i = 0;
+            if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+                let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+                return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+            }
+
+            let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+
+            Ok((i, Self {
+                recipes: v0,
+                to_be_displayed: v1,
+                is_filtering_craftable: v2,
+                is_gui_open: v3,
+                is_furnace_filtering_craftable: v4,
+                is_furnace_gui_open: v5,
+                is_blasting_furnace_filtering_craftable: v6,
+                is_blasting_furnace_gui_open: v7,
+                is_smoker_filtering_craftable: v8,
+                is_smoker_gui_open: v9,
+            }))
+        }
+    }
+
+    impl<'raw> ::bebop::Record<'raw> for RecipeBook {}
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct Vehicle {
+        pub uuid: Uuid,
+        pub entity: Entity,
+    }
+
+    impl<'raw> ::core::convert::From<super::Vehicle<'raw>> for Vehicle {
+        fn from(value: super::Vehicle) -> Self {
+            Self {
+                uuid: value.uuid,
+                entity: value.entity.into(),
+            }
+        }
+    }
+
+    impl<'raw> ::bebop::SubRecord<'raw> for Vehicle {
+        const MIN_SERIALIZED_SIZE: usize =
+            <Uuid>::MIN_SERIALIZED_SIZE +
+            <Entity>::MIN_SERIALIZED_SIZE;
+
+        #[inline]
+        fn serialized_size(&self) -> usize {
+            self.uuid.serialized_size() +
+            self.entity.serialized_size()
+        }
+
+        #[allow(unaligned_references)]
+        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+            Ok(
+                self.uuid._serialize_chained(dest)? +
+                self.entity._serialize_chained(dest)?
+            )
+        }
+
+        fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+            let mut i = 0;
+            if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+                let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+                return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+            }
+
+            let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+
+            Ok((i, Self {
+                uuid: v0,
+                entity: v1,
+            }))
+        }
+    }
+
+    impl<'raw> ::bebop::Record<'raw> for Vehicle {}
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct Player {
+        pub game_type: GameType,
+        pub previous_game_type: GameType,
+        pub score: i64,
+        pub dimension: String,
+        pub selected_item_slot: u32,
+        pub selected_item: Item,
+        pub spawn_dimension: String,
+        pub spawn_x: i64,
+        pub spawn_y: i64,
+        pub spawn_z: i64,
+        pub spawn_forced: bool,
+        pub sleep_timer: u32,
+        pub food_exhaustion_level: f32,
+        pub food_saturation_level: f32,
+        pub food_tick_timer: u32,
+        pub xp_level: u32,
+        pub xp_p: f32,
+        pub xp_total: i32,
+        pub xp_seed: i32,
+        pub inventory: ::std::vec::Vec<Item>,
+        pub ender_items: ::std::vec::Vec<Item>,
+        pub abilities: Abilities,
+        pub entered_nether_position: Vector3d,
+        pub root_vehicle: Vehicle,
+        pub shoulder_entity_left: Entity,
+        pub shoulder_entity_right: Entity,
+        pub seen_credits: bool,
+        pub recipe_book: RecipeBook,
+    }
+
+    impl<'raw> ::core::convert::From<super::Player<'raw>> for Player {
+        fn from(value: super::Player) -> Self {
+            Self {
+                game_type: value.game_type,
+                previous_game_type: value.previous_game_type,
+                score: value.score,
+                dimension: value.dimension.into(),
+                selected_item_slot: value.selected_item_slot,
+                selected_item: value.selected_item.into(),
+                spawn_dimension: value.spawn_dimension.into(),
+                spawn_x: value.spawn_x,
+                spawn_y: value.spawn_y,
+                spawn_z: value.spawn_z,
+                spawn_forced: value.spawn_forced,
+                sleep_timer: value.sleep_timer,
+                food_exhaustion_level: value.food_exhaustion_level,
+                food_saturation_level: value.food_saturation_level,
+                food_tick_timer: value.food_tick_timer,
+                xp_level: value.xp_level,
+                xp_p: value.xp_p,
+                xp_total: value.xp_total,
+                xp_seed: value.xp_seed,
+                inventory: value.inventory.into_iter().map(|value| value.into()).collect(),
+                ender_items: value.ender_items.into_iter().map(|value| value.into()).collect(),
+                abilities: value.abilities,
+                entered_nether_position: value.entered_nether_position,
+                root_vehicle: value.root_vehicle.into(),
+                shoulder_entity_left: value.shoulder_entity_left.into(),
+                shoulder_entity_right: value.shoulder_entity_right.into(),
+                seen_credits: value.seen_credits,
+                recipe_book: value.recipe_book.into(),
+            }
+        }
+    }
+
+    impl<'raw> ::bebop::SubRecord<'raw> for Player {
+        const MIN_SERIALIZED_SIZE: usize =
+            <GameType>::MIN_SERIALIZED_SIZE +
+            <GameType>::MIN_SERIALIZED_SIZE +
+            <i64>::MIN_SERIALIZED_SIZE +
+            <String>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <Item>::MIN_SERIALIZED_SIZE +
+            <String>::MIN_SERIALIZED_SIZE +
+            <i64>::MIN_SERIALIZED_SIZE +
+            <i64>::MIN_SERIALIZED_SIZE +
+            <i64>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <f32>::MIN_SERIALIZED_SIZE +
+            <f32>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <u32>::MIN_SERIALIZED_SIZE +
+            <f32>::MIN_SERIALIZED_SIZE +
+            <i32>::MIN_SERIALIZED_SIZE +
+            <i32>::MIN_SERIALIZED_SIZE +
+            <::std::vec::Vec<Item>>::MIN_SERIALIZED_SIZE +
+            <::std::vec::Vec<Item>>::MIN_SERIALIZED_SIZE +
+            <Abilities>::MIN_SERIALIZED_SIZE +
+            <Vector3d>::MIN_SERIALIZED_SIZE +
+            <Vehicle>::MIN_SERIALIZED_SIZE +
+            <Entity>::MIN_SERIALIZED_SIZE +
+            <Entity>::MIN_SERIALIZED_SIZE +
+            <bool>::MIN_SERIALIZED_SIZE +
+            <RecipeBook>::MIN_SERIALIZED_SIZE;
+
+        #[inline]
+        fn serialized_size(&self) -> usize {
+            self.game_type.serialized_size() +
+            self.previous_game_type.serialized_size() +
+            self.score.serialized_size() +
+            self.dimension.serialized_size() +
+            self.selected_item_slot.serialized_size() +
+            self.selected_item.serialized_size() +
+            self.spawn_dimension.serialized_size() +
+            self.spawn_x.serialized_size() +
+            self.spawn_y.serialized_size() +
+            self.spawn_z.serialized_size() +
+            self.spawn_forced.serialized_size() +
+            self.sleep_timer.serialized_size() +
+            self.food_exhaustion_level.serialized_size() +
+            self.food_saturation_level.serialized_size() +
+            self.food_tick_timer.serialized_size() +
+            self.xp_level.serialized_size() +
+            self.xp_p.serialized_size() +
+            self.xp_total.serialized_size() +
+            self.xp_seed.serialized_size() +
+            self.inventory.serialized_size() +
+            self.ender_items.serialized_size() +
+            self.abilities.serialized_size() +
+            self.entered_nether_position.serialized_size() +
+            self.root_vehicle.serialized_size() +
+            self.shoulder_entity_left.serialized_size() +
+            self.shoulder_entity_right.serialized_size() +
+            self.seen_credits.serialized_size() +
+            self.recipe_book.serialized_size()
+        }
+
+        #[allow(unaligned_references)]
+        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+            Ok(
+                self.game_type._serialize_chained(dest)? +
+                self.previous_game_type._serialize_chained(dest)? +
+                self.score._serialize_chained(dest)? +
+                self.dimension._serialize_chained(dest)? +
+                self.selected_item_slot._serialize_chained(dest)? +
+                self.selected_item._serialize_chained(dest)? +
+                self.spawn_dimension._serialize_chained(dest)? +
+                self.spawn_x._serialize_chained(dest)? +
+                self.spawn_y._serialize_chained(dest)? +
+                self.spawn_z._serialize_chained(dest)? +
+                self.spawn_forced._serialize_chained(dest)? +
+                self.sleep_timer._serialize_chained(dest)? +
+                self.food_exhaustion_level._serialize_chained(dest)? +
+                self.food_saturation_level._serialize_chained(dest)? +
+                self.food_tick_timer._serialize_chained(dest)? +
+                self.xp_level._serialize_chained(dest)? +
+                self.xp_p._serialize_chained(dest)? +
+                self.xp_total._serialize_chained(dest)? +
+                self.xp_seed._serialize_chained(dest)? +
+                self.inventory._serialize_chained(dest)? +
+                self.ender_items._serialize_chained(dest)? +
+                self.abilities._serialize_chained(dest)? +
+                self.entered_nether_position._serialize_chained(dest)? +
+                self.root_vehicle._serialize_chained(dest)? +
+                self.shoulder_entity_left._serialize_chained(dest)? +
+                self.shoulder_entity_right._serialize_chained(dest)? +
+                self.seen_credits._serialize_chained(dest)? +
+                self.recipe_book._serialize_chained(dest)?
+            )
+        }
+
+        fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+            let mut i = 0;
+            if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+                let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+                return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+            }
+
+            let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v1) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v2) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v3) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v4) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v5) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v6) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v7) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v8) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v9) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v10) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v11) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v12) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v13) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v14) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v15) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v16) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v17) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v18) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v19) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v20) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v21) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v22) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v23) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v24) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v25) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v26) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+            let (read, v27) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+
+            Ok((i, Self {
+                game_type: v0,
+                previous_game_type: v1,
+                score: v2,
+                dimension: v3,
+                selected_item_slot: v4,
+                selected_item: v5,
+                spawn_dimension: v6,
+                spawn_x: v7,
+                spawn_y: v8,
+                spawn_z: v9,
+                spawn_forced: v10,
+                sleep_timer: v11,
+                food_exhaustion_level: v12,
+                food_saturation_level: v13,
+                food_tick_timer: v14,
+                xp_level: v15,
+                xp_p: v16,
+                xp_total: v17,
+                xp_seed: v18,
+                inventory: v19,
+                ender_items: v20,
+                abilities: v21,
+                entered_nether_position: v22,
+                root_vehicle: v23,
+                shoulder_entity_left: v24,
+                shoulder_entity_right: v25,
+                seen_credits: v26,
+                recipe_book: v27,
+            }))
+        }
+    }
+
+    impl<'raw> ::bebop::Record<'raw> for Player {}
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct Players {
+        pub players_: ::std::vec::Vec<Player>,
+    }
+
+    impl<'raw> ::core::convert::From<super::Players<'raw>> for Players {
+        fn from(value: super::Players) -> Self {
+            Self {
+                players_: value.players_.into_iter().map(|value| value.into()).collect(),
+            }
+        }
+    }
+
+    impl<'raw> ::bebop::SubRecord<'raw> for Players {
+        const MIN_SERIALIZED_SIZE: usize =
+            <::std::vec::Vec<Player>>::MIN_SERIALIZED_SIZE;
+
+        #[inline]
+        fn serialized_size(&self) -> usize {
+            self.players_.serialized_size()
+        }
+
+        #[allow(unaligned_references)]
+        fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
+            Ok(
+                self.players_._serialize_chained(dest)?
+            )
+        }
+
+        fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
+            let mut i = 0;
+            if raw.len() - i < Self::MIN_SERIALIZED_SIZE {
+                let missing = Self::MIN_SERIALIZED_SIZE - (raw.len() - i);
+                return Err(::bebop::DeserializeError::MoreDataExpected(missing));
+            }
+
+            let (read, v0) = ::bebop::SubRecord::_deserialize_chained(&raw[i..])?;
+            i += read;
+
+            Ok((i, Self {
+                players_: v0,
+            }))
+        }
+    }
+
+    impl<'raw> ::bebop::Record<'raw> for Players {}}
