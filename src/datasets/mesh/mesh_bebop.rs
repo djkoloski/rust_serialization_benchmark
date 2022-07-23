@@ -3,7 +3,7 @@
 //
 //
 //   bebopc version:
-//       2.4.2
+//       2.4.5
 //
 //
 //   bebopc source:
@@ -39,6 +39,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Vector3 {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.x._serialize_chained(dest)?
             + self.y._serialize_chained(dest)?
@@ -92,6 +93,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Triangle {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.v0._serialize_chained(dest)?
             + self.v1._serialize_chained(dest)?
@@ -142,6 +144,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Mesh<'raw> {
         self.triangles.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.triangles._serialize_chained(dest)?)
     }
@@ -195,6 +198,7 @@ pub mod owned {
             self.triangles.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,

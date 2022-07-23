@@ -17,10 +17,9 @@ where
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(
-                data.write_to_buffer_with_ctx(CONTEXT, black_box(serialize_buffer.as_mut_slice()))
-                    .unwrap(),
-            );
+            data.write_to_buffer_with_ctx(CONTEXT, black_box(serialize_buffer.as_mut_slice()))
+                .unwrap();
+            black_box(());
         })
     });
 
@@ -29,7 +28,7 @@ where
     group.bench_function("deserialize", |b| {
         b.iter(|| {
             black_box(
-                T::read_from_buffer_with_ctx(CONTEXT, &black_box(deserialize_buffer.as_slice()))
+                T::read_from_buffer_with_ctx(CONTEXT, black_box(deserialize_buffer.as_slice()))
                     .unwrap(),
             );
         })

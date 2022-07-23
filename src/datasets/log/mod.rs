@@ -10,13 +10,6 @@ pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
 }
 
-#[cfg(feature = "capnp")]
-use crate::bench_capnp;
-#[cfg(feature = "flatbuffers")]
-use crate::bench_flatbuffers;
-#[cfg(feature = "prost")]
-use crate::bench_prost;
-use crate::Generate;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -26,6 +19,14 @@ pub use log_fb::log as fb;
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+use crate::Generate;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
@@ -166,13 +167,13 @@ pub struct LogSchema {
 
 impl Generate for Log {
     fn generate<R: Rng>(rand: &mut R) -> Self {
-        const USERID: [&'static str; 9] = [
+        const USERID: [&str; 9] = [
             "-", "alice", "bob", "carmen", "david", "eric", "frank", "george", "harry",
         ];
-        const MONTHS: [&'static str; 12] = [
+        const MONTHS: [&str; 12] = [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
         ];
-        const TIMEZONE: [&'static str; 25] = [
+        const TIMEZONE: [&str; 25] = [
             "-1200", "-1100", "-1000", "-0900", "-0800", "-0700", "-0600", "-0500", "-0400",
             "-0300", "-0200", "-0100", "+0000", "+0100", "+0200", "+0300", "+0400", "+0500",
             "+0600", "+0700", "+0800", "+0900", "+1000", "+1100", "+1200",
@@ -193,8 +194,8 @@ impl Generate for Log {
             411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431,
             451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511,
         ];
-        const METHODS: [&'static str; 5] = ["GET", "POST", "PUT", "UPDATE", "DELETE"];
-        const ROUTES: [&'static str; 7] = [
+        const METHODS: [&str; 5] = ["GET", "POST", "PUT", "UPDATE", "DELETE"];
+        const ROUTES: [&str; 7] = [
             "/favicon.ico",
             "/css/index.css",
             "/css/font-awsome.min.css",
@@ -203,7 +204,7 @@ impl Generate for Log {
             "/api/login",
             "/api/logout",
         ];
-        const PROTOCOLS: [&'static str; 4] = ["HTTP/1.0", "HTTP/1.1", "HTTP/2", "HTTP/3"];
+        const PROTOCOLS: [&str; 4] = ["HTTP/1.0", "HTTP/1.1", "HTTP/2", "HTTP/3"];
         let request = format!(
             "{} {} {}",
             METHODS[rand.gen_range(0..5)],

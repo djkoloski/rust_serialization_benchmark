@@ -1,5 +1,6 @@
-use bytecheck::CheckBytes;
 use core::pin::Pin;
+
+use bytecheck::CheckBytes;
 use criterion::{black_box, Criterion};
 use rkyv::{
     archived_value, archived_value_mut, check_archived_value,
@@ -76,21 +77,23 @@ where
 
     group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
-            black_box(unsafe {
+            unsafe {
                 read(archived_value::<T>(
                     black_box(deserialize_buffer.as_ref()),
                     black_box(pos),
                 ))
-            });
+            };
+            black_box(());
         })
     });
 
     group.bench_function("read (validated upfront with error)", |b| {
         b.iter(|| {
-            black_box(read(
+            read(
                 check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
                     .unwrap(),
-            ));
+            );
+            black_box(());
         })
     });
 

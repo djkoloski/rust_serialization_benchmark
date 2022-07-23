@@ -15,7 +15,8 @@ where
         b.iter(|| {
             serialize_buffer.clear();
             unsafe {
-                black_box(encode(data, black_box(&mut serialize_buffer)).unwrap());
+                encode(data, black_box(&mut serialize_buffer)).unwrap();
+                black_box(());
             }
         })
     });
@@ -34,7 +35,8 @@ where
     group.bench_function("read (unvalidated)", |b| {
         b.iter(|| unsafe {
             let (data, _) = decode::<T>(black_box(&mut deserialize_buffer)).unwrap();
-            black_box(read(data));
+            read(data);
+            black_box(());
         })
     });
 

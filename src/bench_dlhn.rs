@@ -13,19 +13,27 @@ where
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(
-                black_box(&data).serialize(&mut dlhn::ser::Serializer::new(&mut black_box(serialize_buffer.as_mut_slice()))).unwrap(),
-            );
+            black_box(&data)
+                .serialize(&mut dlhn::ser::Serializer::new(&mut black_box(
+                    serialize_buffer.as_mut_slice(),
+                )))
+                .unwrap();
+            black_box(());
         })
     });
 
     let mut deserialize_buffer = Vec::new();
-    data.serialize(&mut dlhn::ser::Serializer::new(&mut deserialize_buffer)).unwrap();
-
+    data.serialize(&mut dlhn::ser::Serializer::new(&mut deserialize_buffer))
+        .unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(<T>::deserialize(&mut dlhn::de::Deserializer::new(black_box(&mut deserialize_buffer.as_slice()))).unwrap());
+            black_box(
+                <T>::deserialize(&mut dlhn::de::Deserializer::new(black_box(
+                    &mut deserialize_buffer.as_slice(),
+                )))
+                .unwrap(),
+            );
         })
     });
 

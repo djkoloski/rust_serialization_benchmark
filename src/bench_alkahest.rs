@@ -16,7 +16,8 @@ where
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(size = alkahest::write::<T, _>(bytes, black_box(data)));
+            size = alkahest::write::<T, _>(bytes, black_box(data));
+            black_box(());
         })
     });
 
@@ -28,7 +29,8 @@ where
 
     group.bench_function("read (validated on-demand with panic)", |b| {
         b.iter(|| {
-            black_box(read(alkahest::read::<T>(black_box(&bytes[..size]))));
+            read(alkahest::read::<T>(black_box(&bytes[..size])));
+            black_box(());
         })
     });
 

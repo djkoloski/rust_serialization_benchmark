@@ -45,7 +45,7 @@ fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
 }
 
 fn main() {
-    const DATASETS: [&'static str; 3] = ["log", "mesh", "minecraft_savedata"];
+    const DATASETS: [&str; 3] = ["log", "mesh", "minecraft_savedata"];
     for &name in DATASETS.iter() {
         bebop_compile_dataset(name);
         capnpc_compile_dataset(name).unwrap();

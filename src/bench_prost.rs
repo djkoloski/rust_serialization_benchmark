@@ -20,7 +20,8 @@ where
     group.bench_function("serialize (populate + encode)", |b| {
         b.iter(|| {
             black_box(&mut serialize_buffer).clear();
-            black_box(data.serialize_pb().encode(&mut serialize_buffer).unwrap());
+            data.serialize_pb().encode(&mut serialize_buffer).unwrap();
+            black_box(());
         })
     });
 
@@ -28,7 +29,8 @@ where
     group.bench_function("serialize (encode)", |b| {
         b.iter(|| {
             black_box(&mut serialize_buffer).clear();
-            black_box(message.encode(&mut serialize_buffer).unwrap());
+            message.encode(&mut serialize_buffer).unwrap();
+            black_box(());
         })
     });
 

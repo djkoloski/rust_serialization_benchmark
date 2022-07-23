@@ -8,13 +8,6 @@ pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
 }
 
-#[cfg(feature = "capnp")]
-use crate::bench_capnp;
-#[cfg(feature = "flatbuffers")]
-use crate::bench_flatbuffers;
-#[cfg(feature = "prost")]
-use crate::bench_prost;
-use crate::{generate_vec, Generate};
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -26,6 +19,14 @@ use minecraft_savedata_prost as pb;
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+use crate::{generate_vec, Generate};
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
@@ -134,7 +135,7 @@ pub struct Item {
 
 impl Generate for Item {
     fn generate<R: Rng>(rng: &mut R) -> Self {
-        const IDS: [&'static str; 8] = [
+        const IDS: [&str; 8] = [
             "dirt",
             "stone",
             "pickaxe",
@@ -359,10 +360,10 @@ pub struct Entity {
 
 impl Generate for Entity {
     fn generate<R: Rng>(rng: &mut R) -> Self {
-        const IDS: [&'static str; 8] = [
+        const IDS: [&str; 8] = [
             "cow", "sheep", "zombie", "skeleton", "spider", "creeper", "parrot", "bee",
         ];
-        const CUSTOM_NAMES: [&'static str; 8] = [
+        const CUSTOM_NAMES: [&str; 8] = [
             "rainbow", "princess", "steve", "johnny", "missy", "coward", "fairy", "howard",
         ];
 
@@ -401,7 +402,7 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Entity {
         let custom_name = self
             .custom_name
             .as_ref()
-            .map(|name| fbb.create_string(&name));
+            .map(|name| fbb.create_string(name));
 
         let pos = fb::Vector3d::new(self.pos.0, self.pos.1, self.pos.2);
         let motion = fb::Vector3d::new(self.motion.0, self.motion.1, self.motion.2);
@@ -599,7 +600,7 @@ pub struct RecipeBook {
 
 impl Generate for RecipeBook {
     fn generate<R: Rng>(rng: &mut R) -> Self {
-        const RECIPES: [&'static str; 8] = [
+        const RECIPES: [&str; 8] = [
             "pickaxe",
             "torch",
             "bow",
@@ -830,7 +831,7 @@ const _: () = {
 
 impl Generate for Player {
     fn generate<R: Rng>(rng: &mut R) -> Self {
-        const DIMENSIONS: [&'static str; 3] = ["overworld", "nether", "end"];
+        const DIMENSIONS: [&str; 3] = ["overworld", "nether", "end"];
         const MAX_ITEMS: usize = 40;
         const MAX_ENDER_ITEMS: usize = 27;
         Self {
@@ -944,7 +945,7 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Player {
         builder.add_ender_items(ender_items);
         builder.add_abilities(&abilities);
         if let Some(ref entered_nether_position) = entered_nether_position {
-            builder.add_entered_nether_position(&entered_nether_position);
+            builder.add_entered_nether_position(entered_nether_position);
         }
         if let Some(root_vehicle) = root_vehicle {
             builder.add_root_vehicle(root_vehicle);

@@ -27,7 +27,8 @@ where
             black_box(&mut serialize_buffer).clear();
             let mut builder = capnp::message::Builder::new(&mut allocator);
             data.serialize_capnp(&mut builder.init_root::<T::Builder>());
-            black_box(capnp::serialize::write_message(&mut serialize_buffer, &builder).unwrap());
+            capnp::serialize::write_message(&mut serialize_buffer, &builder).unwrap();
+            black_box(());
         })
     });
 
@@ -51,7 +52,8 @@ where
 
     group.bench_function("read (validated on-demand with error)", |b| {
         b.iter(|| {
-            black_box(read(black_box(&mut deserialize_buffer.as_slice())));
+            read(black_box(&mut deserialize_buffer.as_slice()));
+            black_box(());
         })
     });
 

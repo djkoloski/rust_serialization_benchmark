@@ -55,11 +55,17 @@ pub fn bench<T>(
     });
 
     group.bench_function("read (unvalidated)", |b| {
-        b.iter(|| black_box(read_unverified(&black_box(deserialize_buffer))))
+        b.iter(|| {
+            read_unverified(black_box(deserialize_buffer));
+            black_box(())
+        })
     });
 
     group.bench_function("read (validated upfront with error)", |b| {
-        b.iter(|| black_box(read_verified(&black_box(deserialize_buffer))))
+        b.iter(|| {
+            read_verified(black_box(deserialize_buffer));
+            black_box(())
+        })
     });
 
     crate::bench_size(name, "flatbuffers", deserialize_buffer);

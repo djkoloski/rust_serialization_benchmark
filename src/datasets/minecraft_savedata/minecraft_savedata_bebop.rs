@@ -3,7 +3,7 @@
 //
 //
 //   bebopc version:
-//       2.4.2
+//       2.4.5
 //
 //
 //   bebopc source:
@@ -66,6 +66,7 @@ impl ::bebop::SubRecord<'_> for GameType {
     }
 
     #[inline]
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         u32::from(*self)._serialize_chained(dest)
     }
@@ -97,6 +98,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Item<'raw> {
         self.count.serialized_size() + self.slot.serialized_size() + self.id.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.count._serialize_chained(dest)?
             + self.slot._serialize_chained(dest)?
@@ -153,6 +155,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Abilities {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.walk_speed._serialize_chained(dest)?
             + self.fly_speed._serialize_chained(dest)?
@@ -221,6 +224,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Vector3D {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.x._serialize_chained(dest)?
             + self.y._serialize_chained(dest)?
@@ -272,6 +276,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Vector2F {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.x._serialize_chained(dest)? + self.y._serialize_chained(dest)?)
     }
@@ -314,6 +319,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Uuid {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.x0._serialize_chained(dest)?
             + self.x1._serialize_chained(dest)?
@@ -409,6 +415,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Entity<'raw> {
             + self.glowing.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.id._serialize_chained(dest)?
             + self.pos._serialize_chained(dest)?
@@ -536,6 +543,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for RecipeBook<'raw> {
             + self.is_smoker_gui_open.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.recipes._serialize_chained(dest)?
             + self.to_be_displayed._serialize_chained(dest)?
@@ -618,6 +626,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Vehicle<'raw> {
         self.uuid.serialized_size() + self.entity.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.uuid._serialize_chained(dest)? + self.entity._serialize_chained(dest)?)
     }
@@ -740,6 +749,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Player<'raw> {
             + self.recipe_book.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.game_type._serialize_chained(dest)?
             + self.previous_game_type._serialize_chained(dest)?
@@ -886,6 +896,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Players<'raw> {
         self.players_.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.players_._serialize_chained(dest)?)
     }
@@ -942,6 +953,7 @@ pub mod owned {
             self.count.serialized_size() + self.slot.serialized_size() + self.id.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,
@@ -1067,6 +1079,7 @@ pub mod owned {
                 + self.glowing.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,
@@ -1223,6 +1236,7 @@ pub mod owned {
                 + self.is_smoker_gui_open.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,
@@ -1317,6 +1331,7 @@ pub mod owned {
             self.uuid.serialized_size() + self.entity.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,
@@ -1485,6 +1500,7 @@ pub mod owned {
                 + self.recipe_book.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,
@@ -1646,6 +1662,7 @@ pub mod owned {
             self.players_.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,

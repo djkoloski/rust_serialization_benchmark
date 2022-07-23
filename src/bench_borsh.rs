@@ -12,10 +12,9 @@ where
     let mut serialize_buffer = vec![0u8; BUFFER_LEN];
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(
-                data.serialize(black_box(&mut serialize_buffer.as_mut_slice()))
-                    .unwrap(),
-            );
+            data.serialize(black_box(&mut serialize_buffer.as_mut_slice()))
+                .unwrap();
+            black_box(());
         })
     });
 

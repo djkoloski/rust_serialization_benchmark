@@ -3,7 +3,7 @@
 //
 //
 //   bebopc version:
-//       2.4.2
+//       2.4.5
 //
 //
 //   bebopc source:
@@ -40,6 +40,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Address {
         Self::SERIALIZED_SIZE
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.x0._serialize_chained(dest)?
             + self.x1._serialize_chained(dest)?
@@ -108,6 +109,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Log<'raw> {
             + self.size.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.address._serialize_chained(dest)?
             + self.identity._serialize_chained(dest)?
@@ -170,6 +172,7 @@ impl<'raw> ::bebop::SubRecord<'raw> for Logs<'raw> {
         self.logs_.serialized_size()
     }
 
+    #[allow(unaligned_references)]
     fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
         Ok(self.logs_._serialize_chained(dest)?)
     }
@@ -245,6 +248,7 @@ pub mod owned {
                 + self.size.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,
@@ -318,6 +322,7 @@ pub mod owned {
             self.logs_.serialized_size()
         }
 
+        #[allow(unaligned_references)]
         fn _serialize_chained<W: ::std::io::Write>(
             &self,
             dest: &mut W,

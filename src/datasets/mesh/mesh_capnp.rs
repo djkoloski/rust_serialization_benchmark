@@ -202,6 +202,7 @@ pub mod triangle {
     pub fn get_v0(self) -> ::capnp::Result<crate::datasets::mesh::mesh_capnp::vector3::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_v0(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -209,6 +210,7 @@ pub mod triangle {
     pub fn get_v1(self) -> ::capnp::Result<crate::datasets::mesh::mesh_capnp::vector3::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(1), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_v1(&self) -> bool {
       !self.reader.get_pointer_field(1).is_null()
     }
@@ -216,6 +218,7 @@ pub mod triangle {
     pub fn get_v2(self) -> ::capnp::Result<crate::datasets::mesh::mesh_capnp::vector3::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(2), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_v2(&self) -> bool {
       !self.reader.get_pointer_field(2).is_null()
     }
@@ -223,6 +226,7 @@ pub mod triangle {
     pub fn get_normal(self) -> ::capnp::Result<crate::datasets::mesh::mesh_capnp::vector3::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(3), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_normal(&self) -> bool {
       !self.reader.get_pointer_field(3).is_null()
     }
@@ -288,6 +292,7 @@ pub mod triangle {
     pub fn init_v0(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(0), 0)
     }
+    #[inline]
     pub fn has_v0(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }
@@ -303,6 +308,7 @@ pub mod triangle {
     pub fn init_v1(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(1), 0)
     }
+    #[inline]
     pub fn has_v1(&self) -> bool {
       !self.builder.get_pointer_field(1).is_null()
     }
@@ -318,6 +324,7 @@ pub mod triangle {
     pub fn init_v2(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(2), 0)
     }
+    #[inline]
     pub fn has_v2(&self) -> bool {
       !self.builder.get_pointer_field(2).is_null()
     }
@@ -333,6 +340,7 @@ pub mod triangle {
     pub fn init_normal(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(3), 0)
     }
+    #[inline]
     pub fn has_normal(&self) -> bool {
       !self.builder.get_pointer_field(3).is_null()
     }
@@ -415,6 +423,7 @@ pub mod mesh {
     pub fn get_triangles(self) -> ::capnp::Result<::capnp::struct_list::Reader<'a,crate::datasets::mesh::mesh_capnp::triangle::Owned>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_triangles(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -480,6 +489,7 @@ pub mod mesh {
     pub fn init_triangles(self, size: u32) -> ::capnp::struct_list::Builder<'a,crate::datasets::mesh::mesh_capnp::triangle::Owned> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(0), size)
     }
+    #[inline]
     pub fn has_triangles(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }

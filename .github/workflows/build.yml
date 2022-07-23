@@ -1,0 +1,61 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Cargo.toml'
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: build
+    strategy:
+      matrix:
+        # platform: [macos-latest,windows-latest,ubuntu-latest]
+        # platform: [windows-latest]
+        # platform: [macos-latest]
+        #python-version: [3.9]
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          submodules: true
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rust-src
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: build
+        shell: bash
+        run: |
+
+          wget "https://github.com/protocolbuffers/protobuf/releases/download/v21.3/protoc-21.3-linux-x86_64.zip" -O protoc.zip
+          unzip protoc.zip
+          chmod +x bin/protoc
+          mv bin/protoc /usr/local/bin
+
+          wget "https://github.com/google/flatbuffers/releases/download/v2.0.0/Linux.flatc.binary.clang++-9.zip" -O flatbuffers
+          unzip flatbuffers
+          chmod +x flatc
+          mv flatc /usr/local/bin
+
+          sudo apt-get install -y capnproto libprotobuf-dev
+
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
+          node update_benchmark.js
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

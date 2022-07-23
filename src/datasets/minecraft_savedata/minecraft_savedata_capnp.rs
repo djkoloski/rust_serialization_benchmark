@@ -4,7 +4,7 @@
 
 
 #[repr(u16)]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum GameType {
   Survival = 0,
   Creative = 1,
@@ -90,6 +90,7 @@ pub mod item {
     pub fn get_id(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_id(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -171,6 +172,7 @@ pub mod item {
     pub fn init_id(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(0).init_text(size)
     }
+    #[inline]
     pub fn has_id(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }
@@ -438,6 +440,7 @@ pub mod entity {
     pub fn get_id(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_id(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -489,6 +492,7 @@ pub mod entity {
     pub fn get_custom_name(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(1), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_custom_name(&self) -> bool {
       !self.reader.get_pointer_field(1).is_null()
     }
@@ -566,6 +570,7 @@ pub mod entity {
     pub fn init_id(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(0).init_text(size)
     }
+    #[inline]
     pub fn has_id(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }
@@ -681,6 +686,7 @@ pub mod entity {
     pub fn init_custom_name(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(1).init_text(size)
     }
+    #[inline]
     pub fn has_custom_name(&self) -> bool {
       !self.builder.get_pointer_field(1).is_null()
     }
@@ -1383,6 +1389,7 @@ pub mod recipe_book {
     pub fn get_recipes(self) -> ::capnp::Result<::capnp::text_list::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_recipes(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -1390,6 +1397,7 @@ pub mod recipe_book {
     pub fn get_to_be_displayed(self) -> ::capnp::Result<::capnp::text_list::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(1), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_to_be_displayed(&self) -> bool {
       !self.reader.get_pointer_field(1).is_null()
     }
@@ -1487,6 +1495,7 @@ pub mod recipe_book {
     pub fn init_recipes(self, size: u32) -> ::capnp::text_list::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(0), size)
     }
+    #[inline]
     pub fn has_recipes(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }
@@ -1502,6 +1511,7 @@ pub mod recipe_book {
     pub fn init_to_be_displayed(self, size: u32) -> ::capnp::text_list::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(1), size)
     }
+    #[inline]
     pub fn has_to_be_displayed(&self) -> bool {
       !self.builder.get_pointer_field(1).is_null()
     }
@@ -1648,6 +1658,7 @@ pub mod player {
     pub fn get_dimension(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_dimension(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -1659,6 +1670,7 @@ pub mod player {
     pub fn get_selected_item(self) -> ::capnp::Result<crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(1), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_selected_item(&self) -> bool {
       !self.reader.get_pointer_field(1).is_null()
     }
@@ -1710,6 +1722,7 @@ pub mod player {
     pub fn get_inventory(self) -> ::capnp::Result<::capnp::struct_list::Reader<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(3), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_inventory(&self) -> bool {
       !self.reader.get_pointer_field(3).is_null()
     }
@@ -1717,6 +1730,7 @@ pub mod player {
     pub fn get_ender_items(self) -> ::capnp::Result<::capnp::struct_list::Reader<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(4), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_ender_items(&self) -> bool {
       !self.reader.get_pointer_field(4).is_null()
     }
@@ -1724,6 +1738,7 @@ pub mod player {
     pub fn get_abilities(self) -> ::capnp::Result<crate::datasets::minecraft_savedata::minecraft_savedata_capnp::abilities::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(5), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_abilities(&self) -> bool {
       !self.reader.get_pointer_field(5).is_null()
     }
@@ -1751,6 +1766,7 @@ pub mod player {
     pub fn get_recipe_book(self) -> ::capnp::Result<crate::datasets::minecraft_savedata::minecraft_savedata_capnp::recipe_book::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(9), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_recipe_book(&self) -> bool {
       !self.reader.get_pointer_field(9).is_null()
     }
@@ -1840,6 +1856,7 @@ pub mod player {
     pub fn init_dimension(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(0).init_text(size)
     }
+    #[inline]
     pub fn has_dimension(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }
@@ -1863,6 +1880,7 @@ pub mod player {
     pub fn init_selected_item(self, ) -> crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(1), 0)
     }
+    #[inline]
     pub fn has_selected_item(&self) -> bool {
       !self.builder.get_pointer_field(1).is_null()
     }
@@ -1973,6 +1991,7 @@ pub mod player {
     pub fn init_inventory(self, size: u32) -> ::capnp::struct_list::Builder<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(3), size)
     }
+    #[inline]
     pub fn has_inventory(&self) -> bool {
       !self.builder.get_pointer_field(3).is_null()
     }
@@ -1988,6 +2007,7 @@ pub mod player {
     pub fn init_ender_items(self, size: u32) -> ::capnp::struct_list::Builder<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(4), size)
     }
+    #[inline]
     pub fn has_ender_items(&self) -> bool {
       !self.builder.get_pointer_field(4).is_null()
     }
@@ -2003,6 +2023,7 @@ pub mod player {
     pub fn init_abilities(self, ) -> crate::datasets::minecraft_savedata::minecraft_savedata_capnp::abilities::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(5), 0)
     }
+    #[inline]
     pub fn has_abilities(&self) -> bool {
       !self.builder.get_pointer_field(5).is_null()
     }
@@ -2072,6 +2093,7 @@ pub mod player {
     pub fn init_recipe_book(self, ) -> crate::datasets::minecraft_savedata::minecraft_savedata_capnp::recipe_book::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(9), 0)
     }
+    #[inline]
     pub fn has_recipe_book(&self) -> bool {
       !self.builder.get_pointer_field(9).is_null()
     }
@@ -2169,6 +2191,7 @@ pub mod player {
       pub fn total_size(&self) -> ::capnp::Result<::capnp::MessageSize> {
         self.reader.total_size()
       }
+      #[inline]
       pub fn has_some(&self) -> bool {
         if self.reader.get_data_field::<u16>(8) != 1 { return false; }
         !self.reader.get_pointer_field(2).is_null()
@@ -2253,6 +2276,7 @@ pub mod player {
         self.builder.set_data_field::<u16>(8, 1);
         self.builder.get_pointer_field(2).init_text(size)
       }
+      #[inline]
       pub fn has_some(&self) -> bool {
         if self.builder.get_data_field::<u16>(8) != 1 { return false; }
         !self.builder.get_pointer_field(2).is_null()
@@ -3141,6 +3165,7 @@ pub mod player {
         pub fn get_entity(self) -> ::capnp::Result<crate::datasets::minecraft_savedata::minecraft_savedata_capnp::entity::Reader<'a>> {
           ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(6), ::core::option::Option::None)
         }
+        #[inline]
         pub fn has_entity(&self) -> bool {
           !self.reader.get_pointer_field(6).is_null()
         }
@@ -3218,6 +3243,7 @@ pub mod player {
         pub fn init_entity(self, ) -> crate::datasets::minecraft_savedata::minecraft_savedata_capnp::entity::Builder<'a> {
           ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(6), 0)
         }
+        #[inline]
         pub fn has_entity(&self) -> bool {
           !self.builder.get_pointer_field(6).is_null()
         }
@@ -3454,6 +3480,7 @@ pub mod player {
       pub fn total_size(&self) -> ::capnp::Result<::capnp::MessageSize> {
         self.reader.total_size()
       }
+      #[inline]
       pub fn has_some(&self) -> bool {
         if self.reader.get_data_field::<u16>(60) != 1 { return false; }
         !self.reader.get_pointer_field(7).is_null()
@@ -3538,6 +3565,7 @@ pub mod player {
         self.builder.set_data_field::<u16>(60, 1);
         ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(7), 0)
       }
+      #[inline]
       pub fn has_some(&self) -> bool {
         if self.builder.get_data_field::<u16>(60) != 1 { return false; }
         !self.builder.get_pointer_field(7).is_null()
@@ -3629,6 +3657,7 @@ pub mod player {
       pub fn total_size(&self) -> ::capnp::Result<::capnp::MessageSize> {
         self.reader.total_size()
       }
+      #[inline]
       pub fn has_some(&self) -> bool {
         if self.reader.get_data_field::<u16>(61) != 1 { return false; }
         !self.reader.get_pointer_field(8).is_null()
@@ -3713,6 +3742,7 @@ pub mod player {
         self.builder.set_data_field::<u16>(61, 1);
         ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(8), 0)
       }
+      #[inline]
       pub fn has_some(&self) -> bool {
         if self.builder.get_data_field::<u16>(61) != 1 { return false; }
         !self.builder.get_pointer_field(8).is_null()
@@ -3807,6 +3837,7 @@ pub mod players {
     pub fn get_players(self) -> ::capnp::Result<::capnp::struct_list::Reader<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::player::Owned>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_players(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -3872,6 +3903,7 @@ pub mod players {
     pub fn init_players(self, size: u32) -> ::capnp::struct_list::Builder<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::player::Owned> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(0), size)
     }
+    #[inline]
     pub fn has_players(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }

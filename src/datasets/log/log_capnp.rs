@@ -214,6 +214,7 @@ pub mod log {
     pub fn get_address(self) -> ::capnp::Result<crate::datasets::log::log_capnp::address::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_address(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -221,6 +222,7 @@ pub mod log {
     pub fn get_identity(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(1), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_identity(&self) -> bool {
       !self.reader.get_pointer_field(1).is_null()
     }
@@ -228,6 +230,7 @@ pub mod log {
     pub fn get_userid(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(2), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_userid(&self) -> bool {
       !self.reader.get_pointer_field(2).is_null()
     }
@@ -235,6 +238,7 @@ pub mod log {
     pub fn get_date(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(3), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_date(&self) -> bool {
       !self.reader.get_pointer_field(3).is_null()
     }
@@ -242,6 +246,7 @@ pub mod log {
     pub fn get_request(self) -> ::capnp::Result<::capnp::text::Reader<'a>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(4), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_request(&self) -> bool {
       !self.reader.get_pointer_field(4).is_null()
     }
@@ -315,6 +320,7 @@ pub mod log {
     pub fn init_address(self, ) -> crate::datasets::log::log_capnp::address::Builder<'a> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(0), 0)
     }
+    #[inline]
     pub fn has_address(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }
@@ -330,6 +336,7 @@ pub mod log {
     pub fn init_identity(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(1).init_text(size)
     }
+    #[inline]
     pub fn has_identity(&self) -> bool {
       !self.builder.get_pointer_field(1).is_null()
     }
@@ -345,6 +352,7 @@ pub mod log {
     pub fn init_userid(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(2).init_text(size)
     }
+    #[inline]
     pub fn has_userid(&self) -> bool {
       !self.builder.get_pointer_field(2).is_null()
     }
@@ -360,6 +368,7 @@ pub mod log {
     pub fn init_date(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(3).init_text(size)
     }
+    #[inline]
     pub fn has_date(&self) -> bool {
       !self.builder.get_pointer_field(3).is_null()
     }
@@ -375,6 +384,7 @@ pub mod log {
     pub fn init_request(self, size: u32) -> ::capnp::text::Builder<'a> {
       self.builder.get_pointer_field(4).init_text(size)
     }
+    #[inline]
     pub fn has_request(&self) -> bool {
       !self.builder.get_pointer_field(4).is_null()
     }
@@ -464,6 +474,7 @@ pub mod logs {
     pub fn get_logs(self) -> ::capnp::Result<::capnp::struct_list::Reader<'a,crate::datasets::log::log_capnp::log::Owned>> {
       ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(0), ::core::option::Option::None)
     }
+    #[inline]
     pub fn has_logs(&self) -> bool {
       !self.reader.get_pointer_field(0).is_null()
     }
@@ -529,6 +540,7 @@ pub mod logs {
     pub fn init_logs(self, size: u32) -> ::capnp::struct_list::Builder<'a,crate::datasets::log::log_capnp::log::Owned> {
       ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(0), size)
     }
+    #[inline]
     pub fn has_logs(&self) -> bool {
       !self.builder.get_pointer_field(0).is_null()
     }

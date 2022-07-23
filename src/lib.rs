@@ -14,6 +14,8 @@ pub mod bench_bson;
 pub mod bench_capnp;
 #[cfg(feature = "serde_cbor")]
 pub mod bench_cbor;
+#[cfg(feature = "dlhn")]
+pub mod bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 pub mod bench_flatbuffers;
 #[cfg(feature = "nachricht-serde")]
@@ -34,11 +36,10 @@ pub mod bench_serde_json;
 pub mod bench_simd_json;
 #[cfg(feature = "speedy")]
 pub mod bench_speedy;
-#[cfg(feature = "dlhn")]
-pub mod bench_dlhn;
 pub mod datasets;
 
 use core::{mem, ops};
+
 use rand::Rng;
 
 pub trait Generate {
@@ -46,9 +47,7 @@ pub trait Generate {
 }
 
 impl Generate for () {
-    fn generate<R: Rng>(_: &mut R) -> Self {
-        ()
-    }
+    fn generate<R: Rng>(_: &mut R) -> Self {}
 }
 
 impl Generate for bool {

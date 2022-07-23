@@ -1,7 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use rand_pcg::Lcg64Xsh32;
-use rust_serialization_benchmark::generate_vec;
-
 #[cfg(feature = "abomonation")]
 use rust_serialization_benchmark::bench_abomonation;
 #[cfg(feature = "alkahest")]
@@ -18,6 +16,8 @@ use rust_serialization_benchmark::bench_bson;
 use rust_serialization_benchmark::bench_capnp;
 #[cfg(feature = "serde_cbor")]
 use rust_serialization_benchmark::bench_cbor;
+#[cfg(feature = "dlhn")]
+use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 use rust_serialization_benchmark::bench_flatbuffers;
 #[cfg(feature = "nachricht-serde")]
@@ -38,8 +38,7 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
-#[cfg(feature = "dlhn")]
-use rust_serialization_benchmark::bench_dlhn;
+use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
@@ -367,7 +366,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_capnp::bench(BENCH, c, &data, |bytes| {
         let message_reader =
             capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
-        let data = message_reader.get_root::<rust_serialization_benchmark::datasets::minecraft_savedata::cp::players::Reader>().unwrap();
+        let data = message_reader
+      .get_root::<rust_serialization_benchmark::datasets::minecraft_savedata::cp::players::Reader>()
+      .unwrap();
         for player in data.get_players().unwrap().iter() {
             black_box(player.get_game_type().unwrap());
         }

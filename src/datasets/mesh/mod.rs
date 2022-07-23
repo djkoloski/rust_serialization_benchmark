@@ -8,13 +8,6 @@ pub mod mesh_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
 }
 
-#[cfg(feature = "capnp")]
-use crate::bench_capnp;
-#[cfg(feature = "flatbuffers")]
-use crate::bench_flatbuffers;
-#[cfg(feature = "prost")]
-use crate::bench_prost;
-use crate::Generate;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -24,6 +17,14 @@ pub use mesh_fb::mesh as fb;
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+
+#[cfg(feature = "capnp")]
+use crate::bench_capnp;
+#[cfg(feature = "flatbuffers")]
+use crate::bench_flatbuffers;
+#[cfg(feature = "prost")]
+use crate::bench_prost;
+use crate::Generate;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
