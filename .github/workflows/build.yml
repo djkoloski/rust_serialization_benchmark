@@ -57,7 +57,8 @@ jobs:
 
           node update_benchmark.mjs
 
-          git add -A .
+          git add -A benchmark_results
+          git add README.md
           git commit -m "[gh-actions] Update benchmarks"
 
       - name: Push changes
