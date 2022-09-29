@@ -39,6 +39,10 @@ use crate::{generate_vec, Generate};
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
@@ -125,6 +129,10 @@ impl alkahest::Pack<GameType> for GameType {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Item {
@@ -231,6 +239,10 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
@@ -337,6 +349,10 @@ impl alkahest::Pack<Abilities> for Abilities {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Entity {
@@ -583,6 +599,10 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct RecipeBook {
@@ -773,6 +793,10 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Player {
@@ -1204,6 +1228,10 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Players {

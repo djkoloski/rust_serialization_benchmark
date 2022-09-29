@@ -40,6 +40,10 @@ use crate::Generate;
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Address {
@@ -123,6 +127,10 @@ impl alkahest::Pack<Address> for Address {
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Log {
     pub address: Address,
@@ -315,6 +323,10 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Logs {
     pub logs: Vec<Log>,

@@ -37,6 +37,10 @@ use crate::Generate;
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
@@ -115,6 +119,10 @@ impl alkahest::Pack<Vector3> for Vector3 {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
@@ -204,6 +212,10 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(
+    feature = "scale",
+    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Mesh {

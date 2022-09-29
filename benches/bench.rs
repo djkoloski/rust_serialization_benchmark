@@ -32,6 +32,8 @@ use rust_serialization_benchmark::bench_rkyv;
 use rust_serialization_benchmark::bench_rmp;
 #[cfg(feature = "ron")]
 use rust_serialization_benchmark::bench_ron;
+#[cfg(feature = "scale")]
+use rust_serialization_benchmark::bench_scale;
 #[cfg(feature = "serde_json")]
 use rust_serialization_benchmark::bench_serde_json;
 #[cfg(feature = "simd-json")]
@@ -164,6 +166,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
+
+    #[cfg(feature = "scale")]
+    bench_scale::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -300,6 +305,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
+
+    #[cfg(feature = "scale")]
+    bench_scale::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -438,6 +446,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
+
+    #[cfg(feature = "scale")]
+    bench_scale::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);

@@ -26,10 +26,14 @@ pub mod bench_postcard;
 pub mod bench_prost;
 #[cfg(feature = "rkyv")]
 pub mod bench_rkyv;
+#[cfg(feature = "rlp")]
+pub mod bench_rlp;
 #[cfg(feature = "rmp-serde")]
 pub mod bench_rmp;
 #[cfg(feature = "ron")]
 pub mod bench_ron;
+#[cfg(feature = "scale")]
+pub mod bench_scale;
 #[cfg(feature = "serde_json")]
 pub mod bench_serde_json;
 #[cfg(feature = "simd-json")]
