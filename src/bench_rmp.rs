@@ -26,7 +26,7 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(rmp_serde::from_read_ref::<_, T>(black_box(&deserialize_buffer)).unwrap());
+            black_box(rmp_serde::from_slice::<T>(black_box(&deserialize_buffer)).unwrap());
         })
     });
 
