@@ -40,6 +40,8 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+#[cfg(feature = "quick-xml")]
+use rust_serialization_benchmark::bench_quickxml;
 use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
@@ -179,6 +181,9 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
 
+    #[cfg(feature = "quick-xml")]
+    bench_quickxml::bench(BENCH, c, &data);
+
     // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
     #[cfg(feature = "alkahest")]
     bench_alkahest::bench(BENCH, c, &data, read_alkahest_log);
@@ -317,6 +322,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "quick-xml")]
+    bench_quickxml::bench(BENCH, c, &data);
 
     // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
     #[cfg(feature = "alkahest")]
@@ -459,6 +467,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
 
+    #[cfg(feature = "quick-xml")]
+    bench_quickxml::bench(BENCH, c, &data);
+
     #[cfg(feature = "alkahest")]
     bench_alkahest::bench(BENCH, c, &data, read_alkahest_minecraft_savedata);
 }
@@ -476,8 +487,8 @@ fn read_alkahest_minecraft_savedata<'a>(
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {
-    bench_log(c);
-    bench_mesh(c);
+    // bench_log(c);
+    // bench_mesh(c);
     bench_minecraft_savedata(c);
 }
 
