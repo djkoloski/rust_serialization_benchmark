@@ -2,6 +2,7 @@
 pub mod minecraft_savedata_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "minecraft_savedata_generated.rs"]
+#[allow(unused_imports)]
 pub mod minecraft_savedata_fb;
 #[cfg(feature = "prost")]
 pub mod minecraft_savedata_prost {

@@ -4,6 +4,7 @@ pub mod log_bebop;
 pub mod log_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "log_generated.rs"]
+#[allow(unused_imports)]
 pub mod log_fb;
 #[cfg(feature = "prost")]
 pub mod log_prost {

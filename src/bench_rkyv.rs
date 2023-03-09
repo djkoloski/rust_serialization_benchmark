@@ -24,6 +24,7 @@ where
     T::Archived: for<'a> CheckBytes<DefaultValidator<'a>> + Deserialize<T, Infallible>,
     R: Fn(&T::Archived),
     U: Fn(Pin<&mut T::Archived>),
+    <T as Archive>::Archived: for<'a> rkyv::CheckBytes<DefaultValidator<'a>>,
 {
     const BUFFER_LEN: usize = 10_000_000;
     const SCRATCH_LEN: usize = 512_000;

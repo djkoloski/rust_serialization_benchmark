@@ -2,6 +2,7 @@
 pub mod mesh_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "mesh_generated.rs"]
+#[allow(unused_imports)]
 pub mod mesh_fb;
 #[cfg(feature = "prost")]
 pub mod mesh_prost {
