@@ -9,42 +9,43 @@ version = "0.1.1"
 # Some features may require multiple dependencies to compile properly
 # For example, benchmarking bincode requires two features: "serde" and "bincode"
 [dependencies]
-abomonation = {version = "0.7.3", optional = true}
-abomonation_derive = {version = "0.5.0", optional = true}
-alkahest = {version = "0.1.5", optional = true, features = ["derive", "nightly"]}
-bebop = {version = "2.4.9", optional = true}
-bincode = {version = "1.3.3", optional = true}
-borsh = {version = "0.10.2", optional = true}
-bson = {version = "2.0", git = "https://github.com/djkoloski/bson-rust", branch = "master", optional = true}
-bytecheck = {version = "0.6.10", optional = true}
-bytemuck = {version = "1.13.1", optional = true}
-capnp = {version = "0.16.0", optional = true}
+abomonation = { version = "0.7.3", optional = true }
+abomonation_derive = { version = "0.5.0", optional = true }
+alkahest = { version = "0.1.5", optional = true, features = ["derive", "nightly"] }
+bebop = { version = "2.4.9", optional = true }
+bincode = { version = "1.3.3", optional = true }
+borsh = { version = "0.10.2", optional = true }
+bson = { version = "2.0", git = "https://github.com/djkoloski/bson-rust", branch = "master", optional = true }
+bytecheck = { version = "0.6.10", optional = true }
+bytemuck = { version = "1.13.1", optional = true }
+capnp = { version = "0.16.0", optional = true }
 criterion = "0.4.0"
-dlhn = {version = "0.1.2", optional = true}
-flatbuffers = {version = "23.1.21", optional = true}
+dlhn = { version = "0.1.2", optional = true }
+flatbuffers = { version = "23.1.21", optional = true }
 libflate = "1.3.0"
-nachricht-serde = {version = "0.4.0", optional = true}
-parity-scale-codec = {version = "3.4.0", features = ["full"], optional = true}
-parity-scale-codec-derive = {version = "3.1.4", optional = true}
-postcard = {version = "1.0.4", features = ["alloc"], optional = true}
-prost = {version = "0.11.8", optional = true}
+nachricht-serde = { version = "0.4.0", optional = true }
+parity-scale-codec = { version = "3.4.0", features = ["full"], optional = true }
+parity-scale-codec-derive = { version = "3.1.4", optional = true }
+postcard = { version = "1.0.4", features = ["alloc"], optional = true }
+prost = { version = "0.11.8", optional = true }
 rand = "0.8.5"
-rkyv = {version = "0.7.40", features = ["validation"], optional = true}
-rmp-serde = {version = "1.1.1", optional = true}
-ron = {version = "0.8.0", optional = true}
-serde = {version = "1.0.153", features = ["derive"], optional = true}
-serde_bare = {version = "0.5.0", optional = true}
-serde_cbor = {version = "0.11.2", optional = true}
-serde_json = {version = "1.0.94", optional = true}
-simd-json = {version = "0.7.0", optional = true}
-speedy = {version = "0.8.5", optional = true}
+rkyv = { version = "0.7.40", features = ["validation"], optional = true }
+rmp-serde = { version = "1.1.1", optional = true }
+ron = { version = "0.8.0", optional = true }
+serde = { version = "1.0.153", features = ["derive"], optional = true }
+serde_bare = { version = "0.5.0", optional = true }
+serde_cbor = { version = "0.11.2", optional = true }
+serde_json = { version = "1.0.94", optional = true }
+simd-json = { version = "0.7.0", optional = true }
+speedy = { version = "0.8.5", optional = true }
 zstd = "0.12.3+zstd.1.5.2"
 
 [features]
 default = [
   "abomonation",
   "abomonation_derive",
-  "alkahest", # "bebop",
+  "alkahest",
+  # "bebop",
   "bincode",
   "borsh",
   "bson",
