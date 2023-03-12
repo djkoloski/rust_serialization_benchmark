@@ -40,12 +40,12 @@ jobs:
         shell: bash
         run: |
 
-          wget "https://github.com/protocolbuffers/protobuf/releases/download/v21.3/protoc-21.3-linux-x86_64.zip" -O protoc.zip
+          wget "https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protoc-22.2-linux-x86_64.zip" -O protoc.zip
           unzip protoc.zip
           chmod +x bin/protoc
           mv bin/protoc /usr/local/bin
 
-          wget "https://github.com/google/flatbuffers/releases/download/v2.0.0/Linux.flatc.binary.clang++-9.zip" -O flatbuffers
+          wget "https://github.com/google/flatbuffers/releases/download/v23.3.3/Linux.flatc.binary.clang++-12.zip" -O flatbuffers
           unzip flatbuffers
           chmod +x flatc
           mv flatc /usr/local/bin
