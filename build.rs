@@ -1,4 +1,7 @@
-use std::path::{Path, PathBuf};
+use std::{
+    env,
+    path::{Path, PathBuf},
+};
 
 // TODO: re-enable bebop
 #[allow(dead_code)]
@@ -38,6 +41,14 @@ fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
 }
 
 fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
+    if cfg!(windows) {
+        match env::var("PROTOC") {
+            Err(_) => {
+                env::set_var("PROTOC", "./tools/protoc.exe");
+            }
+            _ => {}
+        }
+    }
     let mut prost_config = prost_build::Config::new();
     prost_config.protoc_arg("--experimental_allow_proto3_optional");
     prost_config.compile_protos(
