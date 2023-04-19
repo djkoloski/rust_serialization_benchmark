@@ -8,6 +8,8 @@ use rust_serialization_benchmark::bench_alkahest;
 use rust_serialization_benchmark::bench_bare;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
+#[cfg(feature = "bitcode")]
+use rust_serialization_benchmark::bench_bitcode;
 #[cfg(feature = "borsh")]
 use rust_serialization_benchmark::bench_borsh;
 #[cfg(feature = "bson")]
@@ -72,6 +74,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bitcode")]
+    bench_bitcode::bench(BENCH, c, &data);
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
@@ -227,6 +232,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
+    #[cfg(feature = "bitcode")]
+    bench_bitcode::bench(BENCH, c, &data);
+
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
@@ -363,6 +371,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bitcode")]
+    bench_bitcode::bench(BENCH, c, &data);
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);

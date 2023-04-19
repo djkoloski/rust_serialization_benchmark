@@ -6,6 +6,8 @@ pub mod bench_alkahest;
 pub mod bench_bare;
 #[cfg(feature = "bincode")]
 pub mod bench_bincode;
+#[cfg(feature = "bitcode")]
+pub mod bench_bitcode;
 #[cfg(feature = "borsh")]
 pub mod bench_borsh;
 #[cfg(feature = "bson")]
