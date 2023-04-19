@@ -89,6 +89,5 @@ name = "bench"
 
 [profile.bench]
 lto = true
-debug-assertions = true
 # Uncomment this to profile
 # debug = true
