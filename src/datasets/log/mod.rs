@@ -31,6 +31,7 @@ use crate::Generate;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
@@ -118,6 +119,7 @@ impl alkahest::Pack<Address> for Address {
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
@@ -139,7 +141,9 @@ pub struct Log {
     pub userid: String,
     pub date: String,
     pub request: String,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "100..599"))]
     pub code: u16,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..100000000"))]
     pub size: u64,
 }
 
@@ -314,6 +318,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
