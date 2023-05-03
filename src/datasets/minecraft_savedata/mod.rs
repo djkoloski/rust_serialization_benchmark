@@ -46,6 +46,10 @@ use crate::{generate_vec, Generate};
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[repr(u8)]
@@ -137,6 +141,10 @@ impl alkahest::Pack<GameType> for GameType {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Item {
     pub count: i8,
@@ -249,6 +257,10 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Abilities {
@@ -361,6 +373,10 @@ impl alkahest::Pack<Abilities> for Abilities {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Entity {
     pub id: String,
@@ -612,6 +628,10 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct RecipeBook {
     pub recipes: Vec<String>,
@@ -808,6 +828,10 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Player {
     pub game_type: GameType,
@@ -1244,6 +1268,10 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Players {
     pub players: Vec<Player>,

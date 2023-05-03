@@ -45,6 +45,10 @@ use crate::Generate;
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Vector3 {
@@ -128,6 +132,10 @@ impl alkahest::Pack<Vector3> for Vector3 {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Triangle {
@@ -222,6 +230,10 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "simd-json",
+    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Mesh {
     pub triangles: Vec<Triangle>,
