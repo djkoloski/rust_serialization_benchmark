@@ -16,6 +16,8 @@ pub mod bench_bson;
 pub mod bench_capnp;
 #[cfg(feature = "serde_cbor")]
 pub mod bench_cbor;
+#[cfg(feature = "ciborium")]
+pub mod bench_ciborium;
 #[cfg(feature = "dlhn")]
 pub mod bench_dlhn;
 #[cfg(feature = "flatbuffers")]

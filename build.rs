@@ -40,6 +40,7 @@ fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
     })
 }
 
+#[cfg(feature = "prost-build")]
 fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     if cfg!(windows) {
         match env::var("PROTOC") {
@@ -63,6 +64,7 @@ fn main() {
         // bebop_compile_dataset(name);
         capnpc_compile_dataset(name).unwrap();
         flatc_compile_dataset(name).unwrap();
+        #[cfg(feature = "prost-build")]
         prost_compile_dataset(name).unwrap();
     }
 }

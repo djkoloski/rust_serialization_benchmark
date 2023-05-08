@@ -18,6 +18,8 @@ use rust_serialization_benchmark::bench_bson;
 use rust_serialization_benchmark::bench_capnp;
 #[cfg(feature = "serde_cbor")]
 use rust_serialization_benchmark::bench_cbor;
+#[cfg(feature = "ciborium")]
+use rust_serialization_benchmark::bench_ciborium;
 #[cfg(feature = "dlhn")]
 use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
@@ -100,6 +102,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "serde_cbor")]
     bench_cbor::bench(BENCH, c, &data);
+
+    #[cfg(feature = "ciborium")]
+    bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
@@ -256,6 +261,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "serde_cbor")]
     bench_cbor::bench(BENCH, c, &data);
 
+    #[cfg(feature = "ciborium")]
+    bench_ciborium::bench(BENCH, c, &data);
+
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,
@@ -395,6 +403,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "serde_cbor")]
     bench_cbor::bench(BENCH, c, &data);
+
+    #[cfg(feature = "ciborium")]
+    bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
