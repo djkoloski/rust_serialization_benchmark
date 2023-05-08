@@ -62,6 +62,7 @@ jobs:
           git commit -m "[gh-actions] Update benchmarks"
 
       - name: Push changes
+        if: github.event_name != 'pull_request'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
