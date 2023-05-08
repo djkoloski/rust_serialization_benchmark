@@ -12,6 +12,10 @@ function main() {
   const now = new Date()
   const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 
+  const metadata = JSON.parse(child_process.execSync(`cargo metadata`, {
+    maxBuffer: 4 * 1024 * 1024,
+  }).toString('utf-8'))
+
   const results = child_process.execSync(`cargo bench`).toString('utf-8')
   console.log(results)
   const resultsPath = `benchmark_results/${date}.txt`
@@ -21,7 +25,7 @@ function main() {
   const DO_NOT_EDIT = '<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->\n\n'
   fs.writeFileSync(
     'README.md',
-    DO_NOT_EDIT + formatTemplate(template, { date, results: format(results) })
+    DO_NOT_EDIT + formatTemplate(template, { date, results: format(results, metadata) })
   )
 }
 
@@ -42,9 +46,9 @@ function parseTime(time) {
 
 function getMinValue(dataset, bench) {
   let min = null
-  for (let framework in dataset) {
-    if (dataset[framework][bench] !== undefined) {
-      let benchResults = dataset[framework][bench]
+  for (let crate in dataset) {
+    if (dataset[crate][bench] !== undefined) {
+      let benchResults = dataset[crate][bench]
       if (benchResults.value != null && (min == null || benchResults.value < min)) {
         min = benchResults.value
       }
@@ -60,8 +64,8 @@ function getMinValue(dataset, bench) {
   return min
 }
 
-function buildTables(results, dataset, columns, footnote) {
-  let header = '| Format / Lib |'
+function buildTables(results, dataset, crates, columns, footnote) {
+  let header = '| Crate |'
   for (let column of columns) {
     header += ` ${column[0].toUpperCase() + column.substr(1)} |`
   }
@@ -71,11 +75,11 @@ function buildTables(results, dataset, columns, footnote) {
   }
 
   let dataTable = ''
-  for (let framework in results[dataset]) {
+  for (let crate in results[dataset]) {
     let hadResult = false
-    let row = `| ${framework} |`
+    let row = `| [${crate} ${crates[crate]}][${crate}] |`
     for (let column of columns) {
-      let output = results[dataset][framework][column]
+      let output = results[dataset][crate][column]
       if (output === undefined) {
         row += ` ${footnote} |`
       } else {
@@ -99,12 +103,12 @@ function buildTables(results, dataset, columns, footnote) {
   }
 
   let comparisonTable = ''
-  for (let framework in results[dataset]) {
+  for (let crate in results[dataset]) {
     let hadResult = false
-    let row = `| ${framework} |`
+    let row = `| [${crate} ${crates[crate]}][${crate}] |`
     for (let column of columns) {
       let min = getMinValue(results[dataset], column)
-      let output = results[dataset][framework][column]
+      let output = results[dataset][crate][column]
       if (output === undefined) {
         row += ` ${footnote} |`
       } else {
@@ -140,14 +144,15 @@ const DATASET_DESCRIPTIONS = {
   minecraft_savedata: 'This data set is composed of Minecraft player saves that contain highly structured data.'
 }
 
-function format(input) {
+function format(input, metadata) {
   let bench_times_re = /^([a-z_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\W+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s).*$/gm
   let bench_sizes_re = /^([a-z_\-]+)\/([a-z_\-]+)\/(size|zlib|zstd) (\d+)$/gm
 
   let results = {}
+  let crates = {}
   for (let match of input.matchAll(bench_times_re)) {
     let dataset = match[1]
-    let framework = match[2]
+    let crate = match[2]
     let bench = match[3]
     let variant = match[4]
     let time = match[5]
@@ -156,19 +161,19 @@ function format(input) {
       results[dataset] = {}
     }
 
-    if (results[dataset][framework] === undefined) {
-      results[dataset][framework] = {}
+    if (results[dataset][crate] === undefined) {
+      results[dataset][crate] = {}
     }
 
-    if (results[dataset][framework][bench] === undefined) {
-      results[dataset][framework][bench] = {
+    if (results[dataset][crate][bench] === undefined) {
+      results[dataset][crate][bench] = {
         display: null,
         value: null,
         variants: {}
       }
     }
 
-    let benchResults = results[dataset][framework][bench]
+    let benchResults = results[dataset][crate][bench]
 
     if (variant == null) {
       benchResults.display = time
@@ -179,28 +184,30 @@ function format(input) {
         value: parseTime(time)
       }
     }
+
+    if (!(crate in crates)) {
+      crates[crate] = get_crate_version(crate, metadata)
+    }
   }
 
   for (let match of input.matchAll(bench_sizes_re)) {
     let dataset = match[1]
-    let framework = match[2]
+    let crate = match[2]
     let bench = match[3]
     let size = match[4]
 
-    results[dataset][framework][bench] = {
+    results[dataset][crate][bench] = {
       display: Number(size),
       value: Number(size)
     }
   }
 
-  let tables = ''
+  let output = ''
   for (let dataset in results) {
-    let frameworks = results[dataset]
+    let serdeTables = buildTables(results, dataset, crates, ['serialize', 'deserialize', 'size', 'zlib', 'zstd'], '†')
+    let zcdTables = buildTables(results, dataset, crates, ['access', 'read', 'update'], '‡')
 
-    let serdeTables = buildTables(results, dataset, ['serialize', 'deserialize', 'size', 'zlib', 'zstd'], '†')
-    let zcdTables = buildTables(results, dataset, ['access', 'read', 'update'], '‡')
-
-    tables += `\
+    output += `\
 ## \`${dataset}\`
 
 ${DATASET_DESCRIPTIONS[dataset] || 'Missing dataset description'}
@@ -236,7 +243,22 @@ ${zcdTables.comparison}
 `
   }
 
-  return tables
+  for (let crate in crates) {
+    output += `[${crate}]: https://crates.io/crates/${crate}/${crates[crate]}\n`
+  }
+  output += `\n\n`
+
+  return output
+}
+
+function get_crate_version(crate, metadata) {
+  for (const pkg in metadata.packages) {
+    let pkg_data = metadata.packages[pkg]
+    if (pkg_data.name == crate) {
+      return pkg_data.version
+    }
+  }
+  throw new Error(`Failed to find a crate version for ${crate}`)
 }
 
 main()

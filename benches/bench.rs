@@ -4,8 +4,6 @@ use rand_pcg::Lcg64Xsh32;
 use rust_serialization_benchmark::bench_abomonation;
 #[cfg(feature = "alkahest")]
 use rust_serialization_benchmark::bench_alkahest;
-#[cfg(feature = "serde_bare")]
-use rust_serialization_benchmark::bench_bare;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
 #[cfg(feature = "bitcode")]
@@ -16,8 +14,6 @@ use rust_serialization_benchmark::bench_borsh;
 use rust_serialization_benchmark::bench_bson;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
-#[cfg(feature = "serde_cbor")]
-use rust_serialization_benchmark::bench_cbor;
 #[cfg(feature = "ciborium")]
 use rust_serialization_benchmark::bench_ciborium;
 #[cfg(feature = "dlhn")]
@@ -25,7 +21,7 @@ use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 use rust_serialization_benchmark::bench_flatbuffers;
 #[cfg(feature = "nachricht-serde")]
-use rust_serialization_benchmark::bench_nachricht;
+use rust_serialization_benchmark::bench_nachricht_serde;
 #[cfg(feature = "postcard")]
 use rust_serialization_benchmark::bench_postcard;
 #[cfg(feature = "prost")]
@@ -33,11 +29,15 @@ use rust_serialization_benchmark::bench_prost;
 #[cfg(feature = "rkyv")]
 use rust_serialization_benchmark::bench_rkyv;
 #[cfg(feature = "rmp-serde")]
-use rust_serialization_benchmark::bench_rmp;
+use rust_serialization_benchmark::bench_rmp_serde;
 #[cfg(feature = "ron")]
 use rust_serialization_benchmark::bench_ron;
 #[cfg(feature = "scale")]
-use rust_serialization_benchmark::bench_scale;
+use rust_serialization_benchmark::bench_parity_scale_codec;
+#[cfg(feature = "serde_bare")]
+use rust_serialization_benchmark::bench_serde_bare;
+#[cfg(feature = "serde_cbor")]
+use rust_serialization_benchmark::bench_serde_cbor;
 #[cfg(feature = "serde_json")]
 use rust_serialization_benchmark::bench_serde_json;
 #[cfg(feature = "simd-json")]
@@ -71,9 +71,6 @@ fn bench_log(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "serde_bare")]
-    bench_bare::bench(BENCH, c, &data);
-
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
@@ -99,9 +96,6 @@ fn bench_log(c: &mut Criterion) {
             black_box(log.get_size());
         }
     });
-
-    #[cfg(feature = "serde_cbor")]
-    bench_cbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
@@ -134,7 +128,7 @@ fn bench_log(c: &mut Criterion) {
     );
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
@@ -172,13 +166,19 @@ fn bench_log(c: &mut Criterion) {
     );
 
     #[cfg(feature = "rmp-serde")]
-    bench_rmp::bench(BENCH, c, &data);
+    bench_rmp_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
-    bench_scale::bench(BENCH, c, &data);
+    bench_parity_scale_codec::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_bare")]
+    bench_serde_bare::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_cbor")]
+    bench_serde_cbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -191,21 +191,16 @@ fn bench_log(c: &mut Criterion) {
 
     // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
     #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, read_alkahest_log);
+    bench_alkahest::bench(BENCH, c, &data, |data| {
+        for log in data.logs {
+            black_box(&log.address);
+            black_box(log.code);
+            black_box(log.size);
+        }
+    });
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
-}
-
-#[cfg(feature = "alkahest")]
-fn read_alkahest_log<'a>(
-    data: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::log::LogsSchema>,
-) {
-    for log in data.logs {
-        black_box(&log.address);
-        black_box(log.code);
-        black_box(log.size);
-    }
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -231,9 +226,6 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "serde_bare")]
-    bench_bare::bench(BENCH, c, &data);
-
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
@@ -257,9 +249,6 @@ fn bench_mesh(c: &mut Criterion) {
             black_box(triangle.get_normal().unwrap());
         }
     });
-
-    #[cfg(feature = "serde_cbor")]
-    bench_cbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
@@ -288,7 +277,7 @@ fn bench_mesh(c: &mut Criterion) {
     );
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
@@ -317,13 +306,19 @@ fn bench_mesh(c: &mut Criterion) {
     );
 
     #[cfg(feature = "rmp-serde")]
-    bench_rmp::bench(BENCH, c, &data);
+    bench_rmp_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
-    bench_scale::bench(BENCH, c, &data);
+    bench_parity_scale_codec::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_bare")]
+    bench_serde_bare::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_cbor")]
+    bench_serde_cbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -336,19 +331,14 @@ fn bench_mesh(c: &mut Criterion) {
 
     // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
     #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, read_alkahest_mesh);
+    bench_alkahest::bench(BENCH, c, &data, |mesh| {
+        for triangle in mesh.triangles {
+            black_box(&triangle.normal);
+        }
+    });
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
-}
-
-#[cfg(feature = "alkahest")]
-fn read_alkahest_mesh<'a>(
-    mesh: alkahest::Unpacked<'a, rust_serialization_benchmark::datasets::mesh::MeshSchema>,
-) {
-    for triangle in mesh.triangles {
-        black_box(&triangle.normal);
-    }
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -374,9 +364,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "serde_bare")]
-    bench_bare::bench(BENCH, c, &data);
-
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
@@ -400,9 +387,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             black_box(player.get_game_type().unwrap());
         }
     });
-
-    #[cfg(feature = "serde_cbor")]
-    bench_cbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
@@ -432,7 +416,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
@@ -464,13 +448,19 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     #[cfg(feature = "rmp-serde")]
-    bench_rmp::bench(BENCH, c, &data);
+    bench_rmp_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
-    bench_scale::bench(BENCH, c, &data);
+    bench_parity_scale_codec::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_bare")]
+    bench_serde_bare::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_cbor")]
+    bench_serde_cbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -482,19 +472,11 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_speedy::bench(BENCH, c, &data);
 
     #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, read_alkahest_minecraft_savedata);
-}
-
-#[cfg(feature = "alkahest")]
-fn read_alkahest_minecraft_savedata<'a>(
-    data: alkahest::Unpacked<
-        'a,
-        rust_serialization_benchmark::datasets::minecraft_savedata::PlayersSchema,
-    >,
-) {
-    for player in data.players {
-        black_box(&player.game_type);
-    }
+    bench_alkahest::bench(BENCH, c, &data, |data| {
+        for player in data.players {
+            black_box(&player.game_type);
+        }
+    });
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {

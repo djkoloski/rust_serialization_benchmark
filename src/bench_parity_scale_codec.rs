@@ -7,7 +7,7 @@ where
 {
     const BUFFER_LEN: usize = 10_000_000;
 
-    let mut group = c.benchmark_group(format!("{}/scale", name));
+    let mut group = c.benchmark_group(format!("{}/parity-scale-codec", name));
 
     let mut serialize_buffer = vec![0u8; BUFFER_LEN];
     group.bench_function("serialize", |b| {
@@ -25,7 +25,7 @@ where
         })
     });
 
-    crate::bench_size(name, "scale", deserialize_buffer.as_slice());
+    crate::bench_size(name, "parity-scale-codec", deserialize_buffer.as_slice());
 
     group.finish();
 }
