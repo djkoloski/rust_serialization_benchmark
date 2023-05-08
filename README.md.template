@@ -7,9 +7,6 @@ serialization frameworks.
 
 These benchmarks are still being developed and pull requests to improve benchmarks are welcome.
 
-You can use [this horrible tiny webpage](https://davidkoloski.me/rust_serialization_benchmark) to
-turn a benchmark log into nicely-formatted markdown tables.
-
 ## Format
 
 All tests benchmark the following properties (time or size):
