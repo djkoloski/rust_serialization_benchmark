@@ -242,7 +242,6 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
-#[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
@@ -264,7 +263,9 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Abilities {
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub walk_speed: f32,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub fly_speed: f32,
     pub may_fly: bool,
     pub flying: bool,
@@ -358,7 +359,6 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
-#[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
@@ -380,9 +380,13 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Entity {
     pub id: String,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub pos: (f64, f64, f64),
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub motion: (f64, f64, f64),
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub rotation: (f32, f32),
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub fall_distance: f32,
     pub fire: u16,
     pub air: u16,
@@ -813,7 +817,6 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
-#[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
@@ -846,16 +849,20 @@ pub struct Player {
     pub spawn_z: i64,
     pub spawn_forced: Option<bool>,
     pub sleep_timer: u16,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub food_exhaustion_level: f32,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub food_saturation_level: f32,
     pub food_tick_timer: u32,
     pub xp_level: u32,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub xp_p: f32,
     pub xp_total: i32,
     pub xp_seed: i32,
     pub inventory: Vec<Item>,
     pub ender_items: Vec<Item>,
     pub abilities: Abilities,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub entered_nether_position: Option<(f64, f64, f64)>,
     pub root_vehicle: Option<([u32; 4], Entity)>,
     pub shoulder_entity_left: Option<Entity>,
