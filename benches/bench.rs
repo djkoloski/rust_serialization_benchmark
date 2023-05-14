@@ -391,6 +391,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
+
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,

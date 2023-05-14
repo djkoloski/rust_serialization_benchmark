@@ -23,7 +23,7 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(ciborium::de::from_reader::<'_, T, _>(black_box(deserialize_buffer.as_slice())).unwrap());
+            black_box(ciborium::de::from_reader::<T, _>(black_box(deserialize_buffer.as_slice())).unwrap());
         })
     });
 
