@@ -22,6 +22,8 @@ pub mod bench_ciborium;
 pub mod bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 pub mod bench_flatbuffers;
+#[cfg(feature = "msgpacker")]
+pub mod bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
 pub mod bench_nachricht_serde;
 #[cfg(feature = "postcard")]
