@@ -44,6 +44,7 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+use rust_serialization_benchmark::datasets::mk48::Update;
 use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
@@ -479,10 +480,102 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     });
 }
 
+fn bench_mk48(c: &mut Criterion) {
+    // TODO alkahest, capnp, flatbuffers, prost
+
+    use rust_serialization_benchmark::datasets::mk48::Updates;
+
+    const BENCH: &'static str = "mk48";
+
+    // nothing up our sleeves, state and stream are first 20 digits of pi
+    const STATE: u64 = 3141592653;
+    const STREAM: u64 = 5897932384;
+
+    let mut rng = Lcg64Xsh32::new(STATE, STREAM);
+
+    const UPDATES: usize = 500;
+    let data = Updates {
+        updates: generate_vec::<_, Update>(&mut rng, UPDATES..UPDATES + 1),
+    };
+
+    #[cfg(feature = "abomonation")]
+    bench_abomonation::bench(BENCH, c, &data, |data| {
+        for update in data.updates.iter() {
+            black_box(&update);
+        }
+    });
+
+    #[cfg(feature = "bincode")]
+    bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bitcode")]
+    bench_bitcode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "borsh")]
+    bench_borsh::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bson")]
+    bench_bson::bench(BENCH, c, &data);
+
+    #[cfg(feature = "ciborium")]
+    bench_ciborium::bench(BENCH, c, &data);
+
+    #[cfg(feature = "nachricht-serde")]
+    bench_nachricht_serde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "postcard")]
+    bench_postcard::bench(BENCH, c, &data);
+
+    #[cfg(feature = "rkyv")]
+    bench_rkyv::bench(
+        BENCH,
+        c,
+        &data,
+        |data| {
+            for updates in data.updates.iter() {
+                black_box(&updates.score);
+            }
+        },
+        |updates| {
+            for _ in 0..updates.as_ref().updates.len() {
+                // TODO update something
+            }
+        },
+    );
+
+    #[cfg(feature = "rmp-serde")]
+    bench_rmp_serde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "ron")]
+    bench_ron::bench(BENCH, c, &data);
+
+    #[cfg(feature = "scale")]
+    bench_parity_scale_codec::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_bare")]
+    bench_serde_bare::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_cbor")]
+    bench_serde_cbor::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde_json")]
+    bench_serde_json::bench(BENCH, c, &data);
+
+    #[cfg(feature = "simd-json")]
+    bench_simd_json::bench(BENCH, c, &data);
+
+    #[cfg(feature = "speedy")]
+    bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
+}
+
 pub fn criterion_benchmark(c: &mut Criterion) {
     bench_log(c);
     bench_mesh(c);
     bench_minecraft_savedata(c);
+    bench_mk48(c);
 }
 
 criterion_group!(benches, criterion_benchmark);
