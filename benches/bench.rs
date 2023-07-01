@@ -493,7 +493,7 @@ fn bench_mk48(c: &mut Criterion) {
 
     let mut rng = Lcg64Xsh32::new(STATE, STREAM);
 
-    const UPDATES: usize = 500;
+    const UPDATES: usize = 1000;
     let data = Updates {
         updates: generate_vec::<_, Update>(&mut rng, UPDATES..UPDATES + 1),
     };
