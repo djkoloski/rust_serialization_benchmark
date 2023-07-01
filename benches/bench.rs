@@ -20,6 +20,8 @@ use rust_serialization_benchmark::bench_ciborium;
 use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 use rust_serialization_benchmark::bench_flatbuffers;
+#[cfg(feature = "msgpacker")]
+use rust_serialization_benchmark::bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
 use rust_serialization_benchmark::bench_nachricht_serde;
 #[cfg(feature = "postcard")]
@@ -127,6 +129,9 @@ fn bench_log(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "msgpacker")]
+    bench_msgpacker::bench(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
@@ -277,6 +282,9 @@ fn bench_mesh(c: &mut Criterion) {
         },
     );
 
+    #[cfg(feature = "msgpacker")]
+    bench_msgpacker::bench(BENCH, c, &data);
+
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
@@ -392,6 +400,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
+
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,
@@ -415,6 +426,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "msgpacker")]
+    bench_msgpacker::bench(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
