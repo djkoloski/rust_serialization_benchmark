@@ -533,6 +533,9 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
+
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
@@ -579,9 +582,6 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    #[cfg(feature = "dlhn")]
-    bench_dlhn::bench(BENCH, c, &data);
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {
