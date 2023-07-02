@@ -26,7 +26,6 @@ use crate::{generate_vec, Generate};
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 2.14))]
@@ -253,7 +252,6 @@ impl Guidance {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Contact {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub damage: u8,
