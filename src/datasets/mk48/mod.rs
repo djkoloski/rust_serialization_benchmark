@@ -381,6 +381,17 @@ pub struct Update {
     pub terrain_updates: Vec<TerrainUpdate>,
 }
 
+#[cfg(feature = "rkyv")]
+const _: () = {
+    use core::pin::Pin;
+
+    impl ArchivedUpdate {
+        pub fn score_pin(self: Pin<&mut Self>) -> Pin<&mut u32> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.score) }
+        }
+    }
+};
+
 impl Generate for Update {
     fn generate<R: Rng>(rng: &mut R) -> Self {
         let player_count = rng.gen_range(200..400) as u16;

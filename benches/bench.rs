@@ -552,9 +552,10 @@ fn bench_mk48(c: &mut Criterion) {
                 black_box(&updates.score);
             }
         },
-        |updates| {
-            for _ in 0..updates.as_ref().updates.len() {
-                // TODO update something
+        |mut updates| {
+            for i in 0..updates.as_ref().updates.len() {
+                let mut update = updates.as_mut().updates_pin().index_pin(i);
+                *update.as_mut().score_pin() *= 2;
             }
         },
     );
