@@ -46,7 +46,6 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
-use rust_serialization_benchmark::datasets::mk48::Update;
 use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
@@ -509,7 +508,7 @@ fn bench_mk48(c: &mut Criterion) {
 
     const UPDATES: usize = 1000;
     let data = Updates {
-        updates: generate_vec::<_, Update>(&mut rng, UPDATES..UPDATES + 1),
+        updates: generate_vec(&mut rng, UPDATES..UPDATES + 1),
     };
 
     #[cfg(feature = "abomonation")]
