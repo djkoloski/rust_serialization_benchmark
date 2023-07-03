@@ -1,26 +1,25 @@
-name: build
+name: bench
 
 on:
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+  push:
 
 env:
   CI: true
 
 jobs:
   build:
-    name: build
+    name: bench
     strategy:
       matrix:
         platform: [ubuntu-latest]
-
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
           submodules: true
-
+      
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
@@ -29,13 +28,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
-      - name: check formatting
-        shell: bash
-        run: |
-
-          cargo fmt --check
-
-      - name: build
+      - name: bench
         shell: bash
         run: |
 
@@ -51,4 +44,17 @@ jobs:
 
           sudo apt-get install -y capnproto libprotobuf-dev
 
-          cargo build --benches
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
+          node update_benchmark.mjs
+
+          git add -A benchmark_results
+          git add README.md
+          git commit -m "[gh-actions] Update benchmarks"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
