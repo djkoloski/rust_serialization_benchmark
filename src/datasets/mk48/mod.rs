@@ -128,8 +128,12 @@ impl Generate for EntityType {
     }
 }
 
+fn generate_submerge(rng: &mut impl Rng, entity_type: EntityType) -> bool {
+    entity_type.is_sub() && rng.gen_bool(0.9)
+}
+
 fn generate_altitude(rng: &mut impl Rng, entity_type: EntityType) -> i8 {
-    if entity_type.is_sub() && rng.gen_bool(0.9) {
+    if generate_submerge(rng, entity_type) {
         rng.gen_range(-120..-35)
     } else {
         0
@@ -214,17 +218,16 @@ impl Transform {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct Guidance {
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
-    pub altitude: i8,
     pub angle: u16,
+    pub submerge: bool,
     pub velocity: i16,
 }
 
 impl Guidance {
     fn generate<R: Rng>(rng: &mut R, entity_type: EntityType) -> Self {
         Self {
-            altitude: generate_altitude(rng, entity_type),
             angle: rng.gen(),
+            submerge: generate_submerge(rng, entity_type),
             velocity: generate_velocity(rng),
         }
     }
