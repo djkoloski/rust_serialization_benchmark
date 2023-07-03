@@ -514,7 +514,7 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "abomonation")]
     bench_abomonation::bench(BENCH, c, &data, |data| {
         for update in data.updates.iter() {
-            black_box(&update);
+            black_box(update.score);
         }
     });
 
@@ -548,8 +548,8 @@ fn bench_mk48(c: &mut Criterion) {
         c,
         &data,
         |data| {
-            for updates in data.updates.iter() {
-                black_box(&updates.score);
+            for update in data.updates.iter() {
+                black_box(update.score);
             }
         },
         |mut updates| {
