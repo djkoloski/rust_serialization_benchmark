@@ -578,6 +578,9 @@ fn bench_mk48(c: &mut Criterion) {
         },
     );
 
+    #[cfg(feature = "msgpacker")]
+    bench_msgpacker::bench(BENCH, c, &data);
+
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
