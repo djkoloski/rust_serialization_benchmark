@@ -73,6 +73,16 @@ fn bench_log(c: &mut Criterion) {
         }
     });
 
+    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, |data| {
+        for log in data.logs {
+            black_box(&log.address);
+            black_box(log.code);
+            black_box(log.size);
+        }
+    });
+
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
@@ -101,6 +111,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
+
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
 
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
@@ -134,6 +147,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "scale")]
+    bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
@@ -176,9 +192,6 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
-    #[cfg(feature = "scale")]
-    bench_parity_scale_codec::bench(BENCH, c, &data);
-
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -193,19 +206,6 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |data| {
-        for log in data.logs {
-            black_box(&log.address);
-            black_box(log.code);
-            black_box(log.size);
-        }
-    });
-
-    #[cfg(feature = "dlhn")]
-    bench_dlhn::bench(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -228,6 +228,14 @@ fn bench_mesh(c: &mut Criterion) {
     bench_abomonation::bench(BENCH, c, &data, |data| {
         for triangle in data.triangles.iter() {
             black_box(triangle.normal);
+        }
+    });
+
+    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, |mesh| {
+        for triangle in mesh.triangles {
+            black_box(&triangle.normal);
         }
     });
 
@@ -258,6 +266,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
+    #[cfg(feature = "dlhn")]
+    bench_dlhn::bench(BENCH, c, &data);
+
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,
@@ -286,6 +297,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "scale")]
+    bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
@@ -319,9 +333,6 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
-    #[cfg(feature = "scale")]
-    bench_parity_scale_codec::bench(BENCH, c, &data);
-
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -336,17 +347,6 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |mesh| {
-        for triangle in mesh.triangles {
-            black_box(&triangle.normal);
-        }
-    });
-
-    #[cfg(feature = "dlhn")]
-    bench_dlhn::bench(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -369,6 +369,13 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_abomonation::bench(BENCH, c, &data, |data| {
         for player in data.players.iter() {
             black_box(player.game_type);
+        }
+    });
+
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, |data| {
+        for player in data.players {
+            black_box(&player.game_type);
         }
     });
 
@@ -432,6 +439,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
+    #[cfg(feature = "scale")]
+    bench_parity_scale_codec::bench(BENCH, c, &data);
+
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
 
@@ -467,9 +477,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
-    #[cfg(feature = "scale")]
-    bench_parity_scale_codec::bench(BENCH, c, &data);
-
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -484,13 +491,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |data| {
-        for player in data.players {
-            black_box(&player.game_type);
-        }
-    });
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -581,6 +581,9 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
+    #[cfg(feature = "scale")]
+    bench_parity_scale_codec::bench(BENCH, c, &data);
+
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
 
@@ -610,9 +613,6 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
-
-    #[cfg(feature = "scale")]
-    bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
