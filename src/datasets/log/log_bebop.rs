@@ -3,7 +3,7 @@
 //
 //
 //   bebopc version:
-//       2.4.5
+//       2.8.5
 //
 //
 //   bebopc source:
@@ -40,13 +40,14 @@ impl<'raw> ::bebop::SubRecord<'raw> for Address {
         Self::SERIALIZED_SIZE
     }
 
-    #[allow(unaligned_references)]
-    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-        Ok(self.x0._serialize_chained(dest)?
-            + self.x1._serialize_chained(dest)?
-            + self.x2._serialize_chained(dest)?
-            + self.x3._serialize_chained(dest)?)
-    }
+    ::bebop::define_serialize_chained!(*Self => |zelf, dest| {
+        Ok(
+            ::bebop::packed_read!(zelf.x0)._serialize_chained(dest)? +
+            ::bebop::packed_read!(zelf.x1)._serialize_chained(dest)? +
+            ::bebop::packed_read!(zelf.x2)._serialize_chained(dest)? +
+            ::bebop::packed_read!(zelf.x3)._serialize_chained(dest)?
+        )
+    });
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
         let mut i = 0;
@@ -109,16 +110,17 @@ impl<'raw> ::bebop::SubRecord<'raw> for Log<'raw> {
             + self.size.serialized_size()
     }
 
-    #[allow(unaligned_references)]
-    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-        Ok(self.address._serialize_chained(dest)?
-            + self.identity._serialize_chained(dest)?
-            + self.userid._serialize_chained(dest)?
-            + self.date._serialize_chained(dest)?
-            + self.request._serialize_chained(dest)?
-            + self.code._serialize_chained(dest)?
-            + self.size._serialize_chained(dest)?)
-    }
+    ::bebop::define_serialize_chained!(Self => |zelf, dest| {
+        Ok(
+            zelf.address._serialize_chained(dest)? +
+            zelf.identity._serialize_chained(dest)? +
+            zelf.userid._serialize_chained(dest)? +
+            zelf.date._serialize_chained(dest)? +
+            zelf.request._serialize_chained(dest)? +
+            zelf.code._serialize_chained(dest)? +
+            zelf.size._serialize_chained(dest)?
+        )
+    });
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
         let mut i = 0;
@@ -172,10 +174,11 @@ impl<'raw> ::bebop::SubRecord<'raw> for Logs<'raw> {
         self.logs_.serialized_size()
     }
 
-    #[allow(unaligned_references)]
-    fn _serialize_chained<W: ::std::io::Write>(&self, dest: &mut W) -> ::bebop::SeResult<usize> {
-        Ok(self.logs_._serialize_chained(dest)?)
-    }
+    ::bebop::define_serialize_chained!(Self => |zelf, dest| {
+        Ok(
+            zelf.logs_._serialize_chained(dest)?
+        )
+    });
 
     fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
         let mut i = 0;
@@ -248,19 +251,17 @@ pub mod owned {
                 + self.size.serialized_size()
         }
 
-        #[allow(unaligned_references)]
-        fn _serialize_chained<W: ::std::io::Write>(
-            &self,
-            dest: &mut W,
-        ) -> ::bebop::SeResult<usize> {
-            Ok(self.address._serialize_chained(dest)?
-                + self.identity._serialize_chained(dest)?
-                + self.userid._serialize_chained(dest)?
-                + self.date._serialize_chained(dest)?
-                + self.request._serialize_chained(dest)?
-                + self.code._serialize_chained(dest)?
-                + self.size._serialize_chained(dest)?)
-        }
+        ::bebop::define_serialize_chained!(Self => |zelf, dest| {
+            Ok(
+                zelf.address._serialize_chained(dest)? +
+                zelf.identity._serialize_chained(dest)? +
+                zelf.userid._serialize_chained(dest)? +
+                zelf.date._serialize_chained(dest)? +
+                zelf.request._serialize_chained(dest)? +
+                zelf.code._serialize_chained(dest)? +
+                zelf.size._serialize_chained(dest)?
+            )
+        });
 
         fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
             let mut i = 0;
@@ -322,13 +323,11 @@ pub mod owned {
             self.logs_.serialized_size()
         }
 
-        #[allow(unaligned_references)]
-        fn _serialize_chained<W: ::std::io::Write>(
-            &self,
-            dest: &mut W,
-        ) -> ::bebop::SeResult<usize> {
-            Ok(self.logs_._serialize_chained(dest)?)
-        }
+        ::bebop::define_serialize_chained!(Self => |zelf, dest| {
+            Ok(
+                zelf.logs_._serialize_chained(dest)?
+            )
+        });
 
         fn _deserialize_chained(raw: &'raw [u8]) -> ::bebop::DeResult<(usize, Self)> {
             let mut i = 0;

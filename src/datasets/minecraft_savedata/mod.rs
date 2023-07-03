@@ -1130,7 +1130,7 @@ impl bench_prost::Serialize for Player {
 
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message::default();
-        result.game_type = self.game_type as i32;
+        result.game_type = <GameType as Into<cp::GameType>>::into(self.game_type) as i32;
         result.previous_game_type = self.previous_game_type as i32;
         result.score = self.score;
         result.dimension = self.dimension.clone();

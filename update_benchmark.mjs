@@ -141,12 +141,13 @@ function buildTables(results, dataset, crates, columns, footnote) {
 const DATASET_DESCRIPTIONS = {
   log: 'This data set is composed of HTTP request logs that are small and contain many strings.',
   mesh: 'This data set is a single mesh. The mesh contains an array of triangles, each of which has three vertices and a normal vector.',
+  mk48: 'This data set is composed of mk48.io game updates that contain data with many exploitable patterns and invariants.',
   minecraft_savedata: 'This data set is composed of Minecraft player saves that contain highly structured data.'
 }
 
 function format(input, metadata) {
-  let bench_times_re = /^([a-z_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\W+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s).*$/gm
-  let bench_sizes_re = /^([a-z_\-]+)\/([a-z_\-]+)\/(size|zlib|zstd) (\d+)$/gm
+  let bench_times_re = /^([a-z0-9_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\W+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s).*$/gm
+  let bench_sizes_re = /^([a-z0-9_\-]+)\/([a-z_\-]+)\/(size|zlib|zstd) (\d+)$/gm
 
   let results = {}
   let crates = {}
