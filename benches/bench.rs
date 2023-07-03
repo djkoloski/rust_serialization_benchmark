@@ -494,7 +494,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 }
 
 fn bench_mk48(c: &mut Criterion) {
-    // TODO alkahest, capnp, flatbuffers, prost
+    // TODO capnp, flatbuffers, prost
 
     use rust_serialization_benchmark::datasets::mk48::Updates;
 
@@ -514,6 +514,13 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "abomonation")]
     bench_abomonation::bench(BENCH, c, &data, |data| {
         for update in data.updates.iter() {
+            black_box(update.score);
+        }
+    });
+
+    #[cfg(feature = "alkahest")]
+    bench_alkahest::bench(BENCH, c, &data, |data| {
+        for update in data.updates {
             black_box(update.score);
         }
     });

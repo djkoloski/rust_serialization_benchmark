@@ -26,6 +26,7 @@ use crate::{generate_vec, Generate};
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 2.14))]
@@ -128,6 +129,26 @@ impl Generate for EntityType {
     }
 }
 
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<EntityType> for EntityType {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<EntityType>, usize) {
+        use EntityType::*;
+        match self {
+            ArleighBurke => EntityTypeArleighBurkePack.pack(offset, output),
+            Bismarck => EntityTypeBismarckPack.pack(offset, output),
+            Clemenceau => EntityTypeClemenceauPack.pack(offset, output),
+            Fletcher => EntityTypeFletcherPack.pack(offset, output),
+            G5 => EntityTypeG5Pack.pack(offset, output),
+            Iowa => EntityTypeIowaPack.pack(offset, output),
+            Kolkata => EntityTypeKolkataPack.pack(offset, output),
+            Osa => EntityTypeOsaPack.pack(offset, output),
+            Yasen => EntityTypeYasenPack.pack(offset, output),
+            Zubr => EntityTypeZubrPack.pack(offset, output),
+        }
+    }
+}
+
 fn generate_submerge(rng: &mut impl Rng, entity_type: EntityType) -> bool {
     entity_type.is_sub() && rng.gen_bool(0.9)
 }
@@ -153,7 +174,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -175,6 +196,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Transform {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub altitude: i8,
@@ -195,7 +217,21 @@ impl Transform {
     }
 }
 
-#[derive(Clone, Debug)]
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<Transform> for Transform {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Transform>, usize) {
+        TransformPack {
+            altitude: self.altitude,
+            angle: self.angle,
+            position: self.position,
+            velocity: self.velocity,
+        }
+        .pack(offset, output)
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -217,6 +253,7 @@ impl Transform {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 pub struct Guidance {
     pub angle: u16,
     pub submerge: bool,
@@ -230,6 +267,19 @@ impl Guidance {
             submerge: generate_submerge(rng, entity_type),
             velocity: generate_velocity(rng),
         }
+    }
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<Guidance> for Guidance {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Guidance>, usize) {
+        GuidancePack {
+            angle: self.angle,
+            submerge: self.submerge,
+            velocity: self.velocity,
+        }
+        .pack(offset, output)
     }
 }
 
@@ -312,6 +362,37 @@ impl Contact {
     }
 }
 
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct ContactSchema {
+    pub damage: u8,
+    pub entity_id: u32,
+    pub entity_type: Option<EntityType>,
+    pub guidance: Guidance,
+    pub player_id: Option<u16>,
+    pub reloads: alkahest::Seq<bool>,
+    pub transform: Transform,
+    pub turret_angles: alkahest::Seq<u16>,
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<ContactSchema> for &'_ Contact {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<ContactSchema>, usize) {
+        ContactSchemaPack {
+            damage: self.damage,
+            entity_id: self.entity_id,
+            entity_type: self.entity_type,
+            guidance: self.guidance,
+            player_id: self.player_id,
+            reloads: self.reloads.iter(),
+            transform: self.transform,
+            turret_angles: self.turret_angles.iter(),
+        }
+        .pack(offset, output)
+    }
+}
+
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -354,6 +435,29 @@ impl TerrainUpdate {
     }
 }
 
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct TerrainUpdateSchema {
+    pub chunk_id: (i8, i8),
+    pub data: alkahest::Bytes,
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
+    #[inline]
+    fn pack(
+        self,
+        offset: usize,
+        output: &mut [u8],
+    ) -> (alkahest::Packed<TerrainUpdateSchema>, usize) {
+        TerrainUpdateSchemaPack {
+            chunk_id: self.chunk_id,
+            data: self.data.iter(),
+        }
+        .pack(offset, output)
+    }
+}
+
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -384,17 +488,6 @@ pub struct Update {
     pub terrain_updates: Vec<TerrainUpdate>,
 }
 
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedUpdate {
-        pub fn score_pin(self: Pin<&mut Self>) -> Pin<&mut u32> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.score) }
-        }
-    }
-};
-
 impl Generate for Update {
     fn generate<R: Rng>(rng: &mut R) -> Self {
         let player_count = rng.gen_range(200..400) as u16;
@@ -411,6 +504,40 @@ impl Generate for Update {
                 .map(|_| TerrainUpdate::generate(rng, terrain_radius))
                 .collect(),
         }
+    }
+}
+
+#[cfg(feature = "rkyv")]
+const _: () = {
+    use core::pin::Pin;
+
+    impl ArchivedUpdate {
+        pub fn score_pin(self: Pin<&mut Self>) -> Pin<&mut u32> {
+            unsafe { self.map_unchecked_mut(|s| &mut s.score) }
+        }
+    }
+};
+
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct UpdateSchema {
+    pub contacts: alkahest::Seq<ContactSchema>,
+    pub score: u32,
+    pub world_radius: f32,
+    pub terrain_updates: alkahest::Seq<TerrainUpdateSchema>,
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<UpdateSchema> for &'_ Update {
+    #[inline]
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<UpdateSchema>, usize) {
+        UpdateSchemaPack {
+            contacts: self.contacts.iter(),
+            score: self.score,
+            world_radius: self.world_radius,
+            terrain_updates: self.terrain_updates.iter(),
+        }
+        .pack(offset, output)
     }
 }
 
@@ -450,3 +577,19 @@ const _: () = {
         }
     }
 };
+
+#[cfg(feature = "alkahest")]
+#[derive(alkahest::Schema)]
+pub struct UpdatesSchema {
+    pub updates: alkahest::Seq<UpdateSchema>,
+}
+
+#[cfg(feature = "alkahest")]
+impl alkahest::Pack<UpdatesSchema> for &'_ Updates {
+    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<UpdatesSchema>, usize) {
+        UpdatesSchemaPack {
+            updates: self.updates.iter(),
+        }
+        .pack(offset, output)
+    }
+}
