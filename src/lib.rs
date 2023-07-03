@@ -2,8 +2,6 @@
 pub mod bench_abomonation;
 #[cfg(feature = "alkahest")]
 pub mod bench_alkahest;
-#[cfg(feature = "serde_bare")]
-pub mod bench_serde_bare;
 #[cfg(feature = "bincode")]
 pub mod bench_bincode;
 #[cfg(feature = "bitcode")]
@@ -14,8 +12,6 @@ pub mod bench_borsh;
 pub mod bench_bson;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
-#[cfg(feature = "serde_cbor")]
-pub mod bench_serde_cbor;
 #[cfg(feature = "ciborium")]
 pub mod bench_ciborium;
 #[cfg(feature = "dlhn")]
@@ -26,6 +22,8 @@ pub mod bench_flatbuffers;
 pub mod bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
 pub mod bench_nachricht_serde;
+#[cfg(feature = "scale")]
+pub mod bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
 pub mod bench_postcard;
 #[cfg(feature = "prost")]
@@ -36,8 +34,10 @@ pub mod bench_rkyv;
 pub mod bench_rmp_serde;
 #[cfg(feature = "ron")]
 pub mod bench_ron;
-#[cfg(feature = "scale")]
-pub mod bench_parity_scale_codec;
+#[cfg(feature = "serde_bare")]
+pub mod bench_serde_bare;
+#[cfg(feature = "serde_cbor")]
+pub mod bench_serde_cbor;
 #[cfg(feature = "serde_json")]
 pub mod bench_serde_json;
 #[cfg(feature = "simd-json")]

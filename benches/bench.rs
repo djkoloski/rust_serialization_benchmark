@@ -24,6 +24,8 @@ use rust_serialization_benchmark::bench_flatbuffers;
 use rust_serialization_benchmark::bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
 use rust_serialization_benchmark::bench_nachricht_serde;
+#[cfg(feature = "scale")]
+use rust_serialization_benchmark::bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
 use rust_serialization_benchmark::bench_postcard;
 #[cfg(feature = "prost")]
@@ -34,8 +36,6 @@ use rust_serialization_benchmark::bench_rkyv;
 use rust_serialization_benchmark::bench_rmp_serde;
 #[cfg(feature = "ron")]
 use rust_serialization_benchmark::bench_ron;
-#[cfg(feature = "scale")]
-use rust_serialization_benchmark::bench_parity_scale_codec;
 #[cfg(feature = "serde_bare")]
 use rust_serialization_benchmark::bench_serde_bare;
 #[cfg(feature = "serde_cbor")]
@@ -494,8 +494,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 }
 
 fn bench_mk48(c: &mut Criterion) {
-    // TODO capnp, flatbuffers, prost
-
     use rust_serialization_benchmark::datasets::mk48::Updates;
 
     const BENCH: &'static str = "mk48";
@@ -537,17 +535,57 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "bson")]
     bench_bson::bench(BENCH, c, &data);
 
+    #[cfg(feature = "capnp")]
+    bench_capnp::bench(BENCH, c, &data, |bytes| {
+        let message_reader =
+            capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
+        let data = message_reader
+            .get_root::<rust_serialization_benchmark::datasets::mk48::cp::updates::Reader>()
+            .unwrap();
+        for update in data.get_updates().unwrap().iter() {
+            black_box(update.get_score());
+        }
+    });
+
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
 
+    #[cfg(feature = "flatbuffers")]
+    bench_flatbuffers::bench(
+        BENCH,
+        c,
+        &data,
+        |bytes| unsafe {
+            let data = flatbuffers::root_unchecked::<
+                rust_serialization_benchmark::datasets::mk48::fb::Updates,
+            >(bytes);
+            for update in data.updates().iter() {
+                black_box(update.score());
+            }
+        },
+        |bytes| {
+            let data =
+                flatbuffers::root::<rust_serialization_benchmark::datasets::mk48::fb::Updates>(
+                    bytes,
+                )
+                .unwrap();
+            for update in data.updates().iter() {
+                black_box(update.score());
+            }
+        },
+    );
+
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
+
+    #[cfg(feature = "prost")]
+    bench_prost::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(

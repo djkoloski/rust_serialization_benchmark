@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package prost.mk48;
+
+enum EntityType {
+    ARLEIGH_BURKE = 0;
+    BISMARCK = 1;
+    CLEMENCEAU = 2;
+    FLETCHER = 3;
+    G5 = 4;
+    IOWA = 5;
+    KOLKATA = 6;
+    OSA = 7;
+    YASEN = 8;
+    ZUBR = 9;
+}
+
+message Vector2f {
+    float x = 1;
+    float y = 2;
+}
+
+message Transform {
+    int32 altitude = 1;
+    uint32 angle = 2;
+    Vector2f position = 3;
+    int32 velocity = 4;
+}
+
+message Guidance {
+    uint32 angle = 1;
+    bool submerge = 2;
+    int32 velocity = 3;
+}
+
+message Contact {
+    uint32 damage = 1;
+    uint32 entity_id = 2;
+    optional EntityType entity_type = 3;
+    Guidance guidance = 4;
+    optional uint32 player_id = 5;
+    repeated bool reloads = 6;
+    Transform transform = 7;
+    repeated uint32 turret_angles = 8;
+}
+
+message ChunkId {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message TerrainUpdate {
+    ChunkId chunk_id = 1;
+    bytes data = 2;
+}
+
+message Update {
+    repeated Contact contacts = 1;
+    uint32 score = 2;
+    float world_radius = 3;
+    repeated TerrainUpdate terrain_updates = 4;
+}
+
+message Updates {
+    repeated Update updates = 1;
+}

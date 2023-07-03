@@ -1,0 +1,62 @@
+enum EntityType {
+    ARLEIGH_BURKE = 1;
+    BISMARCK = 2;
+    CLEMENCEAU = 3;
+    FLETCHER = 4;
+    G5 = 5;
+    IOWA = 6;
+    KOLKATA = 7;
+    OSA = 8;
+    YASEN = 9;
+    ZUBR = 10;
+}
+
+struct Vector2F {
+    float32 x;
+    float32 y;
+}
+
+struct Transform {
+    int16 altitude;
+    uint16 angle;
+    Vector2F position;
+    int16 velocity;
+}
+
+struct Guidance {
+    uint16 angle;
+    bool submerge;
+    int16 velocity;
+}
+
+struct Contact {
+    byte damage;
+    uint32 entity_id;
+    EntityType entity_type;
+    Guidance guidance;
+    uint32 player_id;
+    bool[] reloads;
+    Transform transform;
+    uint32[] turret_angles;
+}
+
+struct ChunkId {
+    int32 x;
+    int32 y;
+}
+
+struct TerrainUpdate {
+    ChunkId chunk_id;
+    byte[] data;
+}
+
+struct Update {
+    Contact[] contacts;
+    uint32 score;
+    float32 world_radius;
+    TerrainUpdate[] terrain_updates;
+}
+
+struct Updates {
+    Update[] updates_;
+}

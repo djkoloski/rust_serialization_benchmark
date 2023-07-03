@@ -1,0 +1,64 @@
+namespace mk48;
+
+enum EntityType : byte {
+    ArleighBurke,
+    Bismarck,
+    Clemenceau,
+    Fletcher,
+    G5,
+    Iowa,
+    Kolkata,
+    Osa,
+    Yasen,
+    Zubr,
+}
+
+struct Vector2f {
+    x: float;
+    y: float;
+}
+
+struct Transform {
+    altitude: byte;
+    angle: ushort;
+    position: Vector2f;
+    velocity: short;
+}
+
+struct Guidance {
+    angle: ushort;
+    submerge: bool;
+    velocity: short;
+}
+
+table Contact {
+    damage: ubyte;
+    entity_id: uint;
+    entity_type: EntityType;
+    guidance: Guidance;
+    player_id: ushort;
+    reloads: [bool] (required);
+    transform: Transform;
+    turret_angles: [ushort] (required);
+}
+
+struct ChunkId {
+    x: byte;
+    y: byte;
+}
+
+table TerrainUpdate {
+    chunk_id: ChunkId;
+    data: [ubyte];
+}
+
+table Update {
+    contacts: [Contact] (required);
+    score: uint;
+    world_radius: float;
+    terrain_updates: [TerrainUpdate] (required);
+}
+
+table Updates {
+    updates: [Update] (required);
+}

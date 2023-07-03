@@ -1,5 +1,5 @@
-use parity_scale_codec::{Encode, Decode};
 use criterion::{black_box, Criterion};
+use parity_scale_codec::{Decode, Encode};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
