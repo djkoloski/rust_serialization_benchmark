@@ -63,8 +63,9 @@ jobs:
           git add -A benchmark_results
           git add README.md
 
-          cd pages && trunk --config Trunk.prod.toml build --release --filehash=false
-          git add -A pages/dist
+          cd pages
+          trunk --config Trunk.prod.toml build --release --filehash=false
+          git add -A dist
 
           git commit -m "[gh-actions] Update benchmarks"
 
