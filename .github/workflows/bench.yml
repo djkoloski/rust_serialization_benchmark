@@ -65,7 +65,8 @@ jobs:
 
           cd pages
           trunk --config Trunk.prod.toml build --release --filehash=false
-          git add -A dist_prod
+          cd ..
+          git add -A docs
 
           git commit -m "[gh-actions] Update benchmarks"
 

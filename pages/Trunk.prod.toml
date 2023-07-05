@@ -6,7 +6,7 @@ target = "index.html"
 release = true
 
 # The output dir for all final assets.
-dist = "dist_prod"
+dist = "../docs"
 
 # The public URL from which assets are to be served.
 public_url = "/rust_serialization_benchmark/"
