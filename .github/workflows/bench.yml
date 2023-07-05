@@ -60,7 +60,7 @@ jobs:
 
           cargo run -p bencher
 
-          git add -A benchmark_results
+          # git add -A benchmark_results
           git add README.md
 
           cd pages
