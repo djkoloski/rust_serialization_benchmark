@@ -1,4 +1,3 @@
 [unstable]
-# Requires the rust-src component. `rustup component add rust-src`
 build-std = ["std", "panic_abort"]
 build-std-features = ["panic_immediate_abort"]

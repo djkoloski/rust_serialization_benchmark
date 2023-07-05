@@ -1,6 +1,7 @@
 use crate::calc::calc;
 use crate::compression::Compression;
 use crate::event::event_target;
+use crate::mode::Mode;
 use row::Row;
 use std::str::FromStr;
 use stylist::css;
@@ -10,6 +11,7 @@ use yew::prelude::*;
 mod calc;
 mod compression;
 mod event;
+mod mode;
 mod row;
 
 const RAW: &str = include_str!("../../README.md");
@@ -65,7 +67,11 @@ fn benchmark() -> Html {
     let cpus = f64::from_str(&cpus_state.value).unwrap_or_default();
 
     let dataset_state = Var::new(use_state(|| 3usize));
-    let (name, message_name, messages_per_benchmark) = DATASETS[dataset_state.value];
+    let dataset = dataset_state.value;
+    let (name, message_name, messages_per_benchmark) = DATASETS[dataset];
+
+    let mode_state = Var::new(use_state(|| Mode::Serialize));
+    let mode = mode_state.value;
 
     let compression_set_state = Var::new(use_state(|| Compression::iter().collect()));
     let compression_set = &compression_set_state.value;
@@ -88,22 +94,32 @@ fn benchmark() -> Html {
         bandwidth_bytes,
         cpus as f32,
         compression_set,
+        mode,
     );
 
     let on_bandwidth = on_event!(bandwidth_state, InputEvent, HtmlInputElement);
     let on_cpus = on_event!(cpus_state, InputEvent, HtmlInputElement);
     let on_dataset = on_event!(dataset_state, Event, HtmlSelectElement);
+    let on_mode = on_event!(mode_state, Event, HtmlSelectElement);
 
     let selection_style = css!(
         r#"
-        margin: 0.5rem auto;
+        margin: auto;
+        margin-bottom: 0.7rem;
         input[type=number], select {
-            width: 8rem;
+            width: 6rem;
         }
         th, td {
-            padding-left: 0.3rem;
-            padding-right: 0.3rem;
+            padding-left: 0.2rem;
+            padding-right: 0.2rem;
         }
+        "#
+    );
+
+    let inner_selection_style = css!(
+        r#"
+        margin-left: 0.7rem;
+        margin-right: 0.7rem;
         "#
     );
 
@@ -135,69 +151,87 @@ fn benchmark() -> Html {
 
     let bandwidth_step = float_step(bandwidth);
     let cpus_step = float_step(cpus);
+    let mode_description = mode.description();
 
     html! {
         <div>
             <div style="text-align:center;">
                 <h2 style="margin: 0.5rem; margin-top: 0.75rem;">{ "Rust Serialization Benchmark" }</h2>
-                <p style="white-space: initial; width: 65%; margin: auto; margin-bottom: 1rem; color: #a9a9a9; font-style: italic;">
-                    { format!("Given monthly bandwidth and CPU allocation, how many {} can be serialized and sent per second?", message_name) }
+                <p style="white-space: initial; width: 80%; margin: auto; margin-bottom: 1rem; color: #a9a9a9; font-style: italic;">
+                    { format!("Given monthly bandwidth and CPU allocation, how many {message_name} can be {mode_description} per second?") }
                 </p>
             </div>
-            <table class={selection_style}>
-                <tr title="Bandwidth allocated in terabytes per month">
-                    <td><label for="bandwidth"> { "Bandwidth " } </label></td>
-                    <td><input name="bandwidth" type="number" min="0" step={bandwidth_step} oninput={on_bandwidth} value={bandwidth_state.value}/></td>
-                    <td><label for="bandwidth"> { " TB/Mo" } </label></td>
-                </tr>
-                <tr title="Fractional CPU cores allocated for serialization and compression">
-                    <td><label for="cpus"> { "CPU " } </label></td>
-                    <td><input name="cpus" type="number" min="0" step={cpus_step} oninput={on_cpus} value={cpus_state.value}/></td>
-                    <td><label for="bandwidth"> { " cores" } </label></td>
-                </tr>
-                <tr title="See rust_serialization_benchmark">
-                    <td><label for="dataset"> { "Dataset " } </label></td>
-                    <td>
-                        <select name="dataset" onchange={on_dataset}>
-                            {
-                                DATASETS.iter().enumerate().map(|(i, (b, ..))| html! {
-                                    <option value={i.to_string()}> {b} </option>
-                                }).collect::<Html>()
+            <table class={selection_style}><tr>
+                <td><table class={inner_selection_style.clone()}>
+                    <tr title="Bandwidth allocated in terabytes per month">
+                        <td><label for="bandwidth"> { "Bandwidth " } </label></td>
+                        <td><input name="bandwidth" type="number" min="0" step={bandwidth_step} oninput={on_bandwidth} value={bandwidth_state.value}/></td>
+                        <td><label for="bandwidth"> { " TB/Mo" } </label></td>
+                    </tr>
+                    <tr title="Fractional CPU cores allocated for serialization and compression">
+                        <td><label for="cpus"> { "CPU " } </label></td>
+                        <td><input name="cpus" type="number" min="0" step={cpus_step} oninput={on_cpus} value={cpus_state.value}/></td>
+                        <td><label for="bandwidth"> { " cores" } </label></td>
+                    </tr>
+                    <tr title="See rust_serialization_benchmark">
+                        <td><label for="dataset"> { "Dataset " } </label></td>
+                        <td>
+                            <select name="dataset" onchange={on_dataset}>
+                                {
+                                    DATASETS.iter().enumerate().map(|(i, (b, ..))| html! {
+                                        <option value={i.to_string()} selected={i == dataset}> {b} </option>
+                                    }).collect::<Html>()
+                                }
+                            </select>
+                        </td>
+                        <td/>
+                    </tr>
+                    <tr title="Measure serialization, deserialization or both">
+                        <td><label for="mode"> { "Mode " } </label></td>
+                        <td>
+                            <select name="mode" onchange={on_mode}>
+                                {
+                                    Mode::iter().map(|m| html! {
+                                        <option value={m.to_string()} selected={m == mode}> {m.to_string()} </option>
+                                    }).collect::<Html>()
+                                }
+                            </select>
+                        </td>
+                        <td/>
+                    </tr>
+                </table></td>
+                <td><table class={inner_selection_style}>
+                    {
+                        Compression::iter().filter(|c| c.is_some()).map(|compression| {
+                            let checked = compression_set.contains(compression);
+
+                            let on_change = compression_set_state.on_change.clone();
+                            let compression_set = *compression_set;
+                            let oninput = Callback::from(move |event: InputEvent| {
+                                let element: HtmlInputElement = event_target(&event);
+                                let mut s = compression_set;
+                                if element.checked() {
+                                    s.insert(compression);
+                                } else {
+                                    s.remove(compression);
+                                }
+                                on_change.emit(s);
+                            });
+
+                            let name = format!("{compression}");
+                            let title = format!("Allow {compression} compression");
+
+                            html! {
+                                <tr {title}>
+                                    <td><label for={name.clone()}> { format!("{compression} ") } </label></td>
+                                    <td><input {name} {oninput} {checked} type="checkbox"/></td>
+                                    <td/>
+                                </tr>
                             }
-                        </select>
-                    </td>
-                    <td/>
-                </tr>
-                {
-                    Compression::iter().filter(|c| c.is_some()).map(|compression| {
-                        let checked = compression_set.contains(compression);
-
-                        let on_change = compression_set_state.on_change.clone();
-                        let compression_set = *compression_set;
-                        let oninput = Callback::from(move |event: InputEvent| {
-                            let element: HtmlInputElement = event_target(&event);
-                            let mut s = compression_set;
-                            if element.checked() {
-                                s.insert(compression);
-                            } else {
-                                s.remove(compression);
-                            }
-                            on_change.emit(s);
-                        });
-
-                        let name = format!("{compression}");
-                        let title = format!("Allow {compression} compression");
-
-                        html! {
-                            <tr {title}>
-                                <td><label for={name.clone()}> { format!("{compression} ") } </label></td>
-                                <td><input {name} {oninput} {checked} type="checkbox"/></td>
-                                <td/>
-                            </tr>
-                        }
-                    }).collect::<Html>()
-                }
-            </table>
+                        }).collect::<Html>()
+                    }
+                </table></td>
+            </tr></table>
             <table class = {table_style.clone()}>
                 <tr>
                     <th> { "Crate" } </th>
@@ -266,6 +300,7 @@ fn float_step(float: f64) -> String {
 }
 
 // Overrides step down 0.1 - 0.1 => 0.09.
+#[allow(clippy::ptr_arg)]
 fn step_zero_down(next: String, previous: &String) -> String {
     if let Ok(float) = f64::from_str(&next) {
         if float == 0.0 {
@@ -278,7 +313,7 @@ fn step_zero_down(next: String, previous: &String) -> String {
             }
         }
     }
-    return next;
+    next
 }
 
 // https://stackoverflow.com/questions/60497397/how-do-you-format-a-float-to-the-first-significant-decimal-and-with-specified-pr

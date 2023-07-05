@@ -25,11 +25,24 @@ impl Compression {
         !self.is_none()
     }
 
-    pub fn seconds(self, bytes: u64) -> f32 {
+    pub fn serialize_seconds(self, bytes: u64) -> f32 {
         // TODO real benchmarks (since speed is different on different data and cpus).
         const SCALE: f32 = 0.5;
         const ZLIB_MBPS: f32 = 31.375 * SCALE;
         const ZSTD_MBPS: f32 = 202.985 * SCALE;
+
+        bytes as f32
+            * match self {
+                Self::None => 0.0,
+                Self::Zlib => 1.0 / (ZLIB_MBPS * 1_000_000.0),
+                Self::Zstd => 1.0 / (ZSTD_MBPS * 1_000_000.0),
+            }
+    }
+
+    pub fn deserialize_seconds(self, bytes: u64) -> f32 {
+        // TODO real benchmarks (since speed is different on different data and cpus).
+        const ZLIB_MBPS: f32 = 400.0;
+        const ZSTD_MBPS: f32 = 1360.0;
 
         bytes as f32
             * match self {

@@ -1,4 +1,5 @@
 use crate::compression::{Compression, CompressionSet};
+use crate::mode::Mode;
 use crate::row::Row;
 use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
@@ -37,6 +38,7 @@ pub fn calc(
     bandwidth: u64,
     cpus: f32,
     compression_set: &CompressionSet,
+    mode: Mode,
 ) -> Vec<CalcRow> {
     let bandwidth_per_second = bandwidth as f32 * (1.0 / (30.4 * 24.0 * 60.0 * 60.0));
 
@@ -46,19 +48,30 @@ pub fn calc(
             let Row {
                 crate_,
                 serialize,
+                deserialize,
                 version,
                 sizes,
                 ..
             } = r;
+            let deserialize = deserialize.unwrap_or(0.0);
 
             sizes
                 .into_iter()
                 .filter(|(c, _)| compression_set.contains(*c))
                 .map(move |(compression, size)| {
-                    let limit_size = bandwidth_per_second / size as f32;
+                    // TODO this assumes that inbound bandwidth is equivalent to outbound bandwidth which isn't the case for many VPS.
+                    let size = size * if mode == Mode::RoundTrip { 2 } else { 1 };
 
-                    let compression_seconds = compression.seconds(size);
-                    let limit_speed = cpus / (serialize + compression_seconds);
+                    let limit_size = bandwidth_per_second / size as f32;
+                    let serialize_seconds = serialize + compression.serialize_seconds(size);
+                    let deserialize_seconds = deserialize + compression.deserialize_seconds(size);
+
+                    let limit_speed = cpus
+                        / match mode {
+                            Mode::Serialize => serialize_seconds,
+                            Mode::Deserialize => deserialize_seconds,
+                            Mode::RoundTrip => serialize_seconds + deserialize_seconds,
+                        };
 
                     let (benchmarks_per_second, limit) = if limit_size < limit_speed {
                         (limit_size, Bottleneck::Bandwidth)
