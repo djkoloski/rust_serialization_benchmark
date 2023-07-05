@@ -28,11 +28,19 @@ struct Var<T> {
 
 impl<T: Clone + 'static> Var<T> {
     fn new(state: UseStateHandle<T>) -> Self {
+        Self::with_map(state, |next, _| next)
+    }
+
+    /// Maps (next, current) -> next.
+    fn with_map(state: UseStateHandle<T>, map: fn(T, &T) -> T) -> Self {
         Var {
             value: (*state).clone(),
             on_change: {
                 let state = state.clone();
-                Callback::from(move |value| state.set(value))
+                Callback::from(move |next| {
+                    let next = map(next, &*state);
+                    state.set(next)
+                })
             },
         }
     }
@@ -50,11 +58,11 @@ macro_rules! on_event {
 
 #[function_component(Benchmark)]
 fn benchmark() -> Html {
-    let bandwidth_state = Var::new(use_state(|| "1".to_owned()));
-    let bandwidth = f32::from_str(&bandwidth_state.value).unwrap_or_default();
+    let bandwidth_state = Var::with_map(use_state(|| "1".to_owned()), step_zero_down);
+    let bandwidth = f64::from_str(&bandwidth_state.value).unwrap_or_default();
 
-    let cpus_state = Var::new(use_state(|| "0.01".to_owned()));
-    let cpus = f32::from_str(&cpus_state.value).unwrap_or_default();
+    let cpus_state = Var::with_map(use_state(|| "0.01".to_owned()), step_zero_down);
+    let cpus = f64::from_str(&cpus_state.value).unwrap_or_default();
 
     let dataset_state = Var::new(use_state(|| 3usize));
     let (name, message_name, messages_per_benchmark) = DATASETS[dataset_state.value];
@@ -78,7 +86,7 @@ fn benchmark() -> Html {
         rows,
         messages_per_benchmark,
         bandwidth_bytes,
-        cpus,
+        cpus as f32,
         compression_set,
     );
 
@@ -125,6 +133,9 @@ fn benchmark() -> Html {
         "#
     );
 
+    let bandwidth_step = float_step(bandwidth);
+    let cpus_step = float_step(cpus);
+
     html! {
         <div>
             <div style="text-align:center;">
@@ -136,12 +147,12 @@ fn benchmark() -> Html {
             <table class={selection_style}>
                 <tr title="Bandwidth allocated in terabytes per month">
                     <td><label for="bandwidth"> { "Bandwidth " } </label></td>
-                    <td><input name="bandwidth" type="number" min="0" step="0.1" oninput={on_bandwidth} value={bandwidth_state.value}/></td>
+                    <td><input name="bandwidth" type="number" min="0" step={bandwidth_step} oninput={on_bandwidth} value={bandwidth_state.value}/></td>
                     <td><label for="bandwidth"> { " TB/Mo" } </label></td>
                 </tr>
                 <tr title="Fractional CPU cores allocated for serialization and compression">
                     <td><label for="cpus"> { "CPU " } </label></td>
-                    <td><input name="cpus" type="number" min="0" step="0.01" oninput={on_cpus} value={cpus_state.value}/></td>
+                    <td><input name="cpus" type="number" min="0" step={cpus_step} oninput={on_cpus} value={cpus_state.value}/></td>
                     <td><label for="bandwidth"> { " cores" } </label></td>
                 </tr>
                 <tr title="See rust_serialization_benchmark">
@@ -238,6 +249,36 @@ fn app() -> Html {
 
 fn main() {
     yew::Renderer::<App>::new().render();
+}
+
+fn float_ilog2(float: f64) -> i32 {
+    if float <= 0.0 {
+        -2
+    } else {
+        // Work around some rounding errors.
+        let offset = 64;
+        ((float * 1.001).log10().floor() + 0.25 + offset as f64) as u32 as i32 - offset
+    }
+}
+
+fn float_step(float: f64) -> String {
+    10f64.powi(float_ilog2(float)).to_string()
+}
+
+// Overrides step down 0.1 - 0.1 => 0.09.
+fn step_zero_down(next: String, previous: &String) -> String {
+    if let Ok(float) = f64::from_str(&next) {
+        if float == 0.0 {
+            if let Ok(previous) = f64::from_str(previous) {
+                if previous >= 1e-10 {
+                    // Max 11 decimals and trim trailing zeros to work around rounding errors.
+                    let s = format!("{:.11}", (10f64.powi(float_ilog2(previous) - 1) * 9.0));
+                    return s.trim_end_matches('0').trim_end_matches('.').to_owned();
+                }
+            }
+        }
+    }
+    return next;
 }
 
 // https://stackoverflow.com/questions/60497397/how-do-you-format-a-float-to-the-first-significant-decimal-and-with-specified-pr
