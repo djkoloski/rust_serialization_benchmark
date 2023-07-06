@@ -3,6 +3,9 @@ name: bench
 on:
   workflow_dispatch:
   push:
+    paths-ignore:
+      - 'README.md'
+      - 'benchmark_results/**'
 
 env:
   CI: true
@@ -47,7 +50,7 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
-          node update_benchmark.mjs
+          cargo run -p bencher
 
           git add -A benchmark_results
           git add README.md

@@ -1,0 +1,11 @@
+[package]
+name = "bencher"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+tempfile.workspace = true
+time.workspace = true

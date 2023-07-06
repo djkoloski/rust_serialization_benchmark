@@ -18,7 +18,7 @@ fn bebop_compile_dataset(name: &'static str) {
 fn capnpc_compile_dataset(name: &'static str) -> capnp::Result<()> {
     let mut command = capnpc::CompilerCommand::new();
     #[cfg(windows)]
-    command.capnp_executable("tools/capnp.exe");
+    command.capnp_executable("prebuilt/capnp.exe");
     command.file(&format!("src/datasets/{0}/{0}.capnp", name));
     command.output_path(".");
     command.default_parent_module(vec!["datasets".into(), name.into()]);
@@ -27,7 +27,7 @@ fn capnpc_compile_dataset(name: &'static str) -> capnp::Result<()> {
 
 fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
     #[cfg(windows)]
-    let flatc = flatc_rust::Flatc::from_path("./tools/flatc.exe");
+    let flatc = flatc_rust::Flatc::from_path("./prebuilt/flatc.exe");
     #[cfg(not(windows))]
     let flatc = flatc_rust::Flatc::from_env_path();
 
@@ -45,7 +45,7 @@ fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     if cfg!(windows) {
         match env::var("PROTOC") {
             Err(_) => {
-                env::set_var("PROTOC", "./tools/protoc.exe");
+                env::set_var("PROTOC", "./prebuilt/protoc.exe");
             }
             _ => {}
         }

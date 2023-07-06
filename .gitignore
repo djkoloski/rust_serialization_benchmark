@@ -1,5 +1,3 @@
-*.log
-.date
 Cargo.lock
 /target
 /.vscode
