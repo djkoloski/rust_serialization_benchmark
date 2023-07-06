@@ -54,18 +54,20 @@ pub fn calc(
                 ..
             } = r;
             let deserialize = deserialize.unwrap_or(0.0);
+            let uncompressed_size = *sizes.get(Compression::None).unwrap();
 
             sizes
                 .into_iter()
                 .filter(|(c, _)| compression_set.contains(*c))
-                .map(move |(compression, size)| {
+                .map(move |(compression, compressed_size)| {
                     // TODO this assumes that inbound bandwidth is equivalent to outbound bandwidth which isn't the case for many VPS.
-                    let size = size * if mode == Mode::RoundTrip { 2 } else { 1 };
+                    let limit_size = bandwidth_per_second
+                        / (compressed_size * if mode == Mode::RoundTrip { 2 } else { 1 }) as f32;
 
-                    let limit_size = bandwidth_per_second / size as f32;
-                    let serialize_seconds = serialize + compression.serialize_seconds(size);
-                    let deserialize_seconds = deserialize + compression.deserialize_seconds(size);
-
+                    let serialize_seconds =
+                        serialize + compression.serialize_seconds(uncompressed_size);
+                    let deserialize_seconds =
+                        deserialize + compression.deserialize_seconds(uncompressed_size);
                     let limit_speed = cpus
                         / match mode {
                             Mode::Serialize => serialize_seconds,
