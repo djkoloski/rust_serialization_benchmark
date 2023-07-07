@@ -29,7 +29,6 @@ pub struct CalcRow {
     pub limit: Bottleneck,
     pub messages_per_second: f32,
     pub relative: f32,
-    pub version: String,
 }
 
 pub fn calc(
@@ -49,7 +48,6 @@ pub fn calc(
                 crate_,
                 serialize,
                 deserialize,
-                version,
                 sizes,
                 ..
             } = r;
@@ -86,7 +84,6 @@ pub fn calc(
                         limit,
                         messages_per_second: benchmarks_per_second * messages_per_benchmark as f32,
                         relative: 0.0,
-                        version: version.clone(),
                     }
                 })
         })

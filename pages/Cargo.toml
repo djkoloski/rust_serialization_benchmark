@@ -7,9 +7,13 @@ publish = false
 [dependencies]
 enum-iterator = "0.8.1"
 fixed-map = { version = "0.9.2", default-features = false }
+schema = { path = "../tools/schema" }
+serde_json = "1.0.96"
 stylist = { git = "https://github.com/finnbear/stylist-rs/", branch="fix_120_no_js_value_in_proc_macro", version = "0.12", features = [ "yew_integration", "macros" ], default-features = false }
 wasm-bindgen = "0.2"
 yew = { version = "0.20.0", features = [ "csr" ], default-features = false }
+
+[workspace]
 
 [dependencies.web-sys]
 version = "0.3.60"

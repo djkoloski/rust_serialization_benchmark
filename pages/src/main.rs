@@ -3,6 +3,7 @@ use crate::compression::Compression;
 use crate::event::event_target;
 use crate::mode::Mode;
 use row::Row;
+use schema::Results;
 use std::str::FromStr;
 use stylist::css;
 use web_sys::{Event, HtmlInputElement, HtmlSelectElement};
@@ -14,13 +15,8 @@ mod event;
 mod mode;
 mod row;
 
-const RAW: &str = include_str!("../../README.md");
-const DATASETS: [(&str, &str, u32); 4] = [
-    ("log", "logs", 10_000),
-    ("mesh", "meshes", 1),
-    ("minecraft_savedata", "saves", 500),
-    ("mk48", "updates", 1_000),
-];
+// TODO latest json.
+const RAW: &str = include_str!("../../benchmark_results/2023-7-7_2-13-59.json");
 
 #[derive(PartialEq)]
 struct Var<T> {
@@ -60,15 +56,31 @@ macro_rules! on_event {
 
 #[function_component(Benchmark)]
 fn benchmark() -> Html {
+    let results: Results = serde_json::from_str(RAW).unwrap();
+    let datasets: Vec<_> = results.datasets.keys().collect();
+
     let bandwidth_state = Var::with_map(use_state(|| "1".to_owned()), step_zero_down);
     let bandwidth = f64::from_str(&bandwidth_state.value).unwrap_or_default();
 
     let cpus_state = Var::with_map(use_state(|| "0.01".to_owned()), step_zero_down);
     let cpus = f64::from_str(&cpus_state.value).unwrap_or_default();
 
-    let dataset_state = Var::new(use_state(|| 3usize));
+    let dataset_state = Var::new(use_state(|| {
+        let default_dataset = "mk48";
+        if results.datasets.contains_key(default_dataset) {
+            default_dataset.to_owned()
+        } else {
+            (*datasets.iter().next().unwrap()).clone()
+        }
+    }));
     let dataset = dataset_state.value;
-    let (name, message_name, messages_per_benchmark) = DATASETS[dataset];
+    let (message_name, messages_per_benchmark) = match dataset.as_str() {
+        "log" => ("logs", 10_000),
+        "mesh" => ("meshes", 1),
+        "minecraft_savedata" => ("saves", 500),
+        "mk48" => ("updates", 1_000),
+        _ => ("messages", 1),
+    };
 
     let mode_state = Var::new(use_state(|| Mode::Serialize));
     let mode = mode_state.value;
@@ -76,15 +88,18 @@ fn benchmark() -> Html {
     let compression_set_state = Var::new(use_state(|| Compression::iter().collect()));
     let compression_set = &compression_set_state.value;
 
-    let s = RAW;
-    let (_, s) = s.split_once(&format!("## `{}`", name)).unwrap();
-    let (s, _) = s
-        .split_once("#### Zero-copy deserialization speed")
-        .unwrap();
-
-    let lines = s.lines().filter(|l| l.starts_with("| ["));
-    let rows: Result<Vec<Row>, _> = lines.map(FromStr::from_str).collect();
-    let rows = rows.unwrap();
+    let rows: Result<Vec<Row>, _> = results
+        .datasets
+        .get(&dataset)
+        .unwrap()
+        .crates
+        .iter()
+        .map(TryFrom::try_from)
+        .collect();
+    let rows = match rows {
+        Ok(rows) => rows,
+        Err(err) => return html! { { format!("error: {err}") } },
+    };
 
     let bandwidth_bytes = (bandwidth * 1_000_000_000_000.0) as u64;
 
@@ -178,8 +193,8 @@ fn benchmark() -> Html {
                         <td>
                             <select name="dataset" onchange={on_dataset}>
                                 {
-                                    DATASETS.iter().enumerate().map(|(i, (b, ..))| html! {
-                                        <option value={i.to_string()} selected={i == dataset}> {b} </option>
+                                    datasets.iter().map(|&d| html! {
+                                        <option value={d.clone()} selected={d == &dataset}> {d} </option>
                                     }).collect::<Html>()
                                 }
                             </select>
@@ -244,7 +259,7 @@ fn benchmark() -> Html {
                     rows.iter().map(|row| {
                         html! {
                             <tr>
-                                <td><a href={format!("https://crates.io/crates/{}/{}", row.crate_, row.version)} target="_blank">{ &row.crate_ }</a></td>
+                                <td><a href={format!("https://crates.io/crates/{}/{}", row.crate_, results.meta.crate_versions.get(&row.crate_).unwrap())} target="_blank">{ &row.crate_ }</a></td>
                                 <td> { row.compression.to_string() } </td>
                                 <td> { format_float(row.messages_per_second, 3) } </td>
                                 <td> { format!("{}%", (row.relative * 100.0) as u32) } </td>

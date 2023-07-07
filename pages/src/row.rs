@@ -1,10 +1,9 @@
 use crate::compression::{Compression, CompressionMap};
-use std::str::FromStr;
+use schema::{Bench, Crate};
 
 #[derive(Debug)]
 pub struct Row {
     pub crate_: String,
-    pub version: String,
     pub serialize: f32,
     pub deserialize: Option<f32>,
     pub sizes: CompressionMap<u64>,
@@ -13,67 +12,42 @@ pub struct Row {
 type Error = &'static str;
 type Result<T> = std::result::Result<T, Error>;
 
-impl FromStr for Row {
-    type Err = Error;
+fn unwrap_bytes(bench: &Bench) -> Result<u64> {
+    match bench {
+        Bench::Bytes(v) => Ok(v.primary.ok_or("missing bytes")?),
+        _ => Err("not bytes"),
+    }
+}
 
-    fn from_str(s: &str) -> Result<Self> {
-        let mut cols = s.split('|');
-        let mut col = || cols.next().ok_or("missing '|''");
-        col()?;
+fn unwrap_seconds(bench: &Bench) -> Result<Option<f64>> {
+    match bench {
+        Bench::Nanos(v) => Ok(v.iter().next().map(|&ns| ns / 1_000_000_000.0)),
+        _ => Err("not nanos"),
+    }
+}
 
-        let (crate_, version) = col()?
-            .split_once('[')
-            .ok_or("missing '['")?
-            .1
-            .split_once(']')
-            .ok_or("missing ']'")?
-            .0
-            .split_once(' ')
-            .ok_or("invalid crate + version")?;
-        let crate_ = crate_.to_owned();
-        let version = version.to_owned();
+impl TryFrom<(&String, &Crate)> for Row {
+    type Error = Error;
 
-        let serialize = parse_seconds(col()?)?.ok_or("no serialize")?;
-        let deserialize = parse_seconds(col()?)?;
+    fn try_from((crate_, Crate { benches }): (&String, &Crate)) -> Result<Self> {
+        let col = |key: &'static str| -> Result<&Bench> { benches.get(key).ok_or(key) };
+
+        let serialize = unwrap_seconds(col("serialize")?)?.ok_or("no serialize primary")? as f32;
+        let deserialize = col("deserialize")
+            .ok()
+            .and_then(|v| unwrap_seconds(v).ok().flatten())
+            .map(|v| v as f32);
 
         let mut sizes = CompressionMap::default();
-        sizes.insert(Compression::None, parse_bytes(col()?)?);
-        sizes.insert(Compression::Zlib, parse_bytes(col()?)?);
-        sizes.insert(Compression::Zstd, parse_bytes(col()?)?);
+        sizes.insert(Compression::None, unwrap_bytes(col("size")?)?);
+        sizes.insert(Compression::Zlib, unwrap_bytes(col("zlib")?)?);
+        sizes.insert(Compression::Zstd, unwrap_bytes(col("zstd")?)?);
 
-        Ok(Row {
-            crate_,
-            version,
+        Ok(Self {
+            crate_: crate_.clone(),
             serialize,
             deserialize,
             sizes,
         })
     }
-}
-
-fn parse_seconds(s: &str) -> Result<Option<f32>> {
-    let s = s.trim();
-    let s = if let Some((_, s)) = s.split_once(">*") {
-        s.split_once('\\').ok_or("missing '\\'")?.0
-    } else {
-        s
-    };
-
-    let Some((num, unit)) = s.split_once(' ') else {
-        return (s == "†").then_some(None).ok_or("invalid nanoseconds");
-    };
-
-    let num = f64::from_str(num).map_err(|_| "invalid f64")?;
-    Ok(Some(
-        (num / match unit {
-            "ns" => 1_000_000_000.0,
-            "µs" => 1_000_000.0,
-            "ms" => 1_000.0,
-            _ => return Err("unknown unit"),
-        }) as f32,
-    ))
-}
-
-fn parse_bytes(s: &str) -> Result<u64> {
-    u64::from_str(s.trim()).map_err(|_| "invalid u64")
 }
