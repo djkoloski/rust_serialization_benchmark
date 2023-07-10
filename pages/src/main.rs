@@ -15,8 +15,7 @@ mod event;
 mod mode;
 mod row;
 
-// TODO latest json.
-const RAW: &str = include_str!("../../benchmark_results/2023-7-7_2-13-59.json");
+const RAW: &str = include_str!("latest.json");
 
 #[derive(PartialEq)]
 struct Var<T> {
@@ -70,7 +69,7 @@ fn benchmark() -> Html {
         if results.datasets.contains_key(default_dataset) {
             default_dataset.to_owned()
         } else {
-            (*datasets.iter().next().unwrap()).clone()
+            (*datasets.first().unwrap()).clone()
         }
     }));
     let dataset = dataset_state.value;

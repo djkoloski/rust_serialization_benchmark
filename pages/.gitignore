@@ -2,3 +2,4 @@ Cargo.lock
 /target
 /dist
 .idea
+src/latest.json
