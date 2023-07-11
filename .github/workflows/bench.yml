@@ -63,7 +63,6 @@ jobs:
 
           git add -A benchmark_results
           git add README.md
-
           git commit -m "[gh-actions] Update benchmarks"
 
       - name: Push changes
