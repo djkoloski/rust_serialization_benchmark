@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 1
           submodules: true
-      
+
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
@@ -40,6 +40,7 @@ jobs:
           crate: trunk
 
       - name: bench
+        if: "!contains(github.event.head_commit.message, '[no-bench]')"
         shell: bash
         run: |
 
@@ -63,11 +64,6 @@ jobs:
           git add -A benchmark_results
           git add README.md
 
-          cd pages
-          trunk --config Trunk.prod.toml build --release --filehash=false
-          cd ..
-          git add -A docs
-
           git commit -m "[gh-actions] Update benchmarks"
 
       - name: Push changes
@@ -75,3 +71,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+
+      - name: Build Pages
+        shell: bash
+        run: cd pages && trunk --config Trunk.prod.toml build --release --filehash=false && cd ..
+
+      - name: Deploy Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pages/dist
