@@ -43,15 +43,18 @@ pub fn calc(
 
     let mut rows: Vec<_> = rows
         .into_iter()
-        .flat_map(|r| {
+        .filter_map(|r| {
+            r.deserialize
+                .or_else(|| (mode == Mode::Serialize).then_some(0.0))
+                .map(|d| (r, d))
+        })
+        .flat_map(|(r, deserialize)| {
             let Row {
                 crate_,
                 serialize,
-                deserialize,
                 sizes,
                 ..
             } = r;
-            let deserialize = deserialize.unwrap_or(0.0);
             let uncompressed_size = *sizes.get(Compression::None).unwrap();
 
             sizes

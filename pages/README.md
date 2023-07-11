@@ -11,8 +11,8 @@
   * mk48: updates (benchmark size divided by 1000, equal to individual updates in benchmark)
 * Mode:
   * serialize: Bandwidth usage is size of compressed data, CPU usage is serialization + compression
-  * deserialize: Bandwidth usage is size of compressed data, CPU usage is decompression + deserialization
-  * round trip: Bandwidth/CPU usage is sum of Mode serialize and Mode deserialize
+  * deserialize: Bandwidth usage is size of compressed data, CPU usage is decompression + deserialization (crates without deserialize are excluded)
+  * round trip: Bandwidth/CPU usage is sum of Mode serialize and Mode deserialize (crates without deserialize are excluded)
 * zlib: allow using zlib as Compression
 * zstd: allow using zstd as Compression
 
