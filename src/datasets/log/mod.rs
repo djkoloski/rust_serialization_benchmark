@@ -29,9 +29,6 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::Generate;
 
-#[cfg(feature = "savefile")]
-use savefile::prelude::ReprC;
-
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -56,7 +53,7 @@ use savefile::prelude::ReprC;
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::ReprC, savefile_derive::Savefile), repr(C))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile), savefile_unsafe_and_fast, repr(C))]
 pub struct Address {
     pub x0: u8,
     pub x1: u8,

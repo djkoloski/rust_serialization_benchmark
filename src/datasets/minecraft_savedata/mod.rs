@@ -28,8 +28,6 @@ use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
 use crate::{generate_vec, Generate};
-#[cfg(feature = "savefile")]
-use savefile::prelude::ReprC;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
@@ -55,7 +53,7 @@ use savefile::prelude::ReprC;
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::ReprC, savefile_derive::Savefile))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile), savefile_unsafe_and_fast)]
 #[repr(u8)]
 pub enum GameType {
     Survival,
@@ -269,7 +267,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::ReprC, savefile_derive::Savefile), repr(C))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Abilities {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub walk_speed: f32,
