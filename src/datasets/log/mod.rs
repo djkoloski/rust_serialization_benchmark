@@ -29,6 +29,9 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::Generate;
 
+#[cfg(feature = "savefile")]
+use savefile::prelude::ReprC;
+
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -53,6 +56,7 @@ use crate::Generate;
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::ReprC, savefile_derive::Savefile), repr(C))]
 pub struct Address {
     pub x0: u8,
     pub x1: u8,
@@ -145,6 +149,7 @@ impl alkahest::Pack<Address> for Address {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -349,6 +354,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Logs {
     pub logs: Vec<Log>,
 }

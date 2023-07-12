@@ -46,7 +46,9 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
-use rust_serialization_benchmark::generate_vec;
+#[cfg(feature = "savefile")]
+use rust_serialization_benchmark::bench_savefile;
+use rust_serialization_benchmark::{generate_vec};
 
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
@@ -206,6 +208,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -347,6 +352,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -491,6 +499,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -631,6 +642,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {

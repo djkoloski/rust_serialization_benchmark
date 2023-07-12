@@ -30,6 +30,8 @@ use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
 use crate::{generate_vec, Generate};
+#[cfg(feature = "savefile")]
+use savefile::prelude::ReprC;
 
 #[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
@@ -55,6 +57,7 @@ use crate::{generate_vec, Generate};
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::ReprC, savefile_derive::Savefile))]
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 2.14))]
@@ -283,6 +286,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Transform {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub altitude: i8,
@@ -389,6 +393,7 @@ impl alkahest::Pack<Transform> for Transform {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Guidance {
     pub angle: u16,
     pub submerge: bool,
@@ -476,6 +481,7 @@ impl alkahest::Pack<Guidance> for Guidance {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Contact {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub damage: u8,
@@ -678,6 +684,7 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct TerrainUpdate {
     #[cfg_attr(feature = "bitcode", bitcode_hint(gamma))]
     chunk_id: (i8, i8),
@@ -798,6 +805,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Update {
     pub contacts: Vec<Contact>,
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..5000"))]
@@ -951,6 +959,7 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Updates {
     pub updates: Vec<Update>,
 }
