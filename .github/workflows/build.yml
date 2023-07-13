@@ -25,7 +25,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
-          components: rust-src
+          components: rust-src, rustfmt
 
       - uses: Swatinem/rust-cache@v2
 
