@@ -34,6 +34,8 @@ pub mod bench_rkyv;
 pub mod bench_rmp_serde;
 #[cfg(feature = "ron")]
 pub mod bench_ron;
+#[cfg(feature = "savefile")]
+pub mod bench_savefile;
 #[cfg(feature = "serde_bare")]
 pub mod bench_serde_bare;
 #[cfg(feature = "serde_cbor")]
@@ -44,8 +46,6 @@ pub mod bench_serde_json;
 pub mod bench_simd_json;
 #[cfg(feature = "speedy")]
 pub mod bench_speedy;
-#[cfg(feature = "savefile")]
-pub mod bench_savefile;
 pub mod datasets;
 
 use core::{mem, ops};

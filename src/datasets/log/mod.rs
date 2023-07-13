@@ -42,6 +42,7 @@ use crate::Generate;
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
     feature = "simd-json",
@@ -53,7 +54,6 @@ use crate::Generate;
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile), savefile_unsafe_and_fast, repr(C))]
 pub struct Address {
     pub x0: u8,
     pub x1: u8,

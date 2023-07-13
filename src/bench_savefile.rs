@@ -1,10 +1,10 @@
-use std::io::Cursor;
 use criterion::{black_box, Criterion};
 use savefile::{Deserialize, Serialize, WithSchema};
+use std::io::Cursor;
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize + Deserialize + WithSchema
+    T: Serialize + Deserialize + WithSchema,
 {
     let mut group = c.benchmark_group(format!("{}/savefile", name));
 

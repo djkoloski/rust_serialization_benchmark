@@ -52,7 +52,7 @@ use crate::Generate;
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile), savefile_unsafe_and_fast, repr(C))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -141,7 +141,7 @@ impl alkahest::Pack<Vector3> for Vector3 {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile), savefile_unsafe_and_fast, repr(C))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Triangle {
     pub v0: Vector3,
     pub v1: Vector3,

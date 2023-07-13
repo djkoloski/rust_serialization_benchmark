@@ -36,6 +36,8 @@ use rust_serialization_benchmark::bench_rkyv;
 use rust_serialization_benchmark::bench_rmp_serde;
 #[cfg(feature = "ron")]
 use rust_serialization_benchmark::bench_ron;
+#[cfg(feature = "savefile")]
+use rust_serialization_benchmark::bench_savefile;
 #[cfg(feature = "serde_bare")]
 use rust_serialization_benchmark::bench_serde_bare;
 #[cfg(feature = "serde_cbor")]
@@ -46,9 +48,7 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
-#[cfg(feature = "savefile")]
-use rust_serialization_benchmark::bench_savefile;
-use rust_serialization_benchmark::{generate_vec};
+use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
@@ -194,6 +194,9 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
+
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -208,9 +211,6 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -338,6 +338,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
+
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -352,9 +355,6 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -485,6 +485,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
+
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -499,9 +502,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -628,6 +628,9 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "ron")]
     bench_ron::bench(BENCH, c, &data);
 
+    #[cfg(feature = "savefile")]
+    bench_savefile::bench(BENCH, c, &data);
+
     #[cfg(feature = "serde_bare")]
     bench_serde_bare::bench(BENCH, c, &data);
 
@@ -642,9 +645,6 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {

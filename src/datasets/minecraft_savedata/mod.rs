@@ -53,8 +53,7 @@ use crate::{generate_vec, Generate};
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile), savefile_unsafe_and_fast)]
-#[repr(u8)]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub enum GameType {
     Survival,
     Creative,
