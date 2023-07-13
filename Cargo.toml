@@ -74,6 +74,8 @@ serde_json = { version = "1.0.96", optional = true }
 simd-json = { version = "0.9.2", optional = true }
 simd-json-derive = { version = "0.9.2", optional = true }
 speedy = { version = "0.8.6", optional = true }
+savefile = { version = "0.14", optional = true }
+savefile-derive = { version = "0.14", optional = true }
 zstd = "0.12.3"
 
 [features]
@@ -107,8 +109,11 @@ default = [
   "serde_json",
   "simd-json",
   "speedy",
+  "savefile"
 ]
 simd-json = ["dep:simd-json", "simd-json-derive"]
+
+savefile = ["dep:savefile", "savefile-derive"]
 
 scale = ["parity-scale-codec", "parity-scale-codec-derive"]
 

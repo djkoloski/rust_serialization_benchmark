@@ -53,7 +53,7 @@ use crate::{generate_vec, Generate};
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
-#[repr(u8)]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub enum GameType {
     Survival,
     Creative,
@@ -148,6 +148,7 @@ impl alkahest::Pack<GameType> for GameType {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Item {
     pub count: i8,
     pub slot: u8,
@@ -265,6 +266,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Abilities {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub walk_speed: f32,
@@ -382,6 +384,7 @@ impl alkahest::Pack<Abilities> for Abilities {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Entity {
     pub id: String,
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
@@ -642,6 +645,7 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct RecipeBook {
     pub recipes: Vec<String>,
     pub to_be_displayed: Vec<String>,
@@ -842,6 +846,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Player {
     pub game_type: GameType,
     pub previous_game_type: GameType,
@@ -1287,6 +1292,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Players {
     pub players: Vec<Player>,
 }

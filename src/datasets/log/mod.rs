@@ -42,6 +42,7 @@ use crate::Generate;
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
     feature = "simd-json",
@@ -145,6 +146,7 @@ impl alkahest::Pack<Address> for Address {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -349,6 +351,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+#[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 pub struct Logs {
     pub logs: Vec<Log>,
 }

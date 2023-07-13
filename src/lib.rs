@@ -34,6 +34,8 @@ pub mod bench_rkyv;
 pub mod bench_rmp_serde;
 #[cfg(feature = "ron")]
 pub mod bench_ron;
+#[cfg(feature = "savefile")]
+pub mod bench_savefile;
 #[cfg(feature = "serde_bare")]
 pub mod bench_serde_bare;
 #[cfg(feature = "serde_cbor")]
