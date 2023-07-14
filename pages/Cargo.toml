@@ -1,19 +1,19 @@
 [package]
-name = "rust_serialization_benchmark_github_pages"
-version = "0.1.0"
-edition = "2021"
-publish = false
+name = "pages"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
 
 [dependencies]
-enum-iterator = "0.8.1"
-fixed-map = { version = "0.9.2", default-features = false }
-schema = { path = "../tools/schema" }
-serde_json = "1.0.96"
-stylist = { version = "0.12.1", features = [ "yew_integration", "macros" ], default-features = false }
-wasm-bindgen = "0.2"
-yew = { version = "0.20.0", features = [ "csr" ], default-features = false }
-
-[workspace]
+enum-iterator.workspace = true
+fixed-map.workspace = true
+schema.workspace = true
+serde_json.workspace = true
+stylist = { workspace = true, features = ["macros", "yew_integration"] }
+wasm-bindgen.workspace = true
+yew = { workspace = true, features = ["csr"] }
 
 [dependencies.web-sys]
 version = "0.3.60"
