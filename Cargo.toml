@@ -27,7 +27,7 @@ stylist = { version = "0.12", default-features = false }
 tempfile = "3.6"
 time = "0.3"
 wasm-bindgen = "0.2"
-web-sys = { version = "0.3.60" }
+web-sys = "0.3.60"
 yew = { version = "0.20", default-features = false }
 
 [package]

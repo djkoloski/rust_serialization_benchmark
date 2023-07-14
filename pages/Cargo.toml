@@ -16,7 +16,7 @@ wasm-bindgen.workspace = true
 yew = { workspace = true, features = ["csr"] }
 
 [dependencies.web-sys]
-version = "0.3.60"
+workspace = true
 features = [
     'HtmlInputElement',
     'HtmlSelectElement',
