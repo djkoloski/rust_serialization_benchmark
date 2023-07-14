@@ -6,6 +6,7 @@ on:
     branches:
       - main
     paths:
+      - 'Cargo.toml'
       - 'benches/**'
       - 'src/**'
 
