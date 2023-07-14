@@ -1,10 +1,9 @@
-[build]
-# panic and lto cannot be configured via package profile, so we manually
-# add the it to the rustflags for this crate
-rustflags = [
-    "-Cpanic=abort",
-    "-Clinker-plugin-lto=true",
-]
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 'z'
+panic = "abort"
+strip = "debuginfo"
 
 [unstable]
 build-std = ["std", "panic_abort"]

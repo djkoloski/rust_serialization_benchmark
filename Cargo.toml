@@ -142,8 +142,3 @@ name = "bench"
 lto = true
 # Uncomment this to profile
 # debug = true
-
-[profile.release.package.pages]
-codegen-units = 1
-opt-level = "z"
-strip = "debuginfo"
