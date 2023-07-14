@@ -1,0 +1,30 @@
+[package]
+name = "pages"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+enum-iterator.workspace = true
+fixed-map.workspace = true
+schema.workspace = true
+serde_json.workspace = true
+stylist = { workspace = true, features = ["macros", "yew_integration"] }
+wasm-bindgen.workspace = true
+yew = { workspace = true, features = ["csr"] }
+
+[dependencies.web-sys]
+workspace = true
+features = [
+    'HtmlInputElement',
+    'HtmlSelectElement',
+]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = "debuginfo"

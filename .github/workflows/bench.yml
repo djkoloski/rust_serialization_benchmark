@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 1
           submodules: true
-      
+
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
@@ -34,7 +34,16 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install Trunk
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: trunk
+
       - name: bench
+        if: "!contains(github.event.head_commit.message, '[no-bench]')"
         shell: bash
         run: |
 
@@ -64,3 +73,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+
+      - name: Build Pages
+        shell: bash
+        run: cd pages && trunk --config Trunk.prod.toml build --release --filehash=false && cd ..
+
+      - name: Deploy Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pages/dist

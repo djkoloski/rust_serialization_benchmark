@@ -1,0 +1,9 @@
+[build]
+# The index HTML file to drive the bundling process.
+target = "index.html"
+
+# Build in release mode.
+release = true
+
+# The public URL from which assets are to be served.
+public_url = "/rust_serialization_benchmark/"

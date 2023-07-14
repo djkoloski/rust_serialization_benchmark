@@ -9,7 +9,7 @@ publish.workspace = true
 [dependencies]
 cargo_metadata.workspace = true
 schema.workspace = true
-clap.workspace = true
+clap = { workspace = true, features = ["derive"] }
 regex.workspace = true
-serde.workspace = true
+serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
