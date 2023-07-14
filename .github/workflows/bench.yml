@@ -3,9 +3,11 @@ name: bench
 on:
   workflow_dispatch:
   push:
-    paths-ignore:
-      - 'README.md'
-      - 'benchmark_results/**'
+    branches:
+      - main
+    paths:
+      - 'benches/**'
+      - 'src/**'
 
 env:
   CI: true
