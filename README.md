@@ -10,6 +10,11 @@ serialization frameworks.
 
 These benchmarks are still being developed and pull requests to improve benchmarks are welcome.
 
+## [Interactive site](https://djkoloski.github.io/rust_serialization_benchmark/)
+
+Calculate the number of messages per second that can be sent/received with various rust serialization frameworks and compression libraries.
+[Documentation](pages/README.md)
+
 ## Format
 
 All tests benchmark the following properties (time or size):
