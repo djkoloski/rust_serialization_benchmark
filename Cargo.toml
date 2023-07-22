@@ -104,6 +104,7 @@ default = [
   "flatbuffers",
   "msgpacker",
   "nachricht-serde",
+  "nanoserde",
   "scale",
   "postcard",
   "prost",
