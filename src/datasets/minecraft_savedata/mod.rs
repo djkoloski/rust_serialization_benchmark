@@ -17,6 +17,8 @@ pub use minecraft_savedata_capnp as cp;
 pub use minecraft_savedata_fb::minecraft_savedata as fb;
 #[cfg(feature = "prost")]
 use minecraft_savedata_prost as pb;
+#[cfg(feature = "nanoserde")]
+use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
@@ -54,6 +56,8 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[repr(u8)]
 pub enum GameType {
     Survival,
     Creative,
@@ -149,6 +153,7 @@ impl alkahest::Pack<GameType> for GameType {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Item {
     pub count: i8,
     pub slot: u8,
@@ -267,6 +272,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Abilities {
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub walk_speed: f32,
@@ -385,6 +391,7 @@ impl alkahest::Pack<Abilities> for Abilities {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Entity {
     pub id: String,
     #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
@@ -646,6 +653,7 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct RecipeBook {
     pub recipes: Vec<String>,
     pub to_be_displayed: Vec<String>,
@@ -847,6 +855,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Player {
     pub game_type: GameType,
     pub previous_game_type: GameType,
@@ -1293,6 +1302,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Players {
     pub players: Vec<Player>,
 }

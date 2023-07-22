@@ -17,6 +17,8 @@ use flatbuffers::{FlatBufferBuilder, WIPOffset};
 pub use log_capnp as cp;
 #[cfg(feature = "flatbuffers")]
 pub use log_fb::log as fb;
+#[cfg(feature = "nanoserde")]
+use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
@@ -54,6 +56,7 @@ use crate::Generate;
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Address {
     pub x0: u8,
     pub x1: u8,
@@ -147,6 +150,7 @@ impl alkahest::Pack<Address> for Address {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -352,6 +356,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
+#[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Logs {
     pub logs: Vec<Log>,
 }
