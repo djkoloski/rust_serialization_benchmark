@@ -24,6 +24,8 @@ use rust_serialization_benchmark::bench_flatbuffers;
 use rust_serialization_benchmark::bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
 use rust_serialization_benchmark::bench_nachricht_serde;
+#[cfg(feature = "nanoserde")]
+use rust_serialization_benchmark::bench_nanoserde;
 #[cfg(feature = "scale")]
 use rust_serialization_benchmark::bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
@@ -211,6 +213,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "nanoserde")]
+    bench_nanoserde::bench(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -355,6 +360,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "nanoserde")]
+    bench_nanoserde::bench(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -502,6 +510,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "nanoserde")]
+    bench_nanoserde::bench(BENCH, c, &data);
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -645,6 +656,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "nanoserde")]
+    bench_nanoserde::bench(BENCH, c, &data);
 }
 
 pub fn criterion_benchmark(c: &mut Criterion) {

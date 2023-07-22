@@ -22,6 +22,8 @@ pub mod bench_flatbuffers;
 pub mod bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
 pub mod bench_nachricht_serde;
+#[cfg(feature = "nanoserde")]
+pub mod bench_nanoserde;
 #[cfg(feature = "scale")]
 pub mod bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
