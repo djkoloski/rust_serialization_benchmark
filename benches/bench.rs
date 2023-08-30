@@ -30,6 +30,8 @@ use rust_serialization_benchmark::bench_nanoserde;
 use rust_serialization_benchmark::bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
 use rust_serialization_benchmark::bench_postcard;
+#[cfg(feature = "pot")]
+use rust_serialization_benchmark::bench_pot;
 #[cfg(feature = "prost")]
 use rust_serialization_benchmark::bench_prost;
 #[cfg(feature = "rkyv")]
@@ -157,6 +159,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
+
+    #[cfg(feature = "pot")]
+    bench_pot::bench(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -314,6 +319,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
 
+    #[cfg(feature = "pot")]
+    bench_pot::bench(BENCH, c, &data);
+
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
 
@@ -460,6 +468,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
+
+    #[cfg(feature = "pot")]
+    bench_pot::bench(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -611,6 +622,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "postcard")]
     bench_postcard::bench(BENCH, c, &data);
+
+    #[cfg(feature = "pot")]
+    bench_pot::bench(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
