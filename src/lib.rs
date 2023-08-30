@@ -28,6 +28,8 @@ pub mod bench_nanoserde;
 pub mod bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
 pub mod bench_postcard;
+#[cfg(feature = "pot")]
+pub mod bench_pot;
 #[cfg(feature = "prost")]
 pub mod bench_prost;
 #[cfg(feature = "rkyv")]
