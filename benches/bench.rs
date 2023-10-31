@@ -14,6 +14,8 @@ use rust_serialization_benchmark::bench_borsh;
 use rust_serialization_benchmark::bench_bson;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
+#[cfg(feature = "cbor4ii")]
+use rust_serialization_benchmark::bench_cbor4ii;
 #[cfg(feature = "ciborium")]
 use rust_serialization_benchmark::bench_ciborium;
 #[cfg(feature = "dlhn")]
@@ -114,6 +116,9 @@ fn bench_log(c: &mut Criterion) {
             black_box(log.get_size());
         }
     });
+
+    #[cfg(feature = "cbor4ii")]
+    bench_cbor4ii::bench(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
@@ -278,6 +283,9 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
+    #[cfg(feature = "cbor4ii")]
+    bench_cbor4ii::bench(BENCH, c, &data);
+
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
@@ -426,6 +434,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             black_box(player.get_game_type().unwrap());
         }
     });
+
+    #[cfg(feature = "cbor4ii")]
+    bench_cbor4ii::bench(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
@@ -579,6 +590,9 @@ fn bench_mk48(c: &mut Criterion) {
             black_box(update.get_score());
         }
     });
+
+    #[cfg(feature = "cbor4ii")]
+    bench_cbor4ii::bench(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
