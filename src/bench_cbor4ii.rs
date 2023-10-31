@@ -12,8 +12,11 @@ where
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            serialize_buffer = cbor4ii::serde::to_vec(std::mem::take(black_box(&mut serialize_buffer)), black_box(&data))
-                .unwrap();
+            serialize_buffer = cbor4ii::serde::to_vec(
+                std::mem::take(black_box(&mut serialize_buffer)),
+                black_box(&data),
+            )
+            .unwrap();
             black_box(());
         })
     });
