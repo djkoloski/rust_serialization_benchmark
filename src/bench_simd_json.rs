@@ -1,5 +1,5 @@
 use criterion::{black_box, BatchSize, Criterion};
-use simd_json::AlignedBuf;
+use simd_json::Buffers;
 use simd_json_derive::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
@@ -21,8 +21,7 @@ where
     });
 
     let deserialize_buffer = data.json_vec().unwrap();
-    let mut input_buffer = AlignedBuf::with_capacity(BUFFER_LEN);
-    let mut string_buffer = serialize_buffer;
+    let mut buffers = Buffers::new(BUFFER_LEN);
 
     group.bench_function("deserialize", |b| {
         b.iter_batched_ref(
@@ -31,8 +30,7 @@ where
                 black_box(
                     T::from_slice_with_buffers(
                         deserialize_buffer.as_mut_slice(),
-                        &mut input_buffer,
-                        string_buffer.as_mut_slice(),
+                        &mut buffers,
                     )
                     .unwrap(),
                 );
