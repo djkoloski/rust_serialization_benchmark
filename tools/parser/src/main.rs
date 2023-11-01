@@ -36,10 +36,10 @@ fn main() {
         serde_json::from_str::<Metadata>(&fs::read_to_string(args.meta).unwrap()).unwrap();
 
     let time_benches_re = Regex::new(
-        r"(?m)^([a-z0-9_\-]+)\/([a-z_\-]+)\/([a-z\-]+)(?: \(([a-z \-+]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s)"
+        r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/([a-z0-9_\-]+)(?: \(([a-z0-9_\-+ ]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s)"
     ).unwrap();
     let size_benches_re =
-        Regex::new(r"(?m)^([a-z0-9_\-]+)\/([a-z_\-]+)\/(size|zlib|zstd) (\d+)").unwrap();
+        Regex::new(r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/(size|zlib|zstd) (\d+)").unwrap();
 
     let mut results = Results::default();
 

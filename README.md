@@ -53,6 +53,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | [borsh 1.1.1][borsh] | 579.71 µs | 4.0903 ms | 885780 | 362204 | 286514 |
 | [bson 2.6.0][bson] | 2.9524 ms | 12.022 ms | 1924682 | 532821 | 376270 |
 | [capnp 0.18.3][capnp] | 711.95 µs | † | 1443216 | 513986 | 428649 |
+| [cbor4ii 0.3.1][cbor4ii] | 2.8183 ms | 8.2575 ms | 1407835 | 403440 | 324081 |
 | [ciborium 0.2.1][ciborium] | 3.2328 ms | 12.770 ms | 1407835 | 403440 | 324081 |
 | [dlhn 0.1.6][dlhn] | 936.23 µs | 4.4048 ms | 724953 | 301446 | 253629 |
 | [flatbuffers 23.5.26][flatbuffers] | 2.1313 ms | † | 1276368 | 468539 | 388832 |
@@ -98,6 +99,7 @@ Relative to best. Higher is better.
 | [borsh 1.1.1][borsh] | 45.02% | 68.89% | 79.44% | 74.03% | 79.56% |
 | [bson 2.6.0][bson] | 8.84% | 23.44% | 36.56% | 50.32% | 60.58% |
 | [capnp 0.18.3][capnp] | 36.66% | † | 48.76% | 52.17% | 53.18% |
+| [cbor4ii 0.3.1][cbor4ii] | 9.26% | 34.12% | 49.98% | 66.46% | 70.34% |
 | [ciborium 0.2.1][ciborium] | 8.07% | 22.07% | 49.98% | 66.46% | 70.34% |
 | [dlhn 0.1.6][dlhn] | 27.88% | 63.97% | 97.06% | 88.95% | 89.87% |
 | [flatbuffers 23.5.26][flatbuffers] | 12.25% | † | 55.13% | 57.23% | 58.62% |
@@ -147,6 +149,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | [borsh 1.1.1][borsh] | 6.9712 ms | 6.7910 ms | 6000004 | 5378496 | 5345889 |
 | [bson 2.6.0][bson] | 53.349 ms | 127.01 ms | 23013911 | 9212089 | 7497811 |
 | [capnp 0.18.3][capnp] | 11.249 ms | † | 14000088 | 7130367 | 6051062 |
+| [cbor4ii 0.3.1][cbor4ii] | 26.668 ms | 70.596 ms | 13125016 | 7524114 | 6757967 |
 | [ciborium 0.2.1][ciborium] | 77.533 ms | 117.13 ms | 13122324 | 7524660 | 6759658 |
 | [dlhn 0.1.6][dlhn] | 8.4180 ms | 10.913 ms | 6000003 | 5378495 | 5345900 |
 | [flatbuffers 23.5.26][flatbuffers] | 1.0549 ms | † | 6000024 | 5378434 | 5345910 |
@@ -192,6 +195,7 @@ Relative to best. Higher is better.
 | [borsh 1.1.1][borsh] | 7.54% | 7.63% | 78.13% | 87.17% | 87.70% |
 | [bson 2.6.0][bson] | 0.98% | 0.41% | 20.37% | 50.89% | 62.53% |
 | [capnp 0.18.3][capnp] | 4.67% | † | 33.49% | 65.75% | 77.48% |
+| [cbor4ii 0.3.1][cbor4ii] | 1.97% | 0.73% | 35.72% | 62.31% | 69.37% |
 | [ciborium 0.2.1][ciborium] | 0.68% | 0.44% | 35.73% | 62.31% | 69.36% |
 | [dlhn 0.1.6][dlhn] | 6.24% | 4.75% | 78.13% | 87.17% | 87.70% |
 | [flatbuffers 23.5.26][flatbuffers] | 49.81% | † | 78.13% | 87.17% | 87.70% |
@@ -241,6 +245,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | [borsh 1.1.1][borsh] | 688.84 µs | 3.1308 ms | 446595 | 234236 | 210008 |
 | [bson 2.6.0][bson] | 4.0343 ms | 13.540 ms | 1619653 | 502185 | 328399 |
 | [capnp 0.18.3][capnp] | 682.54 µs | † | 803896 | 335606 | 280851 |
+| [cbor4ii 0.3.1][cbor4ii] | 2.5838 ms | 8.0141 ms | 1109831 | 344745 | 274514 |
 | [ciborium 0.2.1][ciborium] | 3.9928 ms | 11.920 ms | 1109821 | 344751 | 274526 |
 | [dlhn 0.1.6][dlhn] | 1.0193 ms | 4.1593 ms | 366496 | 220600 | 205683 |
 | [flatbuffers 23.5.26][flatbuffers] | 4.1043 ms | † | 844168 | 345696 | 294015 |
@@ -286,6 +291,7 @@ Relative to best. Higher is better.
 | [borsh 1.1.1][borsh] | 40.57% | 71.07% | 72.28% | 90.92% | 94.51% |
 | [bson 2.6.0][bson] | 6.93% | 16.43% | 19.93% | 42.41% | 60.44% |
 | [capnp 0.18.3][capnp] | 40.95% | † | 40.15% | 63.46% | 70.67% |
+| [cbor4ii 0.3.1][cbor4ii] | 10.82% | 27.76% | 29.09% | 61.78% | 72.31% |
 | [ciborium 0.2.1][ciborium] | 7.00% | 18.67% | 29.09% | 61.78% | 72.30% |
 | [dlhn 0.1.6][dlhn] | 27.42% | 53.49% | 88.08% | 96.54% | 96.50% |
 | [flatbuffers 23.5.26][flatbuffers] | 6.81% | † | 38.24% | 61.61% | 67.51% |
@@ -335,6 +341,7 @@ For operations, time per iteration; for size, bytes. Lower is better.
 | [borsh 1.1.1][borsh] | 2.9782 ms | 4.5021 ms | 1486162 | 1082357 | 1013550 |
 | [bson 2.6.0][bson] | 33.618 ms | 72.867 ms | 10030880 | 2833079 | 1600859 |
 | [capnp 0.18.3][capnp] | 3.0267 ms | † | 2664040 | 1511895 | 1212087 |
+| [cbor4ii 0.3.1][cbor4ii] | 13.791 ms | 32.606 ms | 5878791 | 1655835 | 1431390 |
 | [ciborium 0.2.1][ciborium] | 24.877 ms | 53.666 ms | 5878653 | 1655791 | 1431560 |
 | [dlhn 0.1.6][dlhn] | 6.7217 ms | 13.006 ms | 1279599 | 1052061 | 1021161 |
 | [flatbuffers 23.5.26][flatbuffers] | 6.4173 ms | † | 2273740 | 1408408 | 1235566 |
@@ -380,6 +387,7 @@ Relative to best. Higher is better.
 | [borsh 1.1.1][borsh] | 22.32% | 81.13% | 58.59% | 80.08% | 85.91% |
 | [bson 2.6.0][bson] | 1.98% | 5.01% | 8.68% | 30.59% | 54.39% |
 | [capnp 0.18.3][capnp] | 21.97% | † | 32.68% | 57.33% | 71.84% |
+| [cbor4ii 0.3.1][cbor4ii] | 4.82% | 11.20% | 14.81% | 52.34% | 60.83% |
 | [ciborium 0.2.1][ciborium] | 2.67% | 6.81% | 14.81% | 52.35% | 60.82% |
 | [dlhn 0.1.6][dlhn] | 9.89% | 28.08% | 68.04% | 82.38% | 85.27% |
 | [flatbuffers 23.5.26][flatbuffers] | 10.36% | † | 38.29% | 61.54% | 70.47% |
@@ -417,6 +425,7 @@ Relative to best. Higher is better.
 [borsh]: https://crates.io/crates/borsh/1.1.1
 [bson]: https://crates.io/crates/bson/2.6.0
 [capnp]: https://crates.io/crates/capnp/0.18.3
+[cbor4ii]: https://crates.io/crates/cbor4ii/0.3.1
 [ciborium]: https://crates.io/crates/ciborium/0.2.1
 [dlhn]: https://crates.io/crates/dlhn/0.1.6
 [flatbuffers]: https://crates.io/crates/flatbuffers/23.5.26
