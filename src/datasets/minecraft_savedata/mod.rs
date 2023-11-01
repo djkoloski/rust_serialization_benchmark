@@ -206,9 +206,11 @@ impl<'a> bench_capnp::Serialize<'a> for Item {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        use capnp::text::Reader;
+
         builder.set_count(self.count);
         builder.set_slot(self.slot);
-        builder.set_id(&self.id);
+        builder.set_id(Reader(self.id.as_bytes()));
     }
 }
 
@@ -496,7 +498,9 @@ impl<'a> bench_capnp::Serialize<'a> for Entity {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        builder.set_id(&self.id);
+        use capnp::text::Reader;
+
+        builder.set_id(Reader(self.id.as_bytes()));
         let mut pos = builder.reborrow().init_pos();
         pos.set_x(self.pos.0);
         pos.set_y(self.pos.1);
@@ -521,7 +525,7 @@ impl<'a> bench_capnp::Serialize<'a> for Entity {
         uuid.set_x2(self.uuid[2]);
         uuid.set_x3(self.uuid[3]);
         if let Some(ref custom_name) = self.custom_name {
-            builder.set_custom_name(custom_name);
+            builder.set_custom_name(Reader(custom_name.as_bytes()));
         }
         builder.set_custom_name_visible(self.custom_name_visible);
         builder.set_silent(self.silent);
@@ -747,15 +751,17 @@ impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        use capnp::text::Reader;
+
         let mut recipes = builder.reborrow().init_recipes(self.recipes.len() as u32);
         for (i, recipe) in self.recipes.iter().enumerate() {
-            recipes.set(i as u32, recipe);
+            recipes.set(i as u32, Reader(recipe.as_bytes()));
         }
         let mut to_be_displayed = builder
             .reborrow()
             .init_to_be_displayed(self.to_be_displayed.len() as u32);
         for (i, name) in self.to_be_displayed.iter().enumerate() {
-            to_be_displayed.set(i as u32, name);
+            to_be_displayed.set(i as u32, Reader(name.as_bytes()));
         }
         builder.set_is_filtering_craftable(self.is_filtering_craftable);
         builder.set_is_gui_open(self.is_gui_open);
@@ -1053,15 +1059,17 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
     type Builder = cp::player::Builder<'a>;
 
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        use capnp::text::Reader;
+
         builder.set_game_type(self.game_type.into());
         builder.set_previous_game_type(self.previous_game_type.into());
         builder.set_score(self.score);
-        builder.set_dimension(&self.dimension);
+        builder.set_dimension(Reader(self.dimension.as_bytes()));
         let mut selected_item = builder.reborrow().init_selected_item();
         self.selected_item.serialize_capnp(&mut selected_item);
         let mut spawn_dimension = builder.reborrow().init_spawn_dimension();
         if let Some(ref value) = self.spawn_dimension {
-            spawn_dimension.set_some(value);
+            spawn_dimension.set_some(Reader(value.as_bytes()));
         } else {
             spawn_dimension.set_none(());
         }

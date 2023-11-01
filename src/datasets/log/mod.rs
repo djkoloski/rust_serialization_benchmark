@@ -287,12 +287,14 @@ impl<'a> bench_capnp::Serialize<'a> for Log {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
+        use capnp::text::Reader;
+
         self.address
             .serialize_capnp(&mut builder.reborrow().init_address());
-        builder.set_identity(&self.identity);
-        builder.set_userid(&self.userid);
-        builder.set_date(&self.date);
-        builder.set_request(&self.request);
+        builder.set_identity(Reader(self.identity.as_bytes()));
+        builder.set_userid(Reader(self.userid.as_bytes()));
+        builder.set_date(Reader(self.date.as_bytes()));
+        builder.set_request(Reader(self.request.as_bytes()));
         builder.set_code(self.code);
         builder.set_size(self.size);
     }

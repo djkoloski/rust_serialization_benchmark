@@ -1,4 +1,4 @@
-use borsh::{BorshDeserialize, BorshSerialize};
+use borsh::{to_vec, BorshDeserialize, BorshSerialize};
 use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
@@ -18,7 +18,7 @@ where
         })
     });
 
-    let deserialize_buffer = data.try_to_vec().unwrap();
+    let deserialize_buffer = to_vec(data).unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {

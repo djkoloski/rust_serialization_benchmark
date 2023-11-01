@@ -28,11 +28,8 @@ where
             || deserialize_buffer.clone(),
             |deserialize_buffer| {
                 black_box(
-                    T::from_slice_with_buffers(
-                        deserialize_buffer.as_mut_slice(),
-                        &mut buffers,
-                    )
-                    .unwrap(),
+                    T::from_slice_with_buffers(deserialize_buffer.as_mut_slice(), &mut buffers)
+                        .unwrap(),
                 );
             },
             BatchSize::SmallInput,
