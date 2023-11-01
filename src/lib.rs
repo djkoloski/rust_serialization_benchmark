@@ -12,6 +12,8 @@ pub mod bench_borsh;
 pub mod bench_bson;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
+#[cfg(feature = "cbor4ii")]
+pub mod bench_cbor4ii;
 #[cfg(feature = "ciborium")]
 pub mod bench_ciborium;
 #[cfg(feature = "dlhn")]
