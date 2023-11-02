@@ -13,16 +13,13 @@ where
     group.bench_function("serialize", |b| {
         b.iter(|| {
             serialize_buffer.clear();
-            cbor4ii::serde::to_writer(
-                black_box(&mut serialize_buffer),
-                black_box(&data),
-            )
-            .unwrap();
+            cbor4ii::serde::to_writer(black_box(&mut serialize_buffer), black_box(&data)).unwrap();
             black_box(());
         })
     });
 
-    let deserialize_buffer = cbor4ii::serde::to_vec(Vec::new(), &data).unwrap();
+    let mut deserialize_buffer = Vec::new();
+    cbor4ii::serde::to_writer(&mut deserialize_buffer, &data).unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
