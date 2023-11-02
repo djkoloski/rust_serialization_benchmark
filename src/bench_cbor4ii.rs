@@ -9,11 +9,12 @@ where
 
     let mut group = c.benchmark_group(format!("{}/cbor4ii", name));
 
-    let mut serialize_buffer = vec![0; BUFFER_LEN];
+    let mut serialize_buffer = Vec::with_capacity(BUFFER_LEN);
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            serialize_buffer = cbor4ii::serde::to_vec(
-                std::mem::take(black_box(&mut serialize_buffer)),
+            serialize_buffer.clear();
+            cbor4ii::serde::to_writer(
+                black_box(&mut serialize_buffer),
                 black_box(&data),
             )
             .unwrap();
