@@ -16,6 +16,8 @@ pub mod bench_capnp;
 pub mod bench_cbor4ii;
 #[cfg(feature = "ciborium")]
 pub mod bench_ciborium;
+#[cfg(feature = "databuf")]
+pub mod bench_databuf;
 #[cfg(feature = "dlhn")]
 pub mod bench_dlhn;
 #[cfg(feature = "flatbuffers")]

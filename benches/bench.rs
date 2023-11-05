@@ -18,6 +18,8 @@ use rust_serialization_benchmark::bench_capnp;
 use rust_serialization_benchmark::bench_cbor4ii;
 #[cfg(feature = "ciborium")]
 use rust_serialization_benchmark::bench_ciborium;
+#[cfg(feature = "databuf")]
+use rust_serialization_benchmark::bench_databuf;
 #[cfg(feature = "dlhn")]
 use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
@@ -54,6 +56,7 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+
 use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
@@ -122,6 +125,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
+
+    #[cfg(feature = "databuf")]
+    bench_databuf::bench(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
@@ -289,6 +295,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
+    #[cfg(feature = "databuf")]
+    bench_databuf::bench(BENCH, c, &data);
+
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
 
@@ -440,6 +449,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
+
+    #[cfg(feature = "databuf")]
+    bench_databuf::bench(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
@@ -596,6 +608,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
+
+    #[cfg(feature = "databuf")]
+    bench_databuf::bench(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
