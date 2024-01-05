@@ -4,8 +4,10 @@ use rand_pcg::Lcg64Xsh32;
 use rust_serialization_benchmark::bench_abomonation;
 #[cfg(feature = "alkahest")]
 use rust_serialization_benchmark::bench_alkahest;
-#[cfg(feature = "bincode")]
+#[cfg(feature = "bincode1")]
 use rust_serialization_benchmark::bench_bincode;
+#[cfg(feature = "bincode")]
+use rust_serialization_benchmark::bench_bincode2;
 #[cfg(feature = "bitcode")]
 use rust_serialization_benchmark::bench_bitcode;
 #[cfg(feature = "borsh")]
@@ -94,8 +96,11 @@ fn bench_log(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "bincode")]
+    #[cfg(feature = "bincode1")]
     bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bincode")]
+    bench_bincode2::bench(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
     bench_bitcode::bench(BENCH, c, &data);
@@ -265,8 +270,11 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "bincode")]
+    #[cfg(feature = "bincode1")]
     bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bincode")]
+    bench_bincode2::bench(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
     bench_bitcode::bench(BENCH, c, &data);
@@ -420,8 +428,11 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "bincode")]
+    #[cfg(feature = "bincode1")]
     bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bincode")]
+    bench_bincode2::bench(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
     bench_bitcode::bench(BENCH, c, &data);
@@ -579,8 +590,11 @@ fn bench_mk48(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "bincode")]
+    #[cfg(feature = "bincode1")]
     bench_bincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bincode")]
+    bench_bincode2::bench(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
     bench_bitcode::bench(BENCH, c, &data);

@@ -12,18 +12,18 @@ where
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            bincode::serialize_into(black_box(serialize_buffer.as_mut_slice()), black_box(&data))
+            bincode1::serialize_into(black_box(serialize_buffer.as_mut_slice()), black_box(&data))
                 .unwrap();
             black_box(());
         })
     });
 
     let mut deserialize_buffer = Vec::new();
-    bincode::serialize_into(&mut deserialize_buffer, &data).unwrap();
+    bincode1::serialize_into(&mut deserialize_buffer, &data).unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(bincode::deserialize::<'_, T>(black_box(&deserialize_buffer)).unwrap());
+            black_box(bincode1::deserialize::<'_, T>(black_box(&deserialize_buffer)).unwrap());
         })
     });
 

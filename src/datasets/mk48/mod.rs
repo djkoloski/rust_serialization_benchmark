@@ -35,6 +35,7 @@ use crate::{generate_vec, Generate};
 
 #[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
@@ -266,6 +267,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 
 #[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
@@ -375,6 +377,7 @@ impl alkahest::Pack<Transform> for Transform {
 
 #[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
@@ -466,6 +469,7 @@ impl alkahest::Pack<Guidance> for Guidance {
 
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
@@ -671,6 +675,7 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
 
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
@@ -794,6 +799,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
@@ -950,6 +956,7 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
 
 #[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
