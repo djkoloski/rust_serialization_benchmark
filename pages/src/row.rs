@@ -1,9 +1,9 @@
 use crate::compression::{Compression, CompressionMap};
-use schema::{Bench, Crate};
+use schema::{Bench, Feature};
 
 #[derive(Debug)]
 pub struct Row {
-    pub crate_: String,
+    pub feature: String,
     pub serialize: f32,
     pub deserialize: Option<f32>,
     pub sizes: CompressionMap<u64>,
@@ -26,10 +26,10 @@ fn unwrap_seconds(bench: &Bench) -> Result<Option<f64>> {
     }
 }
 
-impl TryFrom<(&String, &Crate)> for Row {
+impl TryFrom<(&String, &Feature)> for Row {
     type Error = Error;
 
-    fn try_from((crate_, Crate { benches }): (&String, &Crate)) -> Result<Self> {
+    fn try_from((feature, Feature { benches }): (&String, &Feature)) -> Result<Self> {
         let col = |key: &'static str| -> Result<&Bench> { benches.get(key).ok_or(key) };
 
         let serialize = unwrap_seconds(col("serialize")?)?.ok_or("no serialize primary")? as f32;
@@ -44,7 +44,7 @@ impl TryFrom<(&String, &Crate)> for Row {
         sizes.insert(Compression::Zstd, unwrap_bytes(col("zstd")?)?);
 
         Ok(Self {
-            crate_: crate_.clone(),
+            feature: feature.clone(),
             serialize,
             deserialize,
             sizes,

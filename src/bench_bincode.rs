@@ -1,33 +1,36 @@
 use criterion::{black_box, Criterion};
-use serde::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize + for<'de> Deserialize<'de>,
+    T: bincode::Encode + bincode::Decode,
 {
     const BUFFER_LEN: usize = 10_000_000;
-
     let mut group = c.benchmark_group(format!("{}/bincode", name));
 
-    let mut serialize_buffer = vec![0; BUFFER_LEN];
+    let mut buffer = Box::new([0u8; BUFFER_LEN]);
+    let conf = bincode::config::standard();
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            bincode1::serialize_into(black_box(serialize_buffer.as_mut_slice()), black_box(&data))
+            let size = bincode::encode_into_slice(black_box(&data), black_box(&mut *buffer), conf)
                 .unwrap();
-            black_box(());
+            black_box(&buffer[..size]);
         })
     });
 
-    let mut deserialize_buffer = Vec::new();
-    bincode1::serialize_into(&mut deserialize_buffer, &data).unwrap();
+    let size = bincode::encode_into_slice(&data, &mut *buffer, conf).unwrap();
+    let buffer = &buffer[..size];
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(bincode1::deserialize::<'_, T>(black_box(&deserialize_buffer)).unwrap());
+            black_box(
+                bincode::decode_from_slice::<T, _>(black_box(buffer), conf)
+                    .unwrap()
+                    .0,
+            );
         })
     });
 
-    crate::bench_size(name, "bincode", deserialize_buffer.as_slice());
+    crate::bench_size(name, "bincode", buffer);
 
     group.finish();
 }

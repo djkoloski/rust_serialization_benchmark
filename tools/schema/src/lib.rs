@@ -1,24 +1,49 @@
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashMap};
+use std::{
+    collections::{BTreeMap, HashMap},
+    path::Path,
+};
+
+#[derive(Clone, Deserialize, Serialize)]
+pub struct PackageId {
+    pub name: String,
+    pub version: String,
+}
+
+impl PackageId {
+    pub fn crates_io_url(&self) -> String {
+        format!("https://crates.io/crates/{}/{}", self.name, self.version)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct Config {
+    pub descriptions: HashMap<String, String>,
+    pub do_not_edit: String,
+    pub features: HashMap<String, PackageId>,
+}
+
+impl Config {
+    pub fn read(path: &Path) -> Self {
+        serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap()
+    }
+}
 
 #[derive(Default, Deserialize, Serialize)]
 pub struct Results {
     pub datasets: BTreeMap<String, Dataset>,
-    pub meta: Meta,
+    pub features: Features,
 }
 
-#[derive(Default, Deserialize, Serialize)]
-pub struct Meta {
-    pub crate_versions: BTreeMap<String, String>,
-}
+pub type Features = BTreeMap<String, PackageId>;
 
 #[derive(Default, Deserialize, Serialize)]
 pub struct Dataset {
-    pub crates: BTreeMap<String, Crate>,
+    pub features: BTreeMap<String, Feature>,
 }
 
 #[derive(Default, Deserialize, Serialize)]
-pub struct Crate {
+pub struct Feature {
     pub benches: HashMap<String, Bench>,
 }
 

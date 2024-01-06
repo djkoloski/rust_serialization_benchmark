@@ -25,7 +25,7 @@ impl Display for Bottleneck {
 
 pub struct CalcRow {
     pub compression: Compression,
-    pub crate_: String,
+    pub feature: String,
     pub limit: Bottleneck,
     pub messages_per_second: f32,
     pub relative: f32,
@@ -50,7 +50,7 @@ pub fn calc(
         })
         .flat_map(|(r, deserialize)| {
             let Row {
-                crate_,
+                feature,
                 serialize,
                 sizes,
                 ..
@@ -83,7 +83,7 @@ pub fn calc(
                     };
                     CalcRow {
                         compression,
-                        crate_: crate_.clone(),
+                        feature: feature.clone(),
                         limit,
                         messages_per_second: benchmarks_per_second * messages_per_benchmark as f32,
                         relative: 0.0,
@@ -108,7 +108,7 @@ pub fn calc(
 
     // Dedup crates.
     let mut seen = HashSet::new();
-    rows.retain(|r| seen.insert(r.crate_.clone()));
+    rows.retain(|r| seen.insert(r.feature.clone()));
 
     rows
 }

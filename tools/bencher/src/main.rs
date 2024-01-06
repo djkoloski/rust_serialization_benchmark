@@ -34,20 +34,22 @@ fn main() {
         .stdout;
     fs::write(&log_path, log).unwrap();
 
+    let mut config_path = PathBuf::from("tools");
+    config_path.push("config.json");
+
     let mut json_path = bench_path.clone();
     json_path.set_extension("json");
     Command::new("cargo")
-        .args(["run", "-p", "parser", "--", "--log"])
+        .args(["run", "-p", "parser", "--"])
         .arg(&log_path)
+        .arg("--config")
+        .arg(&config_path)
         .arg("--meta")
         .arg(&metadata_path)
         .arg("--output")
         .arg(&json_path)
         .status()
         .unwrap();
-
-    let mut config_path = PathBuf::from("tools");
-    config_path.push("config.json");
 
     let mut template_path = PathBuf::from("tools");
     template_path.push("README.md.template");
