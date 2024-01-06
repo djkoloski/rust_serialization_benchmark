@@ -1,5 +1,5 @@
 use std::{
-    collections::HashMap,
+    collections::BTreeSet,
     fmt::{self, Display, Write},
     fs,
     path::PathBuf,
@@ -7,8 +7,7 @@ use std::{
 
 use clap::Parser;
 
-use schema::{Bench, Dataset, Meta, Results, Values};
-use serde::{Deserialize, Serialize};
+use schema::{Bench, Config, Dataset, Features, Results, Values};
 
 #[derive(Parser, Debug)]
 #[command(name = "formatter")]
@@ -25,18 +24,13 @@ struct Args {
     output: PathBuf,
 }
 
-#[derive(Deserialize, Serialize)]
-struct Config {
-    descriptions: HashMap<String, String>,
-    do_not_edit: String,
-}
-
 fn main() {
     let args = Args::parse();
 
+    let config = Config::read(&args.config);
+
     let results =
         serde_json::from_str::<Results>(&fs::read_to_string(args.input).unwrap()).unwrap();
-    let config = serde_json::from_str::<Config>(&fs::read_to_string(args.config).unwrap()).unwrap();
     let template = fs::read_to_string(args.template).unwrap();
 
     fs::write(
@@ -103,11 +97,12 @@ fn format_values<T: Copy, U: Display>(
     Ok(())
 }
 
-fn write_crate_row(output: &mut String, crate_name: &str, meta: &Meta) -> fmt::Result {
+fn write_crate_row(output: &mut String, feature: &str, features: &Features) -> fmt::Result {
+    let package_id = features.get(feature).unwrap();
     write!(
         output,
-        "| [{crate_name} {}][{crate_name}] |",
-        meta.crate_versions[crate_name]
+        "| [{} {}][{feature}] |",
+        package_id.name, package_id.version
     )
 }
 
@@ -120,9 +115,9 @@ pub fn capitalize(s: &str) -> String {
 }
 
 fn build_tables(
+    features: &Features,
     dataset: &Dataset,
     columns: &[&str],
-    meta: &Meta,
     placeholder: &str,
 ) -> Result<Tables, fmt::Error> {
     let mut header = "| Crate |".to_string();
@@ -142,22 +137,22 @@ fn build_tables(
         .cloned()
         .map(|col| {
             dataset
-                .crates
+                .features
                 .values()
-                .filter_map(|crate_| crate_.benches.get(col))
+                .filter_map(|feature| feature.benches.get(col))
                 .map(|bench| match bench {
                     Bench::Nanos(values) => values.iter().cloned().reduce(f64::min).unwrap(),
                     Bench::Bytes(values) => values.iter().cloned().min().unwrap() as f64,
                 })
                 .reduce(f64::min)
-                .unwrap()
+                .unwrap_or_default()
         })
         .collect::<Vec<_>>();
 
-    for (crate_name, crate_) in dataset.crates.iter() {
+    for (feature, crate_) in dataset.features.iter() {
         if !columns.iter().all(|&c| crate_.benches.get(c).is_none()) {
-            write_crate_row(&mut data, crate_name, meta)?;
-            write_crate_row(&mut comparison, crate_name, meta)?;
+            write_crate_row(&mut data, feature, features)?;
+            write_crate_row(&mut comparison, feature, features)?;
 
             for (&column, &min) in columns.iter().zip(mins.iter()) {
                 if let Some(bench) = crate_.benches.get(column) {
@@ -200,8 +195,8 @@ fn format(
     let mut tables = String::new();
 
     for (dataset_name, dataset) in results.datasets.iter() {
-        let serde_tables = build_tables(dataset, SERDE_COLS, &results.meta, "†")?;
-        let zcd_tables = build_tables(dataset, ZCD_COLS, &results.meta, "‡")?;
+        let serde_tables = build_tables(&results.features, dataset, SERDE_COLS, "†")?;
+        let zcd_tables = build_tables(&results.features, dataset, ZCD_COLS, "‡")?;
 
         write!(
             &mut tables,
@@ -252,10 +247,17 @@ fn format(
     }
 
     let mut links = String::new();
-    for (crate_name, version) in results.meta.crate_versions.iter() {
+    let features = results
+        .datasets
+        .values()
+        .map(|dataset| dataset.features.keys())
+        .flatten()
+        .collect::<BTreeSet<_>>();
+    for &feature in features.iter() {
         write!(
             &mut links,
-            "[{crate_name}]: https://crates.io/crates/{crate_name}/{version}\n",
+            "[{feature}]: {}\n",
+            results.features.get(feature).unwrap().crates_io_url(),
         )?;
     }
 

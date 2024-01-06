@@ -3,14 +3,15 @@ use clap::Parser;
 use regex::Regex;
 use std::{fs, path::PathBuf};
 
-use schema::{Bench, Crate, Dataset, Meta, Results};
+use schema::{Bench, Config, Dataset, Feature, PackageId, Results};
 
 #[derive(Parser, Debug)]
 #[command(name = "parser")]
 #[command(about = "Parses benchmark logs from rust_serialization_benchmark into JSON", long_about = None)]
 struct Args {
-    #[arg(long)]
     log: PathBuf,
+    #[arg(long)]
+    config: PathBuf,
     #[arg(long)]
     meta: PathBuf,
     #[arg(short, long)]
@@ -32,6 +33,7 @@ fn main() {
     let args = Args::parse();
 
     let log = fs::read_to_string(&args.log).unwrap();
+    let config = Config::read(&args.config);
     let metadata =
         serde_json::from_str::<Metadata>(&fs::read_to_string(args.meta).unwrap()).unwrap();
 
@@ -44,17 +46,21 @@ fn main() {
     let mut results = Results::default();
 
     for capture in time_benches_re.captures_iter(&log) {
-        let crate_name = &capture[2];
+        let feature = &capture[2];
+        results
+            .features
+            .entry(feature.to_string())
+            .or_insert_with(|| find_package_id(feature, &config, &metadata));
 
         let dataset = results
             .datasets
             .entry(capture[1].to_string())
             .or_insert(Dataset::default());
-        let crate_ = dataset
-            .crates
-            .entry(crate_name.to_string())
-            .or_insert(Crate::default());
-        let bench = crate_
+        let package = dataset
+            .features
+            .entry(feature.to_string())
+            .or_insert(Feature::default());
+        let bench = package
             .benches
             .entry(capture[3].to_string())
             .or_insert(Bench::nanos());
@@ -66,44 +72,51 @@ fn main() {
         } else {
             values.primary = Some(value);
         }
-
-        register_crate_version(&mut results.meta, crate_name, &metadata);
     }
 
     for capture in size_benches_re.captures_iter(&log) {
-        let crate_name = &capture[2];
+        let feature = &capture[2];
+        results
+            .features
+            .entry(feature.to_string())
+            .or_insert_with(|| find_package_id(feature, &config, &metadata));
 
         let dataset = results
             .datasets
             .entry(capture[1].to_string())
             .or_insert(Dataset::default());
-        let crate_ = dataset
-            .crates
-            .entry(crate_name.to_string())
-            .or_insert(Crate::default());
-        let bench = crate_
+        let package = dataset
+            .features
+            .entry(feature.to_string())
+            .or_insert(Feature::default());
+        let bench = package
             .benches
             .entry(capture[3].to_string())
             .or_insert(Bench::bytes());
         let values = bench.unwrap_bytes();
         values.primary = Some(capture[4].parse().unwrap());
-
-        register_crate_version(&mut results.meta, crate_name, &metadata);
     }
 
     fs::write(args.output, serde_json::to_string(&results).unwrap()).unwrap();
 }
 
-fn register_crate_version(meta: &mut Meta, crate_name: &str, metadata: &Metadata) {
-    if !meta.crate_versions.contains_key(crate_name) {
-        let version = metadata
-            .packages
-            .iter()
-            .find(|pkg| pkg.name == crate_name)
-            .unwrap()
-            .version
-            .clone();
-        meta.crate_versions
-            .insert(crate_name.to_string(), format!("{version}"));
+fn find_package_id(feature: &str, config: &Config, metadata: &Metadata) -> PackageId {
+    if let Some(package_id) = config.features.get(feature) {
+        package_id.clone()
+    } else {
+        PackageId {
+            name: feature.to_string(),
+            version: find_package_version(feature, metadata),
+        }
     }
+}
+
+fn find_package_version(name: &str, metadata: &Metadata) -> String {
+    metadata
+        .packages
+        .iter()
+        .find(|pkg| pkg.name == name)
+        .unwrap()
+        .version
+        .to_string()
 }

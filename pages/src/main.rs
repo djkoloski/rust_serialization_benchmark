@@ -91,7 +91,7 @@ fn benchmark() -> Html {
         .datasets
         .get(&dataset)
         .unwrap()
-        .crates
+        .features
         .iter()
         .map(TryFrom::try_from)
         .collect();
@@ -258,7 +258,7 @@ fn benchmark() -> Html {
                     rows.iter().map(|row| {
                         html! {
                             <tr>
-                                <td><a href={format!("https://crates.io/crates/{}/{}", row.crate_, results.meta.crate_versions.get(&row.crate_).unwrap())} target="_blank">{ &row.crate_ }</a></td>
+                                <td><a href={results.features.get(&row.feature).unwrap().crates_io_url()} target="_blank">{ &row.feature }</a></td>
                                 <td> { row.compression.to_string() } </td>
                                 <td> { format_float(row.messages_per_second, 3) } </td>
                                 <td> { format!("{}%", (row.relative * 100.0) as u32) } </td>
