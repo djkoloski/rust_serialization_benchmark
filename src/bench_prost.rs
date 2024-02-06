@@ -1,15 +1,15 @@
 use criterion::{black_box, Criterion};
 use prost::Message;
 
-pub trait Serialize {
-    type Message: Default + Message;
+pub trait Serialize: Sized {
+    type Message: Default + Into<Self> + Message;
 
     fn serialize_pb(&self) -> Self::Message;
 }
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize,
+    T: Serialize + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -39,11 +39,13 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(T::Message::decode(black_box(&deserialize_buffer).as_slice()).unwrap());
+            black_box(<T::Message>::decode(black_box(&deserialize_buffer).as_slice()).unwrap());
         })
     });
 
     crate::bench_size(name, "prost", deserialize_buffer.as_slice());
+
+    assert!(&<T::Message>::decode(&*deserialize_buffer).unwrap().into() == data);
 
     group.finish();
 }

@@ -29,7 +29,7 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::Generate;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -109,6 +109,17 @@ impl bench_prost::Serialize for Vector3 {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<mesh_prost::Vector3> for Vector3 {
+    fn from(value: mesh_prost::Vector3) -> Self {
+        Vector3 {
+            x: value.x,
+            y: value.y,
+            z: value.z,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Vector3> for Vector3 {
     #[inline]
@@ -122,7 +133,7 @@ impl alkahest::Pack<Vector3> for Vector3 {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -211,6 +222,18 @@ impl bench_prost::Serialize for Triangle {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<mesh_prost::Triangle> for Triangle {
+    fn from(value: mesh_prost::Triangle) -> Self {
+        Triangle {
+            v0: value.v0.unwrap().into(),
+            v1: value.v1.unwrap().into(),
+            v2: value.v2.unwrap().into(),
+            normal: value.normal.unwrap().into(),
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Triangle> for &'_ Triangle {
     #[inline]
@@ -225,7 +248,7 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -315,6 +338,15 @@ impl bench_prost::Serialize for Mesh {
             result.triangles.push(triangle.serialize_pb());
         }
         result
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<mesh_prost::Mesh> for Mesh {
+    fn from(value: mesh_prost::Mesh) -> Self {
+        Mesh {
+            triangles: value.triangles.into_iter().map(Into::into).collect(),
+        }
     }
 }
 
