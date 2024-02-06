@@ -62,7 +62,9 @@ fn main() {
     const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
     for &name in DATASETS.iter() {
         // bebop_compile_dataset(name);
+        #[cfg(all(feature = "capnp", not(feature = "use-committed-capnp")))]
         capnpc_compile_dataset(name).unwrap();
+        #[cfg(all(feature = "flatbuffers", not(feature = "use-committed-flatbuffers")))]
         flatc_compile_dataset(name).unwrap();
         #[cfg(feature = "prost-build")]
         prost_compile_dataset(name).unwrap();
