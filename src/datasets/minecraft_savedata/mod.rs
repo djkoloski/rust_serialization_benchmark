@@ -31,7 +31,7 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::{generate_vec, Generate};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -118,6 +118,18 @@ impl Into<pb::GameType> for GameType {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<pb::GameType> for GameType {
+    fn from(value: pb::GameType) -> Self {
+        match value {
+            pb::GameType::Survival => GameType::Survival,
+            pb::GameType::Creative => GameType::Creative,
+            pb::GameType::Adventure => GameType::Adventure,
+            pb::GameType::Spectator => GameType::Spectator,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<GameType> for GameType {
     #[inline]
@@ -131,7 +143,7 @@ impl alkahest::Pack<GameType> for GameType {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -232,6 +244,17 @@ impl bench_prost::Serialize for Item {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<pb::Item> for Item {
+    fn from(value: pb::Item) -> Self {
+        Item {
+            count: value.count.try_into().unwrap(),
+            slot: value.slot.try_into().unwrap(),
+            id: value.id,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct ItemSchema {
@@ -253,7 +276,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -358,6 +381,21 @@ impl bench_prost::Serialize for Abilities {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<pb::Abilities> for Abilities {
+    fn from(value: pb::Abilities) -> Self {
+        Abilities {
+            walk_speed: value.walk_speed,
+            fly_speed: value.fly_speed,
+            may_fly: value.may_fly,
+            flying: value.flying,
+            invulnerable: value.invulnerable,
+            may_build: value.may_build,
+            instabuild: value.instabuild,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Abilities> for Abilities {
     #[inline]
@@ -375,7 +413,7 @@ impl alkahest::Pack<Abilities> for Abilities {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -594,6 +632,51 @@ impl bench_prost::Serialize for Entity {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<pb::Vector3d> for (f64, f64, f64) {
+    fn from(value: pb::Vector3d) -> Self {
+        (value.x, value.y, value.z)
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<pb::Vector2f> for (f32, f32) {
+    fn from(value: pb::Vector2f) -> Self {
+        (value.x, value.y)
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<pb::Uuid> for [u32; 4] {
+    fn from(value: pb::Uuid) -> Self {
+        [value.x0, value.x1, value.x2, value.x3]
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<pb::Entity> for Entity {
+    fn from(value: pb::Entity) -> Self {
+        Entity {
+            id: value.id,
+            pos: value.pos.unwrap().into(),
+            motion: value.motion.unwrap().into(),
+            rotation: value.rotation.unwrap().into(),
+            fall_distance: value.fall_distance,
+            fire: value.fire.try_into().unwrap(),
+            air: value.air.try_into().unwrap(),
+            on_ground: value.on_ground,
+            no_gravity: value.no_gravity,
+            invulnerable: value.invulnerable,
+            portal_cooldown: value.portal_cooldown,
+            uuid: value.uuid.unwrap().into(),
+            custom_name: value.custom_name,
+            custom_name_visible: value.custom_name_visible,
+            silent: value.silent,
+            glowing: value.glowing,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct EntitySchema {
@@ -641,7 +724,7 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -812,6 +895,24 @@ impl bench_prost::Serialize for RecipeBook {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<pb::RecipeBook> for RecipeBook {
+    fn from(value: pb::RecipeBook) -> Self {
+        RecipeBook {
+            recipes: value.recipes,
+            to_be_displayed: value.to_be_displayed,
+            is_filtering_craftable: value.is_filtering_craftable,
+            is_gui_open: value.is_gui_open,
+            is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
+            is_furnace_gui_open: value.is_furnace_gui_open,
+            is_blasting_furnace_filtering_craftable: value.is_blasting_furnace_filtering_craftable,
+            is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
+            is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
+            is_smoker_gui_open: value.is_smoker_gui_open,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct RecipeBookSchema {
@@ -847,7 +948,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -1221,6 +1322,42 @@ impl bench_prost::Serialize for Player {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<pb::Player> for Player {
+    fn from(value: pb::Player) -> Self {
+        Player {
+            game_type: pb::GameType::try_from(value.game_type).unwrap().into(),
+            previous_game_type: pb::GameType::try_from(value.previous_game_type).unwrap().into(),
+            score: value.score,
+            dimension: value.dimension,
+            selected_item_slot: value.selected_item_slot,
+            selected_item: value.selected_item.unwrap().into(),
+            spawn_dimension: value.spawn_dimension,
+            spawn_x: value.spawn_x,
+            spawn_y: value.spawn_y,
+            spawn_z: value.spawn_z,
+            spawn_forced: value.spawn_forced,
+            sleep_timer: value.sleep_timer.try_into().unwrap(),
+            food_exhaustion_level: value.food_exhaustion_level,
+            food_saturation_level: value.food_saturation_level,
+            food_tick_timer: value.food_tick_timer,
+            xp_level: value.xp_level,
+            xp_p: value.xp_p,
+            xp_total: value.xp_total,
+            xp_seed: value.xp_seed,
+            inventory: value.inventory.into_iter().map(Into::into).collect(),
+            ender_items: value.ender_items.into_iter().map(Into::into).collect(),
+            abilities: value.abilities.unwrap().into(),
+            entered_nether_position: value.entered_nether_position.map(Into::into),
+            root_vehicle: value.root_vehicle.map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
+            shoulder_entity_left: value.shoulder_entity_left.map(Into::into),
+            shoulder_entity_right: value.shoulder_entity_right.map(Into::into),
+            seen_credits: value.seen_credits,
+            recipe_book: value.recipe_book.unwrap().into(),
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct PlayerSchema {
@@ -1298,7 +1435,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -1386,6 +1523,13 @@ impl bench_prost::Serialize for Players {
             result.players.push(player.serialize_pb());
         }
         result
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<pb::Players> for Players {
+    fn from(value: pb::Players) -> Self {
+        Players { players: value.players.into_iter().map(Into::into).collect() }
     }
 }
 

@@ -31,7 +31,7 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::Generate;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -114,6 +114,18 @@ impl bench_prost::Serialize for Address {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<log_prost::Address> for Address {
+    fn from(value: log_prost::Address) -> Self {
+        Address {
+            x0: value.x0.try_into().unwrap(),
+            x1: value.x1.try_into().unwrap(),
+            x2: value.x2.try_into().unwrap(),
+            x3: value.x3.try_into().unwrap(),
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Address> for Address {
     #[inline]
@@ -128,7 +140,7 @@ impl alkahest::Pack<Address> for Address {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -321,6 +333,21 @@ impl bench_prost::Serialize for Log {
     }
 }
 
+#[cfg(feature = "prost")]
+impl From<log_prost::Log> for Log {
+    fn from(value: log_prost::Log) -> Self {
+        Log {
+            address: value.address.unwrap().into(),
+            identity: value.identity,
+            userid: value.userid,
+            date: value.date,
+            request: value.request,
+            code: value.code.try_into().unwrap(),
+            size: value.size,
+        }
+    }
+}
+
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<LogSchema> for &'_ Log {
     #[inline]
@@ -338,7 +365,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -426,6 +453,13 @@ impl bench_prost::Serialize for Logs {
             result.logs.push(log.serialize_pb());
         }
         result
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<log_prost::Logs> for Logs {
+    fn from(value: log_prost::Logs) -> Self {
+        Logs { logs: value.logs.into_iter().map(Into::into).collect() }
     }
 }
 
