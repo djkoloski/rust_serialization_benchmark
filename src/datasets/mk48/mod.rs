@@ -696,12 +696,18 @@ impl From<pb::Contact> for Contact {
         Contact {
             damage: value.damage.try_into().unwrap(),
             entity_id: value.entity_id,
-            entity_type: value.entity_type.map(|et| <pb::EntityType>::try_from(et).unwrap().into()),
+            entity_type: value
+                .entity_type
+                .map(|et| <pb::EntityType>::try_from(et).unwrap().into()),
             guidance: value.guidance.unwrap().into(),
             player_id: value.player_id.map(|id| id.try_into().unwrap()),
             reloads: value.reloads,
             transform: value.transform.unwrap().into(),
-            turret_angles: value.turret_angles.into_iter().map(|a| a.try_into().unwrap()).collect(),
+            turret_angles: value
+                .turret_angles
+                .into_iter()
+                .map(|a| a.try_into().unwrap())
+                .collect(),
         }
     }
 }
@@ -848,7 +854,10 @@ impl From<pb::ChunkId> for (i8, i8) {
 #[cfg(feature = "prost")]
 impl From<pb::TerrainUpdate> for TerrainUpdate {
     fn from(value: pb::TerrainUpdate) -> Self {
-        TerrainUpdate { chunk_id: value.chunk_id.unwrap().into(), data: value.data }
+        TerrainUpdate {
+            chunk_id: value.chunk_id.unwrap().into(),
+            data: value.data,
+        }
     }
 }
 
@@ -1138,7 +1147,9 @@ impl bench_prost::Serialize for Updates {
 #[cfg(feature = "prost")]
 impl From<pb::Updates> for Updates {
     fn from(value: pb::Updates) -> Self {
-        Updates { updates: value.updates.into_iter().map(Into::into).collect() }
+        Updates {
+            updates: value.updates.into_iter().map(Into::into).collect(),
+        }
     }
 }
 

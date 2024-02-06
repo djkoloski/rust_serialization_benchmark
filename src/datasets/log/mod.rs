@@ -322,7 +322,7 @@ impl bench_prost::Serialize for Log {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        log_prost::Log{
+        log_prost::Log {
             address: Some(self.address.serialize_pb()),
             identity: self.identity.clone(),
             userid: self.userid.clone(),
@@ -460,7 +460,9 @@ impl bench_prost::Serialize for Logs {
 #[cfg(feature = "prost")]
 impl From<log_prost::Logs> for Logs {
     fn from(value: log_prost::Logs) -> Self {
-        Logs { logs: value.logs.into_iter().map(Into::into).collect() }
+        Logs {
+            logs: value.logs.into_iter().map(Into::into).collect(),
+        }
     }
 }
 

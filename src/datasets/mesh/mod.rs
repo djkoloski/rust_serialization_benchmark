@@ -112,7 +112,7 @@ impl bench_prost::Serialize for Vector3 {
 #[cfg(feature = "prost")]
 impl From<mesh_prost::Vector3> for Vector3 {
     fn from(value: mesh_prost::Vector3) -> Self {
-        Vector3{
+        Vector3 {
             x: value.x,
             y: value.y,
             z: value.z,
@@ -344,7 +344,9 @@ impl bench_prost::Serialize for Mesh {
 #[cfg(feature = "prost")]
 impl From<mesh_prost::Mesh> for Mesh {
     fn from(value: mesh_prost::Mesh) -> Self {
-        Mesh { triangles: value.triangles.into_iter().map(Into::into).collect() }
+        Mesh {
+            triangles: value.triangles.into_iter().map(Into::into).collect(),
+        }
     }
 }
 

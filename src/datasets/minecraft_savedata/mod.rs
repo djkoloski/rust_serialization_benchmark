@@ -1327,7 +1327,9 @@ impl From<pb::Player> for Player {
     fn from(value: pb::Player) -> Self {
         Player {
             game_type: pb::GameType::try_from(value.game_type).unwrap().into(),
-            previous_game_type: pb::GameType::try_from(value.previous_game_type).unwrap().into(),
+            previous_game_type: pb::GameType::try_from(value.previous_game_type)
+                .unwrap()
+                .into(),
             score: value.score,
             dimension: value.dimension,
             selected_item_slot: value.selected_item_slot,
@@ -1349,7 +1351,9 @@ impl From<pb::Player> for Player {
             ender_items: value.ender_items.into_iter().map(Into::into).collect(),
             abilities: value.abilities.unwrap().into(),
             entered_nether_position: value.entered_nether_position.map(Into::into),
-            root_vehicle: value.root_vehicle.map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
+            root_vehicle: value
+                .root_vehicle
+                .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
             shoulder_entity_left: value.shoulder_entity_left.map(Into::into),
             shoulder_entity_right: value.shoulder_entity_right.map(Into::into),
             seen_credits: value.seen_credits,
@@ -1529,7 +1533,9 @@ impl bench_prost::Serialize for Players {
 #[cfg(feature = "prost")]
 impl From<pb::Players> for Players {
     fn from(value: pb::Players) -> Self {
-        Players { players: value.players.into_iter().map(Into::into).collect() }
+        Players {
+            players: value.players.into_iter().map(Into::into).collect(),
+        }
     }
 }
 
