@@ -322,14 +322,15 @@ impl bench_prost::Serialize for Log {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.identity = self.identity.clone();
-        result.userid = self.userid.clone();
-        result.date = self.date.clone();
-        result.request = self.request.clone();
-        result.code = self.code as u32;
-        result.size = self.size;
-        result
+        log_prost::Log{
+            address: Some(self.address.serialize_pb()),
+            identity: self.identity.clone(),
+            userid: self.userid.clone(),
+            date: self.date.clone(),
+            request: self.request.clone(),
+            code: self.code as u32,
+            size: self.size,
+        }
     }
 }
 
