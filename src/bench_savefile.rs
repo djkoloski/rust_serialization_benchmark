@@ -4,7 +4,7 @@ use std::io::Cursor;
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize + Deserialize + WithSchema,
+    T: Serialize + Deserialize + WithSchema + PartialEq,
 {
     let mut group = c.benchmark_group(format!("{}/savefile", name));
 
@@ -28,6 +28,10 @@ where
     });
 
     crate::bench_size(name, "savefile", deserialize_buffer.as_slice());
+
+    assert!(
+        savefile::load_noschema::<T>(&mut Cursor::new(&deserialize_buffer), 0).unwrap() == *data
+    );
 
     group.finish();
 }
