@@ -173,9 +173,7 @@ pub struct Log {
     pub userid: String,
     pub date: String,
     pub request: String,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "100..599"))]
     pub code: u16,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..100000000"))]
     pub size: u64,
 }
 

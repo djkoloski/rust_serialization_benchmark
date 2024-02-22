@@ -63,25 +63,15 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[repr(u8)]
 pub enum EntityType {
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 2.14))]
     ArleighBurke,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 0.52))]
     Bismarck,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 0.97))]
     Clemenceau,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 1.46))]
     Fletcher,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 13.16))]
     G5,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 1.55))]
     Iowa,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 0.83))]
     Kolkata,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 7.25))]
     Osa,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 4.06))]
     Yasen,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 12.92))]
     Zubr,
 }
 
@@ -312,7 +302,6 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Transform {
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub altitude: i8,
     pub angle: u16,
     pub position: (f32, f32),
@@ -543,13 +532,10 @@ impl alkahest::Pack<Guidance> for Guidance {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Contact {
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub damage: u8,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..8000"))]
     pub entity_id: u32,
     pub entity_type: Option<EntityType>,
     pub guidance: Guidance,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..400"))]
     pub player_id: Option<u16>,
     pub reloads: Vec<bool>,
     pub transform: Transform,
@@ -771,7 +757,6 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct TerrainUpdate {
-    #[cfg_attr(feature = "bitcode", bitcode_hint(gamma))]
     chunk_id: (i8, i8),
     data: Vec<u8>,
 }
@@ -913,7 +898,6 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Update {
     pub contacts: Vec<Contact>,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..5000"))]
     pub score: u32,
     pub world_radius: f32,
     pub terrain_updates: Vec<TerrainUpdate>,
