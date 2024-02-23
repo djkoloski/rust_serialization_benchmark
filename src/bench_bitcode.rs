@@ -2,8 +2,8 @@ use bitcode::{DecodeOwned, Encode};
 use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
-    where
-        T: Encode + DecodeOwned,
+where
+    T: Encode + DecodeOwned,
 {
     let mut group = c.benchmark_group(format!("{}/bitcode", name));
     let mut buffer = bitcode::EncodeBuffer::<T>::default();
