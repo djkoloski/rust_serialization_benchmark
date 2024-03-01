@@ -1,29 +1,29 @@
-use bitcode::{Decode, Encode};
+use bitcode::{DecodeOwned, Encode};
 use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Encode + Decode,
+    T: Encode + DecodeOwned,
 {
     let mut group = c.benchmark_group(format!("{}/bitcode", name));
-    let mut buffer = bitcode::Buffer::with_capacity(10000000);
+    let mut buffer = bitcode::EncodeBuffer::<T>::default();
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            buffer.encode(black_box(&data)).unwrap();
-            black_box(());
+            black_box(buffer.encode(black_box(data)));
         })
     });
 
-    let encoded = bitcode::encode(&data).unwrap();
+    let encoded = buffer.encode(data);
+    let mut buffer = bitcode::DecodeBuffer::<T>::default();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(buffer.decode::<T>(black_box(&encoded)).unwrap());
+            black_box(buffer.decode(black_box(&encoded)).unwrap());
         })
     });
 
-    crate::bench_size(name, "bitcode", encoded.as_slice());
+    crate::bench_size(name, "bitcode", encoded);
 
     group.finish();
 }

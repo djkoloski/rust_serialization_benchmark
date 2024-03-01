@@ -305,9 +305,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Abilities {
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub walk_speed: f32,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub fly_speed: f32,
     pub may_fly: bool,
     pub flying: bool,
@@ -442,13 +440,9 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Entity {
     pub id: String,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub pos: (f64, f64, f64),
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub motion: (f64, f64, f64),
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub rotation: (f32, f32),
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub fall_distance: f32,
     pub fire: u16,
     pub air: u16,
@@ -988,20 +982,16 @@ pub struct Player {
     pub spawn_z: i64,
     pub spawn_forced: Option<bool>,
     pub sleep_timer: u16,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub food_exhaustion_level: f32,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub food_saturation_level: f32,
     pub food_tick_timer: u32,
     pub xp_level: u32,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub xp_p: f32,
     pub xp_total: i32,
     pub xp_seed: i32,
     pub inventory: Vec<Item>,
     pub ender_items: Vec<Item>,
     pub abilities: Abilities,
-    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub entered_nether_position: Option<(f64, f64, f64)>,
     pub root_vehicle: Option<([u32; 4], Entity)>,
     pub shoulder_entity_left: Option<Entity>,
