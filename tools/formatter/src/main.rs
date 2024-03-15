@@ -107,13 +107,16 @@ fn write_crate_row(output: &mut String, feature: &str, features: &Features) -> f
 }
 
 pub fn capitalize(s: &str) -> String {
-    s.split("_").map(|s| {
-        let mut c = s.chars();
-        match c.next() {
-            None => String::new(),
-            Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
-        }
-    }).collect::<Vec<_>>().join(" ")
+    s.split("_")
+        .map(|s| {
+            let mut c = s.chars();
+            match c.next() {
+                None => String::new(),
+                Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 fn build_tables(
@@ -191,7 +194,14 @@ fn format(
     template: &str,
     date: &str,
 ) -> Result<String, fmt::Error> {
-    const SERDE_COLS: &[&str] = &["serialize", "deserialize", "size", "zlib", "zstd", "zstd_time"];
+    const SERDE_COLS: &[&str] = &[
+        "serialize",
+        "deserialize",
+        "size",
+        "zlib",
+        "zstd",
+        "zstd_time",
+    ];
     const ZCD_COLS: &[&str] = &["access", "read", "update"];
 
     let mut tables = String::new();

@@ -166,7 +166,12 @@ pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
     println!("{}/{}/size {}", name, lib, bytes.len());
     println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
     println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
-    println!("{}/{}/zstd_time {}", name, lib, bench_compression(|| zstd_size(bytes)));
+    println!(
+        "{}/{}/zstd_time {}",
+        name,
+        lib,
+        bench_compression(|| zstd_size(bytes))
+    );
 }
 
 fn bench_compression(compress: impl Fn() -> usize) -> String {
