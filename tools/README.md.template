@@ -23,7 +23,7 @@ All tests benchmark the following properties (time or size):
 * **Size**: the size of the buffer when serialized
 * **Zlib**: the size of the buffer after zlib compression
 * **Zstd**: the size of the buffer after zstd compression
-* **Zstd Time**: the time taken to compress the object with zstd
+* **Zstd Time**: the time taken to compress the serialized buffer with zstd
 
 Zero-copy deserialization libraries have an additional set of benchmarks:
 
