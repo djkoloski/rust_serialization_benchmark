@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize + for<'de> Deserialize<'de>,
+    T: Serialize + for<'de> Deserialize<'de> + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -31,6 +31,8 @@ where
     });
 
     crate::bench_size(name, "rmp-serde", deserialize_buffer.as_slice());
+
+    assert!(rmp_serde::from_slice::<T>(&deserialize_buffer).unwrap() == *data);
 
     group.finish();
 }

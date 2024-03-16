@@ -4,7 +4,7 @@ use simd_json_derive::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize + for<'de> Deserialize<'de>,
+    T: Serialize + for<'de> Deserialize<'de> + PartialEq,
 {
     const BUFFER_LEN: usize = 50_000_000;
 
@@ -37,6 +37,12 @@ where
     });
 
     crate::bench_size(name, "simd-json", deserialize_buffer.as_slice());
+
+    assert!(
+        T::from_slice_with_buffers(deserialize_buffer.clone().as_mut_slice(), &mut buffers)
+            .unwrap()
+            == *data
+    );
 
     group.finish();
 }

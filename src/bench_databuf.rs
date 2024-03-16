@@ -3,7 +3,7 @@ use databuf::{config::num::LE, *};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Encode + for<'de> Decode<'de>,
+    T: Encode + for<'de> Decode<'de> + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -26,6 +26,8 @@ where
     });
 
     crate::bench_size(name, "databuf", deserialize_buffer.as_slice());
+
+    assert!(T::from_bytes::<LE>(&deserialize_buffer).unwrap() == *data);
 
     group.finish();
 }

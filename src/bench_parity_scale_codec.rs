@@ -3,7 +3,7 @@ use parity_scale_codec::{Decode, Encode};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Encode + Decode,
+    T: Encode + Decode + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -26,6 +26,8 @@ where
     });
 
     crate::bench_size(name, "parity-scale-codec", deserialize_buffer.as_slice());
+
+    assert!(T::decode(&mut deserialize_buffer.as_slice()).unwrap() == *data);
 
     group.finish();
 }

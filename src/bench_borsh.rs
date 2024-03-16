@@ -3,7 +3,7 @@ use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: BorshSerialize + BorshDeserialize,
+    T: BorshSerialize + BorshDeserialize + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -27,6 +27,8 @@ where
     });
 
     crate::bench_size(name, "borsh", deserialize_buffer.as_slice());
+
+    assert!(T::deserialize(&mut deserialize_buffer.as_slice()).unwrap() == *data);
 
     group.finish();
 }

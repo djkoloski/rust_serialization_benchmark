@@ -3,7 +3,7 @@ use criterion::{black_box, Criterion};
 
 pub fn bench<T, R>(name: &'static str, c: &mut Criterion, data: &T, read: R)
 where
-    T: Abomonation + Clone,
+    T: Abomonation + Clone + PartialEq,
     R: Fn(&T),
 {
     const BUFFER_LEN: usize = 10_000_000;
@@ -48,6 +48,13 @@ where
     });
 
     crate::bench_size(name, "abomonation", deserialize_buffer.as_slice());
+
+    assert!(
+        unsafe { decode::<T>(black_box(&mut deserialize_buffer)) }
+            .unwrap()
+            .0
+            == data
+    );
 
     group.finish();
 }

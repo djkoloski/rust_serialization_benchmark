@@ -3,7 +3,7 @@ use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Encode + DecodeOwned,
+    T: Encode + DecodeOwned + PartialEq,
 {
     let mut group = c.benchmark_group(format!("{}/bitcode", name));
     let mut buffer = bitcode::EncodeBuffer::<T>::default();
@@ -24,6 +24,8 @@ where
     });
 
     crate::bench_size(name, "bitcode", encoded);
+
+    assert!(buffer.decode(&encoded).unwrap() == *data);
 
     group.finish();
 }

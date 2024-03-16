@@ -1,3 +1,4 @@
+use bincode1::Options;
 use core::pin::Pin;
 
 use bytecheck::CheckBytes;
@@ -20,7 +21,7 @@ pub type BenchSerializer<'a> = CompositeSerializer<
 
 pub fn bench<T, R, U>(name: &'static str, c: &mut Criterion, data: &T, read: R, update: U)
 where
-    T: Archive + for<'a> Serialize<BenchSerializer<'a>>,
+    T: Archive + for<'a> Serialize<BenchSerializer<'a>> + PartialEq,
     T::Archived: for<'a> CheckBytes<DefaultValidator<'a>> + Deserialize<T, Infallible>,
     R: Fn(&T::Archived),
     U: Fn(Pin<&mut T::Archived>),
@@ -133,6 +134,14 @@ where
     });
 
     crate::bench_size(name, "rkyv", deserialize_buffer);
+
+    assert!(
+        check_archived_value::<T>(deserialize_buffer.as_ref(), pos)
+            .unwrap()
+            .deserialize(&mut Infallible)
+            .unwrap()
+            == *data
+    );
 
     group.finish();
 }

@@ -45,7 +45,7 @@ where
 
     crate::bench_size(name, "prost", deserialize_buffer.as_slice());
 
-    assert!(&<T::Message>::decode(&*deserialize_buffer).unwrap().into() == data);
+    assert!(<T::Message>::decode(&*deserialize_buffer).unwrap().into() == *data);
 
     group.finish();
 }

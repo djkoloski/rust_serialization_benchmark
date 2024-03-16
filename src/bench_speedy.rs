@@ -3,7 +3,7 @@ use speedy::{Endianness, Readable, Writable};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: for<'a> Readable<'a, Endianness> + Writable<Endianness>,
+    T: for<'a> Readable<'a, Endianness> + Writable<Endianness> + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
@@ -35,6 +35,8 @@ where
     });
 
     crate::bench_size(name, "speedy", deserialize_buffer.as_slice());
+
+    assert!(T::read_from_buffer_with_ctx(CONTEXT, &deserialize_buffer).unwrap() == *data);
 
     group.finish();
 }

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Serialize + for<'de> Deserialize<'de>,
+    T: Serialize + for<'de> Deserialize<'de> + PartialEq,
 {
     const BUFFER_LEN: usize = 50_000_000;
 
@@ -34,6 +34,8 @@ where
     });
 
     crate::bench_size(name, "ciborium", deserialize_buffer.as_slice());
+
+    assert!(ciborium::de::from_reader::<T, _>(deserialize_buffer.as_slice()).unwrap() == *data);
 
     group.finish();
 }

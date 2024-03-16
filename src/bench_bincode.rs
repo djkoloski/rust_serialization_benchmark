@@ -2,7 +2,7 @@ use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: bincode::Encode + bincode::Decode,
+    T: bincode::Encode + bincode::Decode + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
     let mut group = c.benchmark_group(format!("{}/bincode", name));
@@ -31,6 +31,13 @@ where
     });
 
     crate::bench_size(name, "bincode", buffer);
+
+    assert!(
+        bincode::decode_from_slice::<T, _>(black_box(buffer), conf)
+            .unwrap()
+            .0
+            == *data
+    );
 
     group.finish();
 }

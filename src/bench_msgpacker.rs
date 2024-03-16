@@ -4,7 +4,7 @@ use msgpacker::prelude::*;
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Packable + Unpackable,
+    T: Packable + Unpackable + PartialEq,
     <T as Unpackable>::Error: fmt::Debug,
 {
     const BUFFER_LEN: usize = 10_000_000;
@@ -29,6 +29,8 @@ where
     });
 
     crate::bench_size(name, "msgpacker", &deserialize_buffer);
+
+    assert!(T::unpack(&deserialize_buffer).unwrap().1 == *data);
 
     group.finish();
 }

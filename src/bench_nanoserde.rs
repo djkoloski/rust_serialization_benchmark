@@ -3,7 +3,7 @@ use nanoserde::{DeBin, SerBin};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: DeBin + SerBin,
+    T: DeBin + SerBin + PartialEq,
 {
     let mut group = c.benchmark_group(format!("{}/nanoserde", name));
 
@@ -23,6 +23,8 @@ where
     });
 
     crate::bench_size(name, "nanoserde", deserialize_buffer.as_slice());
+
+    assert!(<T as DeBin>::deserialize_bin(&deserialize_buffer).unwrap() == *data);
 
     group.finish();
 }
