@@ -1,4 +1,5 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+#[allow(unused_imports)]
+use criterion::{black_box, criterion_main, Criterion};
 use rand_pcg::Lcg64Xsh32;
 #[cfg(feature = "abomonation")]
 use rust_serialization_benchmark::bench_abomonation;
@@ -718,6 +719,50 @@ fn bench_mk48(c: &mut Criterion) {
     bench_nanoserde::bench(BENCH, c, &data);
 }
 
+#[cfg(feature = "pprof")]
+mod profiling {
+    use criterion::profiler::Profiler;
+    use pprof::ProfilerGuard;
+    use std::ffi::c_int;
+    use std::fs::File;
+    use std::path::Path;
+
+    pub struct FlamegraphProfiler<'a> {
+        frequency: c_int,
+        active_profiler: Option<ProfilerGuard<'a>>,
+    }
+
+    impl<'a> FlamegraphProfiler<'a> {
+        pub fn new(frequency: c_int) -> Self {
+            FlamegraphProfiler {
+                frequency,
+                active_profiler: None,
+            }
+        }
+    }
+
+    impl<'a> Profiler for FlamegraphProfiler<'a> {
+        fn start_profiling(&mut self, _benchmark_id: &str, _benchmark_dir: &Path) {
+            self.active_profiler = Some(ProfilerGuard::new(self.frequency).unwrap());
+        }
+
+        fn stop_profiling(&mut self, _benchmark_id: &str, benchmark_dir: &Path) {
+            std::fs::create_dir_all(benchmark_dir).unwrap();
+            let flamegraph_path = benchmark_dir.join("flamegraph.svg");
+            let flamegraph_file = File::create(&flamegraph_path)
+                .expect("File system error while creating flamegraph.svg");
+            if let Some(profiler) = self.active_profiler.take() {
+                profiler
+                    .report()
+                    .build()
+                    .unwrap()
+                    .flamegraph(flamegraph_file)
+                    .expect("Error writing flamegraph");
+            }
+        }
+    }
+}
+
 pub fn criterion_benchmark(c: &mut Criterion) {
     bench_log(c);
     bench_mesh(c);
@@ -725,5 +770,12 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     bench_mk48(c);
 }
 
-criterion_group!(benches, criterion_benchmark);
+pub fn benches() {
+    let criterion = Criterion::default();
+    #[cfg(feature = "pprof")]
+    let criterion = criterion.with_profiler(profiling::FlamegraphProfiler::new(100));
+    let mut criterion = criterion.configure_from_args();
+    criterion_benchmark(&mut criterion);
+}
+
 criterion_main!(benches);
