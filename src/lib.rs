@@ -166,6 +166,25 @@ pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
     println!("{}/{}/size {}", name, lib, bytes.len());
     println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
     println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
+    println!(
+        "{}/{}/zstd_time {}",
+        name,
+        lib,
+        bench_compression(|| zstd_size(bytes))
+    );
+}
+
+fn bench_compression(compress: impl Fn() -> usize) -> String {
+    let start = std::time::Instant::now();
+    let size = compress();
+    let elapsed = start.elapsed();
+
+    let s = format!("{elapsed:.4?}");
+    let (number, unit): (String, String) = s.chars().partition(|c| c.is_numeric() || *c == '.');
+    let s = format!("{number} {unit}");
+
+    let mb_per_second = ((size as f64 / 1_000_000.0) / elapsed.as_secs_f64()) as u64;
+    format!("time:   [{s} {s} {s}] {mb_per_second} MB/s")
 }
 
 fn zlib_size(mut bytes: &[u8]) -> usize {

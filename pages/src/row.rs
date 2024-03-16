@@ -6,7 +6,13 @@ pub struct Row {
     pub feature: String,
     pub serialize: f32,
     pub deserialize: Option<f32>,
-    pub sizes: CompressionMap<u64>,
+    pub compression: CompressionMap<CompressionEntry>,
+}
+
+#[derive(Debug)]
+pub struct CompressionEntry {
+    pub size: u64,
+    pub compress: Option<f64>,
 }
 
 type Error = &'static str;
@@ -38,16 +44,34 @@ impl TryFrom<(&String, &Feature)> for Row {
             .and_then(|v| unwrap_seconds(v).ok().flatten())
             .map(|v| v as f32);
 
-        let mut sizes = CompressionMap::default();
-        sizes.insert(Compression::None, unwrap_bytes(col("size")?)?);
-        sizes.insert(Compression::Zlib, unwrap_bytes(col("zlib")?)?);
-        sizes.insert(Compression::Zstd, unwrap_bytes(col("zstd")?)?);
+        let mut compression = CompressionMap::default();
+        compression.insert(
+            Compression::None,
+            CompressionEntry {
+                size: unwrap_bytes(col("size")?)?,
+                compress: None,
+            },
+        );
+        compression.insert(
+            Compression::Zlib,
+            CompressionEntry {
+                size: unwrap_bytes(col("zlib")?)?,
+                compress: None,
+            },
+        );
+        compression.insert(
+            Compression::Zstd,
+            CompressionEntry {
+                size: unwrap_bytes(col("zstd")?)?,
+                compress: unwrap_seconds(col("zstd_time")?)?,
+            },
+        );
 
         Ok(Self {
             feature: feature.clone(),
             serialize,
             deserialize,
-            sizes,
+            compression,
         })
     }
 }
