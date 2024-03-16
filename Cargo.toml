@@ -136,6 +136,11 @@ savefile = ["dep:savefile", "savefile-derive"]
 
 scale = ["parity-scale-codec", "parity-scale-codec-derive"]
 
+# Enable these to use the already-committed generated files for capnp and
+# flatbuffers rather than regenerating them.
+use-committed-capnp = []
+use-committed-flatbuffers = []
+
 [dev-dependencies]
 rand_pcg = "0.3.1"
 
