@@ -5,13 +5,12 @@ pub mod minecraft_savedata_capnp;
 #[allow(unused_imports)]
 pub mod minecraft_savedata_fb;
 #[cfg(feature = "prost")]
-pub mod minecraft_savedata_prost {
-    include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
-}
+#[path = "prost.minecraft_savedata.rs"]
+pub mod minecraft_savedata_prost;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
-#[cfg(feature = "capnp")]
+#[cfg(any(feature = "capnp", feature = "prost"))]
 pub use minecraft_savedata_capnp as cp;
 #[cfg(feature = "flatbuffers")]
 pub use minecraft_savedata_fb::minecraft_savedata as fb;
@@ -92,7 +91,7 @@ impl Into<fb::GameType> for GameType {
     }
 }
 
-#[cfg(feature = "capnp")]
+#[cfg(any(feature = "capnp", feature = "prost"))]
 impl Into<cp::GameType> for GameType {
     #[inline]
     fn into(self) -> cp::GameType {

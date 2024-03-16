@@ -119,7 +119,6 @@ default = [
   "postcard",
   "pot",
   "prost",
-  "prost-build",
   "rkyv",
   "rmp-serde",
   "ron",
@@ -131,16 +130,16 @@ default = [
   "speedy",
   "savefile"
 ]
+capnp = ["dep:capnp"]
+prost = ["dep:capnp", "dep:prost"]
 simd-json = ["dep:simd-json", "simd-json-derive"]
-
 savefile = ["dep:savefile", "savefile-derive"]
-
 scale = ["parity-scale-codec", "parity-scale-codec-derive"]
 
-# Enable these to use the already-committed generated files for capnp and
-# flatbuffers rather than regenerating them.
-use-committed-capnp = []
-use-committed-flatbuffers = []
+# Enable these features to regenerate generated files rather than using the committed versions.
+regenerate-capnp = ["dep:capnpc"]
+regenerate-flatbuffers = ["dep:flatc-rust"]
+regenerate-prost = ["dep:prost-build"]
 
 [dev-dependencies]
 rand_pcg = "0.3.1"
@@ -148,8 +147,8 @@ rand_pcg = "0.3.1"
 [build-dependencies]
 bebop-tools = "2.8.7"
 capnp = "0.18.3"
-capnpc = "0.18.0"
-flatc-rust = "0.2.0"
+capnpc = { version = "0.18.0", optional = true }
+flatc-rust = { version = "0.2.0", optional = true }
 prost-build = { version = "0.12.1", optional = true }
 
 [[bench]]
