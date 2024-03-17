@@ -7,9 +7,8 @@ pub mod log_capnp;
 #[allow(unused_imports)]
 pub mod log_fb;
 #[cfg(feature = "prost")]
-pub mod log_prost {
-    include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
-}
+#[path = "prost.log.rs"]
+pub mod log_prost;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};

@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use std::{
     env,
     path::{Path, PathBuf},
@@ -15,6 +16,7 @@ fn bebop_compile_dataset(name: &'static str) {
     );
 }
 
+#[cfg(feature = "regenerate-capnp")]
 fn capnpc_compile_dataset(name: &'static str) -> capnp::Result<()> {
     let mut command = capnpc::CompilerCommand::new();
     #[cfg(windows)]
@@ -25,6 +27,7 @@ fn capnpc_compile_dataset(name: &'static str) -> capnp::Result<()> {
     command.run()
 }
 
+#[cfg(feature = "regenerate-flatbuffers")]
 fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
     #[cfg(windows)]
     let flatc = flatc_rust::Flatc::from_path("./prebuilt/flatc.exe");
@@ -40,7 +43,7 @@ fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
     })
 }
 
-#[cfg(feature = "prost-build")]
+#[cfg(feature = "regenerate-prost")]
 fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     if cfg!(windows) {
         match env::var("PROTOC") {
@@ -52,21 +55,29 @@ fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     }
     let mut prost_config = prost_build::Config::new();
     prost_config.protoc_arg("--experimental_allow_proto3_optional");
+    prost_config.out_dir(format!("./src/datasets/{name}"));
     prost_config.compile_protos(
-        &[format!("./src/datasets/{0}/{0}.proto", name).as_str()],
+        &[format!("./src/datasets/{name}/{name}.proto").as_str()],
         &["src"],
     )
 }
 
 fn main() {
-    const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
-    for &name in DATASETS.iter() {
-        // bebop_compile_dataset(name);
-        #[cfg(all(feature = "capnp", not(feature = "use-committed-capnp")))]
-        capnpc_compile_dataset(name).unwrap();
-        #[cfg(all(feature = "flatbuffers", not(feature = "use-committed-flatbuffers")))]
-        flatc_compile_dataset(name).unwrap();
-        #[cfg(feature = "prost-build")]
-        prost_compile_dataset(name).unwrap();
+    #[cfg(any(
+        feature = "regenerate-capnp",
+        feature = "regenerate-flatbuffers",
+        feature = "regenerate-prost"
+    ))]
+    {
+        const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
+        for &name in DATASETS.iter() {
+            // bebop_compile_dataset(name);
+            #[cfg(feature = "regenerate-capnp")]
+            capnpc_compile_dataset(name).unwrap();
+            #[cfg(feature = "regenerate-flatbuffers")]
+            flatc_compile_dataset(name).unwrap();
+            #[cfg(feature = "regenerate-prost")]
+            prost_compile_dataset(name).unwrap();
+        }
     }
 }

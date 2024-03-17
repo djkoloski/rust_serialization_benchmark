@@ -1,19 +1,18 @@
 #[cfg(feature = "bebop")]
 pub mod mk48_bebop;
-#[cfg(feature = "capnp")]
+#[cfg(any(feature = "capnp", feature = "prost"))]
 pub mod mk48_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "mk48_generated.rs"]
 #[allow(unused_imports)]
 pub mod mk48_fb;
 #[cfg(feature = "prost")]
-pub mod mk48_prost {
-    include!(concat!(env!("OUT_DIR"), "/prost.mk48.rs"));
-}
+#[path = "prost.mk48.rs"]
+pub mod mk48_prost;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
-#[cfg(feature = "capnp")]
+#[cfg(any(feature = "capnp", feature = "prost"))]
 pub use mk48_capnp as cp;
 #[cfg(feature = "flatbuffers")]
 pub use mk48_fb::mk_48 as fb;
@@ -172,7 +171,7 @@ impl Into<fb::EntityType> for EntityType {
     }
 }
 
-#[cfg(feature = "capnp")]
+#[cfg(any(feature = "capnp", feature = "prost"))]
 impl Into<cp::EntityType> for EntityType {
     #[inline]
     fn into(self) -> cp::EntityType {

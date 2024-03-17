@@ -5,9 +5,8 @@ pub mod mesh_capnp;
 #[allow(unused_imports)]
 pub mod mesh_fb;
 #[cfg(feature = "prost")]
-pub mod mesh_prost {
-    include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
-}
+#[path = "prost.mesh.rs"]
+pub mod mesh_prost;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};

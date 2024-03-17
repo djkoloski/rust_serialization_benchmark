@@ -35,20 +35,45 @@ jobs:
 
           cargo fmt --check
 
-      - name: build
+      - name: set up codegen dependencies
         shell: bash
         run: |
 
-          wget "https://github.com/protocolbuffers/protobuf/releases/download/v23.3/protoc-23.3-linux-x86_64.zip" -O protoc.zip
-          unzip protoc.zip
-          chmod +x bin/protoc
-          mv bin/protoc /usr/local/bin
+          mkdir proto
+          (
+            cd proto
+            wget "https://github.com/protocolbuffers/protobuf/releases/download/v26.0/protoc-26.0-linux-x86_64.zip" -O protoc.zip
+            unzip protoc.zip
+            chmod +x bin/protoc
+            mv bin/protoc /usr/local/bin/
+          )
+          protoc --version
 
-          wget "https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.clang++-12.zip" -O flatbuffers
-          unzip flatbuffers
-          chmod +x flatc
-          mv flatc /usr/local/bin
+          mkdir flatbuffers
+          (
+            cd flatbuffers
+            wget "https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.clang++-12.zip" -O flatbuffers.zip
+            unzip flatbuffers.zip
+            chmod +x ./flatc
+            mv ./flatc /usr/local/bin
+          )
+          flatc --version
 
-          sudo apt-get install -y capnproto libprotobuf-dev
+          wget "https://capnproto.org/capnproto-c++-1.0.2.tar.gz" -O capnproto.tar.gz
+          tar zxf capnproto.tar.gz
+          (
+            cd capnproto-c++-1.0.2
+            ./configure
+            sudo make -j install
+          )
+          capnp --version
 
-          cargo build --benches
+      - name: build
+        shell: bash
+        run: |
+          cargo build --benches --features regenerate-capnp,regenerate-flatbuffers,regenerate-prost
+
+      - name: check generated code
+        shell: bash
+        run: |
+          git diff --exit-code && echo 'ok!' || (echo 'committed generated code is not up to date!'; exit 1)
