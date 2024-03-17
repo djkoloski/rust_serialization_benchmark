@@ -75,6 +75,7 @@ parity-scale-codec = { version = "3.6.5", features = ["full"], optional = true }
 parity-scale-codec-derive = { version = "3.6.5", optional = true }
 postcard = { version = "1.0.8", features = ["alloc"], optional = true }
 pot = { version = "3.0.0", optional = true }
+pprof = { version = "0.13", features = ["flamegraph"], optional = true }
 prost = { version = "0.12.1", optional = true }
 rand = "0.8.5"
 # TODO: unfork after rkyv updates to 0.8 or `stdsimd` cfg for nightly in aHash 0.7 is fixed
