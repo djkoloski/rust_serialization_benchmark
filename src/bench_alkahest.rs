@@ -9,32 +9,32 @@ where
     let mut group = c.benchmark_group(format!("{}/alkahest", name));
 
     // This leak is required because of ICE in rustc if `R` has bound like this `for<'a> Fn(Unpacked<'a, T>)`.
-    const BUFFER_LEN: usize = 8_388_608;
-    let mut buffer = vec![0u64; BUFFER_LEN];
-    let bytes: &mut [u8] = bytemuck::cast_slice_mut(&mut buffer[..]);
-    let mut size = 0;
+    const BUFFER_LEN: usize = 10_000_000;
+    let mut buffer = vec![0; BUFFER_LEN];
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            size = alkahest::write::<T, _>(bytes, black_box(data));
-            black_box(());
+            black_box(alkahest::write::<T, _>(&mut buffer, black_box(data)));
         })
     });
 
+    let size = alkahest::write::<T, _>(&mut buffer, data);
+    let buffer = &buffer[..size];
+
     group.bench_function("access (validated on-demand with panic)", |b| {
         b.iter(|| {
-            black_box(alkahest::read::<T>(black_box(&bytes[..size])));
+            black_box(alkahest::read::<T>(black_box(buffer)));
         })
     });
 
     group.bench_function("read (validated on-demand with panic)", |b| {
         b.iter(|| {
-            read(alkahest::read::<T>(black_box(&bytes[..size])));
+            read(alkahest::read::<T>(black_box(buffer)));
             black_box(());
         })
     });
 
-    crate::bench_size(name, "alkahest", &bytes[..size]);
+    crate::bench_size(name, "alkahest", buffer);
 
     group.finish();
 }
