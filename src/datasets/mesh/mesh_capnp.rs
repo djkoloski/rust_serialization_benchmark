@@ -719,7 +719,7 @@ pub mod mesh {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_triangles(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::mesh::mesh_capnp::triangle::Owned>) -> ::capnp::Result<()> {
+    pub fn set_triangles(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::mesh::mesh_capnp::triangle::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]

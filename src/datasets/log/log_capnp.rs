@@ -834,7 +834,7 @@ pub mod logs {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_logs(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::log::log_capnp::log::Owned>) -> ::capnp::Result<()> {
+    pub fn set_logs(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::log::log_capnp::log::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]

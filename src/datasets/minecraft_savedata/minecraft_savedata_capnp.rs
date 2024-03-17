@@ -2551,7 +2551,7 @@ pub mod recipe_book {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_recipes(&mut self, value: ::capnp::text_list::Reader<'a>) -> ::capnp::Result<()> {
+    pub fn set_recipes(&mut self, value: ::capnp::text_list::Reader<'_>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]
@@ -2567,7 +2567,7 @@ pub mod recipe_book {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(1), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_to_be_displayed(&mut self, value: ::capnp::text_list::Reader<'a>) -> ::capnp::Result<()> {
+    pub fn set_to_be_displayed(&mut self, value: ::capnp::text_list::Reader<'_>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(1), value, false)
     }
     #[inline]
@@ -3292,7 +3292,7 @@ pub mod player {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(3), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_inventory(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned>) -> ::capnp::Result<()> {
+    pub fn set_inventory(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(3), value, false)
     }
     #[inline]
@@ -3308,7 +3308,7 @@ pub mod player {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(4), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_ender_items(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned>) -> ::capnp::Result<()> {
+    pub fn set_ender_items(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::item::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(4), value, false)
     }
     #[inline]
@@ -6601,7 +6601,7 @@ pub mod players {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_players(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::player::Owned>) -> ::capnp::Result<()> {
+    pub fn set_players(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::minecraft_savedata::minecraft_savedata_capnp::player::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]

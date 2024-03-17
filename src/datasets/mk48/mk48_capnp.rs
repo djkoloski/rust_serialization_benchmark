@@ -1093,7 +1093,7 @@ pub mod contact {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(1), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_reloads(&mut self, value: ::capnp::primitive_list::Reader<'a,bool>) -> ::capnp::Result<()> {
+    pub fn set_reloads(&mut self, value: ::capnp::primitive_list::Reader<'_,bool>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(1), value, false)
     }
     #[inline]
@@ -1125,7 +1125,7 @@ pub mod contact {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(3), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_turret_angles(&mut self, value: ::capnp::primitive_list::Reader<'a,u16>) -> ::capnp::Result<()> {
+    pub fn set_turret_angles(&mut self, value: ::capnp::primitive_list::Reader<'_,u16>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(3), value, false)
     }
     #[inline]
@@ -1963,7 +1963,7 @@ pub mod terrain_update {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_data(&mut self, value: ::capnp::primitive_list::Reader<'a,u8>) -> ::capnp::Result<()> {
+    pub fn set_data(&mut self, value: ::capnp::primitive_list::Reader<'_,u8>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]
@@ -2425,7 +2425,7 @@ pub mod update {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_contacts(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::mk48::mk48_capnp::contact::Owned>) -> ::capnp::Result<()> {
+    pub fn set_contacts(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::mk48::mk48_capnp::contact::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]
@@ -2457,7 +2457,7 @@ pub mod update {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(1), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_terrain_updates(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::mk48::mk48_capnp::terrain_update::Owned>) -> ::capnp::Result<()> {
+    pub fn set_terrain_updates(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::mk48::mk48_capnp::terrain_update::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(1), value, false)
     }
     #[inline]
@@ -2722,7 +2722,7 @@ pub mod updates {
       ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(0), ::core::option::Option::None)
     }
     #[inline]
-    pub fn set_updates(&mut self, value: ::capnp::struct_list::Reader<'a,crate::datasets::mk48::mk48_capnp::update::Owned>) -> ::capnp::Result<()> {
+    pub fn set_updates(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::mk48::mk48_capnp::update::Owned>) -> ::capnp::Result<()> {
       ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]
