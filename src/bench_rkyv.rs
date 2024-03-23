@@ -1,4 +1,3 @@
-use bincode1::Options;
 use core::pin::Pin;
 
 use bytecheck::CheckBytes;
