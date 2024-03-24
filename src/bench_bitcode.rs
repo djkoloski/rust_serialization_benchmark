@@ -6,7 +6,7 @@ where
     T: Encode + DecodeOwned + PartialEq,
 {
     let mut group = c.benchmark_group(format!("{}/bitcode", name));
-    let mut buffer = bitcode::EncodeBuffer::<T>::default();
+    let mut buffer = bitcode::Buffer::new();
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
@@ -14,18 +14,17 @@ where
         })
     });
 
-    let encoded = buffer.encode(data);
-    let mut buffer = bitcode::DecodeBuffer::<T>::default();
+    let encoded = buffer.encode(data).to_vec();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(buffer.decode(black_box(&encoded)).unwrap());
+            black_box(buffer.decode::<T>(black_box(&encoded)).unwrap());
         })
     });
 
-    crate::bench_size(name, "bitcode", encoded);
+    crate::bench_size(name, "bitcode", &encoded);
 
-    assert!(buffer.decode(&encoded).unwrap() == *data);
+    assert!(buffer.decode::<T>(&encoded).unwrap() == *data);
 
     group.finish();
 }
