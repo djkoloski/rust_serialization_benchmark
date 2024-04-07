@@ -32,6 +32,7 @@ use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -59,9 +60,13 @@ use crate::Generate;
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Address {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x0: u8,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x1: u8,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x2: u8,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x3: u8,
 }
 
@@ -141,6 +146,7 @@ impl alkahest::Pack<Address> for Address {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -365,6 +371,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -391,6 +398,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Logs {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub logs: Vec<Log>,
 }
 

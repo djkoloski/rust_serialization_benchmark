@@ -2,6 +2,8 @@
 pub mod bench_abomonation;
 #[cfg(feature = "alkahest")]
 pub mod bench_alkahest;
+#[cfg(feature = "bilrost")]
+pub mod bench_bilrost;
 #[cfg(feature = "bincode")]
 pub mod bench_bincode;
 #[cfg(feature = "bincode1")]

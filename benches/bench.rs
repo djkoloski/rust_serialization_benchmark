@@ -5,6 +5,8 @@ use rand_pcg::Lcg64Xsh32;
 use rust_serialization_benchmark::bench_abomonation;
 #[cfg(feature = "alkahest")]
 use rust_serialization_benchmark::bench_alkahest;
+#[cfg(feature = "bilrost")]
+use rust_serialization_benchmark::bench_bilrost;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
 #[cfg(feature = "bincode1")]
@@ -96,6 +98,9 @@ fn bench_log(c: &mut Criterion) {
             black_box(log.size);
         }
     });
+
+    #[cfg(feature = "bilrost")]
+    bench_bilrost::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
@@ -271,6 +276,9 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
+    #[cfg(feature = "bilrost")]
+    bench_bilrost::bench(BENCH, c, &data);
+
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
 
@@ -428,6 +436,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             black_box(&player.game_type);
         }
     });
+
+    #[cfg(feature = "bilrost")]
+    bench_bilrost::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
@@ -590,6 +601,9 @@ fn bench_mk48(c: &mut Criterion) {
             black_box(update.score);
         }
     });
+
+    #[cfg(feature = "bilrost")]
+    bench_bilrost::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
