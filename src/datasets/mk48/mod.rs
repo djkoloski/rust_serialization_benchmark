@@ -1,5 +1,7 @@
 #[cfg(feature = "bebop")]
 pub mod mk48_bebop;
+#[cfg(feature = "bilrost")]
+pub mod mk48_bilrost;
 #[cfg(any(feature = "capnp", feature = "prost"))]
 pub mod mk48_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -34,6 +36,7 @@ use crate::{generate_vec, Generate};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Enumeration))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -62,15 +65,25 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[repr(u8)]
 pub enum EntityType {
+    #[cfg_attr(feature = "bilrost", bilrost(0))]
     ArleighBurke,
+    #[cfg_attr(feature = "bilrost", bilrost(1))]
     Bismarck,
+    #[cfg_attr(feature = "bilrost", bilrost(2))]
     Clemenceau,
+    #[cfg_attr(feature = "bilrost", bilrost(3))]
     Fletcher,
+    #[cfg_attr(feature = "bilrost", bilrost(4))]
     G5,
+    #[cfg_attr(feature = "bilrost", bilrost(5))]
     Iowa,
+    #[cfg_attr(feature = "bilrost", bilrost(6))]
     Kolkata,
+    #[cfg_attr(feature = "bilrost", bilrost(7))]
     Osa,
+    #[cfg_attr(feature = "bilrost", bilrost(8))]
     Yasen,
+    #[cfg_attr(feature = "bilrost", bilrost(9))]
     Zubr,
 }
 
@@ -402,6 +415,7 @@ impl alkahest::Pack<Transform> for Transform {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(

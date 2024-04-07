@@ -50,6 +50,7 @@ alkahest = { version = "0.1.5", optional = true, features = [
   "nightly",
 ] }
 bebop = { version = "2.4.9", optional = true }
+bilrost = { version = "0.1005.1", optional = true }
 bincode1 = { package = "bincode", version = "1.3.3", optional = true }
 # Can't call it bincode2 because of a current issue of bincode2
 bincode = { package = "bincode", version = "2.0.0-rc", optional = true }
@@ -99,6 +100,7 @@ default = [
   "abomonation_derive",
   "alkahest",
   # "bebop",
+  "bilrost",
   "bincode1",
   "bincode",
   "bitcode",
