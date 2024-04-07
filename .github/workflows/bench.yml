@@ -47,17 +47,7 @@ jobs:
         shell: bash
         run: |
 
-          wget "https://github.com/protocolbuffers/protobuf/releases/download/v23.3/protoc-23.3-linux-x86_64.zip" -O protoc.zip
-          unzip protoc.zip
-          chmod +x bin/protoc
-          mv bin/protoc /usr/local/bin
-
-          wget "https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.clang++-12.zip" -O flatbuffers
-          unzip flatbuffers
-          chmod +x flatc
-          mv flatc /usr/local/bin
-
-          sudo apt-get install -y capnproto libprotobuf-dev
+          lscpu
 
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
