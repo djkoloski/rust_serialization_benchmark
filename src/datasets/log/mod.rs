@@ -21,6 +21,8 @@ use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+#[cfg(feature = "wiring")]
+use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -59,6 +61,7 @@ use crate::Generate;
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Address {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x0: u8,
@@ -172,6 +175,7 @@ impl alkahest::Pack<Address> for Address {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -397,6 +401,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub logs: Vec<Log>,

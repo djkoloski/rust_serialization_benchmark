@@ -19,6 +19,8 @@ use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+#[cfg(feature = "wiring")]
+use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -57,6 +59,7 @@ use crate::Generate;
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -161,6 +164,7 @@ impl alkahest::Pack<Vector3> for Vector3 {
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Triangle {
     pub v0: Vector3,
     pub v1: Vector3,
@@ -276,6 +280,7 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Mesh {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub triangles: Vec<Triangle>,

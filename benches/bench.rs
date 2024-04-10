@@ -61,6 +61,8 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+#[cfg(feature = "wiring")]
+use rust_serialization_benchmark::bench_wiring;
 
 use rust_serialization_benchmark::generate_vec;
 
@@ -243,6 +245,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wiring")]
+    bench_wiring::bench::<Logs>(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -405,6 +410,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wiring")]
+    bench_wiring::bench::<Mesh>(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -570,6 +578,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wiring")]
+    bench_wiring::bench::<Players>(BENCH, c, &data);
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -731,6 +742,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wiring")]
+    bench_wiring::bench::<Updates>(BENCH, c, &data);
 }
 
 #[cfg(feature = "pprof")]

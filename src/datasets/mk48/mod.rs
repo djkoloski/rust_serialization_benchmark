@@ -25,6 +25,8 @@ use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+#[cfg(feature = "wiring")]
+use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -63,6 +65,7 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
@@ -313,6 +316,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Transform {
     pub altitude: i8,
     pub angle: u16,
@@ -442,6 +446,7 @@ impl alkahest::Pack<Transform> for Transform {
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Guidance {
     pub angle: u16,
     pub submerge: bool,
@@ -544,6 +549,7 @@ impl alkahest::Pack<Guidance> for Guidance {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Contact {
     pub damage: u8,
     pub entity_id: u32,
@@ -769,6 +775,7 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct TerrainUpdate {
     chunk_id: (i8, i8),
     data: Vec<u8>,
@@ -909,6 +916,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Update {
     pub contacts: Vec<Contact>,
     pub score: u32,
@@ -1077,6 +1085,7 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Updates {
     pub updates: Vec<Update>,
 }
