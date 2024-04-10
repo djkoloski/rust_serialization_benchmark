@@ -23,6 +23,8 @@ use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
+#[cfg(feature = "wiring")]
+use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -61,6 +63,7 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
 #[repr(u8)]
 pub enum GameType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
@@ -177,6 +180,7 @@ impl alkahest::Pack<GameType> for GameType {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Item {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub count: i8,
@@ -314,6 +318,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Abilities {
     pub walk_speed: f32,
     pub fly_speed: f32,
@@ -448,6 +453,7 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Entity {
     pub id: String,
     pub pos: (f64, f64, f64),
@@ -756,6 +762,7 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct RecipeBook {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub recipes: Vec<String>,
@@ -982,6 +989,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Player {
     pub game_type: GameType,
     pub previous_game_type: GameType,
@@ -1469,6 +1477,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
+#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Players {
     pub players: Vec<Player>,
 }
