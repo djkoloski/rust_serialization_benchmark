@@ -1,5 +1,3 @@
-#[cfg(feature = "bilrost")]
-pub mod minecraft_savedata_bilrost;
 #[cfg(feature = "capnp")]
 pub mod minecraft_savedata_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -428,6 +426,7 @@ impl alkahest::Pack<Abilities> for Abilities {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -466,6 +465,7 @@ pub struct Entity {
     pub no_gravity: bool,
     pub invulnerable: bool,
     pub portal_cooldown: i32,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding = "packed<fixed>"))]
     pub uuid: [u32; 4],
     pub custom_name: Option<String>,
     pub custom_name_visible: bool,
@@ -964,6 +964,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -1014,6 +1015,7 @@ pub struct Player {
     pub ender_items: Vec<Item>,
     pub abilities: Abilities,
     pub entered_nether_position: Option<(f64, f64, f64)>,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding = "(packed<fixed>, general)"))]
     pub root_vehicle: Option<([u32; 4], Entity)>,
     pub shoulder_entity_left: Option<Entity>,
     pub shoulder_entity_right: Option<Entity>,
@@ -1452,6 +1454,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -1479,6 +1482,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Players {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub players: Vec<Player>,
 }
 
