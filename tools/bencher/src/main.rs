@@ -14,7 +14,7 @@ fn main() {
         .stdout;
     fs::write(&metadata_path, metadata).unwrap();
 
-    let rustc_info_path = PathBuf::from("rustc_info");
+    let rustc_info_path = NamedTempFile::new().unwrap().into_temp_path();
     let rustc_version = Command::new("rustc")
         .args(["--version", "--verbose"])
         .output()
@@ -24,7 +24,7 @@ fn main() {
 
     #[cfg(target_os = "linux")]
     let cpu_info_path = {
-        let cpu_info_path = PathBuf::from("cpu_info");
+        let cpu_info_path = NamedTempFile::new().unwrap().into_temp_path();
         let lscpu = Command::new("lscpu").output().unwrap().stdout;
         fs::write(&cpu_info_path, lscpu).unwrap();
         cpu_info_path
