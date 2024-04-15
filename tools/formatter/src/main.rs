@@ -205,24 +205,25 @@ fn format(
     const ZCD_COLS: &[&str] = &["access", "read", "update"];
 
     let mut runtime_info = format!(
-        "### `rustc` version
-
-        ```
-        {}
+        "\
+        ### `rustc` version\n\
+        \n\
+        ```\n\
+        {}\n\
         ```",
-        results.rustc_info,
+        results.rustc_info.trim_end(),
     );
     for cpu_info in &results.cpu_info {
         write!(
             &mut runtime_info,
-            "
-
-            ### CPU info
-
-            ```
-            {}
+            "\n\
+            \n\
+            ### CPU info\n\
+            \n\
+            ```\n\
+            {}\n\
             ```",
-            cpu_info
+            cpu_info.trim_end(),
         )?;
     }
 
