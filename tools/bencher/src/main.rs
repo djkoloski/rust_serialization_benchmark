@@ -14,8 +14,7 @@ fn main() {
         .stdout;
     fs::write(&metadata_path, metadata).unwrap();
 
-    let mut rustc_info_path = PathBuf::from("runtime_info");
-    rustc_info_path.push("rustc_info");
+    let rustc_info_path = PathBuf::from("rustc_info");
     let rustc_version = Command::new("rustc")
         .args(["--version", "--verbose"])
         .output()
@@ -25,8 +24,7 @@ fn main() {
 
     #[cfg(target_os = "linux")]
     let cpu_info_path = {
-        let mut cpu_info_path = PathBuf::from("runtime_info");
-        cpu_info_path.push("cpu_info");
+        let cpu_info_path = PathBuf::from("cpu_info");
         let lscpu = Command::new("lscpu").output().unwrap().stdout;
         fs::write(&cpu_info_path, lscpu).unwrap();
         cpu_info_path
@@ -57,7 +55,8 @@ fn main() {
 
     let mut json_path = bench_path.clone();
     json_path.set_extension("json");
-    let parser = Command::new("cargo")
+    let mut parser = Command::new("cargo");
+    parser
         .args(["run", "-p", "parser", "--"])
         .arg(&log_path)
         .arg("--config")
