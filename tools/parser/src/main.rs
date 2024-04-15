@@ -14,6 +14,10 @@ struct Args {
     config: PathBuf,
     #[arg(long)]
     meta: PathBuf,
+    #[arg(long)]
+    rustc_info: PathBuf,
+    #[arg(long)]
+    cpu_info: Option<PathBuf>,
     #[arg(short, long)]
     output: PathBuf,
 }
@@ -36,6 +40,11 @@ fn main() {
     let config = Config::read(&args.config);
     let metadata =
         serde_json::from_str::<Metadata>(&fs::read_to_string(args.meta).unwrap()).unwrap();
+    let rustc_info = fs::read_to_string(&args.rustc_info).unwrap();
+    let cpu_info = args
+        .cpu_info
+        .as_ref()
+        .map(|path| fs::read_to_string(path).unwrap());
 
     let time_benches_re = Regex::new(
         r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/([a-z0-9_\-]+)(?: \(([a-z0-9_\-+ ]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s)"
@@ -43,7 +52,11 @@ fn main() {
     let size_benches_re =
         Regex::new(r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/(size|zlib|zstd) (\d+)").unwrap();
 
-    let mut results = Results::default();
+    let mut results = Results {
+        cpu_info,
+        rustc_info,
+        ..Default::default()
+    };
 
     for capture in time_benches_re.captures_iter(&log) {
         let feature = &capture[2];

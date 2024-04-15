@@ -204,6 +204,28 @@ fn format(
     ];
     const ZCD_COLS: &[&str] = &["access", "read", "update"];
 
+    let mut runtime_info = format!(
+        "### `rustc` version
+
+        ```
+        {}
+        ```",
+        results.rustc_info,
+    );
+    for cpu_info in &results.cpu_info {
+        write!(
+            &mut runtime_info,
+            "
+
+            ### CPU info
+
+            ```
+            {}
+            ```",
+            cpu_info
+        )?;
+    }
+
     let mut tables = String::new();
 
     for (dataset_name, dataset) in results.datasets.iter() {
@@ -276,6 +298,7 @@ fn format(
     Ok(template
         .replace("{dne}", &config.do_not_edit)
         .replace("{date}", date)
+        .replace("{runtime_info}", &runtime_info)
         .replace("{tables}", &tables)
         .replace("{links}", &links))
 }

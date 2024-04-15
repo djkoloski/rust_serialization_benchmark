@@ -31,6 +31,8 @@ impl Config {
 
 #[derive(Default, Deserialize, Serialize)]
 pub struct Results {
+    pub cpu_info: Option<String>,
+    pub rustc_info: String,
     pub datasets: BTreeMap<String, Dataset>,
     pub features: Features,
 }

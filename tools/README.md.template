@@ -35,6 +35,12 @@ Some benchmark results may be italicized and followed by an asterisk. Mouse over
 
 ## Last updated: {date}
 
+<details><summary>Runtime info</summary>
+
+{runtime_info}
+
+</details>
+
 {tables}{links}
 
 ## Footnotes:
