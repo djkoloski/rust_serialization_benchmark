@@ -68,7 +68,7 @@ fn main() {
         .arg("--output")
         .arg(&json_path);
     #[cfg(target_os = "linux")]
-    parser.arg("--lscpu").arg(&cpu_info_path);
+    parser.arg("--cpu-info").arg(&cpu_info_path);
     parser.status().unwrap();
 
     let mut template_path = PathBuf::from("tools");
