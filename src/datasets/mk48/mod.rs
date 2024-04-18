@@ -1,7 +1,5 @@
 #[cfg(feature = "bebop")]
 pub mod mk48_bebop;
-#[cfg(feature = "bilrost")]
-pub mod mk48_bilrost;
 #[cfg(any(feature = "capnp", feature = "prost"))]
 pub mod mk48_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -290,6 +288,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -318,6 +317,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Transform {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub altitude: i8,
     pub angle: u16,
     pub position: (f32, f32),
@@ -524,6 +524,7 @@ impl alkahest::Pack<Guidance> for Guidance {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -551,13 +552,16 @@ impl alkahest::Pack<Guidance> for Guidance {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Contact {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub damage: u8,
     pub entity_id: u32,
     pub entity_type: Option<EntityType>,
     pub guidance: Guidance,
     pub player_id: Option<u16>,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub reloads: Vec<bool>,
     pub transform: Transform,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub turret_angles: Vec<u16>,
 }
 
@@ -750,6 +754,7 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -777,7 +782,9 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct TerrainUpdate {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding = "(varint, varint)"))]
     chunk_id: (i8, i8),
+    #[cfg_attr(feature = "bilrost", bilrost(encoding = "plainbytes"))]
     data: Vec<u8>,
 }
 
@@ -891,6 +898,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -918,9 +926,11 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Update {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub contacts: Vec<Contact>,
     pub score: u32,
     pub world_radius: f32,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub terrain_updates: Vec<TerrainUpdate>,
 }
 
@@ -1060,6 +1070,7 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -1087,6 +1098,7 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Updates {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub updates: Vec<Update>,
 }
 
