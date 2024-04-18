@@ -14,6 +14,22 @@ fn main() {
         .stdout;
     fs::write(&metadata_path, metadata).unwrap();
 
+    let rustc_info_path = NamedTempFile::new().unwrap().into_temp_path();
+    let rustc_version = Command::new("rustc")
+        .args(["--version", "--verbose"])
+        .output()
+        .unwrap()
+        .stdout;
+    fs::write(&rustc_info_path, rustc_version).unwrap();
+
+    #[cfg(target_os = "linux")]
+    let cpu_info_path = {
+        let cpu_info_path = NamedTempFile::new().unwrap().into_temp_path();
+        let lscpu = Command::new("lscpu").output().unwrap().stdout;
+        fs::write(&cpu_info_path, lscpu).unwrap();
+        cpu_info_path
+    };
+
     let mut bench_path = PathBuf::from("benchmark_results");
     bench_path.push(&format!(
         "{}-{}-{}_{}-{}-{}",
@@ -39,17 +55,21 @@ fn main() {
 
     let mut json_path = bench_path.clone();
     json_path.set_extension("json");
-    Command::new("cargo")
+    let mut parser = Command::new("cargo");
+    parser
         .args(["run", "-p", "parser", "--"])
         .arg(&log_path)
         .arg("--config")
         .arg(&config_path)
         .arg("--meta")
         .arg(&metadata_path)
+        .arg("--rustc-info")
+        .arg(&rustc_info_path)
         .arg("--output")
-        .arg(&json_path)
-        .status()
-        .unwrap();
+        .arg(&json_path);
+    #[cfg(target_os = "linux")]
+    parser.arg("--cpu-info").arg(&cpu_info_path);
+    parser.status().unwrap();
 
     let mut template_path = PathBuf::from("tools");
     template_path.push("README.md.template");
