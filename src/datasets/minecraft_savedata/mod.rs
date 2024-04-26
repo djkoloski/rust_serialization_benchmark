@@ -22,7 +22,7 @@ use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
 #[cfg(feature = "wiring")]
-use wiring::prelude::{concat_end, concat_mid, concat_start, Unwiring, Wiring};
+use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -181,10 +181,9 @@ impl alkahest::Pack<GameType> for GameType {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Item {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(2))]
     pub count: i8,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub slot: u8,
     pub id: String,
 }
@@ -320,19 +319,13 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Abilities {
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed)]
     pub walk_speed: f32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub fly_speed: f32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub may_fly: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub flying: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub invulnerable: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub may_build: bool,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub instabuild: bool,
 }
 
@@ -464,35 +457,23 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Entity {
     pub id: String,
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(11))]
     pub pos: (f64, f64, f64),
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub motion: (f64, f64, f64),
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub rotation: (f32, f32),
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub fall_distance: f32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub fire: u16,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub air: u16,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub on_ground: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub no_gravity: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub invulnerable: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub portal_cooldown: i32,
-    #[cfg_attr(feature = "wiring", concat_end)]
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "packed<fixed>"))]
     pub uuid: [u32; 4],
     pub custom_name: Option<String>,
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed)]
     pub custom_name_visible: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub silent: bool,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub glowing: bool,
 }
 
@@ -791,21 +772,14 @@ pub struct RecipeBook {
     pub recipes: Vec<String>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub to_be_displayed: Vec<String>,
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed)]
     pub is_filtering_craftable: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub is_gui_open: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub is_furnace_filtering_craftable: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub is_furnace_gui_open: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub is_blasting_furnace_filtering_craftable: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub is_blasting_furnace_gui_open: bool,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub is_smoker_filtering_craftable: bool,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub is_smoker_gui_open: bool,
 }
 
@@ -1023,38 +997,27 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Player {
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(3))]
     pub game_type: GameType,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub previous_game_type: GameType,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub score: i64,
     pub dimension: String,
     pub selected_item_slot: u32,
     pub selected_item: Item,
     pub spawn_dimension: Option<String>,
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(3))]
     pub spawn_x: i64,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub spawn_y: i64,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub spawn_z: i64,
     pub spawn_forced: Option<bool>,
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(8))]
     pub sleep_timer: u16,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub food_exhaustion_level: f32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub food_saturation_level: f32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub food_tick_timer: u32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub xp_level: u32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub xp_p: f32,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub xp_total: i32,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub xp_seed: i32,
     pub inventory: Vec<Item>,
     pub ender_items: Vec<Item>,

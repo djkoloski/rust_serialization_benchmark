@@ -24,7 +24,7 @@ use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
 #[cfg(feature = "wiring")]
-use wiring::prelude::{concat_end, concat_mid, concat_start, Unwiring, Wiring};
+use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -318,13 +318,10 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Transform {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed)]
     pub altitude: i8,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub angle: u16,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub position: (f32, f32),
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub velocity: i16,
 }
 
@@ -452,11 +449,9 @@ impl alkahest::Pack<Transform> for Transform {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Guidance {
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed)]
     pub angle: u16,
-    #[cfg_attr(feature = "wiring", concat_mid)]
     pub submerge: bool,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub velocity: i16,
 }
 
@@ -560,9 +555,8 @@ impl alkahest::Pack<Guidance> for Guidance {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Contact {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(2))]
     pub damage: u8,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub entity_id: u32,
     pub entity_type: Option<EntityType>,
     pub guidance: Guidance,
@@ -937,9 +931,8 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub contacts: Vec<Contact>,
-    #[cfg_attr(feature = "wiring", concat_start)]
+    #[cfg_attr(feature = "wiring", fixed(2))]
     pub score: u32,
-    #[cfg_attr(feature = "wiring", concat_end)]
     pub world_radius: f32,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub terrain_updates: Vec<TerrainUpdate>,
