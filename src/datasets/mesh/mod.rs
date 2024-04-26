@@ -20,7 +20,7 @@ use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
 #[cfg(feature = "wiring")]
-use wiring::prelude::{Unwiring, Wiring};
+use wiring::prelude::{concat_end, concat_mid, concat_start, Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -61,8 +61,11 @@ use crate::Generate;
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Vector3 {
+    #[cfg_attr(feature = "wiring", concat_start)]
     pub x: f32,
+    #[cfg_attr(feature = "wiring", concat_mid)]
     pub y: f32,
+    #[cfg_attr(feature = "wiring", concat_end)]
     pub z: f32,
 }
 
@@ -166,9 +169,13 @@ impl alkahest::Pack<Vector3> for Vector3 {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Triangle {
+    #[cfg_attr(feature = "wiring", concat_start)]
     pub v0: Vector3,
+    #[cfg_attr(feature = "wiring", concat_mid)]
     pub v1: Vector3,
+    #[cfg_attr(feature = "wiring", concat_mid)]
     pub v2: Vector3,
+    #[cfg_attr(feature = "wiring", concat_end)]
     pub normal: Vector3,
 }
 

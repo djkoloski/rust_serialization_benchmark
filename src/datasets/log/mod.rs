@@ -22,7 +22,7 @@ use rand::Rng;
 #[cfg(feature = "rkyv")]
 use rkyv::Archived;
 #[cfg(feature = "wiring")]
-use wiring::prelude::{Unwiring, Wiring};
+use wiring::prelude::{concat_end, concat_mid, concat_start, Unwiring, Wiring};
 
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
@@ -64,12 +64,16 @@ use crate::Generate;
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Address {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", concat_start)]
     pub x0: u8,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", concat_mid)]
     pub x1: u8,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", concat_mid)]
     pub x2: u8,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", concat_end)]
     pub x3: u8,
 }
 
@@ -182,7 +186,9 @@ pub struct Log {
     pub userid: String,
     pub date: String,
     pub request: String,
+    #[cfg_attr(feature = "wiring", concat_start)]
     pub code: u16,
+    #[cfg_attr(feature = "wiring", concat_end)]
     pub size: u64,
 }
 
