@@ -61,6 +61,7 @@ use crate::Generate;
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Vector3 {
+    #[cfg_attr(feature = "wiring", fixed)]
     pub x: f32,
     pub y: f32,
     pub z: f32,
@@ -166,6 +167,7 @@ impl alkahest::Pack<Vector3> for Vector3 {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Triangle {
+    #[cfg_attr(feature = "wiring", fixed)]
     pub v0: Vector3,
     pub v1: Vector3,
     pub v2: Vector3,

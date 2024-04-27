@@ -247,7 +247,7 @@ fn bench_log(c: &mut Criterion) {
     bench_nanoserde::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
-    bench_wiring::bench::<Logs>(BENCH, c, &data);
+    bench_wiring::bench(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -412,7 +412,7 @@ fn bench_mesh(c: &mut Criterion) {
     bench_nanoserde::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
-    bench_wiring::bench::<Mesh>(BENCH, c, &data);
+    bench_wiring::bench(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -580,7 +580,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_nanoserde::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
-    bench_wiring::bench::<Players>(BENCH, c, &data);
+    bench_wiring::bench(BENCH, c, &data);
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -744,7 +744,7 @@ fn bench_mk48(c: &mut Criterion) {
     bench_nanoserde::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
-    bench_wiring::bench::<Updates>(BENCH, c, &data);
+    bench_wiring::bench(BENCH, c, &data);
 }
 
 #[cfg(feature = "pprof")]

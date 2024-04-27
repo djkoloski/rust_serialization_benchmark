@@ -1,54 +1,29 @@
 use criterion::{black_box, Criterion};
-use tokio::runtime::Runtime;
-use wiring::prelude::{Unwire, Unwiring, Wire, Wiring};
-use zstd::zstd_safe::WriteBuf;
+use wiring::prelude::{BufUnWire, BufWire, Unwiring, Wire, Wiring};
 
-pub fn bench<'a, T>(name: &'static str, c: &mut Criterion, data: &'a T)
-where
-    &'a T: Wiring,
-    T: Unwiring + PartialEq,
-{
-    async fn wire_data<W: Wire, T: Wiring>(mut wire: W, data: T) {
-        (&mut wire).wire(data).await.unwrap();
-    }
-
-    let rt = Runtime::new().unwrap();
-    const BUFFER_LEN: usize = 50_000_000;
+pub fn bench<T: Wiring + Unwiring + PartialEq>(name: &'static str, c: &mut Criterion, data: &T) {
+    const BUFFER_LEN: usize = 10_000_000;
 
     let mut group = c.benchmark_group(format!("{}/wiring", name));
 
     let mut wire: Vec<u8> = Vec::with_capacity(BUFFER_LEN);
 
     group.bench_function("serialize", |b| {
-        b.to_async(Runtime::new().unwrap()).iter_batched(
-            || wire.clone(),
-            |w| wire_data(black_box(w), black_box(data)),
-            criterion::BatchSize::SmallInput,
-        );
+        b.iter(|| black_box(BufWire::new(&mut wire).wire(black_box(data)).unwrap()))
     });
 
-    rt.block_on(async {
-        (&mut wire).wire(data).await.unwrap();
-    });
+    wire.sync_wire(data).unwrap();
 
-    let mut unwire = std::io::Cursor::new(wire);
+    let buffer = wire.as_slice();
 
     group.bench_function("deserialize", |b| {
-        b.to_async(Runtime::new().unwrap()).iter_batched(
-            || unwire.clone(),
-            |w| async move {
-                black_box(w).unwire::<T>().await.unwrap();
-            },
-            criterion::BatchSize::SmallInput,
-        );
+        b.iter(|| black_box(BufUnWire::new(black_box(buffer)).unwire::<T>().unwrap()))
     });
 
-    crate::bench_size(name, "wiring", unwire.as_slice());
+    crate::bench_size(name, "wiring", wire.as_slice());
 
-    rt.block_on(async {
-        let unwired = unwire.unwire::<T>().await.unwrap();
-        assert!(&unwired == data);
-    });
+    let unwired: T = BufUnWire::new(buffer).unwire().unwrap();
+    assert!(&unwired == data);
 
     group.finish();
 }

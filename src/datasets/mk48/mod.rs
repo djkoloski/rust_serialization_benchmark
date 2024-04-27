@@ -318,6 +318,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Transform {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", fixed)]
     pub altitude: i8,
     pub angle: u16,
     pub position: (f32, f32),
@@ -448,6 +449,7 @@ impl alkahest::Pack<Transform> for Transform {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Guidance {
+    #[cfg_attr(feature = "wiring", fixed)]
     pub angle: u16,
     pub submerge: bool,
     pub velocity: i16,
@@ -553,6 +555,7 @@ impl alkahest::Pack<Guidance> for Guidance {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Contact {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", fixed(2))]
     pub damage: u8,
     pub entity_id: u32,
     pub entity_type: Option<EntityType>,
@@ -928,6 +931,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub contacts: Vec<Contact>,
+    #[cfg_attr(feature = "wiring", fixed(2))]
     pub score: u32,
     pub world_radius: f32,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]

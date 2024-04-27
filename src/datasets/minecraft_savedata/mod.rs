@@ -181,6 +181,7 @@ impl alkahest::Pack<GameType> for GameType {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Item {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "wiring", fixed(2))]
     pub count: i8,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub slot: u8,
@@ -318,6 +319,7 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Abilities {
+    #[cfg_attr(feature = "wiring", fixed)]
     pub walk_speed: f32,
     pub fly_speed: f32,
     pub may_fly: bool,
@@ -455,6 +457,7 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Entity {
     pub id: String,
+    #[cfg_attr(feature = "wiring", fixed(11))]
     pub pos: (f64, f64, f64),
     pub motion: (f64, f64, f64),
     pub rotation: (f32, f32),
@@ -468,6 +471,7 @@ pub struct Entity {
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "packed<fixed>"))]
     pub uuid: [u32; 4],
     pub custom_name: Option<String>,
+    #[cfg_attr(feature = "wiring", fixed)]
     pub custom_name_visible: bool,
     pub silent: bool,
     pub glowing: bool,
@@ -768,6 +772,7 @@ pub struct RecipeBook {
     pub recipes: Vec<String>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub to_be_displayed: Vec<String>,
+    #[cfg_attr(feature = "wiring", fixed)]
     pub is_filtering_craftable: bool,
     pub is_gui_open: bool,
     pub is_furnace_filtering_craftable: bool,
@@ -992,6 +997,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Player {
+    #[cfg_attr(feature = "wiring", fixed(3))]
     pub game_type: GameType,
     pub previous_game_type: GameType,
     pub score: i64,
@@ -999,10 +1005,12 @@ pub struct Player {
     pub selected_item_slot: u32,
     pub selected_item: Item,
     pub spawn_dimension: Option<String>,
+    #[cfg_attr(feature = "wiring", fixed(3))]
     pub spawn_x: i64,
     pub spawn_y: i64,
     pub spawn_z: i64,
     pub spawn_forced: Option<bool>,
+    #[cfg_attr(feature = "wiring", fixed(8))]
     pub sleep_timer: u16,
     pub food_exhaustion_level: f32,
     pub food_saturation_level: f32,
