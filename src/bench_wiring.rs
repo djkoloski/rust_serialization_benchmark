@@ -1,5 +1,5 @@
 use criterion::{black_box, Criterion};
-use wiring::prelude::{BufUnWire, BufWire, Unwiring, Wire, Wiring};
+use wiring::prelude::{BufUnWire, BufWire, Unwiring, Wiring};
 
 pub fn bench<T: Wiring + Unwiring + PartialEq>(name: &'static str, c: &mut Criterion, data: &T) {
     const BUFFER_LEN: usize = 10_000_000;
@@ -12,7 +12,7 @@ pub fn bench<T: Wiring + Unwiring + PartialEq>(name: &'static str, c: &mut Crite
         b.iter(|| black_box(BufWire::new(&mut wire).wire(black_box(data)).unwrap()))
     });
 
-    wire.sync_wire(data).unwrap();
+    BufWire::new(&mut wire).wire(data).unwrap();
 
     let buffer = wire.as_slice();
 
