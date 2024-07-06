@@ -740,8 +740,8 @@ impl<'a> Contact<'a> {
     Contact { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ContactArgs<'args>
   ) -> flatbuffers::WIPOffset<Contact<'bldr>> {
     let mut builder = ContactBuilder::new(_fbb);
@@ -860,11 +860,11 @@ impl<'a> Default for ContactArgs<'a> {
   }
 }
 
-pub struct ContactBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ContactBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ContactBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ContactBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_damage(&mut self, damage: u8) {
     self.fbb_.push_slot::<u8>(Contact::VT_DAMAGE, damage, 0);
@@ -898,7 +898,7 @@ impl<'a: 'b, 'b> ContactBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Contact::VT_TURRET_ANGLES, turret_angles);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ContactBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ContactBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ContactBuilder {
       fbb_: _fbb,
@@ -952,8 +952,8 @@ impl<'a> TerrainUpdate<'a> {
     TerrainUpdate { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args TerrainUpdateArgs<'args>
   ) -> flatbuffers::WIPOffset<TerrainUpdate<'bldr>> {
     let mut builder = TerrainUpdateBuilder::new(_fbb);
@@ -1006,11 +1006,11 @@ impl<'a> Default for TerrainUpdateArgs<'a> {
   }
 }
 
-pub struct TerrainUpdateBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TerrainUpdateBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TerrainUpdateBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TerrainUpdateBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_chunk_id(&mut self, chunk_id: &ChunkId) {
     self.fbb_.push_slot_always::<&ChunkId>(TerrainUpdate::VT_CHUNK_ID, chunk_id);
@@ -1020,7 +1020,7 @@ impl<'a: 'b, 'b> TerrainUpdateBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TerrainUpdate::VT_DATA, data);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TerrainUpdateBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> TerrainUpdateBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TerrainUpdateBuilder {
       fbb_: _fbb,
@@ -1068,8 +1068,8 @@ impl<'a> Update<'a> {
     Update { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args UpdateArgs<'args>
   ) -> flatbuffers::WIPOffset<Update<'bldr>> {
     let mut builder = UpdateBuilder::new(_fbb);
@@ -1144,11 +1144,11 @@ impl<'a> Default for UpdateArgs<'a> {
   }
 }
 
-pub struct UpdateBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct UpdateBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> UpdateBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> UpdateBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_contacts(&mut self, contacts: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Contact<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Update::VT_CONTACTS, contacts);
@@ -1166,7 +1166,7 @@ impl<'a: 'b, 'b> UpdateBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Update::VT_TERRAIN_UPDATES, terrain_updates);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> UpdateBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> UpdateBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     UpdateBuilder {
       fbb_: _fbb,
@@ -1215,8 +1215,8 @@ impl<'a> Updates<'a> {
     Updates { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args UpdatesArgs<'args>
   ) -> flatbuffers::WIPOffset<Updates<'bldr>> {
     let mut builder = UpdatesBuilder::new(_fbb);
@@ -1258,17 +1258,17 @@ impl<'a> Default for UpdatesArgs<'a> {
   }
 }
 
-pub struct UpdatesBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct UpdatesBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> UpdatesBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> UpdatesBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_updates(&mut self, updates: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Update<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Updates::VT_UPDATES, updates);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> UpdatesBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> UpdatesBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     UpdatesBuilder {
       fbb_: _fbb,

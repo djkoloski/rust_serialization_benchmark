@@ -888,8 +888,8 @@ impl<'a> Item<'a> {
     Item { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ItemArgs<'args>
   ) -> flatbuffers::WIPOffset<Item<'bldr>> {
     let mut builder = ItemBuilder::new(_fbb);
@@ -953,11 +953,11 @@ impl<'a> Default for ItemArgs<'a> {
   }
 }
 
-pub struct ItemBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ItemBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ItemBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ItemBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_count(&mut self, count: i8) {
     self.fbb_.push_slot::<i8>(Item::VT_COUNT, count, 0);
@@ -971,7 +971,7 @@ impl<'a: 'b, 'b> ItemBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Item::VT_ID, id);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ItemBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ItemBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ItemBuilder {
       fbb_: _fbb,
@@ -1033,8 +1033,8 @@ impl<'a> Entity<'a> {
     Entity { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EntityArgs<'args>
   ) -> flatbuffers::WIPOffset<Entity<'bldr>> {
     let mut builder = EntityBuilder::new(_fbb);
@@ -1241,11 +1241,11 @@ impl<'a> Default for EntityArgs<'a> {
   }
 }
 
-pub struct EntityBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EntityBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EntityBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EntityBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_id(&mut self, id: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Entity::VT_ID, id);
@@ -1311,7 +1311,7 @@ impl<'a: 'b, 'b> EntityBuilder<'a, 'b> {
     self.fbb_.push_slot::<bool>(Entity::VT_GLOWING, glowing, false);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EntityBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EntityBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EntityBuilder {
       fbb_: _fbb,
@@ -1384,8 +1384,8 @@ impl<'a> RecipeBook<'a> {
     RecipeBook { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args RecipeBookArgs<'args>
   ) -> flatbuffers::WIPOffset<RecipeBook<'bldr>> {
     let mut builder = RecipeBookBuilder::new(_fbb);
@@ -1526,11 +1526,11 @@ impl<'a> Default for RecipeBookArgs<'a> {
   }
 }
 
-pub struct RecipeBookBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct RecipeBookBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> RecipeBookBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RecipeBookBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_recipes(&mut self, recipes: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RecipeBook::VT_RECIPES, recipes);
@@ -1572,7 +1572,7 @@ impl<'a: 'b, 'b> RecipeBookBuilder<'a, 'b> {
     self.fbb_.push_slot::<bool>(RecipeBook::VT_IS_SMOKER_GUI_OPEN, is_smoker_gui_open, false);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RecipeBookBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RecipeBookBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RecipeBookBuilder {
       fbb_: _fbb,
@@ -1631,8 +1631,8 @@ impl<'a> Vehicle<'a> {
     Vehicle { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args VehicleArgs<'args>
   ) -> flatbuffers::WIPOffset<Vehicle<'bldr>> {
     let mut builder = VehicleBuilder::new(_fbb);
@@ -1718,11 +1718,11 @@ impl<'a> Default for VehicleArgs<'a> {
   }
 }
 
-pub struct VehicleBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct VehicleBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> VehicleBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> VehicleBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_param_0(&mut self, param_0: u32) {
     self.fbb_.push_slot::<u32>(Vehicle::VT_PARAM_0, param_0, 0);
@@ -1744,7 +1744,7 @@ impl<'a: 'b, 'b> VehicleBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<Entity>>(Vehicle::VT_ENTITY, entity);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> VehicleBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> VehicleBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     VehicleBuilder {
       fbb_: _fbb,
@@ -1820,8 +1820,8 @@ impl<'a> Player<'a> {
     Player { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PlayerArgs<'args>
   ) -> flatbuffers::WIPOffset<Player<'bldr>> {
     let mut builder = PlayerBuilder::new(_fbb);
@@ -2160,11 +2160,11 @@ impl<'a> Default for PlayerArgs<'a> {
   }
 }
 
-pub struct PlayerBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PlayerBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PlayerBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PlayerBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_game_type(&mut self, game_type: GameType) {
     self.fbb_.push_slot::<GameType>(Player::VT_GAME_TYPE, game_type, GameType::Survival);
@@ -2278,7 +2278,7 @@ impl<'a: 'b, 'b> PlayerBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RecipeBook>>(Player::VT_RECIPE_BOOK, recipe_book);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PlayerBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PlayerBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PlayerBuilder {
       fbb_: _fbb,
@@ -2355,8 +2355,8 @@ impl<'a> Players<'a> {
     Players { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PlayersArgs<'args>
   ) -> flatbuffers::WIPOffset<Players<'bldr>> {
     let mut builder = PlayersBuilder::new(_fbb);
@@ -2398,17 +2398,17 @@ impl<'a> Default for PlayersArgs<'a> {
   }
 }
 
-pub struct PlayersBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PlayersBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PlayersBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PlayersBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_players(&mut self, players: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Player<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Players::VT_PLAYERS, players);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PlayersBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PlayersBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PlayersBuilder {
       fbb_: _fbb,

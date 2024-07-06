@@ -42,7 +42,7 @@ jobs:
           mkdir proto
           (
             cd proto
-            wget "https://github.com/protocolbuffers/protobuf/releases/download/v26.0/protoc-26.0-linux-x86_64.zip" -O protoc.zip
+            wget "https://github.com/protocolbuffers/protobuf/releases/download/v27.2/protoc-27.2-linux-x86_64.zip" -O protoc.zip
             unzip protoc.zip
             chmod +x bin/protoc
             mv bin/protoc /usr/local/bin/
@@ -52,7 +52,7 @@ jobs:
           mkdir flatbuffers
           (
             cd flatbuffers
-            wget "https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.clang++-12.zip" -O flatbuffers.zip
+            wget "https://github.com/google/flatbuffers/releases/download/v24.3.25/Linux.flatc.binary.clang++-15.zip" -O flatbuffers.zip
             unzip flatbuffers.zip
             chmod +x ./flatc
             mv ./flatc /usr/local/bin
