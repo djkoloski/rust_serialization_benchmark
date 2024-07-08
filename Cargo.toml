@@ -131,7 +131,7 @@ default = [
   "simd-json",
   "speedy",
   "savefile",
-  "wiring"
+  # "wiring" # does not build: slice_flatten is being stabilized and has been renamed
 ]
 capnp = ["dep:capnp"]
 prost = ["dep:capnp", "dep:prost"]
