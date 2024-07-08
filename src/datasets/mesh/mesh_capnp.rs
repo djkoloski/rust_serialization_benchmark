@@ -112,7 +112,7 @@ pub mod vector3 {
     }
   }
 
-  impl <'a,> ::capnp::traits::SetPointerBuilder for Reader<'a,>  {
+  impl <'a,> ::capnp::traits::SetterInput<Owned<>> for Reader<'a,>  {
     fn set_pointer_builder(mut pointer: ::capnp::private::layout::PointerBuilder<'_>, value: Self, canonicalize: bool) -> ::capnp::Result<()> { pointer.set_struct(&value.reader, canonicalize) }
   }
 
@@ -246,9 +246,11 @@ pub mod vector3 {
       encoded_node: &ENCODED_NODE,
       nonunion_members: NONUNION_MEMBERS,
       members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
+      members_by_name: MEMBERS_BY_NAME,
     };
     pub static NONUNION_MEMBERS : &[u16] = &[0,1,2];
     pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
+    pub static MEMBERS_BY_NAME : &[u16] = &[0,1,2];
     pub const TYPE_ID: u64 = 0xa52c_2b87_1d04_ba8f;
   }
 }
@@ -382,7 +384,7 @@ pub mod triangle {
     }
   }
 
-  impl <'a,> ::capnp::traits::SetPointerBuilder for Reader<'a,>  {
+  impl <'a,> ::capnp::traits::SetterInput<Owned<>> for Reader<'a,>  {
     fn set_pointer_builder(mut pointer: ::capnp::private::layout::PointerBuilder<'_>, value: Self, canonicalize: bool) -> ::capnp::Result<()> { pointer.set_struct(&value.reader, canonicalize) }
   }
 
@@ -406,7 +408,7 @@ pub mod triangle {
     }
     #[inline]
     pub fn set_v0(&mut self, value: crate::datasets::mesh::mesh_capnp::vector3::Reader<'_>) -> ::capnp::Result<()> {
-      ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
+      ::capnp::traits::SetterInput::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]
     pub fn init_v0(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
@@ -422,7 +424,7 @@ pub mod triangle {
     }
     #[inline]
     pub fn set_v1(&mut self, value: crate::datasets::mesh::mesh_capnp::vector3::Reader<'_>) -> ::capnp::Result<()> {
-      ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(1), value, false)
+      ::capnp::traits::SetterInput::set_pointer_builder(self.builder.reborrow().get_pointer_field(1), value, false)
     }
     #[inline]
     pub fn init_v1(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
@@ -438,7 +440,7 @@ pub mod triangle {
     }
     #[inline]
     pub fn set_v2(&mut self, value: crate::datasets::mesh::mesh_capnp::vector3::Reader<'_>) -> ::capnp::Result<()> {
-      ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(2), value, false)
+      ::capnp::traits::SetterInput::set_pointer_builder(self.builder.reborrow().get_pointer_field(2), value, false)
     }
     #[inline]
     pub fn init_v2(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
@@ -454,7 +456,7 @@ pub mod triangle {
     }
     #[inline]
     pub fn set_normal(&mut self, value: crate::datasets::mesh::mesh_capnp::vector3::Reader<'_>) -> ::capnp::Result<()> {
-      ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(3), value, false)
+      ::capnp::traits::SetterInput::set_pointer_builder(self.builder.reborrow().get_pointer_field(3), value, false)
     }
     #[inline]
     pub fn init_normal(self, ) -> crate::datasets::mesh::mesh_capnp::vector3::Builder<'a> {
@@ -584,9 +586,11 @@ pub mod triangle {
       encoded_node: &ENCODED_NODE,
       nonunion_members: NONUNION_MEMBERS,
       members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
+      members_by_name: MEMBERS_BY_NAME,
     };
     pub static NONUNION_MEMBERS : &[u16] = &[0,1,2,3];
     pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
+    pub static MEMBERS_BY_NAME : &[u16] = &[3,0,1,2];
     pub const TYPE_ID: u64 = 0xac3d_8c78_c4b9_b72b;
   }
 }
@@ -696,7 +700,7 @@ pub mod mesh {
     }
   }
 
-  impl <'a,> ::capnp::traits::SetPointerBuilder for Reader<'a,>  {
+  impl <'a,> ::capnp::traits::SetterInput<Owned<>> for Reader<'a,>  {
     fn set_pointer_builder(mut pointer: ::capnp::private::layout::PointerBuilder<'_>, value: Self, canonicalize: bool) -> ::capnp::Result<()> { pointer.set_struct(&value.reader, canonicalize) }
   }
 
@@ -720,7 +724,7 @@ pub mod mesh {
     }
     #[inline]
     pub fn set_triangles(&mut self, value: ::capnp::struct_list::Reader<'_,crate::datasets::mesh::mesh_capnp::triangle::Owned>) -> ::capnp::Result<()> {
-      ::capnp::traits::SetPointerBuilder::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
+      ::capnp::traits::SetterInput::set_pointer_builder(self.builder.reborrow().get_pointer_field(0), value, false)
     }
     #[inline]
     pub fn init_triangles(self, size: u32) -> ::capnp::struct_list::Builder<'a,crate::datasets::mesh::mesh_capnp::triangle::Owned> {
@@ -795,9 +799,11 @@ pub mod mesh {
       encoded_node: &ENCODED_NODE,
       nonunion_members: NONUNION_MEMBERS,
       members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
+      members_by_name: MEMBERS_BY_NAME,
     };
     pub static NONUNION_MEMBERS : &[u16] = &[0];
     pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
+    pub static MEMBERS_BY_NAME : &[u16] = &[0];
     pub const TYPE_ID: u64 = 0xd4a1_c84c_80d5_eea5;
   }
 }

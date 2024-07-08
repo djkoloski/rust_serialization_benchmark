@@ -235,8 +235,8 @@ impl<'a> Log<'a> {
     Log { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args LogArgs<'args>
   ) -> flatbuffers::WIPOffset<Log<'bldr>> {
     let mut builder = LogBuilder::new(_fbb);
@@ -344,11 +344,11 @@ impl<'a> Default for LogArgs<'a> {
   }
 }
 
-pub struct LogBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct LogBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> LogBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LogBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_address(&mut self, address: &Address) {
     self.fbb_.push_slot_always::<&Address>(Log::VT_ADDRESS, address);
@@ -378,7 +378,7 @@ impl<'a: 'b, 'b> LogBuilder<'a, 'b> {
     self.fbb_.push_slot::<u64>(Log::VT_SIZE_, size_, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LogBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LogBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LogBuilder {
       fbb_: _fbb,
@@ -432,8 +432,8 @@ impl<'a> Logs<'a> {
     Logs { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args LogsArgs<'args>
   ) -> flatbuffers::WIPOffset<Logs<'bldr>> {
     let mut builder = LogsBuilder::new(_fbb);
@@ -475,17 +475,17 @@ impl<'a> Default for LogsArgs<'a> {
   }
 }
 
-pub struct LogsBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct LogsBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> LogsBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LogsBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_logs(&mut self, logs: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Log<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Logs::VT_LOGS, logs);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LogsBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LogsBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LogsBuilder {
       fbb_: _fbb,
