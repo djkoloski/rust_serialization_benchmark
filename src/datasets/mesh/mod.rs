@@ -17,8 +17,6 @@ pub use mesh_fb::mesh as fb;
 #[cfg(feature = "nanoserde")]
 use nanoserde::{DeBin, SerBin};
 use rand::Rng;
-#[cfg(feature = "rkyv")]
-use rkyv::Archived;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
@@ -45,7 +43,6 @@ use crate::Generate;
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -151,7 +148,6 @@ impl alkahest::Pack<Vector3> for Vector3 {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -269,7 +265,6 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -287,17 +282,6 @@ pub struct Mesh {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub triangles: Vec<Triangle>,
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedMesh {
-        pub fn triangles_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Triangle>>> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.triangles) }
-        }
-    }
-};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Mesh {

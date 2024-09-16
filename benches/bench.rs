@@ -195,26 +195,41 @@ fn bench_log(c: &mut Criterion) {
         BENCH,
         c,
         &data,
-        |data| {
-            for log in data.logs.iter() {
+        |logs| {
+            for log in logs.logs.iter() {
                 black_box(&log.address);
                 black_box(log.code);
                 black_box(log.size);
             }
         },
-        |mut logs| {
-            use rust_serialization_benchmark::datasets::log::ArchivedAddress;
+        |log| {
+            use rkyv::{munge::munge, vec::ArchivedVec};
+            use rust_serialization_benchmark::datasets::log::{
+                ArchivedAddress, ArchivedLog, ArchivedLogs,
+            };
 
-            for i in 0..logs.as_ref().logs.len() {
-                let mut log = logs.as_mut().logs_pin().index_pin(i);
-                *log.as_mut().address_pin() = ArchivedAddress {
-                    x0: 0,
-                    x1: 0,
-                    x2: 0,
-                    x3: 0,
-                };
-                *log.as_mut().code_pin() = 200;
-                *log.as_mut().size_pin() = 0;
+            munge!(let ArchivedLogs { logs } = log);
+            let mut logs = ArchivedVec::as_slice_seal(logs);
+            for i in 0..logs.len() {
+                munge! {
+                    let ArchivedLog {
+                        address: ArchivedAddress {
+                            mut x0,
+                            mut x1,
+                            mut x2,
+                            mut x3,
+                        },
+                        mut code,
+                        mut size,
+                        ..
+                    } = logs.as_mut().index(i);
+                }
+                *x0 = 0;
+                *x1 = 0;
+                *x2 = 0;
+                *x3 = 0;
+                *code = 200.into();
+                *size = 0.into();
             }
         },
     );
@@ -374,12 +389,29 @@ fn bench_mesh(c: &mut Criterion) {
                 black_box(&triangle.normal);
             }
         },
-        |mut mesh| {
-            for i in 0..mesh.as_ref().triangles.len() {
-                let mut triangle = mesh.as_mut().triangles_pin().index_pin(i);
-                triangle.normal.x = 0f32;
-                triangle.normal.y = 0f32;
-                triangle.normal.z = 0f32;
+        |mesh| {
+            use rkyv::{munge::munge, vec::ArchivedVec};
+            use rust_serialization_benchmark::datasets::mesh::{
+                ArchivedMesh, ArchivedTriangle, ArchivedVector3,
+            };
+
+            munge!(let ArchivedMesh { triangles } = mesh);
+            let mut triangles = ArchivedVec::as_slice_seal(triangles);
+
+            for i in 0..triangles.len() {
+                munge! {
+                    let ArchivedTriangle {
+                        normal: ArchivedVector3 {
+                            mut x,
+                            mut y,
+                            mut z,
+                        },
+                        ..
+                    } = triangles.as_mut().index(i);
+                }
+                *x = 0f32.into();
+                *y = 0f32.into();
+                *z = 0f32.into();
             }
         },
     );
@@ -534,20 +566,36 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         BENCH,
         c,
         &data,
-        |data| {
-            for player in data.players.iter() {
+        |players| {
+            for player in players.players.iter() {
                 black_box(&player.game_type);
             }
         },
-        |mut players| {
+        |players| {
+            use rkyv::{munge::munge, vec::ArchivedVec};
+            use rust_serialization_benchmark::datasets::minecraft_savedata::{
+                ArchivedPlayer, ArchivedPlayers,
+            };
+
             use rust_serialization_benchmark::datasets::minecraft_savedata::ArchivedGameType;
 
-            for i in 0..players.as_ref().players.len() {
-                let mut player = players.as_mut().players_pin().index_pin(i);
-                *player.as_mut().game_type_pin() = ArchivedGameType::Survival;
-                *player.as_mut().spawn_x_pin() = 0;
-                *player.as_mut().spawn_y_pin() = 0;
-                *player.as_mut().spawn_z_pin() = 0;
+            munge!(let ArchivedPlayers { players } = players);
+            let mut players = ArchivedVec::as_slice_seal(players);
+
+            for i in 0..players.len() {
+                munge! {
+                    let ArchivedPlayer {
+                        mut game_type,
+                        mut spawn_x,
+                        mut spawn_y,
+                        mut spawn_z,
+                        ..
+                    } = players.as_mut().index(i);
+                }
+                *game_type = ArchivedGameType::Survival;
+                *spawn_x = 0.into();
+                *spawn_y = 0.into();
+                *spawn_z = 0.into();
             }
         },
     );
@@ -703,15 +751,21 @@ fn bench_mk48(c: &mut Criterion) {
         BENCH,
         c,
         &data,
-        |data| {
-            for update in data.updates.iter() {
+        |updates| {
+            for update in updates.updates.iter() {
                 black_box(update.score);
             }
         },
-        |mut updates| {
-            for i in 0..updates.as_ref().updates.len() {
-                let mut update = updates.as_mut().updates_pin().index_pin(i);
-                *update.as_mut().score_pin() *= 2;
+        |updates| {
+            use rkyv::{munge::munge, vec::ArchivedVec};
+            use rust_serialization_benchmark::datasets::mk48::{ArchivedUpdate, ArchivedUpdates};
+
+            munge!(let ArchivedUpdates { updates } = updates);
+            let mut updates = ArchivedVec::as_slice_seal(updates);
+
+            for i in 0..updates.len() {
+                munge!(let ArchivedUpdate { mut score, .. } = updates.as_mut().index(i));
+                *score *= 2;
             }
         },
     );

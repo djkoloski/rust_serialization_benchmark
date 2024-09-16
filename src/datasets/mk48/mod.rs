@@ -21,8 +21,6 @@ use mk48_prost as pb;
 #[cfg(feature = "nanoserde")]
 use nanoserde::{DeBin, SerBin};
 use rand::Rng;
-#[cfg(feature = "rkyv")]
-use rkyv::Archived;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
@@ -49,7 +47,6 @@ use crate::{generate_vec, Generate};
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -301,7 +298,6 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -433,7 +429,6 @@ impl alkahest::Pack<Transform> for Transform {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -539,7 +534,6 @@ impl alkahest::Pack<Guidance> for Guidance {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -770,7 +764,6 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -914,7 +907,6 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -956,17 +948,6 @@ impl Generate for Update {
         }
     }
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedUpdate {
-        pub fn score_pin(self: Pin<&mut Self>) -> Pin<&mut u32> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.score) }
-        }
-    }
-};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Update {
@@ -1087,7 +1068,6 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -1105,17 +1085,6 @@ pub struct Updates {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub updates: Vec<Update>,
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedUpdates {
-        pub fn updates_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Update>>> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.updates) }
-        }
-    }
-};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Updates {

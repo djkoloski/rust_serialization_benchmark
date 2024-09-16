@@ -1,111 +1,73 @@
-use core::pin::Pin;
+use core::mem::take;
 
-use bytecheck::CheckBytes;
 use criterion::{black_box, Criterion};
 use rkyv::{
-    archived_value, archived_value_mut, check_archived_value,
-    ser::{
-        serializers::{AlignedSerializer, BufferScratch, CompositeSerializer},
-        Serializer,
-    },
-    validation::validators::DefaultValidator,
-    AlignedVec, Archive, Deserialize, Infallible, Serialize,
+    access, access_unchecked, access_unchecked_mut,
+    api::high::{to_bytes_in, HighDeserializer, HighSerializer, HighValidator},
+    bytecheck::CheckBytes,
+    deserialize, from_bytes,
+    rancor::Failure,
+    seal::Seal,
+    ser::allocator::ArenaHandle,
+    util::AlignedVec,
+    Archive, Deserialize, Serialize,
 };
 
-pub type BenchSerializer<'a> = CompositeSerializer<
-    AlignedSerializer<&'a mut AlignedVec>,
-    BufferScratch<&'a mut AlignedVec>,
-    Infallible,
->;
+pub type BenchSerializer<'a> = HighSerializer<'a, AlignedVec, ArenaHandle<'a>, Failure>;
+pub type BenchDeserializer = HighDeserializer<Failure>;
+pub type BenchValidator<'a> = HighValidator<'a, Failure>;
 
 pub fn bench<T, R, U>(name: &'static str, c: &mut Criterion, data: &T, read: R, update: U)
 where
     T: Archive + for<'a> Serialize<BenchSerializer<'a>> + PartialEq,
-    T::Archived: for<'a> CheckBytes<DefaultValidator<'a>> + Deserialize<T, Infallible>,
+    T::Archived: for<'a> CheckBytes<BenchValidator<'a>> + Deserialize<T, BenchDeserializer>,
     R: Fn(&T::Archived),
-    U: Fn(Pin<&mut T::Archived>),
-    <T as Archive>::Archived: for<'a> rkyv::CheckBytes<DefaultValidator<'a>>,
+    U: for<'a> Fn(Seal<'a, T::Archived>),
+    <T as Archive>::Archived: for<'a> CheckBytes<BenchValidator<'a>>,
 {
     const BUFFER_LEN: usize = 10_000_000;
-    const SCRATCH_LEN: usize = 512_000;
 
     let mut group = c.benchmark_group(format!("{}/rkyv", name));
 
-    let mut serialize_buffer = AlignedVec::with_capacity(BUFFER_LEN);
-    let mut serialize_scratch = AlignedVec::with_capacity(SCRATCH_LEN);
-    unsafe {
-        serialize_scratch.set_len(SCRATCH_LEN);
-    }
+    let mut buffer = AlignedVec::with_capacity(BUFFER_LEN);
 
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            serialize_buffer.clear();
-
-            let mut serializer = CompositeSerializer::new(
-                AlignedSerializer::new(black_box(&mut serialize_buffer)),
-                BufferScratch::new(black_box(&mut serialize_scratch)),
-                Infallible,
-            );
-            black_box(serializer.serialize_value(black_box(data)).unwrap());
+            buffer.clear();
+            buffer = black_box(to_bytes_in(black_box(data), black_box(take(&mut buffer))).unwrap());
         })
     });
 
-    serialize_buffer.clear();
-    let mut serializer = CompositeSerializer::new(
-        AlignedSerializer::new(&mut serialize_buffer),
-        BufferScratch::new(&mut serialize_scratch),
-        Infallible,
-    );
-    let pos = serializer.serialize_value(data).unwrap();
-    let deserialize_buffer = serializer.into_serializer().into_inner();
+    buffer.clear();
+    buffer = black_box(to_bytes_in(black_box(data), black_box(buffer)).unwrap());
 
     group.bench_function("access (unvalidated)", |b| {
-        b.iter(|| {
-            black_box(unsafe {
-                archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
-            });
-        })
+        b.iter(|| black_box(unsafe { access_unchecked::<T::Archived>(black_box(buffer.as_ref())) }))
     });
 
     group.bench_function("access (validated upfront with error)", |b| {
-        b.iter(|| {
-            black_box(
-                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
-                    .unwrap(),
-            );
-        })
+        b.iter(|| black_box(access::<T::Archived, Failure>(black_box(buffer.as_ref())).unwrap()))
     });
 
     group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
-            unsafe {
-                read(archived_value::<T>(
-                    black_box(deserialize_buffer.as_ref()),
-                    black_box(pos),
-                ))
-            };
-            black_box(());
+            black_box(unsafe { read(access_unchecked::<T::Archived>(black_box(buffer.as_ref()))) })
         })
     });
 
     group.bench_function("read (validated upfront with error)", |b| {
         b.iter(|| {
-            read(
-                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
-                    .unwrap(),
-            );
-            black_box(());
+            black_box(read(
+                access::<T::Archived, Failure>(black_box(buffer.as_ref())).unwrap(),
+            ))
         })
     });
 
-    let mut update_buffer = deserialize_buffer.clone();
-    group.bench_function("update", |b| {
+    let mut update_buffer = buffer.clone();
+    group.bench_function("update (unvalidated)", |b| {
         b.iter(|| {
             let mut value = unsafe {
-                archived_value_mut::<T>(
-                    black_box(Pin::new_unchecked(update_buffer.as_mut_slice())),
-                    black_box(pos),
-                )
+                access_unchecked_mut::<T::Archived>(black_box(update_buffer.as_mut_slice()))
             };
             update(value.as_mut());
             black_box(value);
@@ -114,33 +76,21 @@ where
 
     group.bench_function("deserialize (unvalidated)", |b| {
         b.iter(|| {
-            let value = unsafe {
-                archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
-            };
-            let deserialized: T = value.deserialize(&mut Infallible).unwrap();
-            black_box(deserialized);
+            let value = unsafe { access_unchecked::<T::Archived>(black_box(buffer.as_ref())) };
+            black_box(deserialize(value).unwrap())
         })
     });
 
     group.bench_function("deserialize (validated upfront with error)", |b| {
         b.iter(|| {
-            let value =
-                check_archived_value::<T>(black_box(deserialize_buffer.as_ref()), black_box(pos))
-                    .unwrap();
-            let deserialized: T = value.deserialize(&mut Infallible).unwrap();
-            black_box(deserialized);
+            let value = access::<T::Archived, Failure>(black_box(buffer.as_ref())).unwrap();
+            black_box(deserialize(value).unwrap())
         })
     });
 
-    crate::bench_size(name, "rkyv", deserialize_buffer);
+    crate::bench_size(name, "rkyv", &buffer);
 
-    assert!(
-        check_archived_value::<T>(deserialize_buffer.as_ref(), pos)
-            .unwrap()
-            .deserialize(&mut Infallible)
-            .unwrap()
-            == *data
-    );
+    assert!(from_bytes::<T, Failure>(buffer.as_ref()).unwrap() == *data);
 
     group.finish();
 }

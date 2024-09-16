@@ -19,8 +19,6 @@ pub use log_fb::log as fb;
 #[cfg(feature = "nanoserde")]
 use nanoserde::{DeBin, SerBin};
 use rand::Rng;
-#[cfg(feature = "rkyv")]
-use rkyv::Archived;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
@@ -47,7 +45,6 @@ use crate::Generate;
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
@@ -163,7 +160,6 @@ impl alkahest::Pack<Address> for Address {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
     feature = "simd-json",
@@ -187,25 +183,6 @@ pub struct Log {
     pub code: u16,
     pub size: u64,
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedLog {
-        pub fn address_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedAddress> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.address) }
-        }
-
-        pub fn code_pin(self: Pin<&mut Self>) -> Pin<&mut u16> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.code) }
-        }
-
-        pub fn size_pin(self: Pin<&mut Self>) -> Pin<&mut u64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.size) }
-        }
-    }
-};
 
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
@@ -390,7 +367,6 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
     feature = "simd-json",
@@ -408,17 +384,6 @@ pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub logs: Vec<Log>,
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedLogs {
-        pub fn logs_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Log>>> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.logs) }
-        }
-    }
-};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Logs {

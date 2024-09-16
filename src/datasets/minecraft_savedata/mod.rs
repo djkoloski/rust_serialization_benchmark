@@ -19,8 +19,7 @@ use minecraft_savedata_prost as pb;
 #[cfg(feature = "nanoserde")]
 use nanoserde::{DeBin, SerBin};
 use rand::Rng;
-#[cfg(feature = "rkyv")]
-use rkyv::Archived;
+use rkyv::traits::NoUndef;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
@@ -47,7 +46,6 @@ use crate::{generate_vec, Generate};
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -73,6 +71,9 @@ pub enum GameType {
     #[cfg_attr(feature = "bilrost", bilrost(3))]
     Spectator,
 }
+
+#[cfg(feature = "rkyv")]
+unsafe impl NoUndef for ArchivedGameType {}
 
 impl Generate for GameType {
     fn generate<R: Rng>(rand: &mut R) -> Self {
@@ -165,7 +166,6 @@ impl alkahest::Pack<GameType> for GameType {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -303,7 +303,6 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -441,7 +440,6 @@ impl alkahest::Pack<Abilities> for Abilities {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -753,7 +751,6 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -982,7 +979,6 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -1030,29 +1026,6 @@ pub struct Player {
     pub seen_credits: bool,
     pub recipe_book: RecipeBook,
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedPlayer {
-        pub fn game_type_pin(self: Pin<&mut Self>) -> Pin<&mut ArchivedGameType> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.game_type) }
-        }
-
-        pub fn spawn_x_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_x) }
-        }
-
-        pub fn spawn_y_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_y) }
-        }
-
-        pub fn spawn_z_pin(self: Pin<&mut Self>) -> Pin<&mut i64> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.spawn_z) }
-        }
-    }
-};
 
 impl Generate for Player {
     fn generate<R: Rng>(rng: &mut R) -> Self {
@@ -1475,7 +1448,6 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
@@ -1493,17 +1465,6 @@ pub struct Players {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub players: Vec<Player>,
 }
-
-#[cfg(feature = "rkyv")]
-const _: () = {
-    use core::pin::Pin;
-
-    impl ArchivedPlayers {
-        pub fn players_pin(self: Pin<&mut Self>) -> Pin<&mut Archived<Vec<Player>>> {
-            unsafe { self.map_unchecked_mut(|s| &mut s.players) }
-        }
-    }
-};
 
 #[cfg(feature = "flatbuffers")]
 impl<'a> bench_flatbuffers::Serialize<'a> for Players {
