@@ -43,24 +43,14 @@ build = "build.rs"
 # Some features may require multiple dependencies to compile properly
 # For example, benchmarking bincode requires two features: "serde" and "bincode"
 [dependencies]
-abomonation = { version = "=0.7.3", optional = true }
-abomonation_derive = { version = "=0.5.0", optional = true }
-alkahest = { version = "=0.1.5", optional = true, features = [
-  "derive",
-  "nightly",
-] }
-bebop = { version = "=2.8.7", optional = true }
 bilrost = { version = "=0.1010.0", optional = true }
 bincode1 = { package = "bincode", version = "=1.3.3", optional = true }
 # Can't call it bincode2 because of a current issue of bincode2
 bincode = { package = "bincode", version = "=2.0.0-rc.3", optional = true }
-bitcode = { version = "=0.6.0", optional = true }
+bitcode = { version = "=0.6.3", optional = true }
 borsh = { version = "=1.5.1", features = ["derive"], optional = true }
-# TODO: Unfork after bson adds support for pre-warmed serialization buffers
-# https://github.com/mongodb/bson-rust/pull/328
-bson = { version = "=2.9.0", git = "https://github.com/djkoloski/bson-rust", branch = "add_into_vec", optional = true }
-capnp = { version = "=0.19.6", optional = true }
-cbor4ii = { version = "=0.3.2", features = [ "use_std", "serde1" ], optional = true }
+capnp = { version = "=0.19.7", optional = true }
+cbor4ii = { version = "=0.3.3", features = [ "use_std", "serde1" ], optional = true }
 ciborium = { version = "=0.2.2", optional = true }
 criterion = "=0.5.1"
 databuf = { version = "=0.5.0", optional = true }
@@ -72,38 +62,33 @@ nachricht-serde = { version = "=0.4.0", optional = true }
 nanoserde = {version = "=0.1.37", optional = true }
 parity-scale-codec = { version = "=3.6.12", features = ["full"], optional = true }
 parity-scale-codec-derive = { version = "=3.6.12", optional = true }
-postcard = { version = "=1.0.8", features = ["alloc"], optional = true }
-pot = { version = "=3.0.0", optional = true }
+postcard = { version = "=1.0.10", features = ["alloc"], optional = true }
+pot = { version = "=3.0.1", optional = true }
 pprof = { version = "=0.13.0", features = ["flamegraph"], optional = true }
-prost = { version = "=0.12.6", optional = true }
+prost = { version = "=0.13.2", optional = true }
 rand = "=0.8.5"
 rkyv = { version = "=0.8.5", optional = true }
 rmp-serde = { version = "=1.3.0", optional = true }
 ron = { version = "=0.8.1", optional = true }
-serde = { version = "=1.0.204", features = ["derive"], optional = true }
+serde = { version = "=1.0.210", features = ["derive"] }
 serde_bare = { version = "=0.5.0", optional = true }
 serde_cbor = { version = "=0.11.2", optional = true }
-serde_json = { version = "=1.0.120", features = ["float_roundtrip"], optional = true }
+serde_json = { version = "=1.0.128", features = ["float_roundtrip"], optional = true }
 simd-json = { version = "=0.13.10", optional = true }
 simd-json-derive = { version = "=0.13.0", optional = true }
 speedy = { version = "=0.8.7", optional = true }
-savefile = { version = "=0.17.6", optional = true }
-savefile-derive = { version = "=0.17.6", optional = true }
+savefile = { version = "=0.17.7", optional = true }
+savefile-derive = { version = "=0.17.7", optional = true }
 wiring = { version = "=0.2.2", optional = true }
 zstd = "=0.13.2"
 
 [features]
 default = [
-  "abomonation",
-  "abomonation_derive",
-  "alkahest",
-  # "bebop",
   "bilrost",
   "bincode1",
   "bincode",
   "bitcode",
   "borsh",
-  "bson",
   "capnp",
   "cbor4ii",
   "ciborium",
@@ -120,7 +105,6 @@ default = [
   "rkyv",
   "rmp-serde",
   "ron",
-  "serde",
   "serde_bare",
   "serde_cbor",
   "serde_json",
@@ -144,11 +128,10 @@ regenerate-prost = ["dep:prost-build"]
 rand_pcg = "0.3.1"
 
 [build-dependencies]
-bebop-tools = "=2.8.7"
-capnp = "=0.19.6"
+capnp = "=0.19.7"
 capnpc = { version = "=0.19.0", optional = true }
 flatc-rust = { version = "=0.2.0", optional = true }
-prost-build = { version = "=0.12.6", optional = true }
+prost-build = { version = "=0.13.2", optional = true }
 
 [[bench]]
 harness = false

@@ -2,7 +2,7 @@
 pub mod minecraft_savedata_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "minecraft_savedata_generated.rs"]
-#[allow(unused_imports)]
+#[allow(unused_imports, clippy::all)]
 pub mod minecraft_savedata_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.minecraft_savedata.rs"]
@@ -32,7 +32,6 @@ use crate::bench_prost;
 use crate::{generate_vec, Generate};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Enumeration))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -50,13 +49,12 @@ use crate::{generate_vec, Generate};
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
@@ -88,10 +86,10 @@ impl Generate for GameType {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::GameType> for GameType {
+impl From<GameType> for fb::GameType {
     #[inline]
-    fn into(self) -> fb::GameType {
-        match self {
+    fn from(value: GameType) -> Self {
+        match value {
             GameType::Survival => fb::GameType::Survival,
             GameType::Creative => fb::GameType::Creative,
             GameType::Adventure => fb::GameType::Adventure,
@@ -101,10 +99,10 @@ impl Into<fb::GameType> for GameType {
 }
 
 #[cfg(any(feature = "capnp", feature = "prost"))]
-impl Into<cp::GameType> for GameType {
+impl From<GameType> for cp::GameType {
     #[inline]
-    fn into(self) -> cp::GameType {
-        match self {
+    fn from(value: GameType) -> Self {
+        match value {
             GameType::Survival => cp::GameType::Survival,
             GameType::Creative => cp::GameType::Creative,
             GameType::Adventure => cp::GameType::Adventure,
@@ -114,10 +112,10 @@ impl Into<cp::GameType> for GameType {
 }
 
 #[cfg(feature = "prost")]
-impl Into<pb::GameType> for GameType {
+impl From<GameType> for pb::GameType {
     #[inline]
-    fn into(self) -> pb::GameType {
-        match self {
+    fn from(value: GameType) -> Self {
+        match value {
             GameType::Survival => pb::GameType::Survival,
             GameType::Creative => pb::GameType::Creative,
             GameType::Adventure => pb::GameType::Adventure,
@@ -138,21 +136,7 @@ impl From<pb::GameType> for GameType {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<GameType> for GameType {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<GameType>, usize) {
-        match self {
-            GameType::Survival => GameTypeSurvivalPack.pack(offset, output),
-            GameType::Creative => GameTypeCreativePack.pack(offset, output),
-            GameType::Adventure => GameTypeAdventurePack.pack(offset, output),
-            GameType::Spectator => GameTypeSpectatorPack.pack(offset, output),
-        }
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -170,7 +154,7 @@ impl alkahest::Pack<GameType> for GameType {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -248,11 +232,11 @@ impl bench_prost::Serialize for Item {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.count = self.count as i32;
-        result.slot = self.slot as u32;
-        result.id = self.id.clone();
-        result
+        Self::Message {
+            count: self.count as i32,
+            slot: self.slot as u32,
+            id: self.id.clone(),
+        }
     }
 }
 
@@ -267,29 +251,7 @@ impl From<pb::Item> for Item {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct ItemSchema {
-    pub count: i8,
-    pub slot: u8,
-    pub id: alkahest::Bytes,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<ItemSchema> for &'_ Item {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<ItemSchema>, usize) {
-        ItemSchemaPack {
-            count: self.count,
-            slot: self.slot,
-            id: self.id.as_bytes(),
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, Copy, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -307,13 +269,12 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
@@ -343,17 +304,17 @@ impl Generate for Abilities {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::Abilities> for Abilities {
+impl From<Abilities> for fb::Abilities {
     #[inline]
-    fn into(self) -> fb::Abilities {
-        fb::Abilities::new(
-            self.walk_speed,
-            self.fly_speed,
-            self.may_fly,
-            self.flying,
-            self.invulnerable,
-            self.may_build,
-            self.instabuild,
+    fn from(value: Abilities) -> Self {
+        Self::new(
+            value.walk_speed,
+            value.fly_speed,
+            value.may_fly,
+            value.flying,
+            value.invulnerable,
+            value.may_build,
+            value.instabuild,
         )
     }
 }
@@ -381,15 +342,15 @@ impl bench_prost::Serialize for Abilities {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.walk_speed = self.walk_speed;
-        result.fly_speed = self.fly_speed;
-        result.may_fly = self.may_fly;
-        result.flying = self.flying;
-        result.invulnerable = self.invulnerable;
-        result.may_build = self.may_build;
-        result.instabuild = self.instabuild;
-        result
+        Self::Message {
+            walk_speed: self.walk_speed,
+            fly_speed: self.fly_speed,
+            may_fly: self.may_fly,
+            flying: self.flying,
+            invulnerable: self.invulnerable,
+            may_build: self.may_build,
+            instabuild: self.instabuild,
+        }
     }
 }
 
@@ -408,25 +369,7 @@ impl From<pb::Abilities> for Abilities {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<Abilities> for Abilities {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Abilities>, usize) {
-        AbilitiesPack {
-            walk_speed: self.walk_speed,
-            fly_speed: self.fly_speed,
-            may_fly: self.may_fly,
-            flying: self.flying,
-            invulnerable: self.invulnerable,
-            may_build: self.may_build,
-            instabuild: self.instabuild,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -444,7 +387,7 @@ impl alkahest::Pack<Abilities> for Abilities {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -597,50 +540,40 @@ impl bench_prost::Serialize for Entity {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.id = self.id.clone();
-        result.pos = Some({
-            let mut result = pb::Vector3d::default();
-            result.x = self.pos.0;
-            result.y = self.pos.1;
-            result.z = self.pos.2;
-            result
-        });
-        result.motion = Some({
-            let mut result = pb::Vector3d::default();
-            result.x = self.motion.0;
-            result.y = self.motion.1;
-            result.z = self.motion.2;
-            result
-        });
-        result.rotation = Some({
-            let mut result = pb::Vector2f::default();
-            result.x = self.rotation.0;
-            result.y = self.rotation.1;
-            result
-        });
-        result.fall_distance = self.fall_distance;
-        result.fire = self.fire as u32;
-        result.air = self.air as u32;
-        result.on_ground = self.on_ground;
-        result.no_gravity = self.no_gravity;
-        result.invulnerable = self.invulnerable;
-        result.portal_cooldown = self.portal_cooldown;
-        result.uuid = Some({
-            let mut result = pb::Uuid::default();
-            result.x0 = self.uuid[0];
-            result.x1 = self.uuid[1];
-            result.x2 = self.uuid[2];
-            result.x3 = self.uuid[3];
-            result
-        });
-        if let Some(ref custom_name) = self.custom_name {
-            result.custom_name = Some(custom_name.clone());
+        Self::Message {
+            id: self.id.clone(),
+            pos: Some(pb::Vector3d {
+                x: self.pos.0,
+                y: self.pos.1,
+                z: self.pos.2,
+            }),
+            motion: Some(pb::Vector3d {
+                x: self.motion.0,
+                y: self.motion.1,
+                z: self.motion.2,
+            }),
+            rotation: Some(pb::Vector2f {
+                x: self.rotation.0,
+                y: self.rotation.1,
+            }),
+            fall_distance: self.fall_distance,
+            fire: self.fire as u32,
+            air: self.air as u32,
+            on_ground: self.on_ground,
+            no_gravity: self.no_gravity,
+            invulnerable: self.invulnerable,
+            portal_cooldown: self.portal_cooldown,
+            uuid: Some(pb::Uuid {
+                x0: self.uuid[0],
+                x1: self.uuid[1],
+                x2: self.uuid[2],
+                x3: self.uuid[3],
+            }),
+            custom_name: self.custom_name.clone(),
+            custom_name_visible: self.custom_name_visible,
+            silent: self.silent,
+            glowing: self.glowing,
         }
-        result.custom_name_visible = self.custom_name_visible;
-        result.silent = self.silent;
-        result.glowing = self.glowing;
-        result
     }
 }
 
@@ -689,55 +622,7 @@ impl From<pb::Entity> for Entity {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct EntitySchema {
-    pub id: alkahest::Bytes,
-    pub pos: (f64, f64, f64),
-    pub motion: (f64, f64, f64),
-    pub rotation: (f32, f32),
-    pub fall_distance: f32,
-    pub fire: u16,
-    pub air: u16,
-    pub on_ground: bool,
-    pub no_gravity: bool,
-    pub invulnerable: bool,
-    pub portal_cooldown: i32,
-    pub uuid: [u32; 4],
-    pub custom_name: Option<alkahest::Bytes>,
-    pub custom_name_visible: bool,
-    pub silent: bool,
-    pub glowing: bool,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<EntitySchema> for &'_ Entity {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<EntitySchema>, usize) {
-        EntitySchemaPack {
-            id: self.id.as_bytes(),
-            pos: (self.pos.0, self.pos.1, self.pos.2),
-            motion: (self.motion.0, self.motion.1, self.motion.2),
-            rotation: (self.rotation.0, self.rotation.1),
-            fall_distance: self.fall_distance,
-            fire: self.fire,
-            air: self.air,
-            on_ground: self.on_ground,
-            no_gravity: self.no_gravity,
-            invulnerable: self.invulnerable,
-            portal_cooldown: self.portal_cooldown,
-            uuid: self.uuid,
-            custom_name: self.custom_name.as_ref().map(|s| s.as_bytes()),
-            custom_name_visible: self.custom_name_visible,
-            silent: self.silent,
-            glowing: self.glowing,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -755,7 +640,7 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -929,43 +814,7 @@ impl From<pb::RecipeBook> for RecipeBook {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct RecipeBookSchema {
-    pub recipes: alkahest::Seq<alkahest::Bytes>,
-    pub to_be_displayed: alkahest::Seq<alkahest::Bytes>,
-    pub is_filtering_craftable: bool,
-    pub is_gui_open: bool,
-    pub is_furnace_filtering_craftable: bool,
-    pub is_furnace_gui_open: bool,
-    pub is_blasting_furnace_filtering_craftable: bool,
-    pub is_blasting_furnace_gui_open: bool,
-    pub is_smoker_filtering_craftable: bool,
-    pub is_smoker_gui_open: bool,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<RecipeBookSchema>, usize) {
-        RecipeBookSchemaPack {
-            recipes: self.recipes.iter().map(|s| s.as_bytes()),
-            to_be_displayed: self.to_be_displayed.iter().map(|s| s.as_bytes()),
-            is_filtering_craftable: self.is_filtering_craftable,
-            is_gui_open: self.is_gui_open,
-            is_furnace_filtering_craftable: self.is_furnace_filtering_craftable,
-            is_furnace_gui_open: self.is_furnace_gui_open,
-            is_blasting_furnace_filtering_craftable: self.is_blasting_furnace_filtering_craftable,
-            is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
-            is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
-            is_smoker_gui_open: self.is_smoker_gui_open,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -983,7 +832,7 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -1258,60 +1107,57 @@ impl bench_prost::Serialize for Player {
     type Message = pb::Player;
 
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.game_type = <GameType as Into<cp::GameType>>::into(self.game_type) as i32;
-        result.previous_game_type = self.previous_game_type as i32;
-        result.score = self.score;
-        result.dimension = self.dimension.clone();
-        result.selected_item_slot = self.selected_item_slot;
-        result.selected_item = Some(self.selected_item.serialize_pb());
-        result.spawn_dimension = self.spawn_dimension.clone();
-        result.spawn_x = self.spawn_x;
-        result.spawn_y = self.spawn_y;
-        result.spawn_z = self.spawn_z;
-        result.spawn_forced = self.spawn_forced;
-        result.sleep_timer = self.sleep_timer as u32;
-        result.food_exhaustion_level = self.food_exhaustion_level;
-        result.food_saturation_level = self.food_saturation_level;
-        result.food_tick_timer = self.food_tick_timer;
-        result.xp_level = self.xp_level as u32;
-        result.xp_p = self.xp_p;
-        result.xp_total = self.xp_total;
-        result.xp_seed = self.xp_seed;
+        let mut result = Self::Message {
+            game_type: pb::GameType::from(self.game_type) as i32,
+            previous_game_type: self.previous_game_type as i32,
+            score: self.score,
+            dimension: self.dimension.clone(),
+            selected_item_slot: self.selected_item_slot,
+            selected_item: Some(self.selected_item.serialize_pb()),
+            spawn_dimension: self.spawn_dimension.clone(),
+            spawn_x: self.spawn_x,
+            spawn_y: self.spawn_y,
+            spawn_z: self.spawn_z,
+            spawn_forced: self.spawn_forced,
+            sleep_timer: self.sleep_timer as u32,
+            food_exhaustion_level: self.food_exhaustion_level,
+            food_saturation_level: self.food_saturation_level,
+            food_tick_timer: self.food_tick_timer,
+            xp_level: self.xp_level,
+            xp_p: self.xp_p,
+            xp_total: self.xp_total,
+            xp_seed: self.xp_seed,
+            inventory: Default::default(),
+            ender_items: Default::default(),
+            abilities: Some(self.abilities.serialize_pb()),
+            entered_nether_position: self.entered_nether_position.map(|p| pb::Vector3d {
+                x: p.0,
+                y: p.1,
+                z: p.2,
+            }),
+            root_vehicle: self.root_vehicle.as_ref().map(|v| pb::Vehicle {
+                uuid: Some(pb::Uuid {
+                    x0: v.0[0],
+                    x1: v.0[1],
+                    x2: v.0[2],
+                    x3: v.0[3],
+                }),
+                entity: Some(v.1.serialize_pb()),
+            }),
+            shoulder_entity_left: self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb()),
+            shoulder_entity_right: self
+                .shoulder_entity_right
+                .as_ref()
+                .map(|e| e.serialize_pb()),
+            seen_credits: self.seen_credits,
+            recipe_book: Some(self.recipe_book.serialize_pb()),
+        };
         for item in self.inventory.iter() {
             result.inventory.push(item.serialize_pb());
         }
         for item in self.ender_items.iter() {
             result.ender_items.push(item.serialize_pb());
         }
-        result.abilities = Some(self.abilities.serialize_pb());
-        result.entered_nether_position = self.entered_nether_position.map(|p| {
-            let mut result = pb::Vector3d::default();
-            result.x = p.0;
-            result.y = p.1;
-            result.z = p.2;
-            result
-        });
-        result.root_vehicle = self.root_vehicle.as_ref().map(|v| {
-            let mut result = pb::Vehicle::default();
-            result.uuid = Some({
-                let mut result = pb::Uuid::default();
-                result.x0 = v.0[0];
-                result.x1 = v.0[1];
-                result.x2 = v.0[2];
-                result.x3 = v.0[3];
-                result
-            });
-            result.entity = Some(v.1.serialize_pb());
-            result
-        });
-        result.shoulder_entity_left = self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb());
-        result.shoulder_entity_right = self
-            .shoulder_entity_right
-            .as_ref()
-            .map(|e| e.serialize_pb());
-        result.seen_credits = self.seen_credits;
-        result.recipe_book = Some(self.recipe_book.serialize_pb());
         result
     }
 }
@@ -1356,85 +1202,7 @@ impl From<pb::Player> for Player {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct PlayerSchema {
-    pub game_type: GameType,
-    pub previous_game_type: GameType,
-    pub score: i64,
-    pub dimension: alkahest::Bytes,
-    pub selected_item_slot: u32,
-    pub selected_item: ItemSchema,
-    pub spawn_dimension: Option<alkahest::Bytes>,
-    pub spawn_x: i64,
-    pub spawn_y: i64,
-    pub spawn_z: i64,
-    pub spawn_forced: Option<bool>,
-    pub sleep_timer: u16,
-    pub food_exhaustion_level: f32,
-    pub food_saturation_level: f32,
-    pub food_tick_timer: u32,
-    pub xp_level: u32,
-    pub xp_p: f32,
-    pub xp_total: i32,
-    pub xp_seed: i32,
-    pub inventory: alkahest::Seq<ItemSchema>,
-    pub ender_items: alkahest::Seq<ItemSchema>,
-    pub abilities: Abilities,
-    pub entered_nether_position: Option<(f64, f64, f64)>,
-    pub root_vehicle: Option<([u32; 4], EntitySchema)>,
-    pub shoulder_entity_left: Option<EntitySchema>,
-    pub shoulder_entity_right: Option<EntitySchema>,
-    pub seen_credits: bool,
-    pub recipe_book: RecipeBookSchema,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<PlayerSchema> for &'_ Player {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayerSchema>, usize) {
-        PlayerSchemaPack {
-            game_type: self.game_type,
-            previous_game_type: self.previous_game_type,
-            score: self.score,
-            dimension: self.dimension.as_bytes(),
-            selected_item_slot: self.selected_item_slot,
-            selected_item: &self.selected_item,
-            spawn_dimension: self.spawn_dimension.as_ref().map(|s| s.as_bytes()),
-            spawn_x: self.spawn_x,
-            spawn_y: self.spawn_y,
-            spawn_z: self.spawn_z,
-            spawn_forced: self.spawn_forced,
-            sleep_timer: self.sleep_timer,
-            food_exhaustion_level: self.food_exhaustion_level,
-            food_saturation_level: self.food_saturation_level,
-            food_tick_timer: self.food_tick_timer,
-            xp_level: self.xp_level,
-            xp_p: self.xp_p,
-            xp_total: self.xp_total,
-            xp_seed: self.xp_seed,
-            inventory: self.inventory.iter(),
-            ender_items: self.ender_items.iter(),
-            abilities: self.abilities,
-            entered_nether_position: self
-                .entered_nether_position
-                .as_ref()
-                .map(|p| (p.0, p.1, p.2)),
-            root_vehicle: self
-                .root_vehicle
-                .as_ref()
-                .map(|(array, entity)| (array, entity)),
-            shoulder_entity_left: self.shoulder_entity_left.as_ref(),
-            shoulder_entity_right: self.shoulder_entity_right.as_ref(),
-            seen_credits: self.seen_credits,
-            recipe_book: &self.recipe_book,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -1452,7 +1220,7 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -1521,21 +1289,5 @@ impl From<pb::Players> for Players {
         Players {
             players: value.players.into_iter().map(Into::into).collect(),
         }
-    }
-}
-
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct PlayersSchema {
-    pub players: alkahest::Seq<PlayerSchema>,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<PlayersSchema> for &'_ Players {
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<PlayersSchema>, usize) {
-        PlayersSchemaPack {
-            players: self.players.iter(),
-        }
-        .pack(offset, output)
     }
 }

@@ -9,7 +9,7 @@ pub fn bench<T: Wiring + Unwiring + PartialEq>(name: &'static str, c: &mut Crite
     let mut wire: Vec<u8> = Vec::with_capacity(BUFFER_LEN);
 
     group.bench_function("serialize", |b| {
-        b.iter(|| black_box(BufWire::new(&mut wire).wire(black_box(data)).unwrap()))
+        b.iter(|| BufWire::new(&mut wire).wire(black_box(data)).unwrap())
     });
 
     BufWire::new(&mut wire).wire(data).unwrap();
@@ -17,7 +17,7 @@ pub fn bench<T: Wiring + Unwiring + PartialEq>(name: &'static str, c: &mut Crite
     let buffer = wire.as_slice();
 
     group.bench_function("deserialize", |b| {
-        b.iter(|| black_box(BufUnWire::new(black_box(buffer)).unwire::<T>().unwrap()))
+        b.iter(|| BufUnWire::new(black_box(buffer)).unwire::<T>().unwrap())
     });
 
     crate::bench_size(name, "wiring", wire.as_slice());

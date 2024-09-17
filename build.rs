@@ -4,18 +4,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-// TODO: re-enable bebop
-#[allow(dead_code)]
-fn bebop_compile_dataset(name: &'static str) {
-    bebop_tools::download_bebopc(PathBuf::from("target").join("bebopc"));
-
-    bebop_tools::build_schema(
-        format!("./src/datasets/{0}/{0}.bop", name),
-        format!("./src/datasets/{0}/{0}_bebop.rs", name),
-        &bebop_tools::BuildConfig::default(),
-    );
-}
-
 #[cfg(feature = "regenerate-capnp")]
 fn capnpc_compile_dataset(name: &'static str) -> capnp::Result<()> {
     let mut command = capnpc::CompilerCommand::new();
@@ -71,7 +59,6 @@ fn main() {
     {
         const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
         for &name in DATASETS.iter() {
-            // bebop_compile_dataset(name);
             #[cfg(feature = "regenerate-capnp")]
             capnpc_compile_dataset(name).unwrap();
             #[cfg(feature = "regenerate-flatbuffers")]

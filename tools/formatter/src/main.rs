@@ -213,7 +213,7 @@ fn format(
         ```",
         results.rustc_info.trim_end(),
     );
-    for cpu_info in &results.cpu_info {
+    if let Some(cpu_info) = &results.cpu_info {
         write!(
             &mut runtime_info,
             "\n\

@@ -13,7 +13,7 @@ where
     group.bench_function("serialize", |b| {
         b.iter(|| {
             serialize_buffer.clear();
-            black_box(data.encode::<LE>(&mut serialize_buffer));
+            data.encode::<LE>(&mut serialize_buffer).unwrap();
         })
     });
 

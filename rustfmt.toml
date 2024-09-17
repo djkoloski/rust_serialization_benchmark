@@ -1,15 +1,11 @@
 # Ignore generated source files
 ignore = [
-    "src/datasets/log/log_bebop.rs",
     "src/datasets/log/log_capnp.rs",
     "src/datasets/log/log_generated.rs",
-    "src/datasets/mesh/mesh_bebop.rs",
     "src/datasets/mesh/mesh_capnp.rs",
     "src/datasets/mesh/mesh_generated.rs",
-    "src/datasets/minecraft_savedata/minecraft_savedata_bebop.rs",
     "src/datasets/minecraft_savedata/minecraft_savedata_capnp.rs",
     "src/datasets/minecraft_savedata/minecraft_savedata_generated.rs",
-    "src/datasets/mk48/mk48_bebop.rs",
     "src/datasets/mk48/mk48_capnp.rs",
     "src/datasets/mk48/mk48_generated.rs",
 ]

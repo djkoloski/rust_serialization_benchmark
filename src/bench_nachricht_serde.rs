@@ -13,7 +13,7 @@ where
     group.bench_function("serialize", |b| {
         b.iter(|| {
             nachricht_serde::to_writer(
-                &mut black_box(serialize_buffer.as_mut_slice()),
+                black_box(serialize_buffer.as_mut_slice()),
                 black_box(&data),
             )
             .unwrap();

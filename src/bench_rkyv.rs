@@ -51,15 +51,14 @@ where
 
     group.bench_function("read (unvalidated)", |b| {
         b.iter(|| {
-            black_box(unsafe { read(access_unchecked::<T::Archived>(black_box(buffer.as_ref()))) })
+            let value = unsafe { access_unchecked::<T::Archived>(black_box(buffer.as_ref())) };
+            read(value);
         })
     });
 
     group.bench_function("read (validated upfront with error)", |b| {
         b.iter(|| {
-            black_box(read(
-                access::<T::Archived, Failure>(black_box(buffer.as_ref())).unwrap(),
-            ))
+            read(access::<T::Archived, Failure>(black_box(buffer.as_ref())).unwrap());
         })
     });
 
@@ -70,7 +69,6 @@ where
                 access_unchecked_mut::<T::Archived>(black_box(update_buffer.as_mut_slice()))
             };
             update(value.as_mut());
-            black_box(value);
         })
     });
 

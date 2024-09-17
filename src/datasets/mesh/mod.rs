@@ -2,7 +2,7 @@
 pub mod mesh_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "mesh_generated.rs"]
-#[allow(unused_imports)]
+#[allow(unused_imports, clippy::all)]
 pub mod mesh_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.mesh.rs"]
@@ -29,7 +29,6 @@ use crate::bench_prost;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -47,13 +46,12 @@ use crate::Generate;
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
@@ -75,10 +73,10 @@ impl Generate for Vector3 {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::Vector3> for Vector3 {
+impl From<Vector3> for fb::Vector3 {
     #[inline]
-    fn into(self) -> fb::Vector3 {
-        fb::Vector3::new(self.x, self.y, self.z)
+    fn from(value: Vector3) -> Self {
+        Self::new(value.x, value.y, value.z)
     }
 }
 
@@ -101,11 +99,11 @@ impl bench_prost::Serialize for Vector3 {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.x = self.x;
-        result.y = self.y;
-        result.z = self.z;
-        result
+        Self::Message {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+        }
     }
 }
 
@@ -120,21 +118,7 @@ impl From<mesh_prost::Vector3> for Vector3 {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<Vector3> for Vector3 {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Self>, usize) {
-        Vector3Pack {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, Copy, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -152,13 +136,12 @@ impl alkahest::Pack<Vector3> for Vector3 {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
@@ -182,14 +165,14 @@ impl Generate for Triangle {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::Triangle> for Triangle {
+impl From<Triangle> for fb::Triangle {
     #[inline]
-    fn into(self) -> fb::Triangle {
-        fb::Triangle::new(
-            &self.v0.into(),
-            &self.v1.into(),
-            &self.v2.into(),
-            &self.normal.into(),
+    fn from(value: Triangle) -> Self {
+        Self::new(
+            &value.v0.into(),
+            &value.v1.into(),
+            &value.v2.into(),
+            &value.normal.into(),
         )
     }
 }
@@ -215,12 +198,12 @@ impl bench_prost::Serialize for Triangle {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.v0 = Some(self.v0.serialize_pb());
-        result.v1 = Some(self.v1.serialize_pb());
-        result.v2 = Some(self.v2.serialize_pb());
-        result.normal = Some(self.normal.serialize_pb());
-        result
+        Self::Message {
+            v0: Some(self.v0.serialize_pb()),
+            v1: Some(self.v1.serialize_pb()),
+            v2: Some(self.v2.serialize_pb()),
+            normal: Some(self.normal.serialize_pb()),
+        }
     }
 }
 
@@ -236,22 +219,7 @@ impl From<mesh_prost::Triangle> for Triangle {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<Triangle> for &'_ Triangle {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Triangle>, usize) {
-        TrianglePack {
-            v0: self.v0,
-            v1: self.v1,
-            v2: self.v2,
-            normal: self.normal,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -269,7 +237,7 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -340,22 +308,5 @@ impl From<mesh_prost::Mesh> for Mesh {
         Mesh {
             triangles: value.triangles.into_iter().map(Into::into).collect(),
         }
-    }
-}
-
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct MeshSchema {
-    pub triangles: alkahest::Seq<Triangle>,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<MeshSchema> for &'_ Mesh {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<MeshSchema>, usize) {
-        MeshSchemaPack {
-            triangles: self.triangles.iter(),
-        }
-        .pack(offset, output)
     }
 }

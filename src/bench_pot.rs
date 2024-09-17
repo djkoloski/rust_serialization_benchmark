@@ -12,10 +12,7 @@ where
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(
-                pot::to_writer(black_box(&data), black_box(serialize_buffer.as_mut_slice()))
-                    .unwrap(),
-            );
+            pot::to_writer(black_box(&data), black_box(serialize_buffer.as_mut_slice())).unwrap();
         })
     });
 

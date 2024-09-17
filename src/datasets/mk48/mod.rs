@@ -1,10 +1,8 @@
-#[cfg(feature = "bebop")]
-pub mod mk48_bebop;
 #[cfg(any(feature = "capnp", feature = "prost"))]
 pub mod mk48_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "mk48_generated.rs"]
-#[allow(unused_imports)]
+#[allow(unused_imports, clippy::all)]
 pub mod mk48_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.mk48.rs"]
@@ -33,7 +31,6 @@ use crate::bench_prost;
 use crate::{generate_vec, Generate};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Enumeration))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -51,13 +48,12 @@ use crate::{generate_vec, Generate};
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
@@ -164,10 +160,10 @@ impl Generate for EntityType {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::EntityType> for EntityType {
+impl From<EntityType> for fb::EntityType {
     #[inline]
-    fn into(self) -> fb::EntityType {
-        match self {
+    fn from(value: EntityType) -> Self {
+        match value {
             EntityType::ArleighBurke => fb::EntityType::ArleighBurke,
             EntityType::Bismarck => fb::EntityType::Bismarck,
             EntityType::Clemenceau => fb::EntityType::Clemenceau,
@@ -183,10 +179,10 @@ impl Into<fb::EntityType> for EntityType {
 }
 
 #[cfg(any(feature = "capnp", feature = "prost"))]
-impl Into<cp::EntityType> for EntityType {
+impl From<EntityType> for cp::EntityType {
     #[inline]
-    fn into(self) -> cp::EntityType {
-        match self {
+    fn from(value: EntityType) -> Self {
+        match value {
             EntityType::ArleighBurke => cp::EntityType::ArleighBurke,
             EntityType::Bismarck => cp::EntityType::Bismarck,
             EntityType::Clemenceau => cp::EntityType::Clemenceau,
@@ -202,10 +198,10 @@ impl Into<cp::EntityType> for EntityType {
 }
 
 #[cfg(feature = "prost")]
-impl Into<pb::EntityType> for EntityType {
+impl From<EntityType> for pb::EntityType {
     #[inline]
-    fn into(self) -> pb::EntityType {
-        match self {
+    fn from(value: EntityType) -> Self {
+        match value {
             EntityType::ArleighBurke => pb::EntityType::ArleighBurke,
             EntityType::Bismarck => pb::EntityType::Bismarck,
             EntityType::Clemenceau => pb::EntityType::Clemenceau,
@@ -238,26 +234,6 @@ impl From<pb::EntityType> for EntityType {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<EntityType> for EntityType {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<EntityType>, usize) {
-        use EntityType::*;
-        match self {
-            ArleighBurke => EntityTypeArleighBurkePack.pack(offset, output),
-            Bismarck => EntityTypeBismarckPack.pack(offset, output),
-            Clemenceau => EntityTypeClemenceauPack.pack(offset, output),
-            Fletcher => EntityTypeFletcherPack.pack(offset, output),
-            G5 => EntityTypeG5Pack.pack(offset, output),
-            Iowa => EntityTypeIowaPack.pack(offset, output),
-            Kolkata => EntityTypeKolkataPack.pack(offset, output),
-            Osa => EntityTypeOsaPack.pack(offset, output),
-            Yasen => EntityTypeYasenPack.pack(offset, output),
-            Zubr => EntityTypeZubrPack.pack(offset, output),
-        }
-    }
-}
-
 fn generate_submerge(rng: &mut impl Rng, entity_type: EntityType) -> bool {
     entity_type.is_sub() && rng.gen_bool(0.9)
 }
@@ -284,7 +260,6 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -302,13 +277,12 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
@@ -334,13 +308,13 @@ impl Transform {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::Transform> for Transform {
-    fn into(self) -> fb::Transform {
+impl From<Transform> for fb::Transform {
+    fn from(value: Transform) -> Self {
         fb::Transform::new(
-            self.altitude,
-            self.angle,
-            &fb::Vector2f::new(self.position.0, self.position.1),
-            self.velocity,
+            value.altitude,
+            value.angle,
+            &fb::Vector2f::new(value.position.0, value.position.1),
+            value.velocity,
         )
     }
 }
@@ -367,17 +341,15 @@ impl bench_prost::Serialize for Transform {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.altitude = self.altitude.into();
-        result.angle = self.angle.into();
-        result.position = Some({
-            let mut result = pb::Vector2f::default();
-            result.x = self.position.0;
-            result.y = self.position.1;
-            result
-        });
-        result.velocity = self.velocity.into();
-        result
+        Self::Message {
+            altitude: self.altitude.into(),
+            angle: self.angle.into(),
+            position: Some(pb::Vector2f {
+                x: self.position.0,
+                y: self.position.1,
+            }),
+            velocity: self.velocity.into(),
+        }
     }
 }
 
@@ -400,22 +372,7 @@ impl From<pb::Transform> for Transform {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<Transform> for Transform {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Transform>, usize) {
-        TransformPack {
-            altitude: self.altitude,
-            angle: self.angle,
-            position: self.position,
-            velocity: self.velocity,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Copy, Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -433,13 +390,12 @@ impl alkahest::Pack<Transform> for Transform {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
@@ -461,10 +417,10 @@ impl Guidance {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::Guidance> for Guidance {
+impl From<Guidance> for fb::Guidance {
     #[inline]
-    fn into(self) -> fb::Guidance {
-        fb::Guidance::new(self.angle, self.submerge, self.velocity)
+    fn from(value: Guidance) -> Self {
+        Self::new(value.angle, value.submerge, value.velocity)
     }
 }
 
@@ -477,7 +433,7 @@ impl<'a> bench_capnp::Serialize<'a> for Guidance {
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
         builder.set_angle(self.angle);
         builder.set_submerge(self.submerge);
-        builder.set_velocity(self.velocity.into());
+        builder.set_velocity(self.velocity);
     }
 }
 
@@ -487,11 +443,11 @@ impl bench_prost::Serialize for Guidance {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.angle = self.angle as u32;
-        result.submerge = self.submerge;
-        result.velocity = self.velocity as i32;
-        result
+        Self::Message {
+            angle: self.angle as u32,
+            submerge: self.submerge,
+            velocity: self.velocity as i32,
+        }
     }
 }
 
@@ -506,21 +462,7 @@ impl From<pb::Guidance> for Guidance {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<Guidance> for Guidance {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Guidance>, usize) {
-        GuidancePack {
-            angle: self.angle,
-            submerge: self.submerge,
-            velocity: self.velocity,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -538,7 +480,7 @@ impl alkahest::Pack<Guidance> for Guidance {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -677,18 +619,21 @@ impl bench_prost::Serialize for Contact {
     type Message = pb::Contact;
 
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.damage = self.damage as u32;
-        result.entity_id = self.entity_id;
-        result.entity_type = self
-            .entity_type
-            .map(|entity_type| <EntityType as Into<cp::EntityType>>::into(entity_type) as i32);
-        result.guidance = Some(self.guidance.serialize_pb());
-        result.player_id = self.player_id.map(Into::into);
+        let mut result = Self::Message {
+            damage: self.damage as u32,
+            entity_id: self.entity_id,
+            entity_type: self
+                .entity_type
+                .map(|entity_type| cp::EntityType::from(entity_type) as i32),
+            guidance: Some(self.guidance.serialize_pb()),
+            player_id: self.player_id.map(Into::into),
+            reloads: Default::default(),
+            transform: Some(self.transform.serialize_pb()),
+            turret_angles: Default::default(),
+        };
         for reload in self.reloads.iter().cloned() {
             result.reloads.push(reload);
         }
-        result.transform = Some(self.transform.serialize_pb());
         for turret_angle in self.turret_angles.iter().cloned() {
             result.turret_angles.push(turret_angle as u32);
         }
@@ -718,39 +663,7 @@ impl From<pb::Contact> for Contact {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct ContactSchema {
-    pub damage: u8,
-    pub entity_id: u32,
-    pub entity_type: Option<EntityType>,
-    pub guidance: Guidance,
-    pub player_id: Option<u16>,
-    pub reloads: alkahest::Seq<bool>,
-    pub transform: Transform,
-    pub turret_angles: alkahest::Seq<u16>,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<ContactSchema> for &'_ Contact {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<ContactSchema>, usize) {
-        ContactSchemaPack {
-            damage: self.damage,
-            entity_id: self.entity_id,
-            entity_type: self.entity_type,
-            guidance: self.guidance,
-            player_id: self.player_id,
-            reloads: self.reloads.iter(),
-            transform: self.transform,
-            turret_angles: self.turret_angles.iter(),
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -768,7 +681,7 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -838,12 +751,12 @@ impl bench_prost::Serialize for TerrainUpdate {
     type Message = pb::TerrainUpdate;
 
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.chunk_id = {
-            let mut result = pb::ChunkId::default();
-            result.x = self.chunk_id.0 as i32;
-            result.y = self.chunk_id.1 as i32;
-            Some(result)
+        let mut result = Self::Message {
+            chunk_id: Some(pb::ChunkId {
+                x: self.chunk_id.0 as i32,
+                y: self.chunk_id.1 as i32,
+            }),
+            data: Default::default(),
         };
         for datum in self.data.iter().cloned() {
             result.data.push(datum);
@@ -869,31 +782,7 @@ impl From<pb::TerrainUpdate> for TerrainUpdate {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct TerrainUpdateSchema {
-    pub chunk_id: (i8, i8),
-    pub data: alkahest::Bytes,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
-    #[inline]
-    fn pack(
-        self,
-        offset: usize,
-        output: &mut [u8],
-    ) -> (alkahest::Packed<TerrainUpdateSchema>, usize) {
-        TerrainUpdateSchemaPack {
-            chunk_id: self.chunk_id,
-            data: self.data.iter(),
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -911,7 +800,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -1030,31 +919,7 @@ impl From<pb::Update> for Update {
     }
 }
 
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct UpdateSchema {
-    pub contacts: alkahest::Seq<ContactSchema>,
-    pub score: u32,
-    pub world_radius: f32,
-    pub terrain_updates: alkahest::Seq<TerrainUpdateSchema>,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<UpdateSchema> for &'_ Update {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<UpdateSchema>, usize) {
-        UpdateSchemaPack {
-            contacts: self.contacts.iter(),
-            score: self.score,
-            world_radius: self.world_radius,
-            terrain_updates: self.terrain_updates.iter(),
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -1072,7 +937,7 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
     feature = "scale",
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -1141,21 +1006,5 @@ impl From<pb::Updates> for Updates {
         Updates {
             updates: value.updates.into_iter().map(Into::into).collect(),
         }
-    }
-}
-
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct UpdatesSchema {
-    pub updates: alkahest::Seq<UpdateSchema>,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<UpdatesSchema> for &'_ Updates {
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<UpdatesSchema>, usize) {
-        UpdatesSchemaPack {
-            updates: self.updates.iter(),
-        }
-        .pack(offset, output)
     }
 }

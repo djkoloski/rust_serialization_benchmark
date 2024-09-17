@@ -17,7 +17,7 @@ where
         })
     });
 
-    let size = bincode::encode_into_slice(&data, &mut *buffer, conf).unwrap();
+    let size = bincode::encode_into_slice(data, &mut *buffer, conf).unwrap();
     let buffer = &buffer[..size];
 
     group.bench_function("deserialize", |b| {

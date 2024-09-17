@@ -1,10 +1,6 @@
 #[allow(unused_imports)]
 use criterion::{black_box, criterion_main, Criterion};
 use rand_pcg::Lcg64Xsh32;
-#[cfg(feature = "abomonation")]
-use rust_serialization_benchmark::bench_abomonation;
-#[cfg(feature = "alkahest")]
-use rust_serialization_benchmark::bench_alkahest;
 #[cfg(feature = "bilrost")]
 use rust_serialization_benchmark::bench_bilrost;
 #[cfg(feature = "bincode")]
@@ -15,8 +11,6 @@ use rust_serialization_benchmark::bench_bincode1;
 use rust_serialization_benchmark::bench_bitcode;
 #[cfg(feature = "borsh")]
 use rust_serialization_benchmark::bench_borsh;
-#[cfg(feature = "bson")]
-use rust_serialization_benchmark::bench_bson;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -82,25 +76,6 @@ fn bench_log(c: &mut Criterion) {
         logs: generate_vec::<_, Log>(&mut rng, LOGS..LOGS + 1),
     };
 
-    #[cfg(feature = "abomonation")]
-    bench_abomonation::bench(BENCH, c, &data, |data| {
-        for log in data.logs.iter() {
-            black_box(log.address);
-            black_box(log.code);
-            black_box(log.size);
-        }
-    });
-
-    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |data| {
-        for log in data.logs {
-            black_box(&log.address);
-            black_box(log.code);
-            black_box(log.size);
-        }
-    });
-
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
 
@@ -115,9 +90,6 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bson")]
-    bench_bson::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -281,21 +253,6 @@ fn bench_mesh(c: &mut Criterion) {
         triangles: generate_vec::<_, Triangle>(&mut rng, TRIANGLES..TRIANGLES + 1),
     };
 
-    #[cfg(feature = "abomonation")]
-    bench_abomonation::bench(BENCH, c, &data, |data| {
-        for triangle in data.triangles.iter() {
-            black_box(triangle.normal);
-        }
-    });
-
-    // Doesn't use a closure due to ICE in rustc. Probably related to https://github.com/rust-lang/rust/issues/86703
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |mesh| {
-        for triangle in mesh.triangles {
-            black_box(&triangle.normal);
-        }
-    });
-
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
 
@@ -310,9 +267,6 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bson")]
-    bench_bson::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -463,20 +417,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         players: generate_vec::<_, Player>(&mut rng, PLAYERS..PLAYERS + 1),
     };
 
-    #[cfg(feature = "abomonation")]
-    bench_abomonation::bench(BENCH, c, &data, |data| {
-        for player in data.players.iter() {
-            black_box(player.game_type);
-        }
-    });
-
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |data| {
-        for player in data.players {
-            black_box(&player.game_type);
-        }
-    });
-
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
 
@@ -491,9 +431,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bson")]
-    bench_bson::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -647,20 +584,6 @@ fn bench_mk48(c: &mut Criterion) {
         updates: generate_vec(&mut rng, UPDATES..UPDATES + 1),
     };
 
-    #[cfg(feature = "abomonation")]
-    bench_abomonation::bench(BENCH, c, &data, |data| {
-        for update in data.updates.iter() {
-            black_box(update.score);
-        }
-    });
-
-    #[cfg(feature = "alkahest")]
-    bench_alkahest::bench(BENCH, c, &data, |data| {
-        for update in data.updates {
-            black_box(update.score);
-        }
-    });
-
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
 
@@ -675,9 +598,6 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bson")]
-    bench_bson::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {

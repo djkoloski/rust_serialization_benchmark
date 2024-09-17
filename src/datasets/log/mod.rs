@@ -1,10 +1,8 @@
-#[cfg(feature = "bebop")]
-pub mod log_bebop;
 #[cfg(feature = "capnp")]
 pub mod log_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "log_generated.rs"]
-#[allow(unused_imports)]
+#[allow(unused_imports, clippy::all)]
 pub mod log_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.log.rs"]
@@ -31,7 +29,6 @@ use crate::bench_prost;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -46,7 +43,7 @@ use crate::Generate;
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -56,7 +53,6 @@ use crate::Generate;
     derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
-#[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Address {
@@ -83,10 +79,10 @@ impl Generate for Address {
 }
 
 #[cfg(feature = "flatbuffers")]
-impl Into<fb::Address> for Address {
+impl From<Address> for fb::Address {
     #[inline]
-    fn into(self) -> fb::Address {
-        fb::Address::new(self.x0, self.x1, self.x2, self.x3)
+    fn from(value: Address) -> Self {
+        Self::new(value.x0, value.x1, value.x2, value.x3)
     }
 }
 
@@ -110,12 +106,12 @@ impl bench_prost::Serialize for Address {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        result.x0 = self.x0 as u32;
-        result.x1 = self.x1 as u32;
-        result.x2 = self.x2 as u32;
-        result.x3 = self.x3 as u32;
-        result
+        Self::Message {
+            x0: self.x0 as u32,
+            x1: self.x1 as u32,
+            x2: self.x2 as u32,
+            x3: self.x3 as u32,
+        }
     }
 }
 
@@ -131,22 +127,7 @@ impl From<log_prost::Address> for Address {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<Address> for Address {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<Address>, usize) {
-        AddressPack {
-            x0: self.x0,
-            x1: self.x1,
-            x2: self.x2,
-            x3: self.x3,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -160,7 +141,7 @@ impl alkahest::Pack<Address> for Address {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -180,18 +161,6 @@ pub struct Log {
     pub date: String,
     pub request: String,
     #[cfg_attr(feature = "wiring", fixed)]
-    pub code: u16,
-    pub size: u64,
-}
-
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct LogSchema {
-    pub address: Address,
-    pub identity: alkahest::Bytes,
-    pub userid: alkahest::Bytes,
-    pub date: alkahest::Bytes,
-    pub request: alkahest::Bytes,
     pub code: u16,
     pub size: u64,
 }
@@ -335,25 +304,7 @@ impl From<log_prost::Log> for Log {
     }
 }
 
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<LogSchema> for &'_ Log {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogSchema>, usize) {
-        LogSchemaPack {
-            address: self.address,
-            identity: self.identity.as_bytes(),
-            userid: self.userid.as_bytes(),
-            date: self.date.as_bytes(),
-            request: self.request.as_bytes(),
-            code: self.code,
-            size: self.size,
-        }
-        .pack(offset, output)
-    }
-}
-
 #[derive(Clone, PartialEq)]
-#[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -367,7 +318,7 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
@@ -440,22 +391,5 @@ impl From<log_prost::Logs> for Logs {
         Logs {
             logs: value.logs.into_iter().map(Into::into).collect(),
         }
-    }
-}
-
-#[cfg(feature = "alkahest")]
-#[derive(alkahest::Schema)]
-pub struct LogsSchema {
-    pub logs: alkahest::Seq<LogSchema>,
-}
-
-#[cfg(feature = "alkahest")]
-impl alkahest::Pack<LogsSchema> for &'_ Logs {
-    #[inline]
-    fn pack(self, offset: usize, output: &mut [u8]) -> (alkahest::Packed<LogsSchema>, usize) {
-        LogsSchemaPack {
-            logs: self.logs.iter(),
-        }
-        .pack(offset, output)
     }
 }

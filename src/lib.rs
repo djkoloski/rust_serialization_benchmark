@@ -1,7 +1,6 @@
-#[cfg(feature = "abomonation")]
-pub mod bench_abomonation;
-#[cfg(feature = "alkahest")]
-pub mod bench_alkahest;
+// wiring causes this clippy lint everywhere
+#![cfg_attr(feature = "wiring", allow(clippy::manual_async_fn))]
+
 #[cfg(feature = "bilrost")]
 pub mod bench_bilrost;
 #[cfg(feature = "bincode")]
@@ -12,8 +11,6 @@ pub mod bench_bincode1;
 pub mod bench_bitcode;
 #[cfg(feature = "borsh")]
 pub mod bench_borsh;
-#[cfg(feature = "bson")]
-pub mod bench_bson;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -120,32 +117,18 @@ macro_rules! impl_tuple {
 
 impl_tuple!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11,);
 
-macro_rules! impl_array {
-    () => {};
-    ($len:literal, $($rest:literal,)*) => {
-        impl<T: Generate> Generate for [T; $len] {
-            fn generate<R: Rng>(rng: &mut R) -> Self {
-                let mut result = mem::MaybeUninit::<Self>::uninit();
-                let result_ptr = result.as_mut_ptr().cast::<T>();
-                for i in 0..$len {
-                    unsafe {
-                        result_ptr.add(i).write(T::generate(rng));
-                    }
-                }
-                unsafe {
-                    result.assume_init()
-                }
+impl<T: Generate, const N: usize> Generate for [T; N] {
+    fn generate<R: Rng>(rng: &mut R) -> Self {
+        let mut result = mem::MaybeUninit::<Self>::uninit();
+        let result_ptr = result.as_mut_ptr().cast::<T>();
+        for i in 0..N {
+            unsafe {
+                result_ptr.add(i).write(T::generate(rng));
             }
         }
-
-        impl_array!($($rest,)*);
+        unsafe { result.assume_init() }
     }
 }
-
-impl_array!(
-    31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
-    7, 6, 5, 4, 3, 2, 1, 0,
-);
 
 impl<T: Generate> Generate for Option<T> {
     fn generate<R: Rng>(rng: &mut R) -> Self {
