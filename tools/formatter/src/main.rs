@@ -155,7 +155,7 @@ fn build_tables(
         .collect::<Vec<_>>();
 
     for (feature, crate_) in dataset.features.iter() {
-        if !columns.iter().all(|&c| crate_.benches.get(c).is_none()) {
+        if !columns.iter().all(|&c| crate_.benches.contains_key(c)) {
             write_crate_row(&mut data, feature, features)?;
             write_crate_row(&mut comparison, feature, features)?;
 
@@ -285,8 +285,7 @@ fn format(
     let features = results
         .datasets
         .values()
-        .map(|dataset| dataset.features.keys())
-        .flatten()
+        .flat_map(|dataset| dataset.features.keys())
         .collect::<BTreeSet<_>>();
     for &feature in features.iter() {
         write!(
