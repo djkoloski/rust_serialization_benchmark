@@ -19,6 +19,7 @@ use minecraft_savedata_prost as pb;
 #[cfg(feature = "nanoserde")]
 use nanoserde::{DeBin, SerBin};
 use rand::Rng;
+#[cfg(feature = "rkyv")]
 use rkyv::traits::NoUndef;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
