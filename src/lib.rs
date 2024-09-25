@@ -11,6 +11,8 @@ pub mod bench_bincode1;
 pub mod bench_bitcode;
 #[cfg(feature = "borsh")]
 pub mod bench_borsh;
+#[cfg(feature = "brief")]
+pub mod bench_brief;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
 #[cfg(feature = "cbor4ii")]
