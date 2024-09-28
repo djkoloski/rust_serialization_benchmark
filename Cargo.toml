@@ -1,10 +1,10 @@
 [workspace]
 members = [
-  "pages",
-  "tools/bencher",
-  "tools/formatter",
-  "tools/parser",
-  "tools/schema",
+	"pages",
+	"tools/bencher",
+	"tools/formatter",
+	"tools/parser",
+	"tools/schema",
 ]
 
 [workspace.package]
@@ -49,9 +49,14 @@ bincode1 = { package = "bincode", version = "=1.3.3", optional = true }
 bincode = { package = "bincode", version = "=2.0.0-rc.3", optional = true }
 bitcode = { version = "=0.6.3", optional = true }
 borsh = { version = "=1.5.1", features = ["derive"], optional = true }
-brief = { version = "=0.1.0", features = ["std"], optional = true, path = "../brief" }
+serde-brief = { version = "=0.1.0", features = [
+	"std",
+], optional = true }
 capnp = { version = "=0.19.7", optional = true }
-cbor4ii = { version = "=0.3.3", features = [ "use_std", "serde1" ], optional = true }
+cbor4ii = { version = "=0.3.3", features = [
+	"use_std",
+	"serde1",
+], optional = true }
 ciborium = { version = "=0.2.2", optional = true }
 criterion = "=0.5.1"
 databuf = { version = "=0.5.0", optional = true }
@@ -60,8 +65,10 @@ flatbuffers = { version = "=24.3.25", optional = true }
 libflate = "=2.1.0"
 msgpacker = { version = "=0.4.3", optional = true }
 nachricht-serde = { version = "=0.4.0", optional = true }
-nanoserde = {version = "=0.1.37", optional = true }
-parity-scale-codec = { version = "=3.6.12", features = ["full"], optional = true }
+nanoserde = { version = "=0.1.37", optional = true }
+parity-scale-codec = { version = "=3.6.12", features = [
+	"full",
+], optional = true }
 parity-scale-codec-derive = { version = "=3.6.12", optional = true }
 postcard = { version = "=1.0.10", features = ["alloc"], optional = true }
 pot = { version = "=3.0.1", optional = true }
@@ -74,7 +81,9 @@ ron = { version = "=0.8.1", optional = true }
 serde = { version = "=1.0.210", features = ["derive"] }
 serde_bare = { version = "=0.5.0", optional = true }
 serde_cbor = { version = "=0.11.2", optional = true }
-serde_json = { version = "=1.0.128", features = ["float_roundtrip"], optional = true }
+serde_json = { version = "=1.0.128", features = [
+	"float_roundtrip",
+], optional = true }
 simd-json = { version = "=0.13.10", optional = true }
 simd-json-derive = { version = "=0.13.0", optional = true }
 speedy = { version = "=0.8.7", optional = true }
@@ -85,35 +94,35 @@ zstd = "=0.13.2"
 
 [features]
 default = [
-  "bilrost",
-  "bincode1",
-  "bincode",
-  "bitcode",
-  "borsh",
-  "brief",
-  "capnp",
-  "cbor4ii",
-  "ciborium",
-  "databuf",
-  "dlhn",
-  "flatbuffers",
-  "msgpacker",
-  "nachricht-serde",
-  "nanoserde",
-  "scale",
-  "postcard",
-  "pot",
-  "prost",
-  "rkyv",
-  "rmp-serde",
-  "ron",
-  "serde_bare",
-  "serde_cbor",
-  "serde_json",
-  "simd-json",
-  "speedy",
-  "savefile",
-  "wiring"
+	"bilrost",
+	"bincode1",
+	"bincode",
+	"bitcode",
+	"borsh",
+	"serde-brief",
+	"capnp",
+	"cbor4ii",
+	"ciborium",
+	"databuf",
+	"dlhn",
+	"flatbuffers",
+	"msgpacker",
+	"nachricht-serde",
+	"nanoserde",
+	"scale",
+	"postcard",
+	"pot",
+	"prost",
+	"rkyv",
+	"rmp-serde",
+	"ron",
+	"serde_bare",
+	"serde_cbor",
+	"serde_json",
+	"simd-json",
+	"speedy",
+	"savefile",
+	"wiring",
 ]
 capnp = ["dep:capnp"]
 prost = ["dep:capnp", "dep:prost"]

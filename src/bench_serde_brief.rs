@@ -7,29 +7,29 @@ where
 {
     const BUFFER_LEN: usize = 50_000_000;
 
-    let mut group = c.benchmark_group(format!("{}/brief", name));
+    let mut group = c.benchmark_group(format!("{}/serde-brief", name));
 
     let mut serialize_buffer = vec![0; BUFFER_LEN];
     group.bench_function("serialize", |b| {
         b.iter(|| {
             black_box(
-                brief::to_slice(black_box(&data), black_box(serialize_buffer.as_mut_slice()))
+                serde_brief::to_slice(black_box(&data), black_box(serialize_buffer.as_mut_slice()))
                     .unwrap(),
             );
         })
     });
 
-    let deserialize_buffer = brief::to_vec(&data).unwrap();
+    let deserialize_buffer = serde_brief::to_vec(&data).unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(brief::from_slice::<'_, T>(black_box(&deserialize_buffer)).unwrap());
+            black_box(serde_brief::from_slice::<'_, T>(black_box(&deserialize_buffer)).unwrap());
         })
     });
 
-    crate::bench_size(name, "brief", deserialize_buffer.as_slice());
+    crate::bench_size(name, "serde-brief", deserialize_buffer.as_slice());
 
-    assert!(brief::from_slice::<T>(&deserialize_buffer).unwrap() == *data);
+    assert!(serde_brief::from_slice::<T>(&deserialize_buffer).unwrap() == *data);
 
     group.finish();
 }

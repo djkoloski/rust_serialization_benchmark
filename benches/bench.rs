@@ -11,8 +11,8 @@ use rust_serialization_benchmark::bench_bincode1;
 use rust_serialization_benchmark::bench_bitcode;
 #[cfg(feature = "borsh")]
 use rust_serialization_benchmark::bench_borsh;
-#[cfg(feature = "brief")]
-use rust_serialization_benchmark::bench_brief;
+#[cfg(feature = "serde-brief")]
+use rust_serialization_benchmark::bench_serde_brief;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -93,8 +93,8 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
-    #[cfg(feature = "brief")]
-    bench_brief::bench(BENCH, c, &data);
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -273,8 +273,8 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
-    #[cfg(feature = "brief")]
-    bench_brief::bench(BENCH, c, &data);
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -440,8 +440,8 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
-    #[cfg(feature = "brief")]
-    bench_brief::bench(BENCH, c, &data);
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -610,8 +610,8 @@ fn bench_mk48(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
-    #[cfg(feature = "brief")]
-    bench_brief::bench(BENCH, c, &data);
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
