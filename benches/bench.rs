@@ -11,8 +11,6 @@ use rust_serialization_benchmark::bench_bincode1;
 use rust_serialization_benchmark::bench_bitcode;
 #[cfg(feature = "borsh")]
 use rust_serialization_benchmark::bench_borsh;
-#[cfg(feature = "serde-brief")]
-use rust_serialization_benchmark::bench_serde_brief;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -49,6 +47,8 @@ use rust_serialization_benchmark::bench_ron;
 use rust_serialization_benchmark::bench_savefile;
 #[cfg(feature = "serde_bare")]
 use rust_serialization_benchmark::bench_serde_bare;
+#[cfg(feature = "serde-brief")]
+use rust_serialization_benchmark::bench_serde_brief;
 #[cfg(feature = "serde_cbor")]
 use rust_serialization_benchmark::bench_serde_cbor;
 #[cfg(feature = "serde_json")]

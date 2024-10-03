@@ -11,8 +11,6 @@ pub mod bench_bincode1;
 pub mod bench_bitcode;
 #[cfg(feature = "borsh")]
 pub mod bench_borsh;
-#[cfg(feature = "serde-brief")]
-pub mod bench_serde_brief;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -49,6 +47,8 @@ pub mod bench_ron;
 pub mod bench_savefile;
 #[cfg(feature = "serde_bare")]
 pub mod bench_serde_bare;
+#[cfg(feature = "serde-brief")]
+pub mod bench_serde_brief;
 #[cfg(feature = "serde_cbor")]
 pub mod bench_serde_cbor;
 #[cfg(feature = "serde_json")]
