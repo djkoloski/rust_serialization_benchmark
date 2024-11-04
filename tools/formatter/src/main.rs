@@ -155,7 +155,7 @@ fn build_tables(
         .collect::<Vec<_>>();
 
     for (feature, crate_) in dataset.features.iter() {
-        if !columns.iter().all(|&c| crate_.benches.contains_key(c)) {
+        if columns.iter().any(|&c| crate_.benches.contains_key(c)) {
             write_crate_row(&mut data, feature, features)?;
             write_crate_row(&mut comparison, feature, features)?;
 
