@@ -31,7 +31,7 @@ fn main() {
     };
 
     let mut bench_path = PathBuf::from("benchmark_results");
-    bench_path.push(&format!(
+    bench_path.push(format!(
         "{}-{}-{}_{}-{}-{}",
         now.year(),
         now.month() as usize,

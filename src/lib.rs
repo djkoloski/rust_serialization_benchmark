@@ -47,6 +47,8 @@ pub mod bench_ron;
 pub mod bench_savefile;
 #[cfg(feature = "serde_bare")]
 pub mod bench_serde_bare;
+#[cfg(feature = "serde-brief")]
+pub mod bench_serde_brief;
 #[cfg(feature = "serde_cbor")]
 pub mod bench_serde_cbor;
 #[cfg(feature = "serde_json")]

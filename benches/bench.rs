@@ -47,6 +47,8 @@ use rust_serialization_benchmark::bench_ron;
 use rust_serialization_benchmark::bench_savefile;
 #[cfg(feature = "serde_bare")]
 use rust_serialization_benchmark::bench_serde_bare;
+#[cfg(feature = "serde-brief")]
+use rust_serialization_benchmark::bench_serde_brief;
 #[cfg(feature = "serde_cbor")]
 use rust_serialization_benchmark::bench_serde_cbor;
 #[cfg(feature = "serde_json")]
@@ -90,6 +92,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -268,6 +273,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
+
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
         let message_reader =
@@ -431,6 +439,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -598,6 +609,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serde-brief")]
+    bench_serde_brief::bench(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
