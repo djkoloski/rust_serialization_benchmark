@@ -30,7 +30,7 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::{generate_vec, Generate};
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Enumeration))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -57,6 +57,7 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 #[repr(u8)]
 pub enum GameType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
@@ -135,7 +136,7 @@ impl From<pb::GameType> for GameType {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -162,6 +163,7 @@ impl From<pb::GameType> for GameType {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Item {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed(2))]
@@ -250,7 +252,7 @@ impl From<pb::Item> for Item {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -277,6 +279,7 @@ impl From<pb::Item> for Item {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Abilities {
     #[cfg_attr(feature = "wiring", fixed)]
     pub walk_speed: f32,
@@ -368,7 +371,7 @@ impl From<pb::Abilities> for Abilities {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -395,6 +398,7 @@ impl From<pb::Abilities> for Abilities {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Entity {
     pub id: String,
     #[cfg_attr(feature = "wiring", fixed(11))]
@@ -621,7 +625,7 @@ impl From<pb::Entity> for Entity {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -648,6 +652,7 @@ impl From<pb::Entity> for Entity {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct RecipeBook {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub recipes: Vec<String>,
@@ -813,7 +818,7 @@ impl From<pb::RecipeBook> for RecipeBook {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -840,6 +845,7 @@ impl From<pb::RecipeBook> for RecipeBook {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Player {
     #[cfg_attr(feature = "wiring", fixed(3))]
     pub game_type: GameType,
@@ -1201,7 +1207,7 @@ impl From<pb::Player> for Player {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -1228,6 +1234,7 @@ impl From<pb::Player> for Player {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Players {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub players: Vec<Player>,

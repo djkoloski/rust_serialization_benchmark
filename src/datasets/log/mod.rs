@@ -55,6 +55,8 @@ use crate::Generate;
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+#[derive(Debug)]
 pub struct Address {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed)]
@@ -154,6 +156,8 @@ impl From<log_prost::Address> for Address {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+#[derive(Debug)]
 pub struct Log {
     pub address: Address,
     pub identity: String,
@@ -331,6 +335,8 @@ impl From<log_prost::Log> for Log {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+#[derive(Debug)]
 pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub logs: Vec<Log>,

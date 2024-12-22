@@ -57,6 +57,7 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
@@ -286,6 +287,8 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+
 pub struct Transform {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed)]
@@ -399,6 +402,8 @@ impl From<pb::Transform> for Transform {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+
 pub struct Guidance {
     #[cfg_attr(feature = "wiring", fixed)]
     pub angle: u16,
@@ -489,12 +494,14 @@ impl From<pb::Guidance> for Guidance {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Contact {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed(2))]
     pub damage: u8,
     pub entity_id: u32,
     pub entity_type: Option<EntityType>,
+
     pub guidance: Guidance,
     pub player_id: Option<u16>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
@@ -690,6 +697,7 @@ impl From<pb::Contact> for Contact {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct TerrainUpdate {
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "(varint, varint)"))]
     chunk_id: (i8, i8),
@@ -809,6 +817,8 @@ impl From<pb::TerrainUpdate> for TerrainUpdate {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+
 pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub contacts: Vec<Contact>,
@@ -946,6 +956,8 @@ impl From<pb::Update> for Update {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+#[derive(Debug)]
 pub struct Updates {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub updates: Vec<Update>,

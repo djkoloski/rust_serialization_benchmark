@@ -1,3 +1,7 @@
+#![cfg_attr(feature = "serialization", feature(const_trait_impl))]
+#![cfg_attr(feature = "serialization", feature(generic_const_exprs))]
+#![cfg_attr(feature = "serialization", feature(specialization))]
+#![cfg_attr(feature = "serialization", feature(new_zeroed_alloc))]
 // wiring causes this clippy lint everywhere
 #![cfg_attr(feature = "wiring", allow(clippy::manual_async_fn))]
 
@@ -53,6 +57,8 @@ pub mod bench_serde_brief;
 pub mod bench_serde_cbor;
 #[cfg(feature = "serde_json")]
 pub mod bench_serde_json;
+#[cfg(feature = "serialization")]
+pub mod bench_serialization;
 #[cfg(feature = "simd-json")]
 pub mod bench_simd_json;
 #[cfg(feature = "speedy")]

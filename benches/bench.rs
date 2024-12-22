@@ -53,6 +53,8 @@ use rust_serialization_benchmark::bench_serde_brief;
 use rust_serialization_benchmark::bench_serde_cbor;
 #[cfg(feature = "serde_json")]
 use rust_serialization_benchmark::bench_serde_json;
+#[cfg(feature = "serialization")]
+use rust_serialization_benchmark::bench_serialization;
 #[cfg(feature = "simd-json")]
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
@@ -77,6 +79,9 @@ fn bench_log(c: &mut Criterion) {
     let data = Logs {
         logs: generate_vec::<_, Log>(&mut rng, LOGS..LOGS + 1),
     };
+
+    #[cfg(feature = "serialization")]
+    bench_serialization::bench(BENCH, c, &data);
 
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
@@ -258,6 +263,9 @@ fn bench_mesh(c: &mut Criterion) {
         triangles: generate_vec::<_, Triangle>(&mut rng, TRIANGLES..TRIANGLES + 1),
     };
 
+    #[cfg(feature = "serialization")]
+    bench_serialization::bench(BENCH, c, &data);
+
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
 
@@ -425,6 +433,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         players: generate_vec::<_, Player>(&mut rng, PLAYERS..PLAYERS + 1),
     };
 
+    #[cfg(feature = "serialization")]
+    bench_serialization::bench(BENCH, c, &data);
+
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
 
@@ -572,6 +583,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
 
+    #[cfg(feature = "serialization")]
+    bench_serialization::bench(BENCH, c, &data);
+
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
 
@@ -594,6 +608,9 @@ fn bench_mk48(c: &mut Criterion) {
     let data = Updates {
         updates: generate_vec(&mut rng, UPDATES..UPDATES + 1),
     };
+
+    #[cfg(feature = "serialization")]
+    bench_serialization::bench(BENCH, c, &data);
 
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
@@ -727,6 +744,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "speedy")]
     bench_speedy::bench(BENCH, c, &data);
+
+    #[cfg(feature = "serialization")]
+    bench_serialization::bench(BENCH, c, &data);
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);

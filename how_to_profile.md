@@ -41,3 +41,4 @@ profile it, then save a flamegraph of the profile results as a `.svg` file to
 ## Other platforms
 
 Know how to profile these benchmarks on other platforms? Open a pull request!
+

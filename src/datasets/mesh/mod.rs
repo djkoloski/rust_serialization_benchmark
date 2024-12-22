@@ -28,7 +28,7 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::Generate;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -55,6 +55,8 @@ use crate::Generate;
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
+
 pub struct Vector3 {
     #[cfg_attr(feature = "wiring", fixed)]
     pub x: f32,
@@ -118,7 +120,7 @@ impl From<mesh_prost::Vector3> for Vector3 {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -145,6 +147,7 @@ impl From<mesh_prost::Vector3> for Vector3 {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Triangle {
     #[cfg_attr(feature = "wiring", fixed)]
     pub v0: Vector3,
@@ -219,7 +222,7 @@ impl From<mesh_prost::Triangle> for Triangle {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
@@ -246,6 +249,7 @@ impl From<mesh_prost::Triangle> for Triangle {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
+#[cfg_attr(feature = "serialization", derive(serialization::Serializable))]
 pub struct Mesh {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     pub triangles: Vec<Triangle>,

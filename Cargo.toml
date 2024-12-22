@@ -91,6 +91,9 @@ savefile = { version = "=0.17.7", optional = true }
 savefile-derive = { version = "=0.17.7", optional = true }
 wiring = { version = "=0.2.2", optional = true }
 zstd = "=0.13.2"
+serialization = { version = "0.2.10", optional = true, features = ["fast_binary_format"] }
+serialization_minecraft = { version = "0.2.10", optional = true, features = ["fast_binary_format"] }
+fastbuf = "0.28.0"
 
 [features]
 default = [
@@ -123,6 +126,7 @@ default = [
     "speedy",
     "savefile",
     "wiring",
+    "serialization",
 ]
 capnp = ["dep:capnp"]
 prost = ["dep:capnp", "dep:prost"]
@@ -134,6 +138,7 @@ scale = ["parity-scale-codec", "parity-scale-codec-derive"]
 regenerate-capnp = ["dep:capnpc"]
 regenerate-flatbuffers = ["dep:flatc-rust"]
 regenerate-prost = ["dep:prost-build"]
+serialization = ["dep:serialization", "dep:serialization_minecraft"]
 
 [dev-dependencies]
 rand_pcg = "0.3.1"
