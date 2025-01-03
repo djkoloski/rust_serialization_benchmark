@@ -77,3 +77,10 @@ jobs:
         shell: bash
         run: |
           git diff --exit-code && echo 'ok!' || (echo 'committed generated code is not up to date!'; exit 1)
+
+      # build and test in dev mode with debug assertions enabled (and slow, uninteresting code
+      # disabled)
+      - name: test benches
+        shell: bash
+        run: |
+          cargo test --benches --features skip-compression-for-testing
