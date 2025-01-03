@@ -55,11 +55,9 @@ cbor4ii = { version = "=0.3.3", features = [
     "serde1",
 ], optional = true }
 ciborium = { version = "=0.2.2", optional = true }
-criterion = "=0.5.1"
 databuf = { version = "=0.5.0", optional = true }
 dlhn = { version = "=0.1.7", optional = true }
 flatbuffers = { version = "=24.12.23", optional = true }
-libflate = "=2.1.0"
 msgpacker = { version = "=0.4.5", optional = true }
 nachricht-serde = { version = "=0.4.0", optional = true }
 nanoserde = { version = "=0.1.37", optional = true }
@@ -69,31 +67,38 @@ parity-scale-codec = { version = "=3.6.12", features = [
 parity-scale-codec-derive = { version = "=3.6.12", optional = true }
 postcard = { version = "=1.1.1", features = ["alloc"], optional = true }
 pot = { version = "=3.0.1", optional = true }
-pprof = { version = "=0.14.0", features = ["flamegraph"], optional = true }
 prost = { version = "=0.13.4", optional = true }
-rand = "=0.8.5"
 rkyv = { version = "=0.8.9", optional = true }
 rmp-serde = { version = "=1.3.0", optional = true }
 ron = { version = "=0.8.1", optional = true }
-serde = { version = "=1.0.216", features = ["derive"] }
+savefile = { version = "=0.18.5", optional = true }
+savefile-derive = { version = "=0.18.5", optional = true }
 serde_bare = { version = "=0.5.0", optional = true }
 serde-brief = { version = "=0.1.0", features = [
     "std",
 ], optional = true }
 serde_cbor = { version = "=0.11.2", optional = true }
-serde_json = { version = "=1.0.128", features = [
+serde_json = { version = "=1.0.134", features = [
     "float_roundtrip",
 ], optional = true }
 simd-json = { version = "=0.14.3", optional = true }
 simd-json-derive = { version = "=0.15.0", optional = true }
 speedy = { version = "=0.8.7", optional = true }
-savefile = { version = "=0.18.5", optional = true }
-savefile-derive = { version = "=0.18.5", optional = true }
 wiring = { version = "=0.2.2", optional = true }
+
+criterion = "=0.5.1"
+libflate = "=2.1.0"
+pprof = { version = "=0.14.0", features = ["flamegraph"], optional = true }
+rand = "=0.8.5"
+serde = { version = "=1.0.216", features = ["derive"] }
 zstd = "=0.13.2"
 
 [features]
 default = [
+    "default-encoding-set",
+    "measure-compression",
+]
+default-encoding-set = [
     "bilrost",
     "bincode1",
     "bincode",
@@ -108,36 +113,39 @@ default = [
     "msgpacker",
     "nachricht-serde",
     "nanoserde",
-    "scale",
     "postcard",
     "pot",
     "prost",
     "rkyv",
     "rmp-serde",
     "ron",
+    "savefile",
+    "scale",
     "serde_bare",
     "serde-brief",
     "serde_cbor",
     "serde_json",
     "simd-json",
     "speedy",
-    "savefile",
-#    "wiring",
+    # "wiring",
 ]
+
+measure-compression = []
 capnp = ["dep:capnp"]
 prost = ["dep:capnp", "dep:prost"]
-simd-json = ["dep:simd-json", "simd-json-derive"]
-savefile = ["dep:savefile", "savefile-derive"]
-scale = ["parity-scale-codec", "parity-scale-codec-derive"]
+simd-json = ["dep:simd-json", "dep:simd-json-derive"]
+savefile = ["dep:savefile", "dep:savefile-derive"]
+scale = ["dep:parity-scale-codec", "dep:parity-scale-codec-derive"]
 
 # Enable these features to regenerate generated files rather than using the committed versions.
+regenerate = [
+    "regenerate-capnp",
+    "regenerate-flatbuffers",
+    "regenerate-prost",
+]
 regenerate-capnp = ["dep:capnpc"]
 regenerate-flatbuffers = ["dep:flatc-rust"]
 regenerate-prost = ["dep:prost-build"]
-
-# Skip compression tests; useful for speeding up dev-mode checks, which are much slower with the
-# compression code enabled and running all of their debug asserts too
-skip-compression-for-testing = []
 
 [dev-dependencies]
 rand_pcg = "0.3.1"

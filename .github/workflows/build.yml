@@ -79,7 +79,7 @@ jobs:
       - name: build
         shell: bash
         run: |
-          cargo build --benches --features regenerate-capnp,regenerate-flatbuffers,regenerate-prost
+          cargo build --benches --features regenerate
 
       - name: check generated code
         shell: bash
@@ -87,8 +87,9 @@ jobs:
           git diff --exit-code && echo 'ok!' || (echo 'committed generated code is not up to date!'; exit 1)
 
       # build and test in dev mode with debug assertions enabled (and slow, uninteresting code
-      # disabled). this should quickly sanity check broken benchmarks, failing debug assertions, &c
+      # disabled; only the encoders, and not the compression). this should quickly sanity check
+      # broken benchmarks, failing debug assertions, etc.
       - name: test benches
         shell: bash
         run: |
-          cargo test --benches --features skip-compression-for-testing
+          cargo test --benches --no-default-features --features default-encoding-set

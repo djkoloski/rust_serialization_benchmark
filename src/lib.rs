@@ -153,7 +153,7 @@ pub fn generate_vec<R: Rng, T: Generate>(rng: &mut R, range: ops::Range<usize>) 
 
 pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
     println!("{}/{}/size {}", name, lib, bytes.len());
-    #[cfg(not(feature = "skip-compression-for-testing"))]
+    #[cfg(feature = "measure-compression")]
     {
         println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
         println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
@@ -166,7 +166,7 @@ pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
     }
 }
 
-#[cfg(not(feature = "skip-compression-for-testing"))]
+#[cfg(feature = "measure-compression")]
 fn bench_compression(compress: impl Fn() -> usize) -> String {
     let start = std::time::Instant::now();
     let size = compress();
@@ -180,14 +180,14 @@ fn bench_compression(compress: impl Fn() -> usize) -> String {
     format!("time:   [{s} {s} {s}] {mb_per_second} MB/s")
 }
 
-#[cfg(not(feature = "skip-compression-for-testing"))]
+#[cfg(feature = "measure-compression")]
 fn zlib_size(mut bytes: &[u8]) -> usize {
     let mut encoder = libflate::zlib::Encoder::new(Vec::new()).unwrap();
     std::io::copy(&mut bytes, &mut encoder).unwrap();
     encoder.finish().into_result().unwrap().len()
 }
 
-#[cfg(not(feature = "skip-compression-for-testing"))]
+#[cfg(feature = "measure-compression")]
 fn zstd_size(bytes: &[u8]) -> usize {
     zstd::stream::encode_all(bytes, 0).unwrap().len()
 }
