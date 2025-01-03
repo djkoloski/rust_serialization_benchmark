@@ -135,6 +135,10 @@ regenerate-capnp = ["dep:capnpc"]
 regenerate-flatbuffers = ["dep:flatc-rust"]
 regenerate-prost = ["dep:prost-build"]
 
+# Skip compression tests; useful for speeding up dev-mode checks, which are much slower with the
+# compression code enabled and running all of their debug asserts too
+skip-compression-for-testing = []
+
 [dev-dependencies]
 rand_pcg = "0.3.1"
 
