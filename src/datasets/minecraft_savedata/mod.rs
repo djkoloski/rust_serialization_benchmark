@@ -1,4 +1,4 @@
-#[cfg(feature = "capnp")]
+#[cfg(any(feature = "capnp", feature = "prost"))]
 pub mod minecraft_savedata_capnp;
 #[cfg(feature = "flatbuffers")]
 #[path = "minecraft_savedata_generated.rs"]

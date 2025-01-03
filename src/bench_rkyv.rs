@@ -13,7 +13,7 @@ use rkyv::{
     Archive, Deserialize, Serialize,
 };
 
-pub type BenchSerializer<'a> = HighSerializer<'a, AlignedVec, ArenaHandle<'a>, Failure>;
+pub type BenchSerializer<'a> = HighSerializer<AlignedVec, ArenaHandle<'a>, Failure>;
 pub type BenchDeserializer = HighDeserializer<Failure>;
 pub type BenchValidator<'a> = HighValidator<'a, Failure>;
 
