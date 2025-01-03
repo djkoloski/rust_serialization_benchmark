@@ -1,8 +1,16 @@
 name: build
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [ master ]
+  push:
+    branches:
+      - master
+    paths:
+      - 'Cargo.toml'
+      - 'benches/**'
+      - 'src/**'
 
 env:
   CI: true
@@ -79,7 +87,7 @@ jobs:
           git diff --exit-code && echo 'ok!' || (echo 'committed generated code is not up to date!'; exit 1)
 
       # build and test in dev mode with debug assertions enabled (and slow, uninteresting code
-      # disabled)
+      # disabled). this should quickly sanity check broken benchmarks, failing debug assertions, &c
       - name: test benches
         shell: bash
         run: |
