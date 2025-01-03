@@ -535,7 +535,7 @@ impl Contact {
                     (0..entity_type.turret_count())
                         .map(|_| {
                             if rng.gen_bool(0.75) {
-                                (base_angle as i16 + rng.gen_range(-200..200) as i16) as u16
+                                (base_angle as i16).wrapping_add(rng.gen_range(-200..200)) as u16
                             } else {
                                 rng.gen()
                             }
