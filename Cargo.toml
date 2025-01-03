@@ -122,7 +122,7 @@ default = [
     "simd-json",
     "speedy",
     "savefile",
-    "wiring",
+#    "wiring",
 ]
 capnp = ["dep:capnp"]
 prost = ["dep:capnp", "dep:prost"]
