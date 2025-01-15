@@ -7,7 +7,7 @@ where
     const BUFFER_LEN: usize = 10_000_000;
     let mut group = c.benchmark_group(format!("{}/bincode", name));
 
-    let mut buffer = Box::new([0u8; BUFFER_LEN]);
+    let mut buffer = vec![0u8; BUFFER_LEN];
     let conf = bincode::config::standard();
     group.bench_function("serialize", |b| {
         b.iter(|| {
