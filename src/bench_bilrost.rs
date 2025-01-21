@@ -1,11 +1,11 @@
 use bilrost::buf::ReverseBuffer;
 use bilrost::bytes::BufMut;
-use bilrost::Message;
+use bilrost::OwnedMessage;
 use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Message + PartialEq,
+    T: OwnedMessage + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
 
