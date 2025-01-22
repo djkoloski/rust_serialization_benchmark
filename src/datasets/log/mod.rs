@@ -29,7 +29,6 @@ use crate::bench_prost;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
-#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -56,14 +55,10 @@ use crate::Generate;
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Address {
-    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed)]
     pub x0: u8,
-    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x1: u8,
-    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x2: u8,
-    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     pub x3: u8,
 }
 
@@ -76,6 +71,62 @@ impl Generate for Address {
             x3: rand.gen_range(0..=255),
         }
     }
+}
+
+#[cfg(feature = "bilrost")]
+mod bilrost_address_encoding {
+    //! We implement the encoding for Address here via "proxied" encoding: bilrost has facilities to
+    //! encode and decode types via proxy after a transformation. In this case it is much more
+    //! efficient, and it makes sense for this use case because ipv4 address components are never
+    //! going to be larger than u8 or more numerous than four.
+    //!
+    //! In a real program it may be that a different type would be chosen that already encodes
+    //! efficiently, but this is included as example to show that *how* a field encodes can be
+    //! changed without actually affecting the definition of the struct being used.
+
+    use super::Address;
+    use bilrost::encoding::{Fixed, ForOverwrite, General, Proxiable, Proxied};
+    use bilrost::DecodeErrorKind;
+
+    // If `Address` implemented `Default` there is a single macro for both of these.
+    impl ForOverwrite for Address {
+        fn for_overwrite() -> Self {
+            Address {
+                x0: 0,
+                x1: 0,
+                x2: 0,
+                x3: 0,
+            }
+        }
+    }
+
+    bilrost::empty_state_via_for_overwrite!(Address);
+
+    // Proxiable defines conversions to and from the type that will really be encoded and decoded,
+    // and should ideally be bijective and have matching empty states.
+    impl Proxiable for Address {
+        type Proxy = [u8; 4];
+
+        fn new_proxy() -> Self::Proxy {
+            [0; 4]
+        }
+
+        fn encode_proxy(&self) -> Self::Proxy {
+            let Address { x0, x1, x2, x3 } = *self;
+            [x0, x1, x2, x3]
+        }
+
+        fn decode_proxy(&mut self, proxy: Self::Proxy) -> Result<(), DecodeErrorKind> {
+            let [x0, x1, x2, x3] = proxy;
+            *self = Address { x0, x1, x2, x3 };
+            Ok(())
+        }
+    }
+
+    // When proxiable is implemented, the Proxied encoding value-encodes our type as  via the proxy,
+    // and we can delegate to it.
+    bilrost::delegate_value_encoding!(
+        delegate from (General) to (Proxied<Fixed>) for type (Address));
 }
 
 #[cfg(feature = "flatbuffers")]
