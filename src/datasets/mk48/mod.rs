@@ -39,6 +39,7 @@ use crate::{generate_vec, Generate};
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -60,24 +61,34 @@ use crate::{generate_vec, Generate};
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     ArleighBurke,
     #[cfg_attr(feature = "bilrost", bilrost(1))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     Bismarck,
     #[cfg_attr(feature = "bilrost", bilrost(2))]
+    #[cfg_attr(feature = "minicbor", n(2))]
     Clemenceau,
     #[cfg_attr(feature = "bilrost", bilrost(3))]
+    #[cfg_attr(feature = "minicbor", n(3))]
     Fletcher,
     #[cfg_attr(feature = "bilrost", bilrost(4))]
+    #[cfg_attr(feature = "minicbor", n(4))]
     G5,
     #[cfg_attr(feature = "bilrost", bilrost(5))]
+    #[cfg_attr(feature = "minicbor", n(5))]
     Iowa,
     #[cfg_attr(feature = "bilrost", bilrost(6))]
+    #[cfg_attr(feature = "minicbor", n(6))]
     Kolkata,
     #[cfg_attr(feature = "bilrost", bilrost(7))]
+    #[cfg_attr(feature = "minicbor", n(7))]
     Osa,
     #[cfg_attr(feature = "bilrost", bilrost(8))]
+    #[cfg_attr(feature = "minicbor", n(8))]
     Yasen,
     #[cfg_attr(feature = "bilrost", bilrost(9))]
+    #[cfg_attr(feature = "minicbor", n(9))]
     Zubr,
 }
 
@@ -268,6 +279,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -289,9 +301,13 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 pub struct Transform {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub altitude: i8,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub angle: u16,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub position: (f32, f32),
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub velocity: i16,
 }
 
@@ -381,6 +397,7 @@ impl From<pb::Transform> for Transform {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -401,8 +418,11 @@ impl From<pb::Transform> for Transform {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Guidance {
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub angle: u16,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub submerge: bool,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub velocity: i16,
 }
 
@@ -471,6 +491,7 @@ impl From<pb::Guidance> for Guidance {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -492,15 +513,23 @@ impl From<pb::Guidance> for Guidance {
 pub struct Contact {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed(2))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub damage: u8,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub entity_id: u32,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub entity_type: Option<EntityType>,
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub guidance: Guidance,
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub player_id: Option<u16>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub reloads: Vec<bool>,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub transform: Transform,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub turret_angles: Vec<u16>,
 }
 
@@ -672,6 +701,7 @@ impl From<pb::Contact> for Contact {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -692,8 +722,10 @@ impl From<pb::Contact> for Contact {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct TerrainUpdate {
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "(varint, varint)"))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     chunk_id: (i8, i8),
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "plainbytes"))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     data: Vec<u8>,
 }
 
@@ -791,6 +823,7 @@ impl From<pb::TerrainUpdate> for TerrainUpdate {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -811,11 +844,15 @@ impl From<pb::TerrainUpdate> for TerrainUpdate {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub contacts: Vec<Contact>,
     #[cfg_attr(feature = "wiring", fixed(2))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub score: u32,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub world_radius: f32,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub terrain_updates: Vec<TerrainUpdate>,
 }
 
@@ -928,6 +965,7 @@ impl From<pb::Update> for Update {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -948,6 +986,7 @@ impl From<pb::Update> for Update {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Updates {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub updates: Vec<Update>,
 }
 

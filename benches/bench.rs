@@ -673,6 +673,9 @@ fn bench_mk48(c: &mut Criterion) {
         },
     );
 
+    #[cfg(feature = "minicbor")]
+    bench_minicbor::bench(BENCH, c, &data);
+
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);
 
