@@ -23,6 +23,8 @@ use rust_serialization_benchmark::bench_databuf;
 use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 use rust_serialization_benchmark::bench_flatbuffers;
+#[cfg(feature = "minicbor")]
+use rust_serialization_benchmark::bench_minicbor;
 #[cfg(feature = "msgpacker")]
 use rust_serialization_benchmark::bench_msgpacker;
 #[cfg(feature = "nachricht-serde")]
@@ -148,6 +150,9 @@ fn bench_log(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "minicbor")]
+    bench_minicbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);
@@ -323,6 +328,9 @@ fn bench_mesh(c: &mut Criterion) {
         },
     );
 
+    #[cfg(feature = "minicbor")]
+    bench_minicbor::bench(BENCH, c, &data);
+
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);
 
@@ -490,6 +498,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "minicbor")]
+    bench_minicbor::bench(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);

@@ -39,6 +39,7 @@ use crate::{generate_vec, Generate};
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -60,12 +61,16 @@ use crate::{generate_vec, Generate};
 #[repr(u8)]
 pub enum GameType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     Survival,
     #[cfg_attr(feature = "bilrost", bilrost(1))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     Creative,
     #[cfg_attr(feature = "bilrost", bilrost(2))]
+    #[cfg_attr(feature = "minicbor", n(2))]
     Adventure,
     #[cfg_attr(feature = "bilrost", bilrost(3))]
+    #[cfg_attr(feature = "minicbor", n(3))]
     Spectator,
 }
 
@@ -144,6 +149,7 @@ impl From<pb::GameType> for GameType {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -165,9 +171,12 @@ impl From<pb::GameType> for GameType {
 pub struct Item {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "wiring", fixed(2))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub count: i8,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub slot: u8,
+    #[cfg_attr(feature = "minicbor", b(2))]
     pub id: String,
 }
 
@@ -259,6 +268,7 @@ impl From<pb::Item> for Item {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -279,12 +289,19 @@ impl From<pb::Item> for Item {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Abilities {
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub walk_speed: f32,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub fly_speed: f32,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub may_fly: bool,
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub flying: bool,
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub invulnerable: bool,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub may_build: bool,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub instabuild: bool,
 }
 
@@ -377,6 +394,7 @@ impl From<pb::Abilities> for Abilities {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -396,24 +414,40 @@ impl From<pb::Abilities> for Abilities {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Entity {
+    #[cfg_attr(feature = "minicbor", b(0))]
     pub id: String,
     #[cfg_attr(feature = "wiring", fixed(11))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub pos: (f64, f64, f64),
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub motion: (f64, f64, f64),
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub rotation: (f32, f32),
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub fall_distance: f32,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub fire: u16,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub air: u16,
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub on_ground: bool,
+    #[cfg_attr(feature = "minicbor", n(8))]
     pub no_gravity: bool,
+    #[cfg_attr(feature = "minicbor", n(9))]
     pub invulnerable: bool,
+    #[cfg_attr(feature = "minicbor", n(10))]
     pub portal_cooldown: i32,
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "packed<fixed>"))]
+    #[cfg_attr(feature = "minicbor", n(11))]
     pub uuid: [u32; 4],
+    #[cfg_attr(feature = "minicbor", n(12))]
     pub custom_name: Option<String>,
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(13))]
     pub custom_name_visible: bool,
+    #[cfg_attr(feature = "minicbor", n(14))]
     pub silent: bool,
+    #[cfg_attr(feature = "minicbor", n(15))]
     pub glowing: bool,
 }
 
@@ -630,6 +664,7 @@ impl From<pb::Entity> for Entity {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -650,17 +685,27 @@ impl From<pb::Entity> for Entity {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct RecipeBook {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub recipes: Vec<String>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub to_be_displayed: Vec<String>,
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub is_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub is_gui_open: bool,
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub is_furnace_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub is_furnace_gui_open: bool,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub is_blasting_furnace_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub is_blasting_furnace_gui_open: bool,
+    #[cfg_attr(feature = "minicbor", n(8))]
     pub is_smoker_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(9))]
     pub is_smoker_gui_open: bool,
 }
 
@@ -822,6 +867,7 @@ impl From<pb::RecipeBook> for RecipeBook {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -842,36 +888,64 @@ impl From<pb::RecipeBook> for RecipeBook {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Player {
     #[cfg_attr(feature = "wiring", fixed(3))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub game_type: GameType,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub previous_game_type: GameType,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub score: i64,
+    #[cfg_attr(feature = "minicbor", b(3))]
     pub dimension: String,
+    #[cfg_attr(feature = "minicbor", b(4))]
     pub selected_item_slot: u32,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub selected_item: Item,
+    #[cfg_attr(feature = "minicbor", b(6))]
     pub spawn_dimension: Option<String>,
     #[cfg_attr(feature = "wiring", fixed(3))]
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub spawn_x: i64,
+    #[cfg_attr(feature = "minicbor", n(8))]
     pub spawn_y: i64,
+    #[cfg_attr(feature = "minicbor", n(9))]
     pub spawn_z: i64,
+    #[cfg_attr(feature = "minicbor", n(10))]
     pub spawn_forced: Option<bool>,
     #[cfg_attr(feature = "wiring", fixed(8))]
+    #[cfg_attr(feature = "minicbor", n(11))]
     pub sleep_timer: u16,
+    #[cfg_attr(feature = "minicbor", n(12))]
     pub food_exhaustion_level: f32,
+    #[cfg_attr(feature = "minicbor", n(13))]
     pub food_saturation_level: f32,
+    #[cfg_attr(feature = "minicbor", n(14))]
     pub food_tick_timer: u32,
+    #[cfg_attr(feature = "minicbor", n(15))]
     pub xp_level: u32,
+    #[cfg_attr(feature = "minicbor", n(16))]
     pub xp_p: f32,
+    #[cfg_attr(feature = "minicbor", n(17))]
     pub xp_total: i32,
+    #[cfg_attr(feature = "minicbor", n(18))]
     pub xp_seed: i32,
+    #[cfg_attr(feature = "minicbor", n(19))]
     pub inventory: Vec<Item>,
+    #[cfg_attr(feature = "minicbor", n(20))]
     pub ender_items: Vec<Item>,
+    #[cfg_attr(feature = "minicbor", n(21))]
     pub abilities: Abilities,
+    #[cfg_attr(feature = "minicbor", n(22))]
     pub entered_nether_position: Option<(f64, f64, f64)>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "(packed<fixed>, general)"))]
+    #[cfg_attr(feature = "minicbor", n(23))]
     pub root_vehicle: Option<([u32; 4], Entity)>,
+    #[cfg_attr(feature = "minicbor", n(24))]
     pub shoulder_entity_left: Option<Entity>,
+    #[cfg_attr(feature = "minicbor", n(25))]
     pub shoulder_entity_right: Option<Entity>,
+    #[cfg_attr(feature = "minicbor", n(26))]
     pub seen_credits: bool,
+    #[cfg_attr(feature = "minicbor", n(27))]
     pub recipe_book: RecipeBook,
 }
 
@@ -1210,6 +1284,7 @@ impl From<pb::Player> for Player {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -1230,6 +1305,7 @@ impl From<pb::Player> for Player {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Players {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub players: Vec<Player>,
 }
 

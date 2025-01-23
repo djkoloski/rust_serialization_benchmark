@@ -36,6 +36,7 @@ use crate::Generate;
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -56,9 +57,13 @@ use crate::Generate;
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Address {
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub x0: u8,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub x1: u8,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub x2: u8,
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub x3: u8,
 }
 
@@ -187,6 +192,7 @@ impl From<log_prost::Address> for Address {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -206,13 +212,20 @@ impl From<log_prost::Address> for Address {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Log {
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub address: Address,
+    #[cfg_attr(feature = "minicbor", b(1))]
     pub identity: String,
+    #[cfg_attr(feature = "minicbor", b(2))]
     pub userid: String,
+    #[cfg_attr(feature = "minicbor", b(3))]
     pub date: String,
+    #[cfg_attr(feature = "minicbor", b(4))]
     pub request: String,
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub code: u16,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub size: u64,
 }
 
@@ -364,6 +377,7 @@ impl From<log_prost::Log> for Log {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -384,6 +398,7 @@ impl From<log_prost::Log> for Log {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub logs: Vec<Log>,
 }
 

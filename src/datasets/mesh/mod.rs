@@ -37,6 +37,7 @@ use crate::Generate;
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -57,8 +58,11 @@ use crate::Generate;
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Vector3 {
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub x: f32,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub y: f32,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub z: f32,
 }
 
@@ -127,6 +131,7 @@ impl From<mesh_prost::Vector3> for Vector3 {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -147,9 +152,13 @@ impl From<mesh_prost::Vector3> for Vector3 {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Triangle {
     #[cfg_attr(feature = "wiring", fixed)]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub v0: Vector3,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub v1: Vector3,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub v2: Vector3,
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub normal: Vector3,
 }
 
@@ -228,6 +237,7 @@ impl From<mesh_prost::Triangle> for Triangle {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -248,6 +258,7 @@ impl From<mesh_prost::Triangle> for Triangle {
 #[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 pub struct Mesh {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub triangles: Vec<Triangle>,
 }
 

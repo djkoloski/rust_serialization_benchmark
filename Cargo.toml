@@ -58,6 +58,10 @@ ciborium = { version = "=0.2.2", optional = true }
 databuf = { version = "=0.5.0", optional = true }
 dlhn = { version = "=0.1.7", optional = true }
 flatbuffers = { version = "=24.12.23", optional = true }
+minicbor = { version = "=0.25.1", optional = true, features = [
+    "alloc",
+    "derive",
+] }
 msgpacker = { version = "=0.4.5", optional = true }
 nachricht-serde = { version = "=0.4.0", optional = true }
 nanoserde = { version = "=0.1.37", optional = true }
@@ -74,9 +78,7 @@ ron = { version = "=0.8.1", optional = true }
 savefile = { version = "=0.18.5", optional = true }
 savefile-derive = { version = "=0.18.5", optional = true }
 serde_bare = { version = "=0.5.0", optional = true }
-serde-brief = { version = "=0.1.0", features = [
-    "std",
-], optional = true }
+serde-brief = { version = "=0.1.0", features = ["std"], optional = true }
 serde_cbor = { version = "=0.11.2", optional = true }
 serde_json = { version = "=1.0.134", features = [
     "float_roundtrip",
@@ -94,10 +96,7 @@ serde = { version = "=1.0.216", features = ["derive"] }
 zstd = "=0.13.2"
 
 [features]
-default = [
-    "default-encoding-set",
-    "measure-compression",
-]
+default = ["default-encoding-set", "measure-compression"]
 default-encoding-set = [
     "bilrost",
     "bincode1",
@@ -110,6 +109,7 @@ default-encoding-set = [
     "databuf",
     "dlhn",
     "flatbuffers",
+    "minicbor",
     "msgpacker",
     "nachricht-serde",
     "nanoserde",
@@ -138,11 +138,7 @@ savefile = ["dep:savefile", "dep:savefile-derive"]
 scale = ["dep:parity-scale-codec", "dep:parity-scale-codec-derive"]
 
 # Enable these features to regenerate generated files rather than using the committed versions.
-regenerate = [
-    "regenerate-capnp",
-    "regenerate-flatbuffers",
-    "regenerate-prost",
-]
+regenerate = ["regenerate-capnp", "regenerate-flatbuffers", "regenerate-prost"]
 regenerate-capnp = ["dep:capnpc"]
 regenerate-flatbuffers = ["dep:flatc-rust"]
 regenerate-prost = ["dep:prost-build"]
