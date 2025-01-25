@@ -184,6 +184,7 @@ pub struct Item {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowItem<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "minicbor", n(0))]
@@ -489,6 +490,7 @@ pub struct Entity {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowEntity<'a> {
     #[cfg_attr(feature = "minicbor", b(0))]
     pub id: &'a str,
@@ -832,9 +834,11 @@ pub struct RecipeBook {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowRecipeBook<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(0))]
+    #[serde(borrow)]
     pub recipes: Vec<&'a str>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(1))]
@@ -1138,6 +1142,7 @@ pub struct Player {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowPlayer<'a> {
     #[cfg_attr(feature = "minicbor", n(0))]
     pub game_type: GameType,
@@ -1150,6 +1155,7 @@ pub struct BorrowPlayer<'a> {
     #[cfg_attr(feature = "minicbor", n(4))]
     pub selected_item_slot: u32,
     #[cfg_attr(feature = "minicbor", b(5))]
+    #[serde(borrow)]
     pub selected_item: BorrowItem<'a>,
     #[cfg_attr(feature = "minicbor", b(6))]
     pub spawn_dimension: Option<&'a str>,
@@ -1178,8 +1184,10 @@ pub struct BorrowPlayer<'a> {
     #[cfg_attr(feature = "minicbor", n(18))]
     pub xp_seed: i32,
     #[cfg_attr(feature = "minicbor", b(19))]
+    #[serde(borrow)]
     pub inventory: Vec<BorrowItem<'a>>,
     #[cfg_attr(feature = "minicbor", b(20))]
+    #[serde(borrow)]
     pub ender_items: Vec<BorrowItem<'a>>,
     #[cfg_attr(feature = "minicbor", n(21))]
     pub abilities: Abilities,
@@ -1187,14 +1195,18 @@ pub struct BorrowPlayer<'a> {
     pub entered_nether_position: Option<(f64, f64, f64)>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "(packed<fixed>, general)"))]
     #[cfg_attr(feature = "minicbor", b(23))]
+    #[serde(borrow)]
     pub root_vehicle: Option<([u32; 4], BorrowEntity<'a>)>,
     #[cfg_attr(feature = "minicbor", b(24))]
+    #[serde(borrow)]
     pub shoulder_entity_left: Option<BorrowEntity<'a>>,
     #[cfg_attr(feature = "minicbor", b(25))]
+    #[serde(borrow)]
     pub shoulder_entity_right: Option<BorrowEntity<'a>>,
     #[cfg_attr(feature = "minicbor", n(26))]
     pub seen_credits: bool,
     #[cfg_attr(feature = "minicbor", b(27))]
+    #[serde(borrow)]
     pub recipe_book: BorrowRecipeBook<'a>,
 }
 
@@ -1636,9 +1648,11 @@ pub struct Players {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowPlayers<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(0))]
+    #[serde(borrow)]
     pub players: Vec<BorrowPlayer<'a>>,
 }
 

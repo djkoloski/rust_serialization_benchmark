@@ -233,6 +233,7 @@ pub struct Log {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowLog<'a> {
     #[cfg_attr(feature = "minicbor", n(0))]
     pub address: Address,
@@ -454,9 +455,11 @@ pub struct Logs {
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowLogs<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(0))]
+    #[serde(borrow)]
     logs: Vec<BorrowLog<'a>>,
 }
 
