@@ -41,3 +41,9 @@ where
 
     group.finish();
 }
+
+// Borrowing: bincode 2.x has not cut a crate version in years, and 2.0.0rc3 has a bug that prevents
+// borrowed decoding from deriving a working impl. We will not be benchmarking borrowing for this
+// library until it has a working release.
+//
+// https://github.com/bincode-org/bincode/issues/646
