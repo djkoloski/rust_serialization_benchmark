@@ -81,7 +81,7 @@ fn bench_log(c: &mut Criterion) {
     };
 
     #[cfg(feature = "bilrost")]
-    bench_bilrost::bench(BENCH, c, &data);
+    bench_bilrost::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
@@ -152,7 +152,7 @@ fn bench_log(c: &mut Criterion) {
     );
 
     #[cfg(feature = "minicbor")]
-    bench_minicbor::bench(BENCH, c, &data);
+    bench_minicbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);
@@ -434,7 +434,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     };
 
     #[cfg(feature = "bilrost")]
-    bench_bilrost::bench(BENCH, c, &data);
+    bench_bilrost::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
@@ -500,7 +500,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     #[cfg(feature = "minicbor")]
-    bench_minicbor::bench(BENCH, c, &data);
+    bench_minicbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);

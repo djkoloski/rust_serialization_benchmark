@@ -182,9 +182,16 @@ pub struct Item {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowItem<'a> {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub count: i8,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub slot: u8,
+    #[cfg_attr(feature = "minicbor", b(2))]
     pub id: &'a str,
 }
 
@@ -480,22 +487,41 @@ pub struct Entity {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowEntity<'a> {
+    #[cfg_attr(feature = "minicbor", b(0))]
     pub id: &'a str,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub pos: (f64, f64, f64),
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub motion: (f64, f64, f64),
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub rotation: (f32, f32),
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub fall_distance: f32,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub fire: u16,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub air: u16,
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub on_ground: bool,
+    #[cfg_attr(feature = "minicbor", n(8))]
     pub no_gravity: bool,
+    #[cfg_attr(feature = "minicbor", n(9))]
     pub invulnerable: bool,
+    #[cfg_attr(feature = "minicbor", n(10))]
     pub portal_cooldown: i32,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding = "packed<fixed>"))]
+    #[cfg_attr(feature = "minicbor", n(11))]
     pub uuid: [u32; 4],
+    #[cfg_attr(feature = "minicbor", b(12))]
     pub custom_name: Option<&'a str>,
+    #[cfg_attr(feature = "minicbor", n(13))]
     pub custom_name_visible: bool,
+    #[cfg_attr(feature = "minicbor", n(14))]
     pub silent: bool,
+    #[cfg_attr(feature = "minicbor", n(15))]
     pub glowing: bool,
 }
 
@@ -804,16 +830,30 @@ pub struct RecipeBook {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowRecipeBook<'a> {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", b(0))]
     pub recipes: Vec<&'a str>,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", b(1))]
     pub to_be_displayed: Vec<&'a str>,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub is_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(3))]
     pub is_gui_open: bool,
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub is_furnace_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub is_furnace_gui_open: bool,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub is_blasting_furnace_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub is_blasting_furnace_gui_open: bool,
+    #[cfg_attr(feature = "minicbor", n(8))]
     pub is_smoker_filtering_craftable: bool,
+    #[cfg_attr(feature = "minicbor", n(9))]
     pub is_smoker_gui_open: bool,
 }
 
@@ -1096,34 +1136,65 @@ pub struct Player {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowPlayer<'a> {
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub game_type: GameType,
+    #[cfg_attr(feature = "minicbor", n(1))]
     pub previous_game_type: GameType,
+    #[cfg_attr(feature = "minicbor", n(2))]
     pub score: i64,
+    #[cfg_attr(feature = "minicbor", b(3))]
     pub dimension: &'a str,
+    #[cfg_attr(feature = "minicbor", n(4))]
     pub selected_item_slot: u32,
+    #[cfg_attr(feature = "minicbor", b(5))]
     pub selected_item: BorrowItem<'a>,
+    #[cfg_attr(feature = "minicbor", b(6))]
     pub spawn_dimension: Option<&'a str>,
+    #[cfg_attr(feature = "minicbor", n(7))]
     pub spawn_x: i64,
+    #[cfg_attr(feature = "minicbor", n(8))]
     pub spawn_y: i64,
+    #[cfg_attr(feature = "minicbor", n(9))]
     pub spawn_z: i64,
+    #[cfg_attr(feature = "minicbor", n(10))]
     pub spawn_forced: Option<bool>,
+    #[cfg_attr(feature = "minicbor", n(11))]
     pub sleep_timer: u16,
+    #[cfg_attr(feature = "minicbor", n(12))]
     pub food_exhaustion_level: f32,
+    #[cfg_attr(feature = "minicbor", n(13))]
     pub food_saturation_level: f32,
+    #[cfg_attr(feature = "minicbor", n(14))]
     pub food_tick_timer: u32,
+    #[cfg_attr(feature = "minicbor", n(15))]
     pub xp_level: u32,
+    #[cfg_attr(feature = "minicbor", n(16))]
     pub xp_p: f32,
+    #[cfg_attr(feature = "minicbor", n(17))]
     pub xp_total: i32,
+    #[cfg_attr(feature = "minicbor", n(18))]
     pub xp_seed: i32,
+    #[cfg_attr(feature = "minicbor", b(19))]
     pub inventory: Vec<BorrowItem<'a>>,
+    #[cfg_attr(feature = "minicbor", b(20))]
     pub ender_items: Vec<BorrowItem<'a>>,
+    #[cfg_attr(feature = "minicbor", n(21))]
     pub abilities: Abilities,
+    #[cfg_attr(feature = "minicbor", n(22))]
     pub entered_nether_position: Option<(f64, f64, f64)>,
+    #[cfg_attr(feature = "bilrost", bilrost(encoding = "(packed<fixed>, general)"))]
+    #[cfg_attr(feature = "minicbor", b(23))]
     pub root_vehicle: Option<([u32; 4], BorrowEntity<'a>)>,
+    #[cfg_attr(feature = "minicbor", b(24))]
     pub shoulder_entity_left: Option<BorrowEntity<'a>>,
+    #[cfg_attr(feature = "minicbor", b(25))]
     pub shoulder_entity_right: Option<BorrowEntity<'a>>,
+    #[cfg_attr(feature = "minicbor", n(26))]
     pub seen_credits: bool,
+    #[cfg_attr(feature = "minicbor", b(27))]
     pub recipe_book: BorrowRecipeBook<'a>,
 }
 
@@ -1563,7 +1634,11 @@ pub struct Players {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowPlayers<'a> {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", b(0))]
     pub players: Vec<BorrowPlayer<'a>>,
 }
 

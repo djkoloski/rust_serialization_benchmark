@@ -231,13 +231,22 @@ pub struct Log {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowLog<'a> {
+    #[cfg_attr(feature = "minicbor", n(0))]
     pub address: Address,
+    #[cfg_attr(feature = "minicbor", b(1))]
     pub identity: &'a str,
+    #[cfg_attr(feature = "minicbor", b(2))]
     pub userid: &'a str,
+    #[cfg_attr(feature = "minicbor", b(3))]
     pub date: &'a str,
+    #[cfg_attr(feature = "minicbor", b(4))]
     pub request: &'a str,
+    #[cfg_attr(feature = "minicbor", n(5))]
     pub code: u16,
+    #[cfg_attr(feature = "minicbor", n(6))]
     pub size: u64,
 }
 
@@ -443,7 +452,11 @@ pub struct Logs {
 }
 
 #[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 pub struct BorrowLogs<'a> {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", b(0))]
     logs: Vec<BorrowLog<'a>>,
 }
 
