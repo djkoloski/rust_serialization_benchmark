@@ -28,6 +28,7 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+use crate::datasets::BorrowableData;
 use crate::{generate_vec, Generate};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -178,6 +179,33 @@ pub struct Item {
     pub slot: u8,
     #[cfg_attr(feature = "minicbor", b(2))]
     pub id: String,
+}
+
+#[derive(PartialEq)]
+pub struct BorrowItem<'a> {
+    pub count: i8,
+    pub slot: u8,
+    pub id: &'a str,
+}
+
+impl From<BorrowItem<'_>> for Item {
+    fn from(value: BorrowItem<'_>) -> Self {
+        Item {
+            count: value.count,
+            slot: value.slot,
+            id: value.id.to_owned(),
+        }
+    }
+}
+
+impl<'a> From<&'a Item> for BorrowItem<'a> {
+    fn from(value: &'a Item) -> Self {
+        BorrowItem {
+            count: value.count,
+            slot: value.slot,
+            id: value.id.as_str(),
+        }
+    }
 }
 
 impl Generate for Item {
@@ -451,6 +479,72 @@ pub struct Entity {
     pub glowing: bool,
 }
 
+#[derive(PartialEq)]
+pub struct BorrowEntity<'a> {
+    pub id: &'a str,
+    pub pos: (f64, f64, f64),
+    pub motion: (f64, f64, f64),
+    pub rotation: (f32, f32),
+    pub fall_distance: f32,
+    pub fire: u16,
+    pub air: u16,
+    pub on_ground: bool,
+    pub no_gravity: bool,
+    pub invulnerable: bool,
+    pub portal_cooldown: i32,
+    pub uuid: [u32; 4],
+    pub custom_name: Option<&'a str>,
+    pub custom_name_visible: bool,
+    pub silent: bool,
+    pub glowing: bool,
+}
+
+impl From<BorrowEntity<'_>> for Entity {
+    fn from(value: BorrowEntity<'_>) -> Self {
+        Entity {
+            id: value.id.to_owned(),
+            pos: value.pos,
+            motion: value.motion,
+            rotation: value.rotation,
+            fall_distance: value.fall_distance,
+            fire: value.fire,
+            air: value.air,
+            on_ground: value.on_ground,
+            no_gravity: value.no_gravity,
+            invulnerable: value.invulnerable,
+            portal_cooldown: value.portal_cooldown,
+            uuid: value.uuid,
+            custom_name: value.custom_name.map(str::to_owned),
+            custom_name_visible: value.custom_name_visible,
+            silent: value.silent,
+            glowing: value.glowing,
+        }
+    }
+}
+
+impl<'a> From<&'a Entity> for BorrowEntity<'a> {
+    fn from(value: &'a Entity) -> Self {
+        BorrowEntity {
+            id: value.id.as_str(),
+            pos: value.pos,
+            motion: value.motion,
+            rotation: value.rotation,
+            fall_distance: value.fall_distance,
+            fire: value.fire,
+            air: value.air,
+            on_ground: value.on_ground,
+            no_gravity: value.no_gravity,
+            invulnerable: value.invulnerable,
+            portal_cooldown: value.portal_cooldown,
+            uuid: value.uuid,
+            custom_name: value.custom_name.as_ref().map(String::as_str),
+            custom_name_visible: value.custom_name_visible,
+            silent: value.silent,
+            glowing: value.glowing,
+        }
+    }
+}
+
 impl Generate for Entity {
     fn generate<R: Rng>(rng: &mut R) -> Self {
         const IDS: [&str; 8] = [
@@ -709,6 +803,58 @@ pub struct RecipeBook {
     pub is_smoker_gui_open: bool,
 }
 
+#[derive(PartialEq)]
+pub struct BorrowRecipeBook<'a> {
+    pub recipes: Vec<&'a str>,
+    pub to_be_displayed: Vec<&'a str>,
+    pub is_filtering_craftable: bool,
+    pub is_gui_open: bool,
+    pub is_furnace_filtering_craftable: bool,
+    pub is_furnace_gui_open: bool,
+    pub is_blasting_furnace_filtering_craftable: bool,
+    pub is_blasting_furnace_gui_open: bool,
+    pub is_smoker_filtering_craftable: bool,
+    pub is_smoker_gui_open: bool,
+}
+
+impl From<BorrowRecipeBook<'_>> for RecipeBook {
+    fn from(value: BorrowRecipeBook<'_>) -> Self {
+        RecipeBook {
+            recipes: value.recipes.into_iter().map(str::to_owned).collect(),
+            to_be_displayed: value
+                .to_be_displayed
+                .into_iter()
+                .map(str::to_owned)
+                .collect(),
+            is_filtering_craftable: value.is_filtering_craftable,
+            is_gui_open: value.is_gui_open,
+            is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
+            is_furnace_gui_open: value.is_furnace_gui_open,
+            is_blasting_furnace_filtering_craftable: value.is_blasting_furnace_filtering_craftable,
+            is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
+            is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
+            is_smoker_gui_open: value.is_smoker_gui_open,
+        }
+    }
+}
+
+impl<'a> From<&'a RecipeBook> for BorrowRecipeBook<'a> {
+    fn from(value: &'a RecipeBook) -> Self {
+        BorrowRecipeBook {
+            recipes: value.recipes.iter().map(String::as_str).collect(),
+            to_be_displayed: value.to_be_displayed.iter().map(String::as_str).collect(),
+            is_filtering_craftable: value.is_filtering_craftable,
+            is_gui_open: value.is_gui_open,
+            is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
+            is_furnace_gui_open: value.is_furnace_gui_open,
+            is_blasting_furnace_filtering_craftable: value.is_blasting_furnace_filtering_craftable,
+            is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
+            is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
+            is_smoker_gui_open: value.is_smoker_gui_open,
+        }
+    }
+}
+
 impl Generate for RecipeBook {
     fn generate<R: Rng>(rng: &mut R) -> Self {
         const RECIPES: [&str; 8] = [
@@ -947,6 +1093,113 @@ pub struct Player {
     pub seen_credits: bool,
     #[cfg_attr(feature = "minicbor", n(27))]
     pub recipe_book: RecipeBook,
+}
+
+#[derive(PartialEq)]
+pub struct BorrowPlayer<'a> {
+    pub game_type: GameType,
+    pub previous_game_type: GameType,
+    pub score: i64,
+    pub dimension: &'a str,
+    pub selected_item_slot: u32,
+    pub selected_item: BorrowItem<'a>,
+    pub spawn_dimension: Option<&'a str>,
+    pub spawn_x: i64,
+    pub spawn_y: i64,
+    pub spawn_z: i64,
+    pub spawn_forced: Option<bool>,
+    pub sleep_timer: u16,
+    pub food_exhaustion_level: f32,
+    pub food_saturation_level: f32,
+    pub food_tick_timer: u32,
+    pub xp_level: u32,
+    pub xp_p: f32,
+    pub xp_total: i32,
+    pub xp_seed: i32,
+    pub inventory: Vec<BorrowItem<'a>>,
+    pub ender_items: Vec<BorrowItem<'a>>,
+    pub abilities: Abilities,
+    pub entered_nether_position: Option<(f64, f64, f64)>,
+    pub root_vehicle: Option<([u32; 4], BorrowEntity<'a>)>,
+    pub shoulder_entity_left: Option<BorrowEntity<'a>>,
+    pub shoulder_entity_right: Option<BorrowEntity<'a>>,
+    pub seen_credits: bool,
+    pub recipe_book: BorrowRecipeBook<'a>,
+}
+
+impl From<BorrowPlayer<'_>> for Player {
+    fn from(value: BorrowPlayer<'_>) -> Self {
+        Player {
+            game_type: value.game_type,
+            previous_game_type: value.previous_game_type,
+            score: value.score,
+            dimension: value.dimension.to_owned(),
+            selected_item_slot: value.selected_item_slot,
+            selected_item: value.selected_item.into(),
+            spawn_dimension: value.spawn_dimension.map(str::to_owned),
+            spawn_x: value.spawn_x,
+            spawn_y: value.spawn_y,
+            spawn_z: value.spawn_z,
+            spawn_forced: value.spawn_forced,
+            sleep_timer: value.sleep_timer,
+            food_exhaustion_level: value.food_exhaustion_level,
+            food_saturation_level: value.food_saturation_level,
+            food_tick_timer: value.food_tick_timer,
+            xp_level: value.xp_level,
+            xp_p: value.xp_p,
+            xp_total: value.xp_total,
+            xp_seed: value.xp_seed,
+            inventory: value.inventory.into_iter().map(Into::into).collect(),
+            ender_items: value.ender_items.into_iter().map(Into::into).collect(),
+            abilities: value.abilities,
+            entered_nether_position: value.entered_nether_position,
+            root_vehicle: value
+                .root_vehicle
+                .map(|(uuid, entity)| (uuid, entity.into())),
+            shoulder_entity_left: value.shoulder_entity_left.map(Into::into),
+            shoulder_entity_right: value.shoulder_entity_right.map(Into::into),
+            seen_credits: value.seen_credits,
+            recipe_book: value.recipe_book.into(),
+        }
+    }
+}
+
+impl<'a> From<&'a Player> for BorrowPlayer<'a> {
+    fn from(value: &'a Player) -> Self {
+        BorrowPlayer {
+            game_type: value.game_type,
+            previous_game_type: value.previous_game_type,
+            score: value.score,
+            dimension: value.dimension.as_str(),
+            selected_item_slot: value.selected_item_slot,
+            selected_item: (&value.selected_item).into(),
+            spawn_dimension: value.spawn_dimension.as_ref().map(String::as_str),
+            spawn_x: value.spawn_x,
+            spawn_y: value.spawn_y,
+            spawn_z: value.spawn_z,
+            spawn_forced: value.spawn_forced,
+            sleep_timer: value.sleep_timer,
+            food_exhaustion_level: value.food_exhaustion_level,
+            food_saturation_level: value.food_saturation_level,
+            food_tick_timer: value.food_tick_timer,
+            xp_level: value.xp_level,
+            xp_p: value.xp_p,
+            xp_total: value.xp_total,
+            xp_seed: value.xp_seed,
+            inventory: value.inventory.iter().map(Into::into).collect(),
+            ender_items: value.ender_items.iter().map(Into::into).collect(),
+            abilities: value.abilities,
+            entered_nether_position: value.entered_nether_position,
+            root_vehicle: value
+                .root_vehicle
+                .as_ref()
+                .map(|(uuid, entity)| (*uuid, entity.into())),
+            shoulder_entity_left: value.shoulder_entity_left.as_ref().map(Into::into),
+            shoulder_entity_right: value.shoulder_entity_right.as_ref().map(Into::into),
+            seen_credits: value.seen_credits,
+            recipe_book: (&value.recipe_book).into(),
+        }
+    }
 }
 
 impl Generate for Player {
@@ -1307,6 +1560,31 @@ pub struct Players {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub players: Vec<Player>,
+}
+
+#[derive(PartialEq)]
+pub struct BorrowPlayers<'a> {
+    pub players: Vec<BorrowPlayer<'a>>,
+}
+
+impl From<BorrowPlayers<'_>> for Players {
+    fn from(value: BorrowPlayers<'_>) -> Self {
+        Players {
+            players: value.players.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl<'a> From<&'a Players> for BorrowPlayers<'a> {
+    fn from(value: &'a Players) -> Self {
+        BorrowPlayers {
+            players: value.players.iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl BorrowableData for Players {
+    type Borrowed<'a> = BorrowPlayers<'a>;
 }
 
 #[cfg(feature = "flatbuffers")]

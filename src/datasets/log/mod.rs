@@ -26,6 +26,7 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+use crate::datasets::BorrowableData;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -229,6 +230,45 @@ pub struct Log {
     pub size: u64,
 }
 
+#[derive(PartialEq)]
+pub struct BorrowLog<'a> {
+    pub address: Address,
+    pub identity: &'a str,
+    pub userid: &'a str,
+    pub date: &'a str,
+    pub request: &'a str,
+    pub code: u16,
+    pub size: u64,
+}
+
+impl From<BorrowLog<'_>> for Log {
+    fn from(value: BorrowLog<'_>) -> Self {
+        Log {
+            address: value.address,
+            identity: value.identity.to_owned(),
+            userid: value.userid.to_owned(),
+            date: value.date.to_owned(),
+            request: value.request.to_owned(),
+            code: value.code,
+            size: value.size,
+        }
+    }
+}
+
+impl<'a> From<&'a Log> for BorrowLog<'a> {
+    fn from(value: &'a Log) -> Self {
+        BorrowLog {
+            address: value.address,
+            identity: value.identity.as_str(),
+            userid: value.userid.as_str(),
+            date: value.date.as_str(),
+            request: value.request.as_str(),
+            code: value.code,
+            size: value.size,
+        }
+    }
+}
+
 impl Generate for Log {
     fn generate<R: Rng>(rand: &mut R) -> Self {
         const USERID: [&str; 9] = [
@@ -400,6 +440,31 @@ pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub logs: Vec<Log>,
+}
+
+#[derive(PartialEq)]
+pub struct BorrowLogs<'a> {
+    logs: Vec<BorrowLog<'a>>,
+}
+
+impl From<BorrowLogs<'_>> for Logs {
+    fn from(value: BorrowLogs<'_>) -> Self {
+        Logs {
+            logs: value.logs.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl<'a> From<&'a Logs> for BorrowLogs<'a> {
+    fn from(value: &'a Logs) -> Self {
+        BorrowLogs {
+            logs: value.logs.iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl BorrowableData for Logs {
+    type Borrowed<'a> = BorrowLogs<'a>;
 }
 
 #[cfg(feature = "flatbuffers")]
