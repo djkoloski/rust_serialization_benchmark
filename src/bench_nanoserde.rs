@@ -28,3 +28,5 @@ where
 
     group.finish();
 }
+
+// nanoserde does not appear to support borrowed decoding.
