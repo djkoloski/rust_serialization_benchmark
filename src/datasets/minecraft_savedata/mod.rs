@@ -187,6 +187,7 @@ pub struct Item {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowItem<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
     #[cfg_attr(feature = "minicbor", n(0))]
@@ -495,6 +496,7 @@ pub struct Entity {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowEntity<'a> {
     #[cfg_attr(feature = "minicbor", b(0))]
     pub id: &'a str,
@@ -841,6 +843,7 @@ pub struct RecipeBook {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowRecipeBook<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(0))]
@@ -1151,6 +1154,7 @@ pub struct Player {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowPlayer<'a> {
     #[cfg_attr(feature = "minicbor", n(0))]
     pub game_type: GameType,
@@ -1659,6 +1663,7 @@ pub struct Players {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowPlayers<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(0))]

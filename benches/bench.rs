@@ -238,7 +238,7 @@ fn bench_log(c: &mut Criterion) {
     bench_simd_json::bench(BENCH, c, &data);
 
     #[cfg(feature = "speedy")]
-    bench_speedy::bench(BENCH, c, &data);
+    bench_speedy::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
@@ -581,7 +581,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_simd_json::bench(BENCH, c, &data);
 
     #[cfg(feature = "speedy")]
-    bench_speedy::bench(BENCH, c, &data);
+    bench_speedy::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);

@@ -236,6 +236,7 @@ pub struct Log {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowLog<'a> {
     #[cfg_attr(feature = "minicbor", n(0))]
     pub address: Address,
@@ -460,6 +461,7 @@ pub struct Logs {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 pub struct BorrowLogs<'a> {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", b(0))]
