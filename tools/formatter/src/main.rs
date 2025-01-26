@@ -1,4 +1,5 @@
 use std::{
+    borrow::Cow,
     collections::BTreeSet,
     fmt::{self, Display, Write},
     fs,
@@ -194,7 +195,7 @@ fn format(
     template: &str,
     date: &str,
 ) -> Result<String, fmt::Error> {
-    const SERDE_COLS: &[&str] = &[
+    const ALL_SER_DE_COLS: &[&str] = &[
         "serialize",
         "deserialize",
         "borrow",
@@ -231,7 +232,16 @@ fn format(
     let mut tables = String::new();
 
     for (dataset_name, dataset) in results.datasets.iter() {
-        let serde_tables = build_tables(&results.features, dataset, SERDE_COLS, "†")?;
+        let mut ser_de_cols = Cow::from(ALL_SER_DE_COLS);
+        // Only keep the "borrow" column if the suite has a borrowable test data type
+        if !config
+            .suites
+            .get(dataset_name)
+            .map_or(false, |suite| suite.borrowable)
+        {
+            ser_de_cols.to_mut().retain(|&col| col != "borrow");
+        }
+        let serde_tables = build_tables(&results.features, dataset, &ser_de_cols, "†")?;
         let zcd_tables = build_tables(&results.features, dataset, ZCD_COLS, "‡")?;
 
         write!(
@@ -267,9 +277,9 @@ fn format(
             {zcd_comparison}\n\
             ",
             dataset_description = config
-                .descriptions
+                .suites
                 .get(dataset_name)
-                .map(|desc| desc.as_str())
+                .map(|suite| suite.description.as_str())
                 .unwrap_or("Missing dataset description"),
             ser_de_header = serde_tables.header,
             ser_de_data = serde_tables.data,

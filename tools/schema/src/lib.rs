@@ -17,8 +17,15 @@ impl PackageId {
 }
 
 #[derive(Deserialize, Serialize)]
+pub struct Suite {
+    pub description: String,
+    #[serde(default)]
+    pub borrowable: bool,
+}
+
+#[derive(Deserialize, Serialize)]
 pub struct Config {
-    pub descriptions: HashMap<String, String>,
+    pub suites: HashMap<String, Suite>,
     pub do_not_edit: String,
     pub features: HashMap<String, PackageId>,
 }
