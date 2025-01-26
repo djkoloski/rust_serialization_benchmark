@@ -20,7 +20,7 @@ All tests benchmark the following properties (time or size):
 
 * **Serialize**: serialize data into a buffer
 * **Deserialize**: deserializes a buffer into a normal rust object
-* **Borrow**: deserializes a buffer into a rust object that borrows string data from the input buffer
+* **Borrow**: deserializes a buffer into a rust object that borrows string data from the input, with lifetime
 * **Size**: the size of the buffer when serialized
 * **Zlib**: the size of the buffer after zlib compression
 * **Zstd**: the size of the buffer after zstd compression
