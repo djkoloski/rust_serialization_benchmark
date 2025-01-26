@@ -229,7 +229,7 @@ fn bench_log(c: &mut Criterion) {
     bench_serde_bare::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_cbor")]
-    bench_serde_cbor::bench(BENCH, c, &data);
+    bench_serde_cbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -572,7 +572,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_serde_bare::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_cbor")]
-    bench_serde_cbor::bench(BENCH, c, &data);
+    bench_serde_cbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
