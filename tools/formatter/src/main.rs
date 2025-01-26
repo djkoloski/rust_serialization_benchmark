@@ -89,8 +89,8 @@ fn format_values<T: Copy, U: Display>(
     for (name, value) in values.variants.iter() {
         write!(
             output,
-            " <span title=\"{name}\">*{}\\**</span>",
-            display(*value)
+            " <span title=\"{name}\">*{val}\\**</span>",
+            val = display(*value)
         )?;
     }
     write!(output, " |")?;
@@ -210,9 +210,9 @@ fn format(
         ### `rustc` version\n\
         \n\
         ```\n\
-        {}\n\
+        {rustc_info_trimmed}\n\
         ```",
-        results.rustc_info.trim_end(),
+        rustc_info_trimmed = results.rustc_info.trim_end(),
     );
     if let Some(cpu_info) = &results.cpu_info {
         write!(
@@ -222,9 +222,9 @@ fn format(
             ### CPU info\n\
             \n\
             ```\n\
-            {}\n\
+            {cpu_info_trimmed}\n\
             ```",
-            cpu_info.trim_end(),
+            cpu_info_trimmed = cpu_info.trim_end(),
         )?;
     }
 
@@ -239,7 +239,7 @@ fn format(
             "\
             ## `{dataset_name}`\n\
             \n\
-            {}\n\
+            {dataset_description}\n\
             \n\
             ### Raw data\n\
             \n\
@@ -247,38 +247,36 @@ fn format(
             \n\
             #### Serialize / deserialize speed and size\n\
             \n\
-            {}\n\
-            {}\n\
+            {ser_de_header}\n\
+            {ser_de_data}\n\
             #### Zero-copy deserialization speed\n\
             \n\
-            {}\n\
-            {}\n\
+            {zcd_header}\n\
+            {zcd_data}\n\
             ### Comparison\n\
             \n\
             Relative to best. Higher is better.\n\
             \n\
             #### Serialize / deserialize speed and size\n\
             \n\
-            {}\n\
-            {}\n\
+            {ser_de_header}\n\
+            {ser_de_comparison}\n\
             #### Zero-copy deserialization speed\n\
             \n\
-            {}\n\
-            {}\n\
+            {zcd_header}\n\
+            {zcd_comparison}\n\
             ",
-            config
+            dataset_description = config
                 .descriptions
                 .get(dataset_name)
                 .map(|desc| desc.as_str())
                 .unwrap_or("Missing dataset description"),
-            serde_tables.header,
-            serde_tables.data,
-            zcd_tables.header,
-            zcd_tables.data,
-            serde_tables.header,
-            serde_tables.comparison,
-            zcd_tables.header,
-            zcd_tables.comparison,
+            ser_de_header = serde_tables.header,
+            ser_de_data = serde_tables.data,
+            ser_de_comparison = serde_tables.comparison,
+            zcd_header = zcd_tables.header,
+            zcd_data = zcd_tables.data,
+            zcd_comparison = zcd_tables.comparison,
         )?;
     }
 
