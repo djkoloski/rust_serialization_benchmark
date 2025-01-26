@@ -46,3 +46,5 @@ where
 
     group.finish();
 }
+
+// simd_json does not support borrowed decoding.
