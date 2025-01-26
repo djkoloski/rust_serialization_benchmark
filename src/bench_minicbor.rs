@@ -45,7 +45,7 @@ where
 
     let mut deserialize_buffer = Vec::new();
     minicbor::encode(&data, &mut deserialize_buffer).unwrap();
-    let bdata = T::Borrowed::from(&data);
+    let bdata = T::Borrowed::from(data);
 
     // The borrowed variant type should encode exactly the same as the owned type.
     let mut borrowed_serialize_buffer = Vec::new();

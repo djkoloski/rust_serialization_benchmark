@@ -41,7 +41,7 @@ where
     let mut buffer = bitcode::Buffer::new();
 
     let encoded = buffer.encode(data).to_vec();
-    let bdata = T::Borrowed::from(&data);
+    let bdata = T::Borrowed::from(data);
 
     // The borrowed variant type should encode exactly the same as the owned type.
     assert_eq!(bitcode::Buffer::new().encode(&bdata).to_vec(), encoded);

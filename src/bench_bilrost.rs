@@ -62,7 +62,7 @@ where
     let mut group = c.benchmark_group(format!("{}/bilrost", name));
 
     let deserialize_buffer = data.encode_to_vec();
-    let bdata = T::Borrowed::from(&data);
+    let bdata = T::Borrowed::from(data);
 
     // The borrowed variant type should encode exactly the same as the owned type.
     assert_eq!(bdata.encode_to_vec(), deserialize_buffer);

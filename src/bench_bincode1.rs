@@ -46,7 +46,7 @@ where
 
     let mut deserialize_buffer = Vec::new();
     bincode1::serialize_into(&mut deserialize_buffer, &data).unwrap();
-    let bdata = T::Borrowed::from(&data);
+    let bdata = T::Borrowed::from(data);
 
     // The borrowed variant type should encode exactly the same as the owned type.
     let mut borrowed_serialized = Vec::new();
