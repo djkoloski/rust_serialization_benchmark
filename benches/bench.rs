@@ -158,7 +158,7 @@ fn bench_log(c: &mut Criterion) {
     bench_msgpacker::bench(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht_serde::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
@@ -506,7 +506,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_msgpacker::bench(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht_serde::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
