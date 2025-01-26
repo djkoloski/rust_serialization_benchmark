@@ -61,3 +61,6 @@ where
 
     group.finish();
 }
+
+// capnp is a pseudo-zerocopy library with incremental decoding and does not support borrowed
+// decoding.
