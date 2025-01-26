@@ -119,7 +119,7 @@ fn bench_log(c: &mut Criterion) {
     bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
-    bench_databuf::bench(BENCH, c, &data);
+    bench_databuf::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
@@ -470,7 +470,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
-    bench_databuf::bench(BENCH, c, &data);
+    bench_databuf::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
