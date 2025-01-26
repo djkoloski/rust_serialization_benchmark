@@ -31,3 +31,5 @@ where
 
     group.finish();
 }
+
+// parity_scale_codec does not appear to support borrowed decoding.
