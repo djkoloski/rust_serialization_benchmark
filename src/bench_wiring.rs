@@ -27,3 +27,5 @@ pub fn bench<T: Wiring + Unwiring + PartialEq>(name: &'static str, c: &mut Crite
 
     group.finish();
 }
+
+// wiring does not support borrowed decoding.
