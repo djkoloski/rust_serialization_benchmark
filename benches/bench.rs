@@ -164,7 +164,7 @@ fn bench_log(c: &mut Criterion) {
     bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
-    bench_postcard::bench(BENCH, c, &data);
+    bench_postcard::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "pot")]
     bench_pot::bench(BENCH, c, &data);
@@ -512,7 +512,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
-    bench_postcard::bench(BENCH, c, &data);
+    bench_postcard::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "pot")]
     bench_pot::bench(BENCH, c, &data);
