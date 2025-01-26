@@ -54,11 +54,7 @@ where
     assert_eq!(borrowed_serialized, deserialize_buffer);
 
     // The borrowed value we decode should be equivalent to the input
-    assert!(
-        bincode1::deserialize::<T::Borrowed<'_>>(&deserialize_buffer)
-            .unwrap()
-            == bdata
-    );
+    assert!(bincode1::deserialize::<T::Borrowed<'_>>(&deserialize_buffer).unwrap() == bdata);
 
     group.bench_function("borrow", |b| {
         b.iter(|| {

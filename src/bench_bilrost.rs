@@ -73,11 +73,7 @@ where
     assert_eq!(prepended_data, deserialize_buffer);
 
     // The borrowed value we decode should be equivalent to the input
-    assert!(
-        T::Borrowed::decode_borrowed(&deserialize_buffer)
-            .unwrap()
-            == bdata
-    );
+    assert!(T::Borrowed::decode_borrowed(&deserialize_buffer).unwrap() == bdata);
 
     group.bench_function("borrow", |b| {
         b.iter(|| {

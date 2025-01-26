@@ -51,7 +51,11 @@ where
 
     group.bench_function("borrow", |b| {
         b.iter(|| {
-            black_box(buffer.decode::<T::Borrowed<'_>>(black_box(&encoded)).unwrap());
+            black_box(
+                buffer
+                    .decode::<T::Borrowed<'_>>(black_box(&encoded))
+                    .unwrap(),
+            );
         })
     });
 
