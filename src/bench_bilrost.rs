@@ -76,8 +76,7 @@ where
     assert!(
         T::Borrowed::decode_borrowed(&deserialize_buffer)
             .unwrap()
-            .into()
-            == *data
+            == bdata
     );
 
     group.bench_function("borrow", |b| {
