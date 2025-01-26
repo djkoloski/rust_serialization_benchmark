@@ -113,7 +113,7 @@ fn bench_log(c: &mut Criterion) {
     });
 
     #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench(BENCH, c, &data);
+    bench_cbor4ii::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
@@ -464,7 +464,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     });
 
     #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench(BENCH, c, &data);
+    bench_cbor4ii::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
