@@ -96,7 +96,7 @@ fn bench_log(c: &mut Criterion) {
     bench_borsh::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde-brief")]
-    bench_serde_brief::bench(BENCH, c, &data);
+    bench_serde_brief::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -449,7 +449,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_borsh::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde-brief")]
-    bench_serde_brief::bench(BENCH, c, &data);
+    bench_serde_brief::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
