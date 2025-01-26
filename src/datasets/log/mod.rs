@@ -232,6 +232,7 @@ pub struct Log {
 
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowLog<'a> {
@@ -454,6 +455,7 @@ pub struct Logs {
 
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct BorrowLogs<'a> {
