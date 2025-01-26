@@ -49,3 +49,6 @@ where
 
     group.finish();
 }
+
+// dlhn both has a deserialize api that takes `std::io::Read` and has not yet implemented decoding
+// for borrowed types (see dlhn-0.1.7/src/de.rs:207)
