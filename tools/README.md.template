@@ -48,6 +48,6 @@ Some benchmark results may be italicized and followed by an asterisk. Mouse over
 
 \* *mouse over for situational details*
 
-† *do not provide deserialization capabilities, but the user can write their own*
+† *this deserialization capability is not supported*
 
-‡ *do not support buffer mutation (`capnp` and `flatbuffers` may but not for rust)*
+‡ *buffer mutation is not supported (`capnp` and `flatbuffers` may but not for rust)*
