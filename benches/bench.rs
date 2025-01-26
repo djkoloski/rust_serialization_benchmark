@@ -167,7 +167,7 @@ fn bench_log(c: &mut Criterion) {
     bench_postcard::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "pot")]
-    bench_pot::bench(BENCH, c, &data);
+    bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -515,7 +515,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_postcard::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "pot")]
-    bench_pot::bench(BENCH, c, &data);
+    bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
