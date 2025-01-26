@@ -220,7 +220,7 @@ fn bench_log(c: &mut Criterion) {
     bench_rmp_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
-    bench_ron::bench(BENCH, c, &data);
+    bench_ron::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "savefile")]
     bench_savefile::bench(BENCH, c, &data);
@@ -563,7 +563,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_rmp_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
-    bench_ron::bench(BENCH, c, &data);
+    bench_ron::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "savefile")]
     bench_savefile::bench(BENCH, c, &data);
