@@ -197,6 +197,7 @@ fn format(
     const SERDE_COLS: &[&str] = &[
         "serialize",
         "deserialize",
+        "borrow",
         "size",
         "zlib",
         "zstd",
