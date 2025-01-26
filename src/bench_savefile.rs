@@ -35,3 +35,6 @@ where
 
     group.finish();
 }
+
+// savefile does not support structs which contain references at all, and so cannot perform borrowed
+// decoding. https://github.com/avl/savefile/issues/18
