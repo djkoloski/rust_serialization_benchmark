@@ -34,3 +34,5 @@ where
 
     group.finish();
 }
+
+// msgpacker does not seem to support borrowed decoding.
