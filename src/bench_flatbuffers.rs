@@ -72,3 +72,6 @@ pub fn bench<T>(
 
     group.finish();
 }
+
+// flatbuffers is a pseudo-zerocopy library with incremental decoding and does not support borrowed
+// decoding.

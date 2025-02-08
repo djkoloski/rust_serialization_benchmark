@@ -5,7 +5,7 @@ pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: Serialize + for<'de> Deserialize<'de> + PartialEq,
 {
-    const BUFFER_LEN: usize = 50_000_000;
+    const BUFFER_LEN: usize = 15_000_000;
 
     let mut group = c.benchmark_group(format!("{}/ciborium", name));
 
@@ -39,3 +39,6 @@ where
 
     group.finish();
 }
+
+// ciborium only provides reading implementations that require DeserializeOwned, and thus won't
+// decode borrowed data at this time.

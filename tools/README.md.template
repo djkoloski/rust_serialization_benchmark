@@ -20,6 +20,7 @@ All tests benchmark the following properties (time or size):
 
 * **Serialize**: serialize data into a buffer
 * **Deserialize**: deserializes a buffer into a normal rust object
+* **Borrow**: deserializes a buffer into a rust object that borrows string data from the input, with lifetime
 * **Size**: the size of the buffer when serialized
 * **Zlib**: the size of the buffer after zlib compression
 * **Zstd**: the size of the buffer after zstd compression
@@ -47,6 +48,6 @@ Some benchmark results may be italicized and followed by an asterisk. Mouse over
 
 \* *mouse over for situational details*
 
-† *do not provide deserialization capabilities, but the user can write their own*
+† *this deserialization capability is not supported*
 
-‡ *do not support buffer mutation (`capnp` and `flatbuffers` may but not for rust)*
+‡ *buffer mutation is not supported (`capnp` and `flatbuffers` may but not for rust)*

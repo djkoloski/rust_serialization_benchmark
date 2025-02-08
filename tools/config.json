@@ -1,9 +1,19 @@
 {
-    "descriptions": {
-        "log": "This data set is composed of HTTP request logs that are small and contain many strings.",
-        "mesh": "This data set is a single mesh. The mesh contains an array of triangles, each of which has three vertices and a normal vector.",
-        "mk48": "This data set is composed of mk48.io game updates that contain data with many exploitable patterns and invariants.",
-        "minecraft_savedata": "This data set is composed of Minecraft player saves that contain highly structured data."
+    "suites": {
+        "log": {
+            "description": "This data set is composed of HTTP request logs that are small and contain many strings.",
+            "borrowable": true
+        },
+        "mesh": {
+            "description": "This data set is a single mesh. The mesh contains an array of triangles, each of which has three vertices and a normal vector."
+        },
+        "minecraft_savedata": {
+            "description": "This data set is composed of Minecraft player saves that contain highly structured data.",
+            "borrowable": true
+        },
+        "mk48": {
+            "description": "This data set is composed of mk48.io game updates that contain data with many exploitable patterns and invariants."
+        }
     },
     "do_not_edit": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
     "features": {

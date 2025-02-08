@@ -1,4 +1,5 @@
 use std::{
+    borrow::Cow,
     collections::BTreeSet,
     fmt::{self, Display, Write},
     fs,
@@ -89,8 +90,8 @@ fn format_values<T: Copy, U: Display>(
     for (name, value) in values.variants.iter() {
         write!(
             output,
-            " <span title=\"{name}\">*{}\\**</span>",
-            display(*value)
+            " <span title=\"{name}\">*{val}\\**</span>",
+            val = display(*value)
         )?;
     }
     write!(output, " |")?;
@@ -194,9 +195,10 @@ fn format(
     template: &str,
     date: &str,
 ) -> Result<String, fmt::Error> {
-    const SERDE_COLS: &[&str] = &[
+    const ALL_SER_DE_COLS: &[&str] = &[
         "serialize",
         "deserialize",
+        "borrow",
         "size",
         "zlib",
         "zstd",
@@ -209,9 +211,9 @@ fn format(
         ### `rustc` version\n\
         \n\
         ```\n\
-        {}\n\
+        {rustc_info_trimmed}\n\
         ```",
-        results.rustc_info.trim_end(),
+        rustc_info_trimmed = results.rustc_info.trim_end(),
     );
     if let Some(cpu_info) = &results.cpu_info {
         write!(
@@ -221,16 +223,25 @@ fn format(
             ### CPU info\n\
             \n\
             ```\n\
-            {}\n\
+            {cpu_info_trimmed}\n\
             ```",
-            cpu_info.trim_end(),
+            cpu_info_trimmed = cpu_info.trim_end(),
         )?;
     }
 
     let mut tables = String::new();
 
     for (dataset_name, dataset) in results.datasets.iter() {
-        let serde_tables = build_tables(&results.features, dataset, SERDE_COLS, "†")?;
+        let mut ser_de_cols = Cow::from(ALL_SER_DE_COLS);
+        // Only keep the "borrow" column if the suite has a borrowable test data type
+        if !config
+            .suites
+            .get(dataset_name)
+            .map_or(false, |suite| suite.borrowable)
+        {
+            ser_de_cols.to_mut().retain(|&col| col != "borrow");
+        }
+        let serde_tables = build_tables(&results.features, dataset, &ser_de_cols, "†")?;
         let zcd_tables = build_tables(&results.features, dataset, ZCD_COLS, "‡")?;
 
         write!(
@@ -238,7 +249,7 @@ fn format(
             "\
             ## `{dataset_name}`\n\
             \n\
-            {}\n\
+            {dataset_description}\n\
             \n\
             ### Raw data\n\
             \n\
@@ -246,38 +257,36 @@ fn format(
             \n\
             #### Serialize / deserialize speed and size\n\
             \n\
-            {}\n\
-            {}\n\
+            {ser_de_header}\n\
+            {ser_de_data}\n\
             #### Zero-copy deserialization speed\n\
             \n\
-            {}\n\
-            {}\n\
+            {zcd_header}\n\
+            {zcd_data}\n\
             ### Comparison\n\
             \n\
             Relative to best. Higher is better.\n\
             \n\
             #### Serialize / deserialize speed and size\n\
             \n\
-            {}\n\
-            {}\n\
+            {ser_de_header}\n\
+            {ser_de_comparison}\n\
             #### Zero-copy deserialization speed\n\
             \n\
-            {}\n\
-            {}\n\
+            {zcd_header}\n\
+            {zcd_comparison}\n\
             ",
-            config
-                .descriptions
+            dataset_description = config
+                .suites
                 .get(dataset_name)
-                .map(|desc| desc.as_str())
+                .map(|suite| suite.description.as_str())
                 .unwrap_or("Missing dataset description"),
-            serde_tables.header,
-            serde_tables.data,
-            zcd_tables.header,
-            zcd_tables.data,
-            serde_tables.header,
-            serde_tables.comparison,
-            zcd_tables.header,
-            zcd_tables.comparison,
+            ser_de_header = serde_tables.header,
+            ser_de_data = serde_tables.data,
+            ser_de_comparison = serde_tables.comparison,
+            zcd_header = zcd_tables.header,
+            zcd_data = zcd_tables.data,
+            zcd_comparison = zcd_tables.comparison,
         )?;
     }
 

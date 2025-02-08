@@ -5,7 +5,7 @@ pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: Serialize + for<'de> Deserialize<'de> + PartialEq,
 {
-    const BUFFER_LEN: usize = 50_000_000;
+    const BUFFER_LEN: usize = 30_000_000;
 
     let mut group = c.benchmark_group(format!("{}/serde_json", name));
 
@@ -33,3 +33,5 @@ where
 
     group.finish();
 }
+
+// serde_json does not support borrowed decoding.

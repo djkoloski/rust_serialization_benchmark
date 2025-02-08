@@ -33,3 +33,5 @@ where
 
     group.finish();
 }
+
+// serde_bare does not seem to have support for borrowed decoding.

@@ -92,3 +92,5 @@ where
 
     group.finish();
 }
+
+// rkyv is a true zero-copy decoding, rather than implementing borrowed decoding.

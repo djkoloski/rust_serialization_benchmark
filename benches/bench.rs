@@ -81,22 +81,22 @@ fn bench_log(c: &mut Criterion) {
     };
 
     #[cfg(feature = "bilrost")]
-    bench_bilrost::bench(BENCH, c, &data);
+    bench_bilrost::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
-    bench_bincode1::bench(BENCH, c, &data);
+    bench_bincode1::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
-    bench_bitcode::bench(BENCH, c, &data);
+    bench_bitcode::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde-brief")]
-    bench_serde_brief::bench(BENCH, c, &data);
+    bench_serde_brief::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -113,13 +113,13 @@ fn bench_log(c: &mut Criterion) {
     });
 
     #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench(BENCH, c, &data);
+    bench_cbor4ii::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
-    bench_databuf::bench(BENCH, c, &data);
+    bench_databuf::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
@@ -152,22 +152,22 @@ fn bench_log(c: &mut Criterion) {
     );
 
     #[cfg(feature = "minicbor")]
-    bench_minicbor::bench(BENCH, c, &data);
+    bench_minicbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht_serde::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
-    bench_postcard::bench(BENCH, c, &data);
+    bench_postcard::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "pot")]
-    bench_pot::bench(BENCH, c, &data);
+    bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -217,10 +217,10 @@ fn bench_log(c: &mut Criterion) {
     );
 
     #[cfg(feature = "rmp-serde")]
-    bench_rmp_serde::bench(BENCH, c, &data);
+    bench_rmp_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
-    bench_ron::bench(BENCH, c, &data);
+    bench_ron::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "savefile")]
     bench_savefile::bench(BENCH, c, &data);
@@ -229,7 +229,7 @@ fn bench_log(c: &mut Criterion) {
     bench_serde_bare::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_cbor")]
-    bench_serde_cbor::bench(BENCH, c, &data);
+    bench_serde_cbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -238,7 +238,7 @@ fn bench_log(c: &mut Criterion) {
     bench_simd_json::bench(BENCH, c, &data);
 
     #[cfg(feature = "speedy")]
-    bench_speedy::bench(BENCH, c, &data);
+    bench_speedy::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
@@ -434,22 +434,22 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     };
 
     #[cfg(feature = "bilrost")]
-    bench_bilrost::bench(BENCH, c, &data);
+    bench_bilrost::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
-    bench_bincode1::bench(BENCH, c, &data);
+    bench_bincode1::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
     bench_bincode::bench(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
-    bench_bitcode::bench(BENCH, c, &data);
+    bench_bitcode::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "borsh")]
     bench_borsh::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde-brief")]
-    bench_serde_brief::bench(BENCH, c, &data);
+    bench_serde_brief::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -464,13 +464,13 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     });
 
     #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench(BENCH, c, &data);
+    bench_cbor4ii::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ciborium")]
     bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
-    bench_databuf::bench(BENCH, c, &data);
+    bench_databuf::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "dlhn")]
     bench_dlhn::bench(BENCH, c, &data);
@@ -500,22 +500,22 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     #[cfg(feature = "minicbor")]
-    bench_minicbor::bench(BENCH, c, &data);
+    bench_minicbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
     bench_msgpacker::bench(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
-    bench_nachricht_serde::bench(BENCH, c, &data);
+    bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
 
     #[cfg(feature = "postcard")]
-    bench_postcard::bench(BENCH, c, &data);
+    bench_postcard::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "pot")]
-    bench_pot::bench(BENCH, c, &data);
+    bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -560,10 +560,10 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     #[cfg(feature = "rmp-serde")]
-    bench_rmp_serde::bench(BENCH, c, &data);
+    bench_rmp_serde::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "ron")]
-    bench_ron::bench(BENCH, c, &data);
+    bench_ron::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "savefile")]
     bench_savefile::bench(BENCH, c, &data);
@@ -572,7 +572,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_serde_bare::bench(BENCH, c, &data);
 
     #[cfg(feature = "serde_cbor")]
-    bench_serde_cbor::bench(BENCH, c, &data);
+    bench_serde_cbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "serde_json")]
     bench_serde_json::bench(BENCH, c, &data);
@@ -581,7 +581,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_simd_json::bench(BENCH, c, &data);
 
     #[cfg(feature = "speedy")]
-    bench_speedy::bench(BENCH, c, &data);
+    bench_speedy::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);

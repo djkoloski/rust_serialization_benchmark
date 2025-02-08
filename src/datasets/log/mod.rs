@@ -26,6 +26,7 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+use crate::datasets::BorrowableData;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -229,6 +230,58 @@ pub struct Log {
     pub size: u64,
 }
 
+#[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
+#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+pub struct BorrowLog<'a> {
+    #[cfg_attr(feature = "minicbor", n(0))]
+    pub address: Address,
+    #[cfg_attr(feature = "minicbor", b(1))]
+    pub identity: &'a str,
+    #[cfg_attr(feature = "minicbor", b(2))]
+    pub userid: &'a str,
+    #[cfg_attr(feature = "minicbor", b(3))]
+    pub date: &'a str,
+    #[cfg_attr(feature = "minicbor", b(4))]
+    pub request: &'a str,
+    #[cfg_attr(feature = "minicbor", n(5))]
+    pub code: u16,
+    #[cfg_attr(feature = "minicbor", n(6))]
+    pub size: u64,
+}
+
+impl From<BorrowLog<'_>> for Log {
+    fn from(value: BorrowLog<'_>) -> Self {
+        Log {
+            address: value.address,
+            identity: value.identity.to_owned(),
+            userid: value.userid.to_owned(),
+            date: value.date.to_owned(),
+            request: value.request.to_owned(),
+            code: value.code,
+            size: value.size,
+        }
+    }
+}
+
+impl<'a> From<&'a Log> for BorrowLog<'a> {
+    fn from(value: &'a Log) -> Self {
+        BorrowLog {
+            address: value.address,
+            identity: value.identity.as_str(),
+            userid: value.userid.as_str(),
+            date: value.date.as_str(),
+            request: value.request.as_str(),
+            code: value.code,
+            size: value.size,
+        }
+    }
+}
+
 impl Generate for Log {
     fn generate<R: Rng>(rand: &mut R) -> Self {
         const USERID: [&str; 9] = [
@@ -400,6 +453,40 @@ pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub logs: Vec<Log>,
+}
+
+#[derive(PartialEq)]
+#[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
+#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
+#[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
+pub struct BorrowLogs<'a> {
+    #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "minicbor", b(0))]
+    #[serde(borrow)]
+    logs: Vec<BorrowLog<'a>>,
+}
+
+impl From<BorrowLogs<'_>> for Logs {
+    fn from(value: BorrowLogs<'_>) -> Self {
+        Logs {
+            logs: value.logs.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl<'a> From<&'a Logs> for BorrowLogs<'a> {
+    fn from(value: &'a Logs) -> Self {
+        BorrowLogs {
+            logs: value.logs.iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl BorrowableData for Logs {
+    type Borrowed<'a> = BorrowLogs<'a>;
 }
 
 #[cfg(feature = "flatbuffers")]

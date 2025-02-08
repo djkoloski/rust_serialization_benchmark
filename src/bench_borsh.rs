@@ -32,3 +32,5 @@ where
 
     group.finish();
 }
+
+// borsh does not support borrowed decoding: https://github.com/near/borsh-rs/issues/90

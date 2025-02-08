@@ -49,3 +49,5 @@ where
 
     group.finish();
 }
+
+// prost does not support borrowed decoding.
