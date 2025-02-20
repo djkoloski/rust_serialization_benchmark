@@ -56,8 +56,9 @@ fn protobuf_compile_dataset(name: &'static str) -> std::io::Result<()> {
         .out_dir(format!("./src/datasets/{name}/{name}_protobuf"))
         .inputs(&[format!("./src/datasets/{name}/{name}.proto")])
         .include(format!("./src/datasets/{name}/"))
-        .run().unwrap();
-    
+        .run()
+        .unwrap();
+
     Ok(())
 }
 

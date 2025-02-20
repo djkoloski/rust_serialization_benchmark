@@ -808,9 +808,9 @@ impl bench_protobuf::Serialize for Contact {
         let mut result = Self::Message {
             damage: self.damage as u32,
             entity_id: self.entity_id,
-            entity_type: self
-                .entity_type
-                .map(|entity_type| protobuf::EnumOrUnknown::new(rpb::mk48::EntityType::from(entity_type))),
+            entity_type: self.entity_type.map(|entity_type| {
+                protobuf::EnumOrUnknown::new(rpb::mk48::EntityType::from(entity_type))
+            }),
             guidance: Some(self.guidance.serialize_pb()).into(),
             player_id: self.player_id.map(Into::into),
             reloads: Default::default(),
@@ -834,9 +834,7 @@ impl From<rpb::mk48::Contact> for Contact {
         Contact {
             damage: value.damage.try_into().unwrap(),
             entity_id: value.entity_id,
-            entity_type: value
-                .entity_type
-                .map(|et| et.unwrap().into()),
+            entity_type: value.entity_type.map(|et| et.unwrap().into()),
             guidance: value.guidance.unwrap().into(),
             player_id: value.player_id.map(|id| id.try_into().unwrap()),
             reloads: value.reloads,

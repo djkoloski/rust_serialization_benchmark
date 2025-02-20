@@ -1858,7 +1858,8 @@ impl bench_protobuf::Serialize for Player {
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message {
             game_type: rpb::minecraft_savedata::GameType::from(self.game_type).into(),
-            previous_game_type: rpb::minecraft_savedata::GameType::from(self.previous_game_type).into(),
+            previous_game_type: rpb::minecraft_savedata::GameType::from(self.previous_game_type)
+                .into(),
             score: self.score,
             dimension: self.dimension.clone(),
             selected_item_slot: self.selected_item_slot,
@@ -1879,28 +1880,40 @@ impl bench_protobuf::Serialize for Player {
             inventory: Default::default(),
             ender_items: Default::default(),
             abilities: protobuf::MessageField::some(self.abilities.serialize_pb()),
-            entered_nether_position: self.entered_nether_position.map(|p| rpb::minecraft_savedata::Vector3d {
-                x: p.0,
-                y: p.1,
-                z: p.2,
-                special_fields: protobuf::SpecialFields::new(),
-            }).into(),
-            root_vehicle: self.root_vehicle.as_ref().map(|v| rpb::minecraft_savedata::Vehicle {
-                uuid: protobuf::MessageField::some(rpb::minecraft_savedata::Uuid {
-                    x0: v.0[0],
-                    x1: v.0[1],
-                    x2: v.0[2],
-                    x3: v.0[3],
+            entered_nether_position: self
+                .entered_nether_position
+                .map(|p| rpb::minecraft_savedata::Vector3d {
+                    x: p.0,
+                    y: p.1,
+                    z: p.2,
                     special_fields: protobuf::SpecialFields::new(),
-                }),
-                entity: protobuf::MessageField::some(v.1.serialize_pb()),
-                special_fields: protobuf::SpecialFields::new(),
-            }).into(),
-            shoulder_entity_left: self.shoulder_entity_left.as_ref().map(|e| e.serialize_pb()).into(),
+                })
+                .into(),
+            root_vehicle: self
+                .root_vehicle
+                .as_ref()
+                .map(|v| rpb::minecraft_savedata::Vehicle {
+                    uuid: protobuf::MessageField::some(rpb::minecraft_savedata::Uuid {
+                        x0: v.0[0],
+                        x1: v.0[1],
+                        x2: v.0[2],
+                        x3: v.0[3],
+                        special_fields: protobuf::SpecialFields::new(),
+                    }),
+                    entity: protobuf::MessageField::some(v.1.serialize_pb()),
+                    special_fields: protobuf::SpecialFields::new(),
+                })
+                .into(),
+            shoulder_entity_left: self
+                .shoulder_entity_left
+                .as_ref()
+                .map(|e| e.serialize_pb())
+                .into(),
             shoulder_entity_right: self
                 .shoulder_entity_right
                 .as_ref()
-                .map(|e| e.serialize_pb()).into(),
+                .map(|e| e.serialize_pb())
+                .into(),
             seen_credits: self.seen_credits,
             recipe_book: protobuf::MessageField::some(self.recipe_book.serialize_pb()),
             special_fields: protobuf::SpecialFields::new(),
@@ -1920,8 +1933,10 @@ impl From<rpb::minecraft_savedata::Player> for Player {
     fn from(value: rpb::minecraft_savedata::Player) -> Self {
         Player {
             game_type: rpb::minecraft_savedata::GameType::from(value.game_type.unwrap()).into(),
-            previous_game_type: rpb::minecraft_savedata::GameType::from(value.previous_game_type.unwrap())
-                .into(),
+            previous_game_type: rpb::minecraft_savedata::GameType::from(
+                value.previous_game_type.unwrap(),
+            )
+            .into(),
             score: value.score,
             dimension: value.dimension,
             selected_item_slot: value.selected_item_slot,
@@ -1942,12 +1957,22 @@ impl From<rpb::minecraft_savedata::Player> for Player {
             inventory: value.inventory.into_iter().map(Into::into).collect(),
             ender_items: value.ender_items.into_iter().map(Into::into).collect(),
             abilities: value.abilities.unwrap().into(),
-            entered_nether_position: value.entered_nether_position.map(|p| (p.x, p.y, p.z)).into_option(),
+            entered_nether_position: value
+                .entered_nether_position
+                .map(|p| (p.x, p.y, p.z))
+                .into_option(),
             root_vehicle: value
                 .root_vehicle
-                .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())).into_option(),
-            shoulder_entity_left: value.shoulder_entity_left.map(|e| Entity::from(e)).into_option(),
-            shoulder_entity_right: value.shoulder_entity_right.map(|e| Entity::from(e)).into_option(),
+                .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into()))
+                .into_option(),
+            shoulder_entity_left: value
+                .shoulder_entity_left
+                .map(|e| Entity::from(e))
+                .into_option(),
+            shoulder_entity_right: value
+                .shoulder_entity_right
+                .map(|e| Entity::from(e))
+                .into_option(),
             seen_credits: value.seen_credits,
             recipe_book: value.recipe_book.unwrap().into(),
         }

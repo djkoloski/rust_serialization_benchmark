@@ -20,7 +20,9 @@ where
     group.bench_function("serialize (populate + encode)", |b| {
         b.iter(|| {
             black_box(&mut serialize_buffer).clear();
-            data.serialize_pb().write_to_vec(&mut serialize_buffer).unwrap();
+            data.serialize_pb()
+                .write_to_vec(&mut serialize_buffer)
+                .unwrap();
             black_box(());
         })
     });
@@ -35,7 +37,9 @@ where
     });
 
     let mut deserialize_buffer = Vec::new();
-    data.serialize_pb().write_to_vec(&mut deserialize_buffer).unwrap();
+    data.serialize_pb()
+        .write_to_vec(&mut deserialize_buffer)
+        .unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
@@ -45,7 +49,12 @@ where
 
     crate::bench_size(name, "protobuf", deserialize_buffer.as_slice());
 
-    assert!(T::Message::parse_from_bytes(&deserialize_buffer).unwrap().into() == *data);
+    assert!(
+        T::Message::parse_from_bytes(&deserialize_buffer)
+            .unwrap()
+            .into()
+            == *data
+    );
 
     group.finish();
 }
