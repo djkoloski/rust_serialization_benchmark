@@ -39,6 +39,8 @@ pub mod bench_postcard;
 pub mod bench_pot;
 #[cfg(feature = "prost")]
 pub mod bench_prost;
+#[cfg(feature = "protobuf")]
+pub mod bench_protobuf;
 #[cfg(feature = "rkyv")]
 pub mod bench_rkyv;
 #[cfg(feature = "rmp-serde")]

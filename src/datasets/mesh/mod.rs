@@ -7,6 +7,8 @@ pub mod mesh_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.mesh.rs"]
 pub mod mesh_prost;
+#[cfg(feature = "protobuf")]
+pub mod mesh_protobuf;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
@@ -26,6 +28,8 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+#[cfg(feature = "protobuf")]
+use crate::bench_protobuf;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -114,6 +118,32 @@ impl bench_prost::Serialize for Vector3 {
 #[cfg(feature = "prost")]
 impl From<mesh_prost::Vector3> for Vector3 {
     fn from(value: mesh_prost::Vector3) -> Self {
+        Vector3 {
+            x: value.x,
+            y: value.y,
+            z: value.z,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Vector3 {
+    type Message = mesh_protobuf::mesh::Vector3;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+            special_fields: protobuf::SpecialFields::new(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<mesh_protobuf::mesh::Vector3> for Vector3 {
+    fn from(value: mesh_protobuf::mesh::Vector3) -> Self {
         Vector3 {
             x: value.x,
             y: value.y,
@@ -228,6 +258,34 @@ impl From<mesh_prost::Triangle> for Triangle {
     }
 }
 
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Triangle {
+    type Message = mesh_protobuf::mesh::Triangle;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            v0: protobuf::MessageField::some(self.v0.serialize_pb()),
+            v1: protobuf::MessageField::some(self.v1.serialize_pb()),
+            v2: protobuf::MessageField::some(self.v2.serialize_pb()),
+            normal: protobuf::MessageField::some(self.normal.serialize_pb()),
+            special_fields: protobuf::SpecialFields::new(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<mesh_protobuf::mesh::Triangle> for Triangle {
+    fn from(value: mesh_protobuf::mesh::Triangle) -> Self {
+        Triangle {
+            v0: value.v0.unwrap().into(),
+            v1: value.v1.unwrap().into(),
+            v2: value.v2.unwrap().into(),
+            normal: value.normal.unwrap().into(),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
@@ -316,6 +374,29 @@ impl bench_prost::Serialize for Mesh {
 #[cfg(feature = "prost")]
 impl From<mesh_prost::Mesh> for Mesh {
     fn from(value: mesh_prost::Mesh) -> Self {
+        Mesh {
+            triangles: value.triangles.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Mesh {
+    type Message = mesh_protobuf::mesh::Mesh;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::new();
+        for triangle in self.triangles.iter() {
+            result.triangles.push(triangle.serialize_pb());
+        }
+        result
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<mesh_protobuf::mesh::Mesh> for Mesh {
+    fn from(value: mesh_protobuf::mesh::Mesh) -> Self {
         Mesh {
             triangles: value.triangles.into_iter().map(Into::into).collect(),
         }

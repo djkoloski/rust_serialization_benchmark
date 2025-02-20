@@ -7,6 +7,8 @@ pub mod log_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.log.rs"]
 pub mod log_prost;
+#[cfg(feature = "protobuf")]
+pub mod log_protobuf;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
@@ -26,6 +28,8 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+#[cfg(feature = "protobuf")]
+use crate::bench_protobuf;
 use crate::datasets::BorrowableData;
 use crate::Generate;
 
@@ -175,6 +179,34 @@ impl bench_prost::Serialize for Address {
 #[cfg(feature = "prost")]
 impl From<log_prost::Address> for Address {
     fn from(value: log_prost::Address) -> Self {
+        Address {
+            x0: value.x0.try_into().unwrap(),
+            x1: value.x1.try_into().unwrap(),
+            x2: value.x2.try_into().unwrap(),
+            x3: value.x3.try_into().unwrap(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Address {
+    type Message = log_protobuf::log::Address;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            x0: self.x0 as u32,
+            x1: self.x1 as u32,
+            x2: self.x2 as u32,
+            x3: self.x3 as u32,
+            special_fields: protobuf::SpecialFields::new(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<log_protobuf::log::Address> for Address {
+    fn from(value: log_protobuf::log::Address) -> Self {
         Address {
             x0: value.x0.try_into().unwrap(),
             x1: value.x1.try_into().unwrap(),
@@ -394,7 +426,7 @@ impl bench_prost::Serialize for Log {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        log_prost::Log {
+        Self::Message {
             address: Some(self.address.serialize_pb()),
             identity: self.identity.clone(),
             userid: self.userid.clone(),
@@ -409,6 +441,40 @@ impl bench_prost::Serialize for Log {
 #[cfg(feature = "prost")]
 impl From<log_prost::Log> for Log {
     fn from(value: log_prost::Log) -> Self {
+        Log {
+            address: value.address.unwrap().into(),
+            identity: value.identity,
+            userid: value.userid,
+            date: value.date,
+            request: value.request,
+            code: value.code.try_into().unwrap(),
+            size: value.size,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Log {
+    type Message = log_protobuf::log::Log;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            address: protobuf::MessageField::some(self.address.serialize_pb()),
+            identity: self.identity.clone(),
+            userid: self.userid.clone(),
+            date: self.date.clone(),
+            request: self.request.clone(),
+            code: self.code as u32,
+            size: self.size,
+            special_fields: protobuf::SpecialFields::new(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<log_protobuf::log::Log> for Log {
+    fn from(value: log_protobuf::log::Log) -> Self {
         Log {
             address: value.address.unwrap().into(),
             identity: value.identity,
@@ -541,6 +607,29 @@ impl bench_prost::Serialize for Logs {
 #[cfg(feature = "prost")]
 impl From<log_prost::Logs> for Logs {
     fn from(value: log_prost::Logs) -> Self {
+        Logs {
+            logs: value.logs.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Logs {
+    type Message = log_protobuf::log::Logs;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::new();
+        for log in self.logs.iter() {
+            result.logs.push(log.serialize_pb());
+        }
+        result
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<log_protobuf::log::Logs> for Logs {
+    fn from(value: log_protobuf::log::Logs) -> Self {
         Logs {
             logs: value.logs.into_iter().map(Into::into).collect(),
         }

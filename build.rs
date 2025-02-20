@@ -45,11 +45,28 @@ fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     )
 }
 
+#[cfg(feature = "regenerate-protobuf")]
+fn protobuf_compile_dataset(name: &'static str) -> std::io::Result<()> {
+    if cfg!(windows) && env::var("PROTOC").is_err() {
+        env::set_var("PROTOC", "./prebuilt/protoc.exe");
+    }
+    protobuf_codegen::Codegen::new()
+        .protoc()
+        .protoc_extra_arg("--experimental_allow_proto3_optional")
+        .out_dir(format!("./src/datasets/{name}/{name}_protobuf"))
+        .inputs(&[format!("./src/datasets/{name}/{name}.proto")])
+        .include(format!("./src/datasets/{name}/"))
+        .run().unwrap();
+    
+    Ok(())
+}
+
 fn main() {
     #[cfg(any(
         feature = "regenerate-capnp",
         feature = "regenerate-flatbuffers",
-        feature = "regenerate-prost"
+        feature = "regenerate-prost",
+        feature = "regenerate-protobuf"
     ))]
     {
         const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
@@ -60,6 +77,8 @@ fn main() {
             flatc_compile_dataset(name).unwrap();
             #[cfg(feature = "regenerate-prost")]
             prost_compile_dataset(name).unwrap();
+            #[cfg(feature = "regenerate-protobuf")]
+            protobuf_compile_dataset(name).unwrap();
         }
     }
 }
