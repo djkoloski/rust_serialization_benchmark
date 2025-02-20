@@ -2,10 +2,18 @@
 ignore = [
     "src/datasets/log/log_capnp.rs",
     "src/datasets/log/log_generated.rs",
+    "src/datasets/log/log_protobuf/mod.rs",
+    "src/datasets/log/log_protobuf/log.rs",
     "src/datasets/mesh/mesh_capnp.rs",
     "src/datasets/mesh/mesh_generated.rs",
+    "src/datasets/log/mesh_protobuf/mod.rs",
+    "src/datasets/log/mesh_protobuf/mesh.rs",
     "src/datasets/minecraft_savedata/minecraft_savedata_capnp.rs",
     "src/datasets/minecraft_savedata/minecraft_savedata_generated.rs",
+    "src/datasets/log/minecraft_savedata_protobuf/mod.rs",
+    "src/datasets/log/minecraft_savedata_protobuf/minecraft_savedata.rs",
     "src/datasets/mk48/mk48_capnp.rs",
     "src/datasets/mk48/mk48_generated.rs",
+    "src/datasets/log/mk48_protobuf/mod.rs",
+    "src/datasets/log/mk48_protobuf/mk48.rs",
 ]

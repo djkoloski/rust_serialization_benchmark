@@ -7,6 +7,8 @@ pub mod mk48_fb;
 #[cfg(feature = "prost")]
 #[path = "prost.mk48.rs"]
 pub mod mk48_prost;
+#[cfg(feature = "protobuf")]
+pub mod mk48_protobuf;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
@@ -16,6 +18,8 @@ pub use mk48_capnp as cp;
 pub use mk48_fb::mk_48 as fb;
 #[cfg(feature = "prost")]
 use mk48_prost as pb;
+#[cfg(feature = "protobuf")]
+use mk48_protobuf as rpb;
 #[cfg(feature = "nanoserde")]
 use nanoserde::{DeBin, SerBin};
 use rand::Rng;
@@ -28,6 +32,8 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+#[cfg(feature = "protobuf")]
+use crate::bench_protobuf;
 use crate::{generate_vec, Generate};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -245,6 +251,43 @@ impl From<pb::EntityType> for EntityType {
     }
 }
 
+#[cfg(feature = "protobuf")]
+impl From<EntityType> for rpb::mk48::EntityType {
+    #[inline]
+    fn from(value: EntityType) -> Self {
+        match value {
+            EntityType::ArleighBurke => rpb::mk48::EntityType::ARLEIGH_BURKE,
+            EntityType::Bismarck => rpb::mk48::EntityType::BISMARCK,
+            EntityType::Clemenceau => rpb::mk48::EntityType::CLEMENCEAU,
+            EntityType::Fletcher => rpb::mk48::EntityType::FLETCHER,
+            EntityType::G5 => rpb::mk48::EntityType::G5,
+            EntityType::Iowa => rpb::mk48::EntityType::IOWA,
+            EntityType::Kolkata => rpb::mk48::EntityType::KOLKATA,
+            EntityType::Osa => rpb::mk48::EntityType::OSA,
+            EntityType::Yasen => rpb::mk48::EntityType::YASEN,
+            EntityType::Zubr => rpb::mk48::EntityType::ZUBR,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::EntityType> for EntityType {
+    fn from(value: rpb::mk48::EntityType) -> Self {
+        match value {
+            rpb::mk48::EntityType::ARLEIGH_BURKE => EntityType::ArleighBurke,
+            rpb::mk48::EntityType::BISMARCK => EntityType::Bismarck,
+            rpb::mk48::EntityType::CLEMENCEAU => EntityType::Clemenceau,
+            rpb::mk48::EntityType::FLETCHER => EntityType::Fletcher,
+            rpb::mk48::EntityType::G5 => EntityType::G5,
+            rpb::mk48::EntityType::IOWA => EntityType::Iowa,
+            rpb::mk48::EntityType::KOLKATA => EntityType::Kolkata,
+            rpb::mk48::EntityType::OSA => EntityType::Osa,
+            rpb::mk48::EntityType::YASEN => EntityType::Yasen,
+            rpb::mk48::EntityType::ZUBR => EntityType::Zubr,
+        }
+    }
+}
+
 fn generate_submerge(rng: &mut impl Rng, entity_type: EntityType) -> bool {
     entity_type.is_sub() && rng.gen_bool(0.9)
 }
@@ -388,6 +431,45 @@ impl From<pb::Transform> for Transform {
     }
 }
 
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Transform {
+    type Message = rpb::mk48::Transform;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            altitude: self.altitude.into(),
+            angle: self.angle.into(),
+            position: protobuf::MessageField::some(rpb::mk48::Vector2f {
+                x: self.position.0,
+                y: self.position.1,
+                special_fields: protobuf::SpecialFields::new(),
+            }),
+            velocity: self.velocity.into(),
+            special_fields: protobuf::SpecialFields::new(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::Vector2f> for (f32, f32) {
+    fn from(value: rpb::mk48::Vector2f) -> Self {
+        (value.x, value.y)
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::Transform> for Transform {
+    fn from(value: rpb::mk48::Transform) -> Self {
+        Transform {
+            altitude: value.altitude.try_into().unwrap(),
+            angle: value.angle.try_into().unwrap(),
+            position: value.position.unwrap().into(),
+            velocity: value.velocity.try_into().unwrap(),
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
@@ -474,6 +556,32 @@ impl bench_prost::Serialize for Guidance {
 #[cfg(feature = "prost")]
 impl From<pb::Guidance> for Guidance {
     fn from(value: pb::Guidance) -> Self {
+        Guidance {
+            angle: value.angle.try_into().unwrap(),
+            submerge: value.submerge,
+            velocity: value.velocity.try_into().unwrap(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Guidance {
+    type Message = rpb::mk48::Guidance;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            angle: self.angle as u32,
+            submerge: self.submerge,
+            velocity: self.velocity as i32,
+            special_fields: protobuf::SpecialFields::new(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::Guidance> for Guidance {
+    fn from(value: rpb::mk48::Guidance) -> Self {
         Guidance {
             angle: value.angle.try_into().unwrap(),
             submerge: value.submerge,
@@ -692,6 +800,54 @@ impl From<pb::Contact> for Contact {
     }
 }
 
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Contact {
+    type Message = rpb::mk48::Contact;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message {
+            damage: self.damage as u32,
+            entity_id: self.entity_id,
+            entity_type: self.entity_type.map(|entity_type| {
+                protobuf::EnumOrUnknown::new(rpb::mk48::EntityType::from(entity_type))
+            }),
+            guidance: Some(self.guidance.serialize_pb()).into(),
+            player_id: self.player_id.map(Into::into),
+            reloads: Default::default(),
+            transform: Some(self.transform.serialize_pb()).into(),
+            turret_angles: Default::default(),
+            special_fields: protobuf::SpecialFields::new(),
+        };
+        for reload in self.reloads.iter().cloned() {
+            result.reloads.push(reload);
+        }
+        for turret_angle in self.turret_angles.iter().cloned() {
+            result.turret_angles.push(turret_angle as u32);
+        }
+        result
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::Contact> for Contact {
+    fn from(value: rpb::mk48::Contact) -> Self {
+        Contact {
+            damage: value.damage.try_into().unwrap(),
+            entity_id: value.entity_id,
+            entity_type: value.entity_type.map(|et| et.unwrap().into()),
+            guidance: value.guidance.unwrap().into(),
+            player_id: value.player_id.map(|id| id.try_into().unwrap()),
+            reloads: value.reloads,
+            transform: value.transform.unwrap().into(),
+            turret_angles: value
+                .turret_angles
+                .into_iter()
+                .map(|a| a.try_into().unwrap())
+                .collect(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
@@ -807,6 +963,44 @@ impl From<pb::ChunkId> for (i8, i8) {
 #[cfg(feature = "prost")]
 impl From<pb::TerrainUpdate> for TerrainUpdate {
     fn from(value: pb::TerrainUpdate) -> Self {
+        TerrainUpdate {
+            chunk_id: value.chunk_id.unwrap().into(),
+            data: value.data,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for TerrainUpdate {
+    type Message = rpb::mk48::TerrainUpdate;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message {
+            chunk_id: protobuf::MessageField::some(rpb::mk48::ChunkId {
+                x: self.chunk_id.0 as i32,
+                y: self.chunk_id.1 as i32,
+                special_fields: protobuf::SpecialFields::new(),
+            }),
+            data: Default::default(),
+            special_fields: protobuf::SpecialFields::new(),
+        };
+        for datum in self.data.iter().cloned() {
+            result.data.push(datum);
+        }
+        result
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::ChunkId> for (i8, i8) {
+    fn from(value: rpb::mk48::ChunkId) -> Self {
+        (value.x.try_into().unwrap(), value.y.try_into().unwrap())
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::TerrainUpdate> for TerrainUpdate {
+    fn from(value: rpb::mk48::TerrainUpdate) -> Self {
         TerrainUpdate {
             chunk_id: value.chunk_id.unwrap().into(),
             data: value.data,
@@ -956,6 +1150,36 @@ impl From<pb::Update> for Update {
     }
 }
 
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Update {
+    type Message = rpb::mk48::Update;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for contact in self.contacts.iter() {
+            result.contacts.push(contact.serialize_pb());
+        }
+        result.score = self.score;
+        result.world_radius = self.world_radius;
+        for terrain_update in self.terrain_updates.iter() {
+            result.terrain_updates.push(terrain_update.serialize_pb());
+        }
+        result
+    }
+}
+
+#[cfg(feature = "prost")]
+impl From<rpb::mk48::Update> for Update {
+    fn from(value: rpb::mk48::Update) -> Self {
+        Update {
+            contacts: value.contacts.into_iter().map(Into::into).collect(),
+            score: value.score,
+            world_radius: value.world_radius,
+            terrain_updates: value.terrain_updates.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
@@ -1042,6 +1266,29 @@ impl bench_prost::Serialize for Updates {
 #[cfg(feature = "prost")]
 impl From<pb::Updates> for Updates {
     fn from(value: pb::Updates) -> Self {
+        Updates {
+            updates: value.updates.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl bench_protobuf::Serialize for Updates {
+    type Message = rpb::mk48::Updates;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for update in self.updates.iter() {
+            result.updates.push(update.serialize_pb());
+        }
+        result
+    }
+}
+
+#[cfg(feature = "protobuf")]
+impl From<rpb::mk48::Updates> for Updates {
+    fn from(value: rpb::mk48::Updates) -> Self {
         Updates {
             updates: value.updates.into_iter().map(Into::into).collect(),
         }
