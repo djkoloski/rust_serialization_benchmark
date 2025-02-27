@@ -2119,7 +2119,7 @@ impl bench_protobuf::Serialize for Players {
     }
 }
 
-#[cfg(feature = "prost")]
+#[cfg(feature = "protobuf")]
 impl From<rpb::minecraft_savedata::Players> for Players {
     fn from(value: rpb::minecraft_savedata::Players) -> Self {
         Players {
