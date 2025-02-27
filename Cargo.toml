@@ -111,7 +111,8 @@ default-encoding-set = [
     "dlhn",
     "flatbuffers",
     "minicbor",
-    "msgpacker",
+    # Disabled until fixed: https://github.com/codx-dev/msgpacker/issues/17
+    # "msgpacker",
     "nachricht-serde",
     "nanoserde",
     "postcard",
@@ -129,6 +130,7 @@ default-encoding-set = [
     "serde_json",
     "simd-json",
     "speedy",
+    # Disabled until fixed: https://github.com/louaykamel/wiring/issues/3
     # "wiring",
 ]
 
