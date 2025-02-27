@@ -1168,7 +1168,7 @@ impl bench_protobuf::Serialize for Update {
     }
 }
 
-#[cfg(feature = "prost")]
+#[cfg(feature = "protobuf")]
 impl From<rpb::mk48::Update> for Update {
     fn from(value: rpb::mk48::Update) -> Self {
         Update {
