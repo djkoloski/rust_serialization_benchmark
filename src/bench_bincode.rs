@@ -1,10 +1,12 @@
+use crate::datasets::BorrowableData;
 use criterion::{black_box, Criterion};
+
+const BUFFER_LEN: usize = 10_000_000;
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: bincode::Encode + bincode::Decode + PartialEq,
+    T: bincode::Encode + bincode::Decode<()> + PartialEq,
 {
-    const BUFFER_LEN: usize = 10_000_000;
     let mut group = c.benchmark_group(format!("{}/bincode", name));
 
     let mut buffer = vec![0u8; BUFFER_LEN];
@@ -42,8 +44,43 @@ where
     group.finish();
 }
 
-// Borrowing: bincode 2.x has not cut a crate version in years, and 2.0.0rc3 has a bug that prevents
-// borrowed decoding from deriving a working impl. We will not be benchmarking borrowing for this
-// library until it has a working release.
-//
-// https://github.com/bincode-org/bincode/issues/646
+pub fn bench_borrowable<T>(name: &'static str, c: &mut Criterion, data: &T)
+where
+    T: bincode::Encode + for<'de> bincode::Decode<()> + BorrowableData,
+    for<'a> T::Borrowed<'a>: bincode::Encode + bincode::BorrowDecode<'a, ()>,
+{
+    bench(name, c, data);
+
+    let mut group = c.benchmark_group(format!("{}/bincode", name));
+
+    let mut deserialize_buffer = vec![0u8; BUFFER_LEN];
+    let conf = bincode::config::standard();
+    let size = bincode::encode_into_slice(data, &mut deserialize_buffer, conf).unwrap();
+    let bdata = T::Borrowed::from(data);
+
+    // The borrowed variant type should encode exactly the same as the owned type.
+    let mut borrowed_serialized = vec![0u8; BUFFER_LEN];
+    bincode::encode_into_slice(&bdata, &mut borrowed_serialized, conf).unwrap();
+    assert_eq!(borrowed_serialized, deserialize_buffer);
+
+    let buffer = &deserialize_buffer[..size];
+
+    // The borrowed value we decode should be equivalent to the input
+    assert!(
+        bincode::borrow_decode_from_slice::<T::Borrowed<'_>, _>(buffer, conf)
+            .unwrap()
+            .0
+            == bdata
+    );
+
+    group.bench_function("borrow", |b| {
+        b.iter(|| {
+            black_box(
+                bincode::borrow_decode_from_slice::<T::Borrowed<'_>, _>(black_box(buffer), conf)
+                    .unwrap(),
+            );
+        })
+    });
+
+    group.finish();
+}

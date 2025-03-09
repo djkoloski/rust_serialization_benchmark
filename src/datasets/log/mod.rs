@@ -264,6 +264,7 @@ pub struct Log {
 
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::BorrowDecode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
@@ -523,6 +524,7 @@ pub struct Logs {
 
 #[derive(PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::BorrowDecode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]

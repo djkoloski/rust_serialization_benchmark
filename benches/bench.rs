@@ -89,7 +89,7 @@ fn bench_log(c: &mut Criterion) {
     bench_bincode1::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
-    bench_bincode::bench(BENCH, c, &data);
+    bench_bincode::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
     bench_bitcode::bench_borrowable(BENCH, c, &data);
@@ -448,7 +448,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_bincode1::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bincode")]
-    bench_bincode::bench(BENCH, c, &data);
+    bench_bincode::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "bitcode")]
     bench_bitcode::bench_borrowable(BENCH, c, &data);
