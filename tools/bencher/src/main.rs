@@ -8,7 +8,7 @@ fn main() {
 
     let metadata_path = NamedTempFile::new().unwrap().into_temp_path();
     let metadata = Command::new("cargo")
-        .args(["metadata"])
+        .args(["metadata", "--format-version", "1"])
         .output()
         .unwrap()
         .stdout;
