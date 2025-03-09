@@ -1,12 +1,11 @@
 use crate::datasets::BorrowableData;
-use bincode::{BorrowDecode, Decode, Encode};
 use criterion::{black_box, Criterion};
 
 const BUFFER_LEN: usize = 10_000_000;
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Encode + Decode<()> + PartialEq,
+    T: bincode::Encode + bincode::Decode<()> + PartialEq,
 {
     let mut group = c.benchmark_group(format!("{}/bincode", name));
 
@@ -47,8 +46,8 @@ where
 
 pub fn bench_borrowable<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
-    T: Encode + for<'de> Decode<()> + BorrowableData,
-    for<'a> T::Borrowed<'a>: Encode + BorrowDecode<'a, ()>,
+    T: bincode::Encode + for<'de> bincode::Decode<()> + BorrowableData,
+    for<'a> T::Borrowed<'a>: bincode::Encode + bincode::BorrowDecode<'a, ()>,
 {
     bench(name, c, data);
 
