@@ -115,20 +115,41 @@ fn main() {
 
 fn find_package_id(feature: &str, config: &Config, metadata: &Metadata) -> PackageId {
     if let Some(package_id) = config.features.get(feature) {
-        package_id.clone()
+        PackageId {
+            name: package_id.name.clone(),
+            version: find_package_version(
+                &package_id.name,
+                Some(
+                    package_id
+                        .version
+                        .parse()
+                        .expect("invalid version spec in config"),
+                ),
+                metadata,
+            ),
+        }
     } else {
         PackageId {
             name: feature.to_string(),
-            version: find_package_version(feature, metadata),
+            version: find_package_version(feature, None, metadata),
         }
     }
 }
 
-fn find_package_version(name: &str, metadata: &Metadata) -> String {
+fn find_package_version(
+    name: &str,
+    version_req: Option<semver::VersionReq>,
+    metadata: &Metadata,
+) -> String {
     metadata
         .packages
         .iter()
-        .find(|pkg| pkg.name == name)
+        .find(|pkg| {
+            pkg.name == name
+                && version_req
+                    .as_ref()
+                    .map_or(true, |req| req.matches(&pkg.version))
+        })
         .unwrap()
         .version
         .to_string()

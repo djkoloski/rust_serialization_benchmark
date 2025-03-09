@@ -11,5 +11,6 @@ cargo_metadata.workspace = true
 clap = { workspace = true, features = ["derive"] }
 regex.workspace = true
 schema.workspace = true
+semver.workspace = true
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
