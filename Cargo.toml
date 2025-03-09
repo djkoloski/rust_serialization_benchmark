@@ -130,8 +130,8 @@ default-encoding-set = [
     "serde_json",
     "simd-json",
     "speedy",
-    # Disabled until fixed: https://github.com/louaykamel/wiring/issues/4
-    # Also affected by: https://github.com/codx-dev/msgpacker/issues/17
+    # Disabled until fixed: https://github.com/louaykamel/wiring/issues/3
+    # Also affected by the removal of `uninit_array`
     # "wiring",
 ]
 
