@@ -21,6 +21,7 @@ enum-iterator = "0.8"
 fixed-map = { version = "0.9", default-features = false }
 regex = "1.11"
 schema = { path = "tools/schema" }
+semver = "1.0.26"
 serde = "1.0"
 serde_json = "1.0"
 stylist = { version = "0.12", default-features = false }

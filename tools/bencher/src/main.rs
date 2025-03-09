@@ -8,7 +8,7 @@ fn main() {
 
     let metadata_path = NamedTempFile::new().unwrap().into_temp_path();
     let metadata = Command::new("cargo")
-        .args(["metadata"])
+        .args(["metadata", "--format-version", "1"])
         .output()
         .unwrap()
         .stdout;
@@ -32,13 +32,13 @@ fn main() {
 
     let mut bench_path = PathBuf::from("benchmark_results");
     bench_path.push(format!(
-        "{}-{}-{}_{}-{}-{}",
-        now.year(),
-        now.month() as usize,
-        now.day(),
-        now.hour(),
-        now.minute(),
-        now.second(),
+        "{yr}-{mon:02}-{day:02}_{hr:02}-{min:02}-{sec:02}",
+        yr = now.year(),
+        mon = now.month() as usize,
+        day = now.day(),
+        hr = now.hour(),
+        min = now.minute(),
+        sec = now.second(),
     ));
 
     let mut log_path = bench_path.clone();
