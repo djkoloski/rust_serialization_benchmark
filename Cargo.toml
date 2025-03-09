@@ -24,7 +24,7 @@ schema = { path = "tools/schema" }
 serde = "1.0"
 serde_json = "1.0"
 stylist = { version = "0.12", default-features = false }
-tempfile = "3.16"
+tempfile = "3.18"
 time = "0.3"
 wasm-bindgen = "0.2"
 web-sys = "0.3.77"
