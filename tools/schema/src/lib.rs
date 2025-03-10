@@ -14,7 +14,10 @@ pub struct PackageId {
 
 impl PackageId {
     pub fn crates_io_url(&self) -> String {
-        format!("https://crates.io/crates/{}/{}", self.crate_name, self.version)
+        format!(
+            "https://crates.io/crates/{}/{}",
+            self.crate_name, self.version
+        )
     }
 }
 
