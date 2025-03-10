@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use std::cmp::Ordering;
 use std::{
+    cmp::Ordering,
     collections::{BTreeMap, HashMap},
     path::Path,
 };
