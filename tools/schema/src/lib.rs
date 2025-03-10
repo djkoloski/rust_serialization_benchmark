@@ -98,7 +98,10 @@ impl PartialOrd<Self> for FeatureName<'_> {
 impl Dataset {
     /// Groups features together with the given config, annotating them with the common encoding
     /// names from the config and returning a map that orders them according to that logic.
-    pub fn grouped_features<'a>(&'a self, config: &'a Config) -> BTreeMap<FeatureName<'a>, &'a Feature> {
+    pub fn grouped_features<'a>(
+        &'a self,
+        config: &'a Config,
+    ) -> BTreeMap<FeatureName<'a>, &'a Feature> {
         self.features
             .iter()
             .map(|(name, feature)| {
