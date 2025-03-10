@@ -16,7 +16,7 @@
         }
     },
     "do_not_edit": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
-    "features": {
+    "crate_matching": {
         "bincode1": {
             "name": "bincode",
             "version": "1"
@@ -25,5 +25,19 @@
             "name": "bincode",
             "version": "2"
         }
+    },
+    "equivalent_encodings": {
+        "bincode1": "bincode",
+        "bincode": "bincode",
+        "cbor4ii": "cbor",
+        "ciborium": "cbor",
+        "msgpacker": "messagepack",
+        "parity-scale-codec": "scale",
+        "prost": "protobuf",
+        "protobuf": "protobuf",
+        "rmp-serde": "messagepack",
+        "serde_cbor": "cbor",
+        "serde_json": "json",
+        "simd-json": "json"
     }
 }

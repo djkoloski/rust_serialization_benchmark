@@ -136,6 +136,12 @@ default-encoding-set = [
     # "wiring",
 ]
 
+# Grouped features for comparing different implementations for a specific encoding
+all-cbor = ["cbor4ii", "ciborium", "serde_cbor"]
+all-json = ["serde_json", "simd-json"]
+all-messagepack = ["msgpacker", "rmp-serde"]
+all-protobuf = ["prost", "protobuf"]
+
 measure-compression = []
 capnp = ["dep:capnp"]
 prost = ["dep:prost", "dep:capnp"]
