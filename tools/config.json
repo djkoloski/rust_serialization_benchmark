@@ -27,8 +27,6 @@
         }
     },
     "equivalent_encodings": {
-        "bincode1": "bincode",
-        "bincode": "bincode",
         "cbor4ii": "cbor",
         "ciborium": "cbor",
         "msgpacker": "messagepack",
