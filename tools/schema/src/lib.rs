@@ -61,6 +61,8 @@ pub struct Dataset {
     pub features: BTreeMap<String, Feature>,
 }
 
+/// Represents the name of a benchmarked feature in the output, annotated with the name of the
+/// common encoding it implements if we know it.
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub struct FeatureName<'a> {
     pub name: &'a str,
@@ -69,7 +71,10 @@ pub struct FeatureName<'a> {
 
 impl Ord for FeatureName<'_> {
     fn cmp(&self, other: &Self) -> Ordering {
-        // Order first by
+        // Order by:
+        // 1. the common encoding (if we know it), falling back to the feature name
+        // 2. features that have a known common encoding come first
+        // 3. finally, within the same common encoding order by the feature name
         let this = (
             self.common_encoding.unwrap_or(self.name),
             self.common_encoding.is_none(),
