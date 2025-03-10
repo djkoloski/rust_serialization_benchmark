@@ -7,13 +7,14 @@ use std::{
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct PackageId {
-    pub name: String,
+    #[serde(alias = "name")]
+    pub crate_name: String,
     pub version: String,
 }
 
 impl PackageId {
     pub fn crates_io_url(&self) -> String {
-        format!("https://crates.io/crates/{}/{}", self.name, self.version)
+        format!("https://crates.io/crates/{}/{}", self.crate_name, self.version)
     }
 }
 
@@ -37,7 +38,7 @@ pub struct Config {
     /// Information indicating which common encodings are implemented by the given libraries being
     /// benchmarked so that they can be compared side-by-side more directly; the keys are feature
     /// names and the values are names of common encodings
-    pub equivalent_encodings: HashMap<String, String>,
+    pub common_encodings: HashMap<String, String>,
 }
 
 impl Config {
@@ -108,7 +109,7 @@ impl Dataset {
                 (
                     FeatureName {
                         name: name.as_str(),
-                        common_encoding: config.equivalent_encodings.get(name).map(String::as_str),
+                        common_encoding: config.common_encodings.get(name).map(String::as_str),
                     },
                     feature,
                 )

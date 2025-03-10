@@ -108,7 +108,7 @@ fn write_crate_row(
         write!(
             output,
             "| {encoding}:<br> [{pkg} {version}][{feature}] |",
-            pkg = package_id.name,
+            pkg = package_id.crate_name,
             version = package_id.version,
             feature = feature.name,
         )
@@ -116,7 +116,7 @@ fn write_crate_row(
         write!(
             output,
             "| [{pkg} {version}][{feature}] |",
-            pkg = package_id.name,
+            pkg = package_id.crate_name,
             version = package_id.version,
             feature = feature.name,
         )
