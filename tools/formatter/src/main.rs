@@ -322,7 +322,7 @@ fn format(
     }
 
     Ok(template
-        .replace("{dne}", &config.do_not_edit)
+        .replace("{dne}", &config.do_not_edit_message)
         .replace("{date}", date)
         .replace("{runtime_info}", &runtime_info)
         .replace("{tables}", &tables)

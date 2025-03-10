@@ -15,7 +15,7 @@
             "description": "This data set is composed of mk48.io game updates that contain data with many exploitable patterns and invariants."
         }
     },
-    "do_not_edit": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
+    "do_not_edit_message": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
     "crate_matching": {
         "bincode1": {
             "name": "bincode",

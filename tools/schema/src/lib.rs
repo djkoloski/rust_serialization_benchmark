@@ -30,7 +30,7 @@ pub struct Config {
     pub suites: HashMap<String, Suite>,
     /// Do-not-edit message inserted into the readme.md file warning contributors to modify the
     /// template instead
-    pub do_not_edit: String,
+    pub do_not_edit_message: String,
     /// Information for distinguishing the appropriate crate for benchmarks whose name doesn't match
     /// the name of the crate, perhaps because multiple versions of that crate are being benchmarked
     pub crate_matching: HashMap<String, PackageId>,
