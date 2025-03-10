@@ -8,7 +8,7 @@ use std::{
 
 use clap::Parser;
 
-use schema::{Bench, Config, Dataset, Features, Results, Values};
+use schema::{Bench, Config, Dataset, FeatureName, Features, Results, Values};
 
 #[derive(Parser, Debug)]
 #[command(name = "formatter")]
@@ -98,13 +98,29 @@ fn format_values<T: Copy, U: Display>(
     Ok(())
 }
 
-fn write_crate_row(output: &mut String, feature: &str, features: &Features) -> fmt::Result {
-    let package_id = features.get(feature).unwrap();
-    write!(
-        output,
-        "| [{} {}][{feature}] |",
-        package_id.name, package_id.version
-    )
+fn write_crate_row(
+    output: &mut String,
+    feature: FeatureName<'_>,
+    features: &Features,
+) -> fmt::Result {
+    let package_id = features.get(feature.name).unwrap();
+    if let Some(encoding) = feature.common_encoding {
+        write!(
+            output,
+            "| {encoding}:<br> [{pkg} {version}][{feature}] |",
+            pkg = package_id.crate_name,
+            version = package_id.version,
+            feature = feature.name,
+        )
+    } else {
+        write!(
+            output,
+            "| [{pkg} {version}][{feature}] |",
+            pkg = package_id.crate_name,
+            version = package_id.version,
+            feature = feature.name,
+        )
+    }
 }
 
 pub fn capitalize(s: &str) -> String {
@@ -123,6 +139,7 @@ pub fn capitalize(s: &str) -> String {
 fn build_tables(
     features: &Features,
     dataset: &Dataset,
+    config: &Config,
     columns: &[&str],
     placeholder: &str,
 ) -> Result<Tables, fmt::Error> {
@@ -155,7 +172,7 @@ fn build_tables(
         })
         .collect::<Vec<_>>();
 
-    for (feature, crate_) in dataset.features.iter() {
+    for (feature, crate_) in dataset.grouped_features(config) {
         if columns.iter().any(|&c| crate_.benches.contains_key(c)) {
             write_crate_row(&mut data, feature, features)?;
             write_crate_row(&mut comparison, feature, features)?;
@@ -241,8 +258,8 @@ fn format(
         {
             ser_de_cols.to_mut().retain(|&col| col != "borrow");
         }
-        let serde_tables = build_tables(&results.features, dataset, &ser_de_cols, "†")?;
-        let zcd_tables = build_tables(&results.features, dataset, ZCD_COLS, "‡")?;
+        let serde_tables = build_tables(&results.features, dataset, &config, &ser_de_cols, "†")?;
+        let zcd_tables = build_tables(&results.features, dataset, &config, ZCD_COLS, "‡")?;
 
         write!(
             &mut tables,
@@ -305,7 +322,7 @@ fn format(
     }
 
     Ok(template
-        .replace("{dne}", &config.do_not_edit)
+        .replace("{dne}", &config.do_not_edit_message)
         .replace("{date}", date)
         .replace("{runtime_info}", &runtime_info)
         .replace("{tables}", &tables)

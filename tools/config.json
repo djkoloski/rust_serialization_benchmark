@@ -15,15 +15,27 @@
             "description": "This data set is composed of mk48.io game updates that contain data with many exploitable patterns and invariants."
         }
     },
-    "do_not_edit": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
-    "features": {
+    "do_not_edit_message": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
+    "crate_matching": {
         "bincode1": {
-            "name": "bincode",
+            "crate_name": "bincode",
             "version": "1"
         },
         "bincode": {
-            "name": "bincode",
+            "crate_name": "bincode",
             "version": "2"
         }
+    },
+    "common_encodings": {
+        "cbor4ii": "cbor",
+        "ciborium": "cbor",
+        "msgpacker": "messagepack",
+        "parity-scale-codec": "scale",
+        "prost": "protobuf",
+        "protobuf": "protobuf",
+        "rmp-serde": "messagepack",
+        "serde_cbor": "cbor",
+        "serde_json": "json",
+        "simd-json": "json"
     }
 }
