@@ -29,4 +29,7 @@ where
     group.finish();
 }
 
+// TODO: nanoserde implements json & ron encodings as well as the binary encoding, so we could
+//  benchmark those as well.
+
 // nanoserde does not appear to support borrowed decoding.
