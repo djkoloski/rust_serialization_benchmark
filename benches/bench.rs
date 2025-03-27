@@ -63,7 +63,8 @@ use rust_serialization_benchmark::bench_simd_json;
 use rust_serialization_benchmark::bench_speedy;
 #[cfg(feature = "wiring")]
 use rust_serialization_benchmark::bench_wiring;
-
+#[cfg(feature = "quick-xml")]
+use rust_serialization_benchmark::bench_quickxml;
 use rust_serialization_benchmark::generate_vec;
 
 fn bench_log(c: &mut Criterion) {
@@ -248,6 +249,9 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
 
+    #[cfg(feature = "quick-xml")]
+    bench_quickxml::bench(BENCH, c, &data);
+
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);
 }
@@ -420,6 +424,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "quick-xml")]
+    bench_quickxml::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);
@@ -758,6 +765,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "quick-xml")]
+    bench_quickxml::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);

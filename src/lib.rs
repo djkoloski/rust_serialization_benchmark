@@ -63,6 +63,8 @@ pub mod bench_simd_json;
 pub mod bench_speedy;
 #[cfg(feature = "wiring")]
 pub mod bench_wiring;
+#[cfg(feature = "quick-xml")]
+pub mod bench_quickxml;
 pub mod datasets;
 
 use core::{mem, ops};
