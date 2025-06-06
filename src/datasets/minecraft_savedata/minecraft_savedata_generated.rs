@@ -153,8 +153,12 @@ impl<'b> flatbuffers::Push for Abilities {
     type Output = Abilities;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Abilities as *const u8, Self::size());
+        let src = ::core::slice::from_raw_parts(self as *const Abilities as *const u8, <Self as flatbuffers::Push>::size());
         dst.copy_from_slice(src);
+    }
+    #[inline]
+    fn alignment() -> flatbuffers::PushAlignment {
+        flatbuffers::PushAlignment::new(4)
     }
 }
 
@@ -432,8 +436,12 @@ impl<'b> flatbuffers::Push for Vector2f {
     type Output = Vector2f;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Vector2f as *const u8, Self::size());
+        let src = ::core::slice::from_raw_parts(self as *const Vector2f as *const u8, <Self as flatbuffers::Push>::size());
         dst.copy_from_slice(src);
+    }
+    #[inline]
+    fn alignment() -> flatbuffers::PushAlignment {
+        flatbuffers::PushAlignment::new(4)
     }
 }
 
@@ -557,8 +565,12 @@ impl<'b> flatbuffers::Push for Vector3d {
     type Output = Vector3d;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Vector3d as *const u8, Self::size());
+        let src = ::core::slice::from_raw_parts(self as *const Vector3d as *const u8, <Self as flatbuffers::Push>::size());
         dst.copy_from_slice(src);
+    }
+    #[inline]
+    fn alignment() -> flatbuffers::PushAlignment {
+        flatbuffers::PushAlignment::new(8)
     }
 }
 
@@ -714,8 +726,12 @@ impl<'b> flatbuffers::Push for Uuid {
     type Output = Uuid;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Uuid as *const u8, Self::size());
+        let src = ::core::slice::from_raw_parts(self as *const Uuid as *const u8, <Self as flatbuffers::Push>::size());
         dst.copy_from_slice(src);
+    }
+    #[inline]
+    fn alignment() -> flatbuffers::PushAlignment {
+        flatbuffers::PushAlignment::new(4)
     }
 }
 

@@ -138,7 +138,7 @@ fn bench_log(c: &mut Criterion) {
             for log in data.logs().iter() {
                 black_box(log.address());
                 black_box(log.code());
-                black_box(log.size_());
+                black_box(log.size());
             }
         },
         |bytes| {
@@ -148,7 +148,7 @@ fn bench_log(c: &mut Criterion) {
             for log in data.logs().iter() {
                 black_box(log.address());
                 black_box(log.code());
-                black_box(log.size_());
+                black_box(log.size());
             }
         },
     );

@@ -57,8 +57,12 @@ impl<'b> flatbuffers::Push for Address {
     type Output = Address;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Address as *const u8, Self::size());
+        let src = ::core::slice::from_raw_parts(self as *const Address as *const u8, <Self as flatbuffers::Push>::size());
         dst.copy_from_slice(src);
+    }
+    #[inline]
+    fn alignment() -> flatbuffers::PushAlignment {
+        flatbuffers::PushAlignment::new(1)
     }
 }
 
@@ -228,7 +232,7 @@ impl<'a> Log<'a> {
   pub const VT_DATE: flatbuffers::VOffsetT = 10;
   pub const VT_REQUEST: flatbuffers::VOffsetT = 12;
   pub const VT_CODE: flatbuffers::VOffsetT = 14;
-  pub const VT_SIZE_: flatbuffers::VOffsetT = 16;
+  pub const VT_SIZE: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -240,7 +244,7 @@ impl<'a> Log<'a> {
     args: &'args LogArgs<'args>
   ) -> flatbuffers::WIPOffset<Log<'bldr>> {
     let mut builder = LogBuilder::new(_fbb);
-    builder.add_size_(args.size_);
+    builder.add_size(args.size);
     if let Some(x) = args.request { builder.add_request(x); }
     if let Some(x) = args.date { builder.add_date(x); }
     if let Some(x) = args.userid { builder.add_userid(x); }
@@ -294,11 +298,11 @@ impl<'a> Log<'a> {
     unsafe { self._tab.get::<u16>(Log::VT_CODE, Some(0)).unwrap()}
   }
   #[inline]
-  pub fn size_(&self) -> u64 {
+  pub fn size(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(Log::VT_SIZE_, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u64>(Log::VT_SIZE, Some(0)).unwrap()}
   }
 }
 
@@ -315,7 +319,7 @@ impl flatbuffers::Verifiable for Log<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("date", Self::VT_DATE, true)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("request", Self::VT_REQUEST, true)?
      .visit_field::<u16>("code", Self::VT_CODE, false)?
-     .visit_field::<u64>("size_", Self::VT_SIZE_, false)?
+     .visit_field::<u64>("size", Self::VT_SIZE, false)?
      .finish();
     Ok(())
   }
@@ -327,7 +331,7 @@ pub struct LogArgs<'a> {
     pub date: Option<flatbuffers::WIPOffset<&'a str>>,
     pub request: Option<flatbuffers::WIPOffset<&'a str>>,
     pub code: u16,
-    pub size_: u64,
+    pub size: u64,
 }
 impl<'a> Default for LogArgs<'a> {
   #[inline]
@@ -339,7 +343,7 @@ impl<'a> Default for LogArgs<'a> {
       date: None, // required field
       request: None, // required field
       code: 0,
-      size_: 0,
+      size: 0,
     }
   }
 }
@@ -374,8 +378,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LogBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u16>(Log::VT_CODE, code, 0);
   }
   #[inline]
-  pub fn add_size_(&mut self, size_: u64) {
-    self.fbb_.push_slot::<u64>(Log::VT_SIZE_, size_, 0);
+  pub fn add_size(&mut self, size: u64) {
+    self.fbb_.push_slot::<u64>(Log::VT_SIZE, size, 0);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LogBuilder<'a, 'b, A> {
@@ -405,7 +409,7 @@ impl core::fmt::Debug for Log<'_> {
       ds.field("date", &self.date());
       ds.field("request", &self.request());
       ds.field("code", &self.code());
-      ds.field("size_", &self.size_());
+      ds.field("size", &self.size());
       ds.finish()
   }
 }
