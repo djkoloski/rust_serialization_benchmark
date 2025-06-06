@@ -393,7 +393,7 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Log {
         builder.add_date(date);
         builder.add_request(request);
         builder.add_code(self.code);
-        builder.add_size_(self.size);
+        builder.add_size(self.size);
         builder.finish()
     }
 }
