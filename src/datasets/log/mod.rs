@@ -95,12 +95,12 @@ mod bilrost_address_encoding {
     //! changed without actually affecting the definition of the struct being used.
 
     use super::Address;
-    use bilrost::encoding::{Fixed, ForOverwrite, General, Proxiable, Proxied};
+    use bilrost::encoding::{Fixed, ForOverwrite, Proxiable};
     use bilrost::DecodeErrorKind;
 
     // If `Address` implemented `Default` there is a single macro for both of these.
-    impl ForOverwrite for Address {
-        fn for_overwrite() -> Self {
+    impl ForOverwrite<(), Address> for () {
+        fn for_overwrite() -> Address {
             Address {
                 x0: 0,
                 x1: 0,
@@ -117,10 +117,6 @@ mod bilrost_address_encoding {
     impl Proxiable for Address {
         type Proxy = [u8; 4];
 
-        fn new_proxy() -> Self::Proxy {
-            [0; 4]
-        }
-
         fn encode_proxy(&self) -> Self::Proxy {
             let Address { x0, x1, x2, x3 } = *self;
             [x0, x1, x2, x3]
@@ -135,8 +131,9 @@ mod bilrost_address_encoding {
 
     // When proxiable is implemented, the Proxied encoding value-encodes our type as  via the proxy,
     // and we can delegate to it.
-    bilrost::delegate_value_encoding!(
-        delegate from (General) to (Proxied<Fixed>) for type (Address));
+    bilrost::delegate_proxied_encoding!(
+        use encoding (Fixed) to encode proxied type (Address) with general encodings
+    );
 }
 
 #[cfg(feature = "flatbuffers")]
