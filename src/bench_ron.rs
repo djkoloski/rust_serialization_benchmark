@@ -13,8 +13,7 @@ where
     let mut serialize_buffer = String::with_capacity(BUFFER_LEN);
     group.bench_function("serialize", |b| {
         b.iter(|| {
-            ron::ser::to_writer(black_box(&mut serialize_buffer), black_box(&data))
-                .unwrap();
+            ron::ser::to_writer(black_box(&mut serialize_buffer), black_box(&data)).unwrap();
             black_box(());
         })
     });
@@ -24,7 +23,9 @@ where
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(ron::de::from_bytes::<'_, T>(black_box(deserialize_buffer.as_ref())).unwrap());
+            black_box(
+                ron::de::from_bytes::<'_, T>(black_box(deserialize_buffer.as_ref())).unwrap(),
+            );
         })
     });
 
@@ -59,7 +60,8 @@ where
     group.bench_function("borrow", |b| {
         b.iter(|| {
             black_box(
-                ron::de::from_bytes::<T::Borrowed<'_>>(black_box(deserialize_buffer.as_ref())).unwrap(),
+                ron::de::from_bytes::<T::Borrowed<'_>>(black_box(deserialize_buffer.as_ref()))
+                    .unwrap(),
             );
         })
     });
