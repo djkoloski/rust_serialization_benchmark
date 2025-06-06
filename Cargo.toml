@@ -130,8 +130,7 @@ default-encoding-set = [
     "serde_json",
     "simd-json",
     "speedy",
-    # Disabled until fixed: https://github.com/louaykamel/wiring/issues/4
-    # "wiring",
+    "wiring",
 ]
 
 # Grouped features for comparing different implementations for a specific encoding
