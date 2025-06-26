@@ -31,6 +31,8 @@ use rust_serialization_benchmark::bench_msgpacker;
 use rust_serialization_benchmark::bench_nachricht_serde;
 #[cfg(feature = "nanoserde")]
 use rust_serialization_benchmark::bench_nanoserde;
+#[cfg(feature = "nibblecode")]
+use rust_serialization_benchmark::bench_nibblecode;
 #[cfg(feature = "scale")]
 use rust_serialization_benchmark::bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
@@ -161,6 +163,30 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
+
+    #[cfg(feature = "nibblecode")]
+    bench_nibblecode::bench(
+        BENCH,
+        c,
+        &data,
+        |logs| {
+            for log in logs.logs.iter() {
+                black_box(&log.address);
+                black_box(log.code);
+                black_box(log.size);
+            }
+        },
+        |log| {
+            for log in log.logs.iter_mut() {
+                log.address.x0 = 0;
+                log.address.x1 = 0;
+                log.address.x2 = 0;
+                log.address.x3 = 0;
+                log.code = 200.into();
+                log.size = 0.into();
+            }
+        },
+    );
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
@@ -342,6 +368,25 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
 
+    #[cfg(feature = "nibblecode")]
+    bench_nibblecode::bench(
+        BENCH,
+        c,
+        &data,
+        |mesh| {
+            for triangle in mesh.triangles.iter() {
+                black_box(&triangle.normal);
+            }
+        },
+        |mesh| {
+            for triangle in mesh.triangles.iter_mut() {
+                triangle.normal.x = 0f32.into();
+                triangle.normal.y = 0f32.into();
+                triangle.normal.z = 0f32.into();
+            }
+        },
+    );
+
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
 
@@ -515,6 +560,29 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
+
+    #[cfg(feature = "nibblecode")]
+    bench_nibblecode::bench(
+        BENCH,
+        c,
+        &data,
+        |players| {
+            for player in players.players.iter() {
+                black_box(&player.game_type);
+            }
+        },
+        |players| {
+            use nibblecode::Serialize;
+            use rust_serialization_benchmark::datasets::minecraft_savedata::GameType;
+
+            for player in players.players.iter_mut() {
+                player.game_type = <GameType as Serialize>::Archived::Survival;
+                player.spawn_x = 0.into();
+                player.spawn_y = 0.into();
+                player.spawn_z = 0.into();
+            }
+        },
+    );
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);
@@ -692,6 +760,23 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "nibblecode")]
+    bench_nibblecode::bench(
+        BENCH,
+        c,
+        &data,
+        |updates| {
+            for update in updates.updates.iter() {
+                black_box(update.score);
+            }
+        },
+        |updates| {
+            for update in updates.updates.iter_mut() {
+                update.score *= 2;
+            }
+        },
+    );
 
     #[cfg(feature = "scale")]
     bench_parity_scale_codec::bench(BENCH, c, &data);

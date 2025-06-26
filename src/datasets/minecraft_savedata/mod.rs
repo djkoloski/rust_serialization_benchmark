@@ -48,6 +48,8 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeGameType, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -183,6 +185,8 @@ impl From<rpb::minecraft_savedata::GameType> for GameType {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeItem, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -367,6 +371,8 @@ impl From<rpb::minecraft_savedata::Item> for Item {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeAbilities, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -527,6 +533,8 @@ impl From<rpb::minecraft_savedata::Abilities> for Abilities {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeEntity, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -980,6 +988,8 @@ impl From<rpb::minecraft_savedata::Entity> for Entity {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeRecipeBook, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -1299,6 +1309,8 @@ impl From<rpb::minecraft_savedata::RecipeBook> for RecipeBook {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodePlayer, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -1994,6 +2006,8 @@ impl From<rpb::minecraft_savedata::Player> for Player {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodePlayers, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)

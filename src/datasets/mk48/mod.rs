@@ -47,6 +47,8 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeEntityType, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -324,6 +326,8 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeTransform, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -481,6 +485,8 @@ impl From<rpb::mk48::Transform> for Transform {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeGuidance, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -601,6 +607,8 @@ impl From<rpb::mk48::Guidance> for Guidance {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeContact, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -859,6 +867,8 @@ impl From<rpb::mk48::Contact> for Contact {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeTerrainUpdate, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -1019,6 +1029,8 @@ impl From<rpb::mk48::TerrainUpdate> for TerrainUpdate {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeUpdate, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -1191,6 +1203,8 @@ impl From<rpb::mk48::Update> for Update {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeUpdates, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)

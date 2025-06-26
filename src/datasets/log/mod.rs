@@ -43,6 +43,8 @@ use crate::Generate;
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeAddress, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -224,6 +226,8 @@ impl From<log_protobuf::log::Address> for Address {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeLog, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
@@ -496,6 +500,8 @@ impl From<log_protobuf::log::Log> for Log {
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
+#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeLogs, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)

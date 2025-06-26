@@ -1,5 +1,6 @@
 // wiring causes this clippy lint everywhere
 #![cfg_attr(feature = "wiring", allow(clippy::manual_async_fn))]
+#![cfg_attr(feature = "nibblecode", feature(ptr_alignment_type))]
 
 #[cfg(feature = "bilrost")]
 pub mod bench_bilrost;
@@ -31,6 +32,8 @@ pub mod bench_msgpacker;
 pub mod bench_nachricht_serde;
 #[cfg(feature = "nanoserde")]
 pub mod bench_nanoserde;
+#[cfg(feature = "nibblecode")]
+pub mod bench_nibblecode;
 #[cfg(feature = "scale")]
 pub mod bench_parity_scale_codec;
 #[cfg(feature = "postcard")]
