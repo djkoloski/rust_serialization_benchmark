@@ -13,7 +13,7 @@ where
         b.iter(|| {
             black_box(&mut builder).reset();
             data.serialize(&mut builder).unwrap();
-            black_box(builder);
+            black_box(());
         })
     });
 
