@@ -13,21 +13,27 @@ where
         b.iter(|| {
             black_box(&mut builder).reset();
             data.serialize(&mut builder).unwrap();
-            black_box(());
+            black_box(builder);
         })
     });
 
-    let buffer = builder.view();
+    builder.reset();
+    data.serialize(&mut builder).unwrap();
+
+    let deserialize_buffer = builder.view();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
             black_box(
-                T::deserialize(black_box(flexbuffers::Reader::get_root(buffer).unwrap())).unwrap(),
+                T::deserialize(black_box(
+                    flexbuffers::Reader::get_root(black_box(deserialize_buffer)).unwrap(),
+                ))
+                .unwrap(),
             );
         })
     });
 
-    crate::bench_size(name, "flexbuffers", buffer);
+    crate::bench_size(name, "flexbuffers", deserialize_buffer);
 
     group.finish();
 }
