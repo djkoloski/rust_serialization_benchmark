@@ -23,6 +23,8 @@ use rust_serialization_benchmark::bench_databuf;
 use rust_serialization_benchmark::bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 use rust_serialization_benchmark::bench_flatbuffers;
+#[cfg(feature = "flexbuffers")]
+use rust_serialization_benchmark::bench_flexbuffers;
 #[cfg(feature = "minicbor")]
 use rust_serialization_benchmark::bench_minicbor;
 #[cfg(feature = "msgpacker")]
@@ -154,6 +156,9 @@ fn bench_log(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "flexbuffers")]
+    bench_flexbuffers::bench(BENCH, c, &data);
 
     #[cfg(feature = "minicbor")]
     bench_minicbor::bench_borrowable(BENCH, c, &data);
@@ -359,6 +364,9 @@ fn bench_mesh(c: &mut Criterion) {
         },
     );
 
+    #[cfg(feature = "flexbuffers")]
+    bench_flexbuffers::bench(BENCH, c, &data);
+
     #[cfg(feature = "minicbor")]
     bench_minicbor::bench(BENCH, c, &data);
 
@@ -551,6 +559,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "flexbuffers")]
+    bench_flexbuffers::bench(BENCH, c, &data);
 
     #[cfg(feature = "minicbor")]
     bench_minicbor::bench_borrowable(BENCH, c, &data);
@@ -751,6 +762,9 @@ fn bench_mk48(c: &mut Criterion) {
             }
         },
     );
+
+    #[cfg(feature = "flexbuffers")]
+    bench_flexbuffers::bench(BENCH, c, &data);
 
     #[cfg(feature = "minicbor")]
     bench_minicbor::bench(BENCH, c, &data);
