@@ -158,7 +158,7 @@ fn bench_log(c: &mut Criterion) {
     );
 
     #[cfg(feature = "flexbuffers")]
-    bench_flexbuffers::bench(BENCH, c, &data);
+    bench_flexbuffers::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "minicbor")]
     bench_minicbor::bench_borrowable(BENCH, c, &data);
@@ -561,7 +561,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     );
 
     #[cfg(feature = "flexbuffers")]
-    bench_flexbuffers::bench(BENCH, c, &data);
+    bench_flexbuffers::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "minicbor")]
     bench_minicbor::bench_borrowable(BENCH, c, &data);
