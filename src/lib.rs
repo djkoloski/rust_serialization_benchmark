@@ -24,6 +24,8 @@ pub mod bench_databuf;
 pub mod bench_dlhn;
 #[cfg(feature = "flatbuffers")]
 pub mod bench_flatbuffers;
+#[cfg(feature = "flexbuffers")]
+pub mod bench_flexbuffers;
 #[cfg(feature = "minicbor")]
 pub mod bench_minicbor;
 #[cfg(feature = "msgpacker")]
