@@ -1,3 +1,5 @@
+cargo-features = ["panic-immediate-abort"]
+
 [package]
 name = "pages"
 version.workspace = true
@@ -22,10 +24,9 @@ features = [
     'HtmlSelectElement',
 ]
 
-# TODO: move this profile to the top level, but without affecting benchmarks?
-# [profile.release]
-# codegen-units = 1
-# lto = true
-# opt-level = "z"
-# panic = "abort"
-# strip = "debuginfo"
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 'z'
+panic = "immediate-abort"
+strip = "debuginfo"
