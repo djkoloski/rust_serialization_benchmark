@@ -65,6 +65,8 @@ use rust_serialization_benchmark::bench_serde_json;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "speedy")]
 use rust_serialization_benchmark::bench_speedy;
+#[cfg(feature = "wincode")]
+use rust_serialization_benchmark::bench_wincode;
 #[cfg(feature = "wiring")]
 use rust_serialization_benchmark::bench_wiring;
 
@@ -279,6 +281,9 @@ fn bench_log(c: &mut Criterion) {
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
 
+    #[cfg(feature = "wincode")]
+    bench_wincode::bench_borrowable(BENCH, c, &data);
+
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);
 }
@@ -473,6 +478,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wincode")]
+    bench_wincode::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);
@@ -676,6 +684,12 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
 
+    #[cfg(feature = "wincode")]
+    bench_wincode::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wincode")]
+    bench_wincode::bench_borrowable(BENCH, c, &data);
+
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);
 }
@@ -857,6 +871,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "nanoserde")]
     bench_nanoserde::bench(BENCH, c, &data);
+
+    #[cfg(feature = "wincode")]
+    bench_wincode::bench(BENCH, c, &data);
 
     #[cfg(feature = "wiring")]
     bench_wiring::bench(BENCH, c, &data);
