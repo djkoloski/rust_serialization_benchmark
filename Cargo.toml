@@ -45,6 +45,7 @@ build = "build.rs"
 # For example, benchmarking bincode requires two features: "serde" and "bincode"
 [dependencies]
 bilrost = { version = "=0.1013.0", optional = true }
+bin-proto = { version = "=0.12.2", optional = true }
 bincode1 = { package = "bincode", version = "=1.3.3", optional = true }
 # Can't call it bincode2 because of a current issue of bincode2 (TODO: issue link?)
 bincode = { package = "bincode", version = "=2.0.1", optional = true }
@@ -104,6 +105,7 @@ zstd = "=0.13.3"
 default = ["default-encoding-set", "measure-compression"]
 default-encoding-set = [
     "bilrost",
+    "bin-proto",
     "bincode1",
     "bincode",
     "bitcode",

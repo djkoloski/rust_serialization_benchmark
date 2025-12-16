@@ -4,6 +4,8 @@
 
 #[cfg(feature = "bilrost")]
 pub mod bench_bilrost;
+#[cfg(feature = "bin-proto")]
+pub mod bench_bin_proto;
 #[cfg(feature = "bincode")]
 pub mod bench_bincode;
 #[cfg(feature = "bincode1")]

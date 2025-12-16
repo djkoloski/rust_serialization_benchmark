@@ -3,6 +3,8 @@ use criterion::{black_box, criterion_main, Criterion};
 use rand_pcg::Lcg64Xsh32;
 #[cfg(feature = "bilrost")]
 use rust_serialization_benchmark::bench_bilrost;
+#[cfg(feature = "bin-proto")]
+use rust_serialization_benchmark::bench_bin_proto;
 #[cfg(feature = "bincode")]
 use rust_serialization_benchmark::bench_bincode;
 #[cfg(feature = "bincode1")]
@@ -90,6 +92,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench_borrowable(BENCH, c, &data);
+
+    #[cfg(feature = "bin-proto")]
+    bench_bin_proto::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench_borrowable(BENCH, c, &data);
@@ -306,6 +311,9 @@ fn bench_mesh(c: &mut Criterion) {
 
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bin-proto")]
+    bench_bin_proto::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
@@ -712,6 +720,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench(BENCH, c, &data);
+
+    #[cfg(feature = "bin-proto")]
+    bench_bin_proto::bench(BENCH, c, &data);
 
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench(BENCH, c, &data);
