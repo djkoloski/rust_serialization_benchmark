@@ -682,7 +682,8 @@ impl Contact {
                 Default::default()
             },
             transform: Transform::generate(rng, entity_type),
-            turret_angles: if is_visible { {
+            turret_angles: if is_visible {
+                {
                     let base_angle: u16 = rng.gen();
                     (0..entity_type.turret_count())
                         .map(|_| {
@@ -693,7 +694,10 @@ impl Contact {
                             }
                         })
                         .collect()
-                } } else { Default::default() },
+                }
+            } else {
+                Default::default()
+            },
         }
     }
 }
