@@ -672,29 +672,25 @@ impl Contact {
             guidance: Guidance::generate(rng, entity_type),
             player_id: is_visible.then(|| rng.gen_range(0..player_count)),
             reloads: if is_visible {
-                {
-                    let p = rng.gen_range(0.0..1.0);
-                    (0..entity_type.weapon_count())
-                        .map(|_| rng.gen_bool(p))
-                        .collect()
-                }
+                let p = rng.gen_range(0.0..1.0);
+                (0..entity_type.weapon_count())
+                    .map(|_| rng.gen_bool(p))
+                    .collect()
             } else {
                 Default::default()
             },
             transform: Transform::generate(rng, entity_type),
             turret_angles: if is_visible {
-                {
-                    let base_angle: u16 = rng.gen();
-                    (0..entity_type.turret_count())
-                        .map(|_| {
-                            if rng.gen_bool(0.75) {
-                                (base_angle as i16).wrapping_add(rng.gen_range(-200..200)) as u16
-                            } else {
-                                rng.gen()
-                            }
-                        })
-                        .collect()
-                }
+                let base_angle: u16 = rng.gen();
+                (0..entity_type.turret_count())
+                    .map(|_| {
+                        if rng.gen_bool(0.75) {
+                            (base_angle as i16).wrapping_add(rng.gen_range(-200..200)) as u16
+                        } else {
+                            rng.gen()
+                        }
+                    })
+                    .collect()
             } else {
                 Default::default()
             },
