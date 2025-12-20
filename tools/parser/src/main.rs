@@ -3,7 +3,7 @@ use clap::Parser;
 use regex::Regex;
 use std::{fs, path::PathBuf};
 
-use schema::{Bench, Config, Dataset, Feature, PackageId, Results};
+use schema::{Bench, Config, PackageId, Results};
 
 #[derive(Parser, Debug)]
 #[command(name = "parser")]
@@ -65,14 +65,8 @@ fn main() {
             .entry(feature.to_string())
             .or_insert_with(|| find_package_id(feature, &config, &metadata));
 
-        let dataset = results
-            .datasets
-            .entry(capture[1].to_string())
-            .or_insert(Dataset::default());
-        let package = dataset
-            .features
-            .entry(feature.to_string())
-            .or_insert(Feature::default());
+        let dataset = results.datasets.entry(capture[1].to_string()).or_default();
+        let package = dataset.features.entry(feature.to_string()).or_default();
         let bench = package
             .benches
             .entry(capture[3].to_string())
@@ -94,14 +88,8 @@ fn main() {
             .entry(feature.to_string())
             .or_insert_with(|| find_package_id(feature, &config, &metadata));
 
-        let dataset = results
-            .datasets
-            .entry(capture[1].to_string())
-            .or_insert(Dataset::default());
-        let package = dataset
-            .features
-            .entry(feature.to_string())
-            .or_insert(Feature::default());
+        let dataset = results.datasets.entry(capture[1].to_string()).or_default();
+        let package = dataset.features.entry(feature.to_string()).or_default();
         let bench = package
             .benches
             .entry(capture[3].to_string())
@@ -148,7 +136,7 @@ fn find_package_version(
             pkg.name == name
                 && version_req
                     .as_ref()
-                    .map_or(true, |req| req.matches(&pkg.version))
+                    .is_none_or(|req| req.matches(&pkg.version))
         })
         .unwrap()
         .version

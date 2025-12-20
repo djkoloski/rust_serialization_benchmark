@@ -20,8 +20,6 @@ pub use mk48_fb::mk_48 as fb;
 use mk48_prost as pb;
 #[cfg(feature = "protobuf")]
 use mk48_protobuf as rpb;
-#[cfg(feature = "nanoserde")]
-use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
@@ -673,17 +671,18 @@ impl Contact {
             entity_type: is_visible.then_some(entity_type),
             guidance: Guidance::generate(rng, entity_type),
             player_id: is_visible.then(|| rng.gen_range(0..player_count)),
-            reloads: is_visible
-                .then(|| {
+            reloads: if is_visible {
+                {
                     let p = rng.gen_range(0.0..1.0);
                     (0..entity_type.weapon_count())
                         .map(|_| rng.gen_bool(p))
                         .collect()
-                })
-                .unwrap_or_default(),
+                }
+            } else {
+                Default::default()
+            },
             transform: Transform::generate(rng, entity_type),
-            turret_angles: is_visible
-                .then(|| {
+            turret_angles: if is_visible { {
                     let base_angle: u16 = rng.gen();
                     (0..entity_type.turret_count())
                         .map(|_| {
@@ -694,8 +693,7 @@ impl Contact {
                             }
                         })
                         .collect()
-                })
-                .unwrap_or_default(),
+                } } else { Default::default() },
         }
     }
 }

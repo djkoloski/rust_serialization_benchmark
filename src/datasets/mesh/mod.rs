@@ -16,8 +16,6 @@ use flatbuffers::{FlatBufferBuilder, WIPOffset};
 pub use mesh_capnp as cp;
 #[cfg(feature = "flatbuffers")]
 pub use mesh_fb::mesh as fb;
-#[cfg(feature = "nanoserde")]
-use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};

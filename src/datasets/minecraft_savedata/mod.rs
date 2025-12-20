@@ -20,8 +20,6 @@ pub use minecraft_savedata_fb::minecraft_savedata as fb;
 use minecraft_savedata_prost as pb;
 #[cfg(feature = "protobuf")]
 use minecraft_savedata_protobuf as rpb;
-#[cfg(feature = "nanoserde")]
-use nanoserde::{DeBin, SerBin};
 use rand::Rng;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
@@ -682,7 +680,7 @@ impl<'a> From<&'a Entity> for BorrowEntity<'a> {
             invulnerable: value.invulnerable,
             portal_cooldown: value.portal_cooldown,
             uuid: value.uuid,
-            custom_name: value.custom_name.as_ref().map(String::as_str),
+            custom_name: value.custom_name.as_deref(),
             custom_name_visible: value.custom_name_visible,
             silent: value.silent,
             glowing: value.glowing,
@@ -1526,7 +1524,7 @@ impl<'a> From<&'a Player> for BorrowPlayer<'a> {
             dimension: value.dimension.as_str(),
             selected_item_slot: value.selected_item_slot,
             selected_item: (&value.selected_item).into(),
-            spawn_dimension: value.spawn_dimension.as_ref().map(String::as_str),
+            spawn_dimension: value.spawn_dimension.as_deref(),
             spawn_x: value.spawn_x,
             spawn_y: value.spawn_y,
             spawn_z: value.spawn_z,
@@ -1962,11 +1960,8 @@ impl bench_protobuf::Serialize for Player {
 impl From<rpb::minecraft_savedata::Player> for Player {
     fn from(value: rpb::minecraft_savedata::Player) -> Self {
         Player {
-            game_type: rpb::minecraft_savedata::GameType::from(value.game_type.unwrap()).into(),
-            previous_game_type: rpb::minecraft_savedata::GameType::from(
-                value.previous_game_type.unwrap(),
-            )
-            .into(),
+            game_type: value.game_type.unwrap().into(),
+            previous_game_type: value.previous_game_type.unwrap().into(),
             score: value.score,
             dimension: value.dimension,
             selected_item_slot: value.selected_item_slot,
@@ -1995,14 +1990,8 @@ impl From<rpb::minecraft_savedata::Player> for Player {
                 .root_vehicle
                 .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into()))
                 .into_option(),
-            shoulder_entity_left: value
-                .shoulder_entity_left
-                .map(|e| Entity::from(e))
-                .into_option(),
-            shoulder_entity_right: value
-                .shoulder_entity_right
-                .map(|e| Entity::from(e))
-                .into_option(),
+            shoulder_entity_left: value.shoulder_entity_left.map(Entity::from).into_option(),
+            shoulder_entity_right: value.shoulder_entity_right.map(Entity::from).into_option(),
             seen_credits: value.seen_credits,
             recipe_book: value.recipe_book.unwrap().into(),
         }
