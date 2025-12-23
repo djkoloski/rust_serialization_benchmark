@@ -36,6 +36,11 @@ use crate::{generate_vec, Generate};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Enumeration))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode),
+    bin_proto(discriminant_type = u8),
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -72,33 +77,43 @@ use crate::{generate_vec, Generate};
 #[repr(u8)]
 pub enum EntityType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 0))]
     #[cfg_attr(feature = "minicbor", n(0))]
     ArleighBurke,
     #[cfg_attr(feature = "bilrost", bilrost(1))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 1))]
     #[cfg_attr(feature = "minicbor", n(1))]
     Bismarck,
     #[cfg_attr(feature = "bilrost", bilrost(2))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 2))]
     #[cfg_attr(feature = "minicbor", n(2))]
     Clemenceau,
     #[cfg_attr(feature = "bilrost", bilrost(3))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 3))]
     #[cfg_attr(feature = "minicbor", n(3))]
     Fletcher,
     #[cfg_attr(feature = "bilrost", bilrost(4))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 4))]
     #[cfg_attr(feature = "minicbor", n(4))]
     G5,
     #[cfg_attr(feature = "bilrost", bilrost(5))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 5))]
     #[cfg_attr(feature = "minicbor", n(5))]
     Iowa,
     #[cfg_attr(feature = "bilrost", bilrost(6))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 6))]
     #[cfg_attr(feature = "minicbor", n(6))]
     Kolkata,
     #[cfg_attr(feature = "bilrost", bilrost(7))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 7))]
     #[cfg_attr(feature = "minicbor", n(7))]
     Osa,
     #[cfg_attr(feature = "bilrost", bilrost(8))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 8))]
     #[cfg_attr(feature = "minicbor", n(8))]
     Yasen,
     #[cfg_attr(feature = "bilrost", bilrost(9))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 9))]
     #[cfg_attr(feature = "minicbor", n(9))]
     Zubr,
 }
@@ -320,6 +335,10 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -480,6 +499,10 @@ impl From<rpb::mk48::Transform> for Transform {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -603,6 +626,10 @@ impl From<rpb::mk48::Guidance> for Guidance {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -639,18 +666,22 @@ pub struct Contact {
     pub damage: u8,
     #[cfg_attr(feature = "minicbor", n(1))]
     pub entity_id: u32,
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = bool, tag_value = self.entity_type.is_some()))]
     #[cfg_attr(feature = "minicbor", n(2))]
     pub entity_type: Option<EntityType>,
     #[cfg_attr(feature = "minicbor", n(3))]
     pub guidance: Guidance,
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = bool, tag_value = self.player_id.is_some()))]
     #[cfg_attr(feature = "minicbor", n(4))]
     pub player_id: Option<u16>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.reloads.len()))]
     #[cfg_attr(feature = "minicbor", n(5))]
     pub reloads: Vec<bool>,
     #[cfg_attr(feature = "minicbor", n(6))]
     pub transform: Transform,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.turret_angles.len()))]
     #[cfg_attr(feature = "minicbor", n(7))]
     pub turret_angles: Vec<u16>,
 }
@@ -864,6 +895,10 @@ impl From<rpb::mk48::Contact> for Contact {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -898,6 +933,7 @@ pub struct TerrainUpdate {
     #[cfg_attr(feature = "minicbor", n(0))]
     chunk_id: (i8, i8),
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "plainbytes"))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.data.len()))]
     #[cfg_attr(feature = "minicbor", n(1))]
     data: Vec<u8>,
 }
@@ -1027,6 +1063,10 @@ impl From<rpb::mk48::TerrainUpdate> for TerrainUpdate {
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -1058,6 +1098,7 @@ impl From<rpb::mk48::TerrainUpdate> for TerrainUpdate {
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.contacts.len()))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub contacts: Vec<Contact>,
     #[cfg_attr(feature = "wiring", fixed(2))]
@@ -1066,6 +1107,7 @@ pub struct Update {
     #[cfg_attr(feature = "minicbor", n(2))]
     pub world_radius: f32,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.terrain_updates.len()))]
     #[cfg_attr(feature = "minicbor", n(3))]
     pub terrain_updates: Vec<TerrainUpdate>,
 }
@@ -1202,6 +1244,10 @@ impl From<rpb::mk48::Update> for Update {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -1233,6 +1279,7 @@ impl From<rpb::mk48::Update> for Update {
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 pub struct Updates {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.updates.len()))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub updates: Vec<Update>,
 }
