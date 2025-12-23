@@ -17,7 +17,7 @@ pub struct Transform {
     #[prost(int32, tag = "4")]
     pub velocity: i32,
 }
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Guidance {
     #[prost(uint32, tag = "1")]
     pub angle: u32,
@@ -45,14 +45,14 @@ pub struct Contact {
     #[prost(uint32, repeated, tag = "8")]
     pub turret_angles: ::prost::alloc::vec::Vec<u32>,
 }
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ChunkId {
     #[prost(int32, tag = "1")]
     pub x: i32,
     #[prost(int32, tag = "2")]
     pub y: i32,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TerrainUpdate {
     #[prost(message, optional, tag = "1")]
     pub chunk_id: ::core::option::Option<ChunkId>,
