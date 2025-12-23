@@ -166,10 +166,10 @@ regenerate-protobuf = ["dep:protobuf-codegen"]
 rand_pcg = "0.3.1"
 
 [build-dependencies]
-capnp = "=0.21.1"
-capnpc = { version = "=0.21.0", optional = true }
+capnp = "=0.23.2"
+capnpc = { version = "=0.23.2", optional = true }
 flatc-rust = { version = "=0.2.0", optional = true }
-prost-build = { version = "=0.13.5", optional = true }
+prost-build = { version = "=0.14.1", optional = true }
 protobuf-codegen = { version = "=3.7.2", optional = true }
 
 [[bench]]
