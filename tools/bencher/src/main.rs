@@ -45,6 +45,7 @@ fn main() {
     log_path.set_extension("log");
     let log = Command::new("cargo")
         .args(["bench"])
+        .env("RUSTFLAGS", "-C target-cpu=native")
         .output()
         .unwrap()
         .stdout;
