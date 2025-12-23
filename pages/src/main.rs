@@ -335,11 +335,7 @@ fn format_float(float: f32, precision: usize) -> String {
     let a = float.abs();
     let precision = if a >= 1. {
         let n = (1. + a.log10().floor()) as usize;
-        if n <= precision {
-            precision - n
-        } else {
-            0
-        }
+        precision.saturating_sub(n)
     } else if a > 0. {
         let n = -(1. + a.log10().floor()) as usize;
         precision + n

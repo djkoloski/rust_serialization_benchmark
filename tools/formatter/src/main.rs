@@ -194,8 +194,8 @@ fn build_tables(
                     write!(&mut comparison, " {placeholder} |")?;
                 }
             }
-            write!(&mut data, "\n")?;
-            write!(&mut comparison, "\n")?;
+            writeln!(&mut data)?;
+            writeln!(&mut comparison)?;
         }
     }
 
@@ -254,12 +254,12 @@ fn format(
         if !config
             .suites
             .get(dataset_name)
-            .map_or(false, |suite| suite.borrowable)
+            .is_some_and(|suite| suite.borrowable)
         {
             ser_de_cols.to_mut().retain(|&col| col != "borrow");
         }
-        let serde_tables = build_tables(&results.features, dataset, &config, &ser_de_cols, "†")?;
-        let zcd_tables = build_tables(&results.features, dataset, &config, ZCD_COLS, "‡")?;
+        let serde_tables = build_tables(&results.features, dataset, config, &ser_de_cols, "†")?;
+        let zcd_tables = build_tables(&results.features, dataset, config, ZCD_COLS, "‡")?;
 
         write!(
             &mut tables,
@@ -314,9 +314,9 @@ fn format(
         .flat_map(|dataset| dataset.features.keys())
         .collect::<BTreeSet<_>>();
     for &feature in features.iter() {
-        write!(
+        writeln!(
             &mut links,
-            "[{feature}]: {}\n",
+            "[{feature}]: {}",
             results.features.get(feature).unwrap().crates_io_url(),
         )?;
     }
