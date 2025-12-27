@@ -9,7 +9,6 @@ members = [
 
 [workspace.package]
 version = "0.1.0"
-authors = ["David Koloski <djkoloski@gmail.com>"]
 edition = "2021"
 license = "MIT"
 publish = false
@@ -34,7 +33,6 @@ yew = { version = "0.20", default-features = false }
 [package]
 name = "rust_serialization_benchmark"
 version.workspace = true
-authors.workspace = true
 edition.workspace = true
 license.workspace = true
 publish.workspace = true

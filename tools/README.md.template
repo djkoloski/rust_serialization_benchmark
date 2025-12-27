@@ -5,6 +5,14 @@
 The goal of these benchmarks is to provide thorough and complete benchmarks for various rust
 serialization frameworks.
 
+## Maintainers
+
+These benchmarks are maintained by a small group of volunteers. Special thanks to:
+
+- [djkoloski](https://github.com/djkoloski)
+- [mumbleskates](https://github.com/mumbleskates)
+- [finnbear](https://github.com/finnbear)
+
 ## These benchmarks are a work in progress
 
 These benchmarks are still being developed and pull requests to improve benchmarks are welcome.
