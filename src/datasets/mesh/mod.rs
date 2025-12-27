@@ -335,7 +335,6 @@ impl From<mesh_protobuf::mesh::Triangle> for Triangle {
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 pub struct Mesh {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.triangles.len()))]
     #[cfg_attr(feature = "minicbor", n(0))]
     #[cfg_attr(
         feature = "wincode",
