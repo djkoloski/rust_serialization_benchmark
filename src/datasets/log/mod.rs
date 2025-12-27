@@ -256,16 +256,12 @@ impl From<log_protobuf::log::Address> for Address {
 pub struct Log {
     #[cfg_attr(feature = "minicbor", n(0))]
     pub address: Address,
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.identity.len()))]
     #[cfg_attr(feature = "minicbor", b(1))]
     pub identity: String,
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.userid.len()))]
     #[cfg_attr(feature = "minicbor", b(2))]
     pub userid: String,
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.date.len()))]
     #[cfg_attr(feature = "minicbor", b(3))]
     pub date: String,
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.request.len()))]
     #[cfg_attr(feature = "minicbor", b(4))]
     pub request: String,
     #[cfg_attr(feature = "wiring", fixed)]
@@ -539,7 +535,6 @@ impl From<log_protobuf::log::Log> for Log {
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 pub struct Logs {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.logs.len()))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub logs: Vec<Log>,
 }

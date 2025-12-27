@@ -666,22 +666,18 @@ pub struct Contact {
     pub damage: u8,
     #[cfg_attr(feature = "minicbor", n(1))]
     pub entity_id: u32,
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = bool, tag_value = self.entity_type.is_some()))]
     #[cfg_attr(feature = "minicbor", n(2))]
     pub entity_type: Option<EntityType>,
     #[cfg_attr(feature = "minicbor", n(3))]
     pub guidance: Guidance,
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = bool, tag_value = self.player_id.is_some()))]
     #[cfg_attr(feature = "minicbor", n(4))]
     pub player_id: Option<u16>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.reloads.len()))]
     #[cfg_attr(feature = "minicbor", n(5))]
     pub reloads: Vec<bool>,
     #[cfg_attr(feature = "minicbor", n(6))]
     pub transform: Transform,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.turret_angles.len()))]
     #[cfg_attr(feature = "minicbor", n(7))]
     pub turret_angles: Vec<u16>,
 }
@@ -933,7 +929,6 @@ pub struct TerrainUpdate {
     #[cfg_attr(feature = "minicbor", n(0))]
     chunk_id: (i8, i8),
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "plainbytes"))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.data.len()))]
     #[cfg_attr(feature = "minicbor", n(1))]
     data: Vec<u8>,
 }
@@ -1098,7 +1093,6 @@ impl From<rpb::mk48::TerrainUpdate> for TerrainUpdate {
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.contacts.len()))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub contacts: Vec<Contact>,
     #[cfg_attr(feature = "wiring", fixed(2))]
@@ -1107,7 +1101,6 @@ pub struct Update {
     #[cfg_attr(feature = "minicbor", n(2))]
     pub world_radius: f32,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.terrain_updates.len()))]
     #[cfg_attr(feature = "minicbor", n(3))]
     pub terrain_updates: Vec<TerrainUpdate>,
 }
@@ -1279,7 +1272,6 @@ impl From<rpb::mk48::Update> for Update {
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 pub struct Updates {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
-    #[cfg_attr(feature = "bin-proto", bin_proto(tag_type = usize, tag_value = self.updates.len()))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub updates: Vec<Update>,
 }

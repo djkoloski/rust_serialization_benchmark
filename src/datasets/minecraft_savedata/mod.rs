@@ -37,6 +37,11 @@ use crate::{generate_vec, Generate};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Enumeration))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode),
+    bin_proto(discriminant_type = u8),
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -73,15 +78,19 @@ use crate::{generate_vec, Generate};
 #[repr(u8)]
 pub enum GameType {
     #[cfg_attr(feature = "bilrost", bilrost(0))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 0))]
     #[cfg_attr(feature = "minicbor", n(0))]
     Survival,
     #[cfg_attr(feature = "bilrost", bilrost(1))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 1))]
     #[cfg_attr(feature = "minicbor", n(1))]
     Creative,
     #[cfg_attr(feature = "bilrost", bilrost(2))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 2))]
     #[cfg_attr(feature = "minicbor", n(2))]
     Adventure,
     #[cfg_attr(feature = "bilrost", bilrost(3))]
+    #[cfg_attr(feature = "bin-proto", bin_proto(discriminant = 3))]
     #[cfg_attr(feature = "minicbor", n(3))]
     Spectator,
 }
@@ -179,6 +188,10 @@ impl From<rpb::minecraft_savedata::GameType> for GameType {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -367,6 +380,10 @@ impl From<rpb::minecraft_savedata::Item> for Item {
 
 #[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -530,6 +547,10 @@ impl From<rpb::minecraft_savedata::Abilities> for Abilities {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -987,6 +1008,10 @@ impl From<rpb::minecraft_savedata::Entity> for Entity {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -1310,6 +1335,10 @@ impl From<rpb::minecraft_savedata::RecipeBook> for RecipeBook {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
@@ -2000,6 +2029,10 @@ impl From<rpb::minecraft_savedata::Player> for Player {
 
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
+#[cfg_attr(
+    feature = "bin-proto",
+    derive(bin_proto::BitEncode, bin_proto::BitDecode)
+)]
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(

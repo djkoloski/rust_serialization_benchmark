@@ -513,6 +513,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "bilrost")]
     bench_bilrost::bench_borrowable(BENCH, c, &data);
 
+    #[cfg(feature = "bin-proto")]
+    bench_bin_proto::bench(BENCH, c, &data);
+
     #[cfg(feature = "bincode1")]
     bench_bincode1::bench_borrowable(BENCH, c, &data);
 
