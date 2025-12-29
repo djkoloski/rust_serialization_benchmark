@@ -3,7 +3,6 @@ cargo-features = ["panic-immediate-abort"]
 [package]
 name = "pages"
 version.workspace = true
-authors.workspace = true
 edition.workspace = true
 license.workspace = true
 publish.workspace = true
