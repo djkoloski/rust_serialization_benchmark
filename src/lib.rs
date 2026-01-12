@@ -20,6 +20,8 @@ pub mod bench_capnp;
 pub mod bench_cbor4ii;
 #[cfg(feature = "ciborium")]
 pub mod bench_ciborium;
+#[cfg(feature = "columnar")]
+pub mod bench_columnar;
 #[cfg(feature = "databuf")]
 pub mod bench_databuf;
 #[cfg(feature = "dlhn")]
