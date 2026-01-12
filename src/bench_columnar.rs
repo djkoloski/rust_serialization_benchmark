@@ -1,7 +1,6 @@
 use criterion::{black_box, Criterion};
 use columnar::{bytemuck, Columnar, Borrow, FromBytes, Index, Push, Clear, bytes::{EncodeDecode, Indexed}};
 
-// Columnar encodes lists of columnar types, and takes `data` as a list input.
 pub fn bench<T: Columnar+PartialEq>(name: &'static str, c: &mut Criterion, data: &T) {
 
     let mut group = c.benchmark_group(format!("{}/columnar", name));
