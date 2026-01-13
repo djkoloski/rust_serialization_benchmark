@@ -5,5 +5,8 @@ target = "index.html"
 # Build in release mode.
 release = true
 
+# Not performance critical so avoid emperically unstable wasm-opt integration
+wasm-opt = false
+
 # The public URL from which assets are to be served.
 public_url = "/rust_serialization_benchmark/"
