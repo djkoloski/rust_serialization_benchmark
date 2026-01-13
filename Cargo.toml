@@ -55,6 +55,7 @@ cbor4ii = { version = "=1.0.0", features = [
     "serde1",
 ], optional = true }
 ciborium = { version = "=0.2.2", optional = true }
+columnar = { version = "=0.11", optional = true }
 databuf = { version = "=0.5.0", optional = true }
 dlhn = { version = "=0.1.7", optional = true }
 flatbuffers = { version = "=25.12.19", optional = true }
@@ -111,6 +112,7 @@ default-encoding-set = [
     "capnp",
     "cbor4ii",
     "ciborium",
+    "columnar",
     "databuf",
     "dlhn",
     "flatbuffers",
