@@ -25,7 +25,7 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
 
     // Idiomatic columnar serialization, where your data are SoA (columns) rather than AoS (rows).
     // The difference from "serialize" above is only the data transposition from rows to columns.
-    group.bench_function("serialize_opt", |b| {
+    group.bench_function("serialize (SoA)", |b| {
         b.iter(|| {
             buffer.clear();
             Indexed::encode(&mut buffer, &columns.borrow());
@@ -62,7 +62,7 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
     let mut deser: T = <T as Columnar>::into_owned(decoded.get(0));
 
     // Deserialize into an existing instance, to avoid benchmarking the allocator.
-    group.bench_function("deserialize_opt", |b| {
+    group.bench_function("deserialize (copy_from)", |b| {
         b.iter(|| {
             let decoded =
                 <<<T as Columnar>::Container as Borrow>::Borrowed<'_> as FromBytes>::from_bytes(
