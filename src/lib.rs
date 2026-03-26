@@ -30,6 +30,8 @@ pub mod bench_dlhn;
 pub mod bench_flatbuffers;
 #[cfg(feature = "flexbuffers")]
 pub mod bench_flexbuffers;
+#[cfg(feature = "flexon")]
+pub mod bench_flexon;
 #[cfg(feature = "minicbor")]
 pub mod bench_minicbor;
 #[cfg(feature = "msgpacker")]
