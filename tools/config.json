@@ -29,13 +29,14 @@
     "common_encodings": {
         "cbor4ii": "cbor",
         "ciborium": "cbor",
+        "serde_cbor": "cbor",
+        "flexon": "json",
+        "serde_json": "json",
+        "simd-json": "json",
         "msgpacker": "messagepack",
-        "parity-scale-codec": "scale",
+        "rmp-serde": "messagepack",
         "prost": "protobuf",
         "protobuf": "protobuf",
-        "rmp-serde": "messagepack",
-        "serde_cbor": "cbor",
-        "serde_json": "json",
-        "simd-json": "json"
+        "parity-scale-codec": "scale"
     }
 }
