@@ -7,23 +7,23 @@ where
 {
     let mut group = c.benchmark_group(format!("{}/compactly", name));
 
-    group.bench_function("serialize", |b| {
+        group.bench_function("serialize", |b| {
         b.iter(|| {
-            black_box(compactly::encode(black_box(data)));
+            black_box(compactly::v2::Ans::encode(black_box(data)));
         })
     });
 
-    let encoded = compactly::encode(data).to_vec();
+    let encoded = compactly::v2::Ans::encode(data).to_vec();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(compactly::decode::<T>(black_box(&encoded)).unwrap());
+            black_box(compactly::v2::Ans::decode::<T>(black_box(&encoded)).unwrap());
         })
     });
 
     crate::bench_size(name, "compactly", &encoded);
 
-    assert!(compactly::decode::<T>(&encoded).unwrap() == *data);
+    assert!(compactly::v2::Ans::decode::<T>(&encoded).unwrap() == *data);
 
     group.finish();
 }
