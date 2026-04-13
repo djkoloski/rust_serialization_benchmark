@@ -1,4 +1,4 @@
-# cargo-features = ["panic-immediate-abort"]
+cargo-features = ["panic-immediate-abort"]
 
 [package]
 name = "pages"
