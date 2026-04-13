@@ -48,6 +48,7 @@ use crate::{generate_vec, Generate};
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -351,6 +352,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -520,6 +522,7 @@ impl From<rpb::mk48::Transform> for Transform {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -652,6 +655,7 @@ impl From<rpb::mk48::Guidance> for Guidance {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -922,6 +926,7 @@ impl From<rpb::mk48::Contact> for Contact {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -1094,6 +1099,7 @@ impl From<rpb::mk48::TerrainUpdate> for TerrainUpdate {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -1278,6 +1284,7 @@ impl From<rpb::mk48::Update> for Update {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]

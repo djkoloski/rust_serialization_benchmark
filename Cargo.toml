@@ -118,6 +118,7 @@ default-encoding-set = [
     "cbor4ii",
     "ciborium",
     "columnar",
+    "compactly",
     "databuf",
     "dlhn",
     "flatbuffers",
