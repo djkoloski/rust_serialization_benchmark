@@ -22,6 +22,8 @@ pub mod bench_cbor4ii;
 pub mod bench_ciborium;
 #[cfg(feature = "columnar")]
 pub mod bench_columnar;
+#[cfg(feature = "compactly")]
+pub mod bench_compactly;
 #[cfg(feature = "databuf")]
 pub mod bench_databuf;
 #[cfg(feature = "dlhn")]
