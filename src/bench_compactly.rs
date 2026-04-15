@@ -1,4 +1,4 @@
-use compactly::{Encode};
+use compactly::Encode;
 use criterion::{black_box, Criterion};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
@@ -7,7 +7,7 @@ where
 {
     let mut group = c.benchmark_group(format!("{}/compactly", name));
 
-        group.bench_function("serialize", |b| {
+    group.bench_function("serialize", |b| {
         b.iter(|| {
             black_box(compactly::v2::Ans::encode(black_box(data)));
         })
