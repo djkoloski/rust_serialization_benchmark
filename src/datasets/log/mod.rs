@@ -43,6 +43,7 @@ use crate::Generate;
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -236,6 +237,7 @@ impl From<log_protobuf::log::Address> for Address {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -269,10 +271,12 @@ pub struct Log {
     #[cfg_attr(feature = "minicbor", b(1))]
     pub identity: String,
     #[cfg_attr(feature = "minicbor", b(2))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub userid: String,
     #[cfg_attr(feature = "minicbor", b(3))]
     pub date: String,
     #[cfg_attr(feature = "minicbor", b(4))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub request: String,
     #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(5))]
@@ -525,6 +529,7 @@ impl From<log_protobuf::log::Log> for Log {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]

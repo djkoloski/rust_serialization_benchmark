@@ -21,6 +21,8 @@ use rust_serialization_benchmark::bench_cbor4ii;
 use rust_serialization_benchmark::bench_ciborium;
 #[cfg(feature = "columnar")]
 use rust_serialization_benchmark::bench_columnar;
+#[cfg(feature = "compactly")]
+use rust_serialization_benchmark::bench_compactly;
 #[cfg(feature = "databuf")]
 use rust_serialization_benchmark::bench_databuf;
 #[cfg(feature = "dlhn")]
@@ -138,6 +140,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "columnar")]
     bench_columnar::bench(BENCH, c, &data);
+
+    #[cfg(feature = "compactly")]
+    bench_compactly::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
     bench_databuf::bench_borrowable(BENCH, c, &data);
@@ -365,6 +370,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "columnar")]
     bench_columnar::bench(BENCH, c, &data);
 
+    #[cfg(feature = "compactly")]
+    bench_compactly::bench(BENCH, c, &data);
+
     #[cfg(feature = "databuf")]
     bench_databuf::bench(BENCH, c, &data);
 
@@ -574,6 +582,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
 
     #[cfg(feature = "columnar")]
     bench_columnar::bench(BENCH, c, &data);
+
+    #[cfg(feature = "compactly")]
+    bench_compactly::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
     bench_databuf::bench_borrowable(BENCH, c, &data);
@@ -794,6 +805,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "columnar")]
     bench_columnar::bench(BENCH, c, &data);
+
+    #[cfg(feature = "compactly")]
+    bench_compactly::bench(BENCH, c, &data);
 
     #[cfg(feature = "databuf")]
     bench_databuf::bench(BENCH, c, &data);

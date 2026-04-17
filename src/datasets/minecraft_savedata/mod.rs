@@ -49,6 +49,7 @@ use crate::{generate_vec, Generate};
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -205,6 +206,7 @@ impl From<rpb::minecraft_savedata::GameType> for GameType {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -241,6 +243,7 @@ pub struct Item {
     #[cfg_attr(feature = "minicbor", n(1))]
     pub slot: u8,
     #[cfg_attr(feature = "minicbor", b(2))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub id: String,
 }
 
@@ -406,6 +409,7 @@ impl From<rpb::minecraft_savedata::Item> for Item {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -578,6 +582,7 @@ impl From<rpb::minecraft_savedata::Abilities> for Abilities {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -607,6 +612,7 @@ impl From<rpb::minecraft_savedata::Abilities> for Abilities {
 )]
 pub struct Entity {
     #[cfg_attr(feature = "minicbor", b(0))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub id: String,
     #[cfg_attr(feature = "wiring", fixed(11))]
     #[cfg_attr(feature = "minicbor", n(1))]
@@ -633,6 +639,7 @@ pub struct Entity {
     #[cfg_attr(feature = "minicbor", n(11))]
     pub uuid: [u32; 4],
     #[cfg_attr(feature = "minicbor", n(12))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub custom_name: Option<String>,
     #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(13))]
@@ -1048,6 +1055,7 @@ impl From<rpb::minecraft_savedata::Entity> for Entity {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -1078,9 +1086,11 @@ impl From<rpb::minecraft_savedata::Entity> for Entity {
 pub struct RecipeBook {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", n(0))]
+    #[cfg_attr(feature = "compactly", compactly(Values<LowCardinality>))]
     pub recipes: Vec<String>,
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", n(1))]
+    #[cfg_attr(feature = "compactly", compactly(Values<LowCardinality>))]
     pub to_be_displayed: Vec<String>,
     #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(2))]
@@ -1384,6 +1394,7 @@ impl From<rpb::minecraft_savedata::RecipeBook> for RecipeBook {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
@@ -1420,12 +1431,14 @@ pub struct Player {
     #[cfg_attr(feature = "minicbor", n(2))]
     pub score: i64,
     #[cfg_attr(feature = "minicbor", b(3))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub dimension: String,
     #[cfg_attr(feature = "minicbor", b(4))]
     pub selected_item_slot: u32,
     #[cfg_attr(feature = "minicbor", n(5))]
     pub selected_item: Item,
     #[cfg_attr(feature = "minicbor", b(6))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
     pub spawn_dimension: Option<String>,
     #[cfg_attr(feature = "wiring", fixed(3))]
     #[cfg_attr(feature = "minicbor", n(7))]
@@ -2087,6 +2100,7 @@ impl From<rpb::minecraft_savedata::Player> for Player {
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
+#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
