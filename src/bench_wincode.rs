@@ -2,15 +2,15 @@ use core::slice;
 use std::mem::MaybeUninit;
 
 use criterion::{black_box, Criterion};
-use wincode::{SchemaRead, SchemaWrite};
+use wincode::{config::DefaultConfig, SchemaRead, SchemaWrite};
 
 use crate::datasets::BorrowableData;
 
-pub trait SerializeSelf: SchemaWrite<Src = Self> {}
-impl<T> SerializeSelf for T where T: SchemaWrite<Src = T> {}
+pub trait SerializeSelf: SchemaWrite<DefaultConfig, Src = Self> {}
+impl<T> SerializeSelf for T where T: SchemaWrite<DefaultConfig, Src = T> {}
 
-pub trait DeserializeSelf<'de>: SchemaRead<'de, Dst = Self> {}
-impl<'de, T> DeserializeSelf<'de> for T where T: SchemaRead<'de, Dst = T> {}
+pub trait DeserializeSelf<'de>: SchemaRead<'de, DefaultConfig, Dst = Self> {}
+impl<'de, T> DeserializeSelf<'de> for T where T: SchemaRead<'de, DefaultConfig, Dst = T> {}
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
