@@ -46,7 +46,10 @@ use crate::Generate;
 #[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeVector3, compare(PartialEq)))]
 #[cfg_attr(
@@ -179,7 +182,10 @@ impl From<mesh_protobuf::mesh::Vector3> for Vector3 {
 #[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeTriangle, compare(PartialEq)))]
 #[cfg_attr(
