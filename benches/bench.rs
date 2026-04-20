@@ -182,7 +182,7 @@ fn bench_log(c: &mut Criterion) {
     bench_minicbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
-    bench_msgpacker::bench(BENCH, c, &data);
+    bench_msgpacker::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench_borrowable(BENCH, c, &data);
@@ -615,7 +615,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_minicbor::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "msgpacker")]
-    bench_msgpacker::bench(BENCH, c, &data);
+    bench_msgpacker::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "nachricht-serde")]
     bench_nachricht_serde::bench_borrowable(BENCH, c, &data);

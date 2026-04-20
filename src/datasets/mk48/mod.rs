@@ -50,7 +50,10 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeEntityType, compare(PartialEq)))]
 #[cfg_attr(
@@ -353,7 +356,10 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeTransform, compare(PartialEq)))]
 #[cfg_attr(
@@ -522,7 +528,10 @@ impl From<rpb::mk48::Transform> for Transform {
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeGuidance, compare(PartialEq)))]
 #[cfg_attr(
@@ -955,6 +964,7 @@ pub struct TerrainUpdate {
     chunk_id: (i8, i8),
     #[cfg_attr(feature = "bilrost", bilrost(encoding = "plainbytes"))]
     #[cfg_attr(feature = "minicbor", n(1))]
+    #[cfg_attr(feature = "msgpacker", msgpacker(binary))]
     data: Vec<u8>,
 }
 

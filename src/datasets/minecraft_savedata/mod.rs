@@ -51,7 +51,10 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeGameType, compare(PartialEq)))]
 #[cfg_attr(
@@ -250,6 +253,7 @@ pub struct Item {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
@@ -408,7 +412,10 @@ impl From<rpb::minecraft_savedata::Item> for Item {
 #[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
+#[cfg_attr(
+    feature = "msgpacker",
+    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
+)]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeAbilities, compare(PartialEq)))]
 #[cfg_attr(
@@ -649,6 +656,7 @@ pub struct Entity {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
@@ -1107,6 +1115,7 @@ pub struct RecipeBook {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
@@ -1480,6 +1489,7 @@ pub struct Player {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
@@ -2126,6 +2136,7 @@ pub struct Players {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
+#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
