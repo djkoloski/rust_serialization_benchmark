@@ -46,10 +46,7 @@ use crate::Generate;
 #[cfg_attr(feature = "compactly", derive(compactly::Encode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(
-    feature = "msgpacker",
-    derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
-)]
+#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
 #[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeAddress, compare(PartialEq)))]
 #[cfg_attr(
@@ -294,7 +291,6 @@ pub struct Log {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
@@ -573,7 +569,6 @@ pub struct Logs {
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
-#[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
