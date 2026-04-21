@@ -350,12 +350,12 @@ function __wbg_get_imports() {
         },
         __wbindgen_cast_0000000000000001: function(arg0, arg1) {
             // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Externref], shim_idx: 261, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
-            const ret = makeMutClosure(arg0, arg1, _RINvNvNtNtCsetIDrCCR5jk_12wasm_bindgen7convert8closuress2_1__6invokeNtB8_7JsValueINtNtCshFAn4A0cooN_4core6result6ResultuNtB8_7JsErrorEKb1_ECs4xHe0Dd1FyI_6js_sys);
+            const ret = makeMutClosure(arg0, arg1, _RINvNvNtNtCs5A3Q3fpisvq_12wasm_bindgen7convert8closuress2_1__6invokeNtB8_7JsValueINtNtCs6WfjO7DwSDc_4core6result6ResultuNtB8_7JsErrorEKb1_ECs34Cous2gzTS_6js_sys);
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
             // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [Ref(NamedExternref("Event"))], shim_idx: 242, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
-            const ret = makeMutClosure(arg0, arg1, _RINvNvNvNtNtCsetIDrCCR5jk_12wasm_bindgen7convert8closures1__s_1__6invokeNtNtNtCs4G4f20rqdNS_7web_sys8features9gen_Event5EventuKb1_ECskX8Z0fb9rQd_12gloo_history);
+            const ret = makeMutClosure(arg0, arg1, _RINvNvNvNtNtCs5A3Q3fpisvq_12wasm_bindgen7convert8closures1__s_1__6invokeNtNtNtCs7mvIxX79WgY_7web_sys8features9gen_Event5EventuKb1_ECsjS8kd3kQyqg_12gloo_history);
             return ret;
         },
         __wbindgen_cast_0000000000000003: function(arg0, arg1) {
@@ -379,12 +379,12 @@ function __wbg_get_imports() {
     };
 }
 
-function _RINvNvNvNtNtCsetIDrCCR5jk_12wasm_bindgen7convert8closures1__s_1__6invokeNtNtNtCs4G4f20rqdNS_7web_sys8features9gen_Event5EventuKb1_ECskX8Z0fb9rQd_12gloo_history(arg0, arg1, arg2) {
-    wasm._RINvNvNvNtNtCsetIDrCCR5jk_12wasm_bindgen7convert8closures1__s_1__6invokeNtNtNtCs4G4f20rqdNS_7web_sys8features9gen_Event5EventuKb1_ECskX8Z0fb9rQd_12gloo_history(arg0, arg1, arg2);
+function _RINvNvNvNtNtCs5A3Q3fpisvq_12wasm_bindgen7convert8closures1__s_1__6invokeNtNtNtCs7mvIxX79WgY_7web_sys8features9gen_Event5EventuKb1_ECsjS8kd3kQyqg_12gloo_history(arg0, arg1, arg2) {
+    wasm._RINvNvNvNtNtCs5A3Q3fpisvq_12wasm_bindgen7convert8closures1__s_1__6invokeNtNtNtCs7mvIxX79WgY_7web_sys8features9gen_Event5EventuKb1_ECsjS8kd3kQyqg_12gloo_history(arg0, arg1, arg2);
 }
 
-function _RINvNvNtNtCsetIDrCCR5jk_12wasm_bindgen7convert8closuress2_1__6invokeNtB8_7JsValueINtNtCshFAn4A0cooN_4core6result6ResultuNtB8_7JsErrorEKb1_ECs4xHe0Dd1FyI_6js_sys(arg0, arg1, arg2) {
-    const ret = wasm._RINvNvNtNtCsetIDrCCR5jk_12wasm_bindgen7convert8closuress2_1__6invokeNtB8_7JsValueINtNtCshFAn4A0cooN_4core6result6ResultuNtB8_7JsErrorEKb1_ECs4xHe0Dd1FyI_6js_sys(arg0, arg1, arg2);
+function _RINvNvNtNtCs5A3Q3fpisvq_12wasm_bindgen7convert8closuress2_1__6invokeNtB8_7JsValueINtNtCs6WfjO7DwSDc_4core6result6ResultuNtB8_7JsErrorEKb1_ECs34Cous2gzTS_6js_sys(arg0, arg1, arg2) {
+    const ret = wasm._RINvNvNtNtCs5A3Q3fpisvq_12wasm_bindgen7convert8closuress2_1__6invokeNtB8_7JsValueINtNtCs6WfjO7DwSDc_4core6result6ResultuNtB8_7JsErrorEKb1_ECs34Cous2gzTS_6js_sys(arg0, arg1, arg2);
     if (ret[1]) {
         throw takeFromExternrefTable0(ret[0]);
     }
