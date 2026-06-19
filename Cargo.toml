@@ -49,6 +49,7 @@ bincode1 = { package = "bincode", version = "=1.3.3", optional = true }
 bincode = { package = "bincode", version = "=2.0.1", optional = true }
 bitcode = { version = "=0.6.6", optional = true }
 borsh = { version = "=1.5.7", features = ["derive"], optional = true }
+buffa = { version = "=0.7.1", optional = true }
 capnp = { version = "=0.23.2", optional = true }
 cbor4ii = { version = "=1.0.0", features = [
     "use_std",
@@ -115,6 +116,7 @@ default-encoding-set = [
     "bincode",
     "bitcode",
     "borsh",
+    "buffa",
     "capnp",
     "cbor4ii",
     "ciborium",
@@ -154,9 +156,10 @@ default-encoding-set = [
 all-cbor = ["cbor4ii", "ciborium", "serde_cbor"]
 all-messagepack = ["msgpacker", "rmp-serde", "zerompk"]
 all-json = ["flexon", "serde_json", "simd-json"]
-all-protobuf = ["prost", "protobuf"]
+all-protobuf = ["buffa", "prost", "protobuf"]
 
 measure-compression = []
+buffa = ["dep:buffa"]
 capnp = ["dep:capnp"]
 prost = ["dep:prost", "dep:capnp"]
 protobuf = ["dep:protobuf"]
@@ -166,7 +169,8 @@ scale = ["dep:parity-scale-codec", "dep:parity-scale-codec-derive"]
 zerompk = ["dep:zerompk"]
 
 # Enable these features to regenerate generated files rather than using the committed versions.
-regenerate = ["regenerate-capnp", "regenerate-flatbuffers", "regenerate-prost", "regenerate-protobuf"]
+regenerate = ["regenerate-buffa", "regenerate-capnp", "regenerate-flatbuffers", "regenerate-prost", "regenerate-protobuf"]
+regenerate-buffa = ["dep:buffa-build"]
 regenerate-capnp = ["dep:capnpc"]
 regenerate-flatbuffers = ["dep:flatc-rust"]
 regenerate-prost = ["dep:prost-build"]
@@ -176,6 +180,7 @@ regenerate-protobuf = ["dep:protobuf-codegen"]
 rand_pcg = "0.3.1"
 
 [build-dependencies]
+buffa-build = { version = "=0.7.1", optional = true }
 capnp = "=0.23.2"
 capnpc = { version = "=0.23.2", optional = true }
 flatc-rust = { version = "=0.2.0", optional = true }

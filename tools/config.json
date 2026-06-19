@@ -38,6 +38,7 @@
         "msgpacker": "messagepack",
         "rmp-serde": "messagepack",
         "zerompk": "messagepack",
+        "buffa": "protobuf",
         "prost": "protobuf",
         "protobuf": "protobuf",
         "parity-scale-codec": "scale"

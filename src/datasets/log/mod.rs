@@ -1,3 +1,6 @@
+#[cfg(feature = "buffa")]
+#[path = "log_buffa/mod.rs"]
+pub mod log_buffa_generated;
 #[cfg(feature = "capnp")]
 pub mod log_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -10,6 +13,9 @@ pub mod log_prost;
 #[cfg(feature = "protobuf")]
 pub mod log_protobuf;
 
+#[cfg(feature = "buffa")]
+use log_buffa_generated::prost::log as log_buffa;
+
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -20,6 +26,8 @@ use rand::Rng;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
+#[cfg(feature = "buffa")]
+use crate::bench_buffa;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -190,6 +198,34 @@ impl bench_prost::Serialize for Address {
 #[cfg(feature = "prost")]
 impl From<log_prost::Address> for Address {
     fn from(value: log_prost::Address) -> Self {
+        Address {
+            x0: value.x0.try_into().unwrap(),
+            x1: value.x1.try_into().unwrap(),
+            x2: value.x2.try_into().unwrap(),
+            x3: value.x3.try_into().unwrap(),
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Address {
+    type Message = log_buffa::Address;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            x0: self.x0 as u32,
+            x1: self.x1 as u32,
+            x2: self.x2 as u32,
+            x3: self.x3 as u32,
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<log_buffa::Address> for Address {
+    fn from(value: log_buffa::Address) -> Self {
         Address {
             x0: value.x0.try_into().unwrap(),
             x1: value.x1.try_into().unwrap(),
@@ -486,6 +522,40 @@ impl From<log_prost::Log> for Log {
     }
 }
 
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Log {
+    type Message = log_buffa::Log;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            address: buffa::MessageField::some(self.address.serialize_pb()),
+            identity: self.identity.clone(),
+            userid: self.userid.clone(),
+            date: self.date.clone(),
+            request: self.request.clone(),
+            code: self.code as u32,
+            size: self.size,
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<log_buffa::Log> for Log {
+    fn from(value: log_buffa::Log) -> Self {
+        Log {
+            address: value.address.into_option().unwrap().into(),
+            identity: value.identity,
+            userid: value.userid,
+            date: value.date,
+            request: value.request,
+            code: value.code.try_into().unwrap(),
+            size: value.size,
+        }
+    }
+}
+
 #[cfg(feature = "protobuf")]
 impl bench_protobuf::Serialize for Log {
     type Message = log_protobuf::log::Log;
@@ -660,6 +730,29 @@ impl bench_prost::Serialize for Logs {
 #[cfg(feature = "prost")]
 impl From<log_prost::Logs> for Logs {
     fn from(value: log_prost::Logs) -> Self {
+        Logs {
+            logs: value.logs.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Logs {
+    type Message = log_buffa::Logs;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for log in self.logs.iter() {
+            result.logs.push(log.serialize_pb());
+        }
+        result
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<log_buffa::Logs> for Logs {
+    fn from(value: log_buffa::Logs) -> Self {
         Logs {
             logs: value.logs.into_iter().map(Into::into).collect(),
         }
