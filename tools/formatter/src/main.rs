@@ -104,23 +104,23 @@ fn write_crate_row(
     features: &Features,
 ) -> fmt::Result {
     let package_id = features.get(feature.name).unwrap();
-    if let Some(encoding) = feature.common_encoding {
-        write!(
-            output,
-            "| {encoding}:<br> [{pkg} {version}][{feature}] |",
-            pkg = package_id.crate_name,
-            version = package_id.version,
-            feature = feature.name,
-        )
-    } else {
-        write!(
-            output,
-            "| [{pkg} {version}][{feature}] |",
-            pkg = package_id.crate_name,
-            version = package_id.version,
-            feature = feature.name,
-        )
-    }
+    write!(
+        output,
+        "| {encoding}[{pkg} {version}][{feature}]{mode} |",
+        encoding = if let Some(encoding) = &feature.common_encoding {
+            format!("{encoding}:<br> ")
+        } else {
+            String::new()
+        },
+        pkg = package_id.crate_name,
+        version = package_id.version,
+        feature = feature.name,
+        mode = if let Some(mode) = &package_id.mode {
+            format!(" (mode: {mode})")
+        } else {
+            String::new()
+        },
+    )
 }
 
 pub fn capitalize(s: &str) -> String {

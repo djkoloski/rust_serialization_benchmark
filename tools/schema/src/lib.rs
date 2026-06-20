@@ -7,8 +7,12 @@ use std::{
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct PackageId {
+    /// Name of the actual crate that does the encoding
     #[serde(alias = "name")]
     pub crate_name: String,
+    /// Friendly encoding mode for this package variant
+    pub mode: Option<String>,
+    /// Semver version for the associated crate
     pub version: String,
 }
 

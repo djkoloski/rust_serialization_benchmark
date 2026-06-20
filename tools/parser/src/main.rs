@@ -113,6 +113,7 @@ fn find_package_id(feature: &str, config: &Config, metadata: &Metadata) -> Packa
     if let Some(package_id) = config.crate_matching.get(feature) {
         PackageId {
             crate_name: package_id.crate_name.clone(),
+            mode: package_id.mode.clone(),
             version: find_package_version(
                 &package_id.crate_name,
                 Some(
@@ -127,6 +128,7 @@ fn find_package_id(feature: &str, config: &Config, metadata: &Metadata) -> Packa
     } else {
         PackageId {
             crate_name: feature.to_string(),
+            mode: None,
             version: find_package_version(feature, None, metadata),
         }
     }
