@@ -132,20 +132,6 @@ fn bench_log(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "capnp")]
-    bench_capnp::bench_packed(BENCH, c, &data, |bytes| {
-        let message_reader =
-            capnp::serialize_packed::read_message(bytes, Default::default()).unwrap();
-        let data = message_reader
-            .get_root::<rust_serialization_benchmark::datasets::log::cp::logs::Reader>()
-            .unwrap();
-        for log in data.get_logs().unwrap().iter() {
-            black_box(log.get_address().unwrap());
-            black_box(log.get_code());
-            black_box(log.get_size());
-        }
-    });
-
     #[cfg(feature = "cbor4ii")]
     bench_cbor4ii::bench_borrowable(BENCH, c, &data);
 
@@ -375,18 +361,6 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "capnp")]
-    bench_capnp::bench_packed(BENCH, c, &data, |bytes| {
-        let message_reader =
-            capnp::serialize_packed::read_message(bytes, Default::default()).unwrap();
-        let data = message_reader
-            .get_root::<rust_serialization_benchmark::datasets::mesh::cp::mesh::Reader>()
-            .unwrap();
-        for triangle in data.get_triangles().unwrap().iter() {
-            black_box(triangle.get_normal().unwrap());
-        }
-    });
-
     #[cfg(feature = "cbor4ii")]
     bench_cbor4ii::bench(BENCH, c, &data);
 
@@ -592,18 +566,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_capnp::bench(BENCH, c, &data, |bytes| {
         let message_reader =
             capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
-        let data = message_reader
-      .get_root::<rust_serialization_benchmark::datasets::minecraft_savedata::cp::players::Reader>()
-      .unwrap();
-        for player in data.get_players().unwrap().iter() {
-            black_box(player.get_game_type().unwrap());
-        }
-    });
-
-    #[cfg(feature = "capnp")]
-    bench_capnp::bench_packed(BENCH, c, &data, |bytes| {
-        let message_reader =
-            capnp::serialize_packed::read_message(bytes, Default::default()).unwrap();
         let data = message_reader
       .get_root::<rust_serialization_benchmark::datasets::minecraft_savedata::cp::players::Reader>()
       .unwrap();
@@ -827,18 +789,6 @@ fn bench_mk48(c: &mut Criterion) {
     bench_capnp::bench(BENCH, c, &data, |bytes| {
         let message_reader =
             capnp::serialize::read_message_from_flat_slice(bytes, Default::default()).unwrap();
-        let data = message_reader
-            .get_root::<rust_serialization_benchmark::datasets::mk48::cp::updates::Reader>()
-            .unwrap();
-        for update in data.get_updates().unwrap().iter() {
-            black_box(update.get_score());
-        }
-    });
-
-    #[cfg(feature = "capnp")]
-    bench_capnp::bench_packed(BENCH, c, &data, |bytes| {
-        let message_reader =
-            capnp::serialize_packed::read_message(bytes, Default::default()).unwrap();
         let data = message_reader
             .get_root::<rust_serialization_benchmark::datasets::mk48::cp::updates::Reader>()
             .unwrap();

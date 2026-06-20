@@ -24,11 +24,16 @@
         "bincode": {
             "crate_name": "bincode",
             "version": "2"
+        },
+        "capnp__packed": {
+            "crate_name": "capnp",
+            "mode": "packed encoding",
+            "version": "*"
         }
     },
     "common_encodings": {
         "capnp": "capnp",
-        "capnp_packed": "capnp",
+        "capnp__packed": "capnp",
         "cbor4ii": "cbor",
         "ciborium": "cbor",
         "serde_cbor": "cbor",
