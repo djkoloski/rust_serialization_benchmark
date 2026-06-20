@@ -47,10 +47,10 @@ fn main() {
         .map(|path| fs::read_to_string(path).unwrap());
 
     let time_benches_re = Regex::new(
-        r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/([a-z0-9_\-]+)(?: \(([a-z0-9_\-+ ]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s)"
+        r"(?m)^(?<suite>[a-z0-9_\-]+)\/(?<feature>[a-z0-9_\-]+)\/(?<bench>[a-z0-9_\-]+)(?: \((?<variant>[a-z0-9_\-+ ]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (?<time>\d+\.\d+ [µnm]s)"
     ).unwrap();
     let size_benches_re = Regex::new(
-        r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/(size|zlib|zstd)(?: \(([a-z0-9_\-+ ]*)\))? (\d+)",
+        r"(?m)^(?<dataset>[a-z0-9_\-]+)\/(?<feature>[a-z0-9_\-]+)\/(?<bench>size|zlib|zstd)(?: \((?<variant>[a-z0-9_\-+ ]*)\))? (?<size>\d+)",
     )
     .unwrap();
 
@@ -61,22 +61,25 @@ fn main() {
     };
 
     for capture in time_benches_re.captures_iter(&log) {
-        let feature = &capture[2];
+        let feature = &capture["feature"];
         results
             .features
             .entry(feature.to_string())
             .or_insert_with(|| find_package_id(feature, &config, &metadata));
 
-        let dataset = results.datasets.entry(capture[1].to_string()).or_default();
+        let dataset = results
+            .datasets
+            .entry(capture["suite"].to_string())
+            .or_default();
         let package = dataset.features.entry(feature.to_string()).or_default();
         let bench = package
             .benches
-            .entry(capture[3].to_string())
+            .entry(capture["bench"].to_string())
             .or_insert(Bench::nanos());
         let values = bench.unwrap_nanos();
 
-        let value = parse_time(&capture[5]);
-        if let Some(variant) = capture.get(4) {
+        let value = parse_time(&capture["time"]);
+        if let Some(variant) = capture.name("variant") {
             values.variants.insert(variant.as_str().to_string(), value);
         } else {
             values.primary = Some(value);
@@ -84,22 +87,25 @@ fn main() {
     }
 
     for capture in size_benches_re.captures_iter(&log) {
-        let feature = &capture[2];
+        let feature = &capture["feature"];
         results
             .features
             .entry(feature.to_string())
             .or_insert_with(|| find_package_id(feature, &config, &metadata));
 
-        let dataset = results.datasets.entry(capture[1].to_string()).or_default();
+        let dataset = results
+            .datasets
+            .entry(capture["dataset"].to_string())
+            .or_default();
         let package = dataset.features.entry(feature.to_string()).or_default();
         let bench = package
             .benches
-            .entry(capture[3].to_string())
+            .entry(capture["bench"].to_string())
             .or_insert(Bench::bytes());
         let values = bench.unwrap_bytes();
 
-        let value = capture[5].parse().unwrap();
-        if let Some(variant) = capture.get(4) {
+        let value = capture["size"].parse().unwrap();
+        if let Some(variant) = capture.name("variant") {
             values.variants.insert(variant.as_str().to_string(), value);
         } else {
             values.primary = Some(value);
