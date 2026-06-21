@@ -60,9 +60,18 @@ where
     crate::bench_size(name, "capnp", deserialize_buffer.as_slice());
 
     group.finish();
+}
 
-    // -----------
-    // Also benchmark in "packed" mode
+// Packed format: same wire schema, zero-byte runs stripped. Requires an unpack
+// step on decode, so it's not zero-copy — only `serialize` and `deserialize`
+// groups are emitted (no `access` / `read`), placing it in the ser/de table
+// alongside other conventional encoders.
+pub fn bench_packed<T, R>(name: &'static str, c: &mut Criterion, data: &T, read: R)
+where
+    T: for<'a> Serialize<'a>,
+    R: Fn(&mut &[u8]),
+{
+    const BUFFER_LEN: usize = 1_000_000;
 
     let mut group = c.benchmark_group(format!("{}/capnp__packed", name));
 
