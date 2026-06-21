@@ -102,7 +102,7 @@ where
         })
     });
 
-    crate::bench_size(name, "capnp (packed)", deserialize_buffer.as_slice());
+    crate::bench_size(name, "capnp__packed", deserialize_buffer.as_slice());
 
     group.finish();
 }
