@@ -7,13 +7,8 @@ pub trait Serialize: Sized {
     fn serialize_pb(&self) -> Self::Message;
 }
 
-pub fn bench<T>(
-    name: &'static str,
-    c: &mut Criterion,
-    data: &T,
-    access: impl Fn(&[u8]),
-    read: impl Fn(&[u8]),
-) where
+pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
+where
     T: Serialize + PartialEq,
 {
     const BUFFER_LEN: usize = 10_000_000;
@@ -48,24 +43,6 @@ pub fn bench<T>(
         })
     });
 
-    // Zero-copy access via buffa's generated view types. Eager views validate
-    // the whole message structure during `decode_view`, so this is the
-    // "validated upfront with error" path (it returns a `Result`), mirroring
-    // the categorization used for the other pseudo-zero-copy libraries.
-    group.bench_function("access (validated upfront with error)", |b| {
-        b.iter(|| {
-            access(black_box(deserialize_buffer.as_slice()));
-            black_box(());
-        })
-    });
-
-    group.bench_function("read (validated upfront with error)", |b| {
-        b.iter(|| {
-            read(black_box(deserialize_buffer.as_slice()));
-            black_box(());
-        })
-    });
-
     crate::bench_size(name, "buffa", deserialize_buffer.as_slice());
 
     assert!(
@@ -74,6 +51,31 @@ pub fn bench<T>(
             .into()
             == *data
     );
+
+    group.finish();
+}
+
+// In addition to the owned `bench`, this also benchmarks decoding into buffa's
+// generated borrowed view types, which reference string/bytes data in the input
+// buffer instead of allocating owned copies. This is buffa's "borrow" target;
+// it still walks the whole message, so it is not a zero-copy access/read.
+pub fn bench_borrowable<T>(name: &'static str, c: &mut Criterion, data: &T, borrow: impl Fn(&[u8]))
+where
+    T: Serialize + PartialEq,
+{
+    bench(name, c, data);
+
+    let mut group = c.benchmark_group(format!("{}/buffa", name));
+
+    let mut deserialize_buffer = Vec::new();
+    data.serialize_pb().encode(&mut deserialize_buffer);
+
+    group.bench_function("borrow", |b| {
+        b.iter(|| {
+            borrow(black_box(deserialize_buffer.as_slice()));
+            black_box(());
+        })
+    });
 
     group.finish();
 }

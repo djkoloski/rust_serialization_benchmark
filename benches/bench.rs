@@ -244,22 +244,9 @@ fn bench_log(c: &mut Criterion) {
     bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "buffa")]
-    bench_buffa::bench(
-        BENCH,
-        c,
-        &data,
-        |bytes| {
-            black_box(rust_serialization_benchmark::datasets::log::log_buffa_generated::prost::log::LogsView::decode_view(bytes).unwrap());
-        },
-        |bytes| {
-            let data = rust_serialization_benchmark::datasets::log::log_buffa_generated::prost::log::LogsView::decode_view(bytes).unwrap();
-            for log in data.logs.iter() {
-                black_box(&log.address);
-                black_box(log.code);
-                black_box(log.size);
-            }
-        },
-    );
+    bench_buffa::bench_borrowable(BENCH, c, &data, |bytes| {
+        black_box(rust_serialization_benchmark::datasets::log::log_buffa_generated::prost::log::LogsView::decode_view(bytes).unwrap());
+    });
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -494,20 +481,7 @@ fn bench_mesh(c: &mut Criterion) {
     bench_pot::bench(BENCH, c, &data);
 
     #[cfg(feature = "buffa")]
-    bench_buffa::bench(
-        BENCH,
-        c,
-        &data,
-        |bytes| {
-            black_box(rust_serialization_benchmark::datasets::mesh::mesh_buffa_generated::prost::mesh::MeshView::decode_view(bytes).unwrap());
-        },
-        |bytes| {
-            let data = rust_serialization_benchmark::datasets::mesh::mesh_buffa_generated::prost::mesh::MeshView::decode_view(bytes).unwrap();
-            for triangle in data.triangles.iter() {
-                black_box(&triangle.normal);
-            }
-        },
-    );
+    bench_buffa::bench(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -740,20 +714,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "buffa")]
-    bench_buffa::bench(
-        BENCH,
-        c,
-        &data,
-        |bytes| {
-            black_box(rust_serialization_benchmark::datasets::minecraft_savedata::minecraft_savedata_buffa_generated::prost::minecraft_savedata::PlayersView::decode_view(bytes).unwrap());
-        },
-        |bytes| {
-            let data = rust_serialization_benchmark::datasets::minecraft_savedata::minecraft_savedata_buffa_generated::prost::minecraft_savedata::PlayersView::decode_view(bytes).unwrap();
-            for player in data.players.iter() {
-                black_box(&player.game_type);
-            }
-        },
-    );
+    bench_buffa::bench_borrowable(BENCH, c, &data, |bytes| {
+        black_box(rust_serialization_benchmark::datasets::minecraft_savedata::minecraft_savedata_buffa_generated::prost::minecraft_savedata::PlayersView::decode_view(bytes).unwrap());
+    });
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -986,20 +949,7 @@ fn bench_mk48(c: &mut Criterion) {
     bench_pot::bench(BENCH, c, &data);
 
     #[cfg(feature = "buffa")]
-    bench_buffa::bench(
-        BENCH,
-        c,
-        &data,
-        |bytes| {
-            black_box(rust_serialization_benchmark::datasets::mk48::mk48_buffa_generated::prost::mk48::UpdatesView::decode_view(bytes).unwrap());
-        },
-        |bytes| {
-            let data = rust_serialization_benchmark::datasets::mk48::mk48_buffa_generated::prost::mk48::UpdatesView::decode_view(bytes).unwrap();
-            for update in data.updates.iter() {
-                black_box(update.score);
-            }
-        },
-    );
+    bench_buffa::bench(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
