@@ -1617,11 +1617,14 @@ impl bench_buffa::Serialize for Updates {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for update in self.updates.iter() {
-            result.updates.push(update.serialize_pb());
+        Self::Message {
+            updates: self
+                .updates
+                .iter()
+                .map(|update| update.serialize_pb())
+                .collect(),
+            ..Default::default()
         }
-        result
     }
 }
 

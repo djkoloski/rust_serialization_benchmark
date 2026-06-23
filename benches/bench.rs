@@ -1,5 +1,3 @@
-#[cfg(feature = "buffa")]
-use buffa::MessageView;
 #[allow(unused_imports)]
 use criterion::{black_box, criterion_main, Criterion};
 use rand_pcg::Lcg64Xsh32;
@@ -244,9 +242,7 @@ fn bench_log(c: &mut Criterion) {
     bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "buffa")]
-    bench_buffa::bench_borrowable(BENCH, c, &data, |bytes| {
-        black_box(rust_serialization_benchmark::datasets::log::log_buffa_generated::prost::log::LogsView::decode_view(bytes).unwrap());
-    });
+    bench_buffa::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -714,9 +710,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     bench_pot::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "buffa")]
-    bench_buffa::bench_borrowable(BENCH, c, &data, |bytes| {
-        black_box(rust_serialization_benchmark::datasets::minecraft_savedata::minecraft_savedata_buffa_generated::prost::minecraft_savedata::PlayersView::decode_view(bytes).unwrap());
-    });
+    bench_buffa::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);

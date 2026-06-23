@@ -2597,11 +2597,14 @@ impl bench_buffa::Serialize for Players {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for player in self.players.iter() {
-            result.players.push(player.serialize_pb());
+        Self::Message {
+            players: self
+                .players
+                .iter()
+                .map(|player| player.serialize_pb())
+                .collect(),
+            ..Default::default()
         }
-        result
     }
 }
 

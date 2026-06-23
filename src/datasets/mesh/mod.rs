@@ -495,11 +495,14 @@ impl bench_buffa::Serialize for Mesh {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for triangle in self.triangles.iter() {
-            result.triangles.push(triangle.serialize_pb());
+        Self::Message {
+            triangles: self
+                .triangles
+                .iter()
+                .map(|triangle| triangle.serialize_pb())
+                .collect(),
+            ..Default::default()
         }
-        result
     }
 }
 

@@ -1,4 +1,4 @@
-use buffa::Message;
+use buffa::{HasMessageView, Message, MessageView};
 use criterion::{black_box, Criterion};
 
 pub trait Serialize: Sized {
@@ -56,24 +56,41 @@ where
 }
 
 // In addition to the owned `bench`, this also benchmarks decoding into buffa's
-// generated borrowed view types, which reference string/bytes data in the input
+// generated borrowed view type, which references string/bytes data in the input
 // buffer instead of allocating owned copies. This is buffa's "borrow" target;
 // it still walks the whole message, so it is not a zero-copy access/read.
-pub fn bench_borrowable<T>(name: &'static str, c: &mut Criterion, data: &T, borrow: impl Fn(&[u8]))
+//
+// The view type is reached generically through `HasMessageView` on the owned
+// message, so callers don't need to name it.
+pub fn bench_borrowable<T>(name: &'static str, c: &mut Criterion, data: &T)
 where
     T: Serialize + PartialEq,
+    T::Message: HasMessageView,
 {
     bench(name, c, data);
+
+    fn decode_borrowed<M: HasMessageView>(buf: &[u8]) -> M::View<'_> {
+        <M::View<'_> as MessageView<'_>>::decode_view(buf).unwrap()
+    }
 
     let mut group = c.benchmark_group(format!("{}/buffa", name));
 
     let mut deserialize_buffer = Vec::new();
     data.serialize_pb().encode(&mut deserialize_buffer);
 
+    // The borrowed view should decode to the same data as the owned value.
+    assert!(
+        decode_borrowed::<T::Message>(&deserialize_buffer)
+            .to_owned_message()
+            .into()
+            == *data
+    );
+
     group.bench_function("borrow", |b| {
         b.iter(|| {
-            borrow(black_box(deserialize_buffer.as_slice()));
-            black_box(());
+            black_box(decode_borrowed::<T::Message>(black_box(
+                &deserialize_buffer,
+            )));
         })
     });
 

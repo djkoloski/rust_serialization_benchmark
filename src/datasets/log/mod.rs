@@ -742,11 +742,10 @@ impl bench_buffa::Serialize for Logs {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        let mut result = Self::Message::default();
-        for log in self.logs.iter() {
-            result.logs.push(log.serialize_pb());
+        Self::Message {
+            logs: self.logs.iter().map(|log| log.serialize_pb()).collect(),
+            ..Default::default()
         }
-        result
     }
 }
 
