@@ -28,7 +28,6 @@
     },
     "common_encodings": {
         "capnp": "capnp",
-        "capnp_packed": "capnp",
         "cbor4ii": "cbor",
         "ciborium": "cbor",
         "serde_cbor": "cbor",
