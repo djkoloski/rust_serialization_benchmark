@@ -13,6 +13,8 @@ use rust_serialization_benchmark::bench_bincode1;
 use rust_serialization_benchmark::bench_bitcode;
 #[cfg(feature = "borsh")]
 use rust_serialization_benchmark::bench_borsh;
+#[cfg(feature = "buffa")]
+use rust_serialization_benchmark::bench_buffa;
 #[cfg(feature = "capnp")]
 use rust_serialization_benchmark::bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -238,6 +240,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "pot")]
     bench_pot::bench_borrowable(BENCH, c, &data);
+
+    #[cfg(feature = "buffa")]
+    bench_buffa::bench_borrowable(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
@@ -471,6 +476,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "pot")]
     bench_pot::bench(BENCH, c, &data);
 
+    #[cfg(feature = "buffa")]
+    bench_buffa::bench(BENCH, c, &data);
+
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
 
@@ -701,6 +709,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "pot")]
     bench_pot::bench_borrowable(BENCH, c, &data);
 
+    #[cfg(feature = "buffa")]
+    bench_buffa::bench_borrowable(BENCH, c, &data);
+
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);
 
@@ -930,6 +941,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "pot")]
     bench_pot::bench(BENCH, c, &data);
+
+    #[cfg(feature = "buffa")]
+    bench_buffa::bench(BENCH, c, &data);
 
     #[cfg(feature = "prost")]
     bench_prost::bench(BENCH, c, &data);

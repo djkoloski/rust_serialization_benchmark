@@ -1,3 +1,6 @@
+#[cfg(feature = "buffa")]
+#[path = "mk48_buffa/mod.rs"]
+pub mod mk48_buffa_generated;
 #[cfg(any(feature = "capnp", feature = "prost"))]
 pub mod mk48_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -12,6 +15,8 @@ pub mod mk48_protobuf;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
+#[cfg(feature = "buffa")]
+use mk48_buffa_generated::prost::mk48 as bpb;
 #[cfg(any(feature = "capnp", feature = "prost"))]
 pub use mk48_capnp as cp;
 #[cfg(feature = "flatbuffers")]
@@ -24,6 +29,8 @@ use rand::Rng;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
+#[cfg(feature = "buffa")]
+use crate::bench_buffa;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -280,6 +287,43 @@ impl From<pb::EntityType> for EntityType {
     }
 }
 
+#[cfg(feature = "buffa")]
+impl From<EntityType> for bpb::EntityType {
+    #[inline]
+    fn from(value: EntityType) -> Self {
+        match value {
+            EntityType::ArleighBurke => bpb::EntityType::ARLEIGH_BURKE,
+            EntityType::Bismarck => bpb::EntityType::BISMARCK,
+            EntityType::Clemenceau => bpb::EntityType::CLEMENCEAU,
+            EntityType::Fletcher => bpb::EntityType::FLETCHER,
+            EntityType::G5 => bpb::EntityType::G5,
+            EntityType::Iowa => bpb::EntityType::IOWA,
+            EntityType::Kolkata => bpb::EntityType::KOLKATA,
+            EntityType::Osa => bpb::EntityType::OSA,
+            EntityType::Yasen => bpb::EntityType::YASEN,
+            EntityType::Zubr => bpb::EntityType::ZUBR,
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::EntityType> for EntityType {
+    fn from(value: bpb::EntityType) -> Self {
+        match value {
+            bpb::EntityType::ARLEIGH_BURKE => EntityType::ArleighBurke,
+            bpb::EntityType::BISMARCK => EntityType::Bismarck,
+            bpb::EntityType::CLEMENCEAU => EntityType::Clemenceau,
+            bpb::EntityType::FLETCHER => EntityType::Fletcher,
+            bpb::EntityType::G5 => EntityType::G5,
+            bpb::EntityType::IOWA => EntityType::Iowa,
+            bpb::EntityType::KOLKATA => EntityType::Kolkata,
+            bpb::EntityType::OSA => EntityType::Osa,
+            bpb::EntityType::YASEN => EntityType::Yasen,
+            bpb::EntityType::ZUBR => EntityType::Zubr,
+        }
+    }
+}
+
 #[cfg(feature = "protobuf")]
 impl From<EntityType> for rpb::mk48::EntityType {
     #[inline]
@@ -476,6 +520,45 @@ impl From<pb::Transform> for Transform {
     }
 }
 
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Transform {
+    type Message = bpb::Transform;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            altitude: self.altitude.into(),
+            angle: self.angle.into(),
+            position: buffa::MessageField::some(bpb::Vector2f {
+                x: self.position.0,
+                y: self.position.1,
+                ..Default::default()
+            }),
+            velocity: self.velocity.into(),
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::Vector2f> for (f32, f32) {
+    fn from(value: bpb::Vector2f) -> Self {
+        (value.x, value.y)
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::Transform> for Transform {
+    fn from(value: bpb::Transform) -> Self {
+        Transform {
+            altitude: value.altitude.try_into().unwrap(),
+            angle: value.angle.try_into().unwrap(),
+            position: value.position.into_option().unwrap().into(),
+            velocity: value.velocity.try_into().unwrap(),
+        }
+    }
+}
+
 #[cfg(feature = "protobuf")]
 impl bench_protobuf::Serialize for Transform {
     type Message = rpb::mk48::Transform;
@@ -617,6 +700,32 @@ impl bench_prost::Serialize for Guidance {
 #[cfg(feature = "prost")]
 impl From<pb::Guidance> for Guidance {
     fn from(value: pb::Guidance) -> Self {
+        Guidance {
+            angle: value.angle.try_into().unwrap(),
+            submerge: value.submerge,
+            velocity: value.velocity.try_into().unwrap(),
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Guidance {
+    type Message = bpb::Guidance;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            angle: self.angle as u32,
+            submerge: self.submerge,
+            velocity: self.velocity as i32,
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::Guidance> for Guidance {
+    fn from(value: bpb::Guidance) -> Self {
         Guidance {
             angle: value.angle.try_into().unwrap(),
             submerge: value.submerge,
@@ -874,6 +983,54 @@ impl From<pb::Contact> for Contact {
     }
 }
 
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Contact {
+    type Message = bpb::Contact;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message {
+            damage: self.damage as u32,
+            entity_id: self.entity_id,
+            entity_type: self
+                .entity_type
+                .map(|entity_type| buffa::EnumValue::from(bpb::EntityType::from(entity_type))),
+            guidance: buffa::MessageField::some(self.guidance.serialize_pb()),
+            player_id: self.player_id.map(Into::into),
+            reloads: Default::default(),
+            transform: buffa::MessageField::some(self.transform.serialize_pb()),
+            turret_angles: Default::default(),
+            ..Default::default()
+        };
+        for reload in self.reloads.iter().cloned() {
+            result.reloads.push(reload);
+        }
+        for turret_angle in self.turret_angles.iter().cloned() {
+            result.turret_angles.push(turret_angle as u32);
+        }
+        result
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::Contact> for Contact {
+    fn from(value: bpb::Contact) -> Self {
+        Contact {
+            damage: value.damage.try_into().unwrap(),
+            entity_id: value.entity_id,
+            entity_type: value.entity_type.map(|et| et.as_known().unwrap().into()),
+            guidance: value.guidance.into_option().unwrap().into(),
+            player_id: value.player_id.map(|id| id.try_into().unwrap()),
+            reloads: value.reloads,
+            transform: value.transform.into_option().unwrap().into(),
+            turret_angles: value
+                .turret_angles
+                .into_iter()
+                .map(|a| a.try_into().unwrap())
+                .collect(),
+        }
+    }
+}
+
 #[cfg(feature = "protobuf")]
 impl bench_protobuf::Serialize for Contact {
     type Message = rpb::mk48::Contact;
@@ -1053,6 +1210,44 @@ impl From<pb::TerrainUpdate> for TerrainUpdate {
     fn from(value: pb::TerrainUpdate) -> Self {
         TerrainUpdate {
             chunk_id: value.chunk_id.unwrap().into(),
+            data: value.data,
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for TerrainUpdate {
+    type Message = bpb::TerrainUpdate;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message {
+            chunk_id: buffa::MessageField::some(bpb::ChunkId {
+                x: self.chunk_id.0 as i32,
+                y: self.chunk_id.1 as i32,
+                ..Default::default()
+            }),
+            data: Default::default(),
+            ..Default::default()
+        };
+        for datum in self.data.iter().cloned() {
+            result.data.push(datum);
+        }
+        result
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::ChunkId> for (i8, i8) {
+    fn from(value: bpb::ChunkId) -> Self {
+        (value.x.try_into().unwrap(), value.y.try_into().unwrap())
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::TerrainUpdate> for TerrainUpdate {
+    fn from(value: bpb::TerrainUpdate) -> Self {
+        TerrainUpdate {
+            chunk_id: value.chunk_id.into_option().unwrap().into(),
             data: value.data,
         }
     }
@@ -1251,6 +1446,36 @@ impl From<pb::Update> for Update {
     }
 }
 
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Update {
+    type Message = bpb::Update;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for contact in self.contacts.iter() {
+            result.contacts.push(contact.serialize_pb());
+        }
+        result.score = self.score;
+        result.world_radius = self.world_radius;
+        for terrain_update in self.terrain_updates.iter() {
+            result.terrain_updates.push(terrain_update.serialize_pb());
+        }
+        result
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::Update> for Update {
+    fn from(value: bpb::Update) -> Self {
+        Update {
+            contacts: value.contacts.into_iter().map(Into::into).collect(),
+            score: value.score,
+            world_radius: value.world_radius,
+            terrain_updates: value.terrain_updates.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
 #[cfg(feature = "protobuf")]
 impl bench_protobuf::Serialize for Update {
     type Message = rpb::mk48::Update;
@@ -1380,6 +1605,32 @@ impl bench_prost::Serialize for Updates {
 #[cfg(feature = "prost")]
 impl From<pb::Updates> for Updates {
     fn from(value: pb::Updates) -> Self {
+        Updates {
+            updates: value.updates.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Updates {
+    type Message = bpb::Updates;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            updates: self
+                .updates
+                .iter()
+                .map(|update| update.serialize_pb())
+                .collect(),
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<bpb::Updates> for Updates {
+    fn from(value: bpb::Updates) -> Self {
         Updates {
             updates: value.updates.into_iter().map(Into::into).collect(),
         }
