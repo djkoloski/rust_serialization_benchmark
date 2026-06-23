@@ -49,8 +49,10 @@ fn main() {
     let time_benches_re = Regex::new(
         r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/([a-z0-9_\-]+)(?: \(([a-z0-9_\-+ ]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (\d+\.\d+ [µnm]s)"
     ).unwrap();
-    let size_benches_re =
-        Regex::new(r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/(size|zlib|zstd) (\d+)").unwrap();
+    let size_benches_re = Regex::new(
+        r"(?m)^([a-z0-9_\-]+)\/([a-z0-9_\-]+)\/(size|zlib|zstd)(?: \(([a-z0-9_\-+ ]*)\))? (\d+)",
+    )
+    .unwrap();
 
     let mut results = Results {
         cpu_info,
@@ -95,7 +97,13 @@ fn main() {
             .entry(capture[3].to_string())
             .or_insert(Bench::bytes());
         let values = bench.unwrap_bytes();
-        values.primary = Some(capture[4].parse().unwrap());
+
+        let value = capture[5].parse().unwrap();
+        if let Some(variant) = capture.get(4) {
+            values.variants.insert(variant.as_str().to_string(), value);
+        } else {
+            values.primary = Some(value);
+        }
     }
 
     fs::write(args.output, serde_json::to_string(&results).unwrap()).unwrap();
