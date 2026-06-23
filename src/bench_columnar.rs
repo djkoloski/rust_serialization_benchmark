@@ -1,8 +1,4 @@
-use columnar::{
-    bytemuck,
-    bytes::{EncodeDecode, Indexed},
-    Borrow, Clear, Columnar, FromBytes, Index, Push,
-};
+use columnar::{bytemuck, bytes::indexed, Borrow, Clear, Columnar, FromBytes, Index, Push};
 use criterion::{black_box, Criterion};
 
 pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, data: &T) {
@@ -15,7 +11,7 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
             columns.clear();
             columns.push(data);
             buffer.clear();
-            Indexed::encode(&mut buffer, &columns.borrow());
+            indexed::encode(&mut buffer, &columns.borrow());
             black_box(());
         })
     });
@@ -28,19 +24,19 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
     group.bench_function("serialize (SoA)", |b| {
         b.iter(|| {
             buffer.clear();
-            Indexed::encode(&mut buffer, &columns.borrow());
+            indexed::encode(&mut buffer, &columns.borrow());
             black_box(());
         })
     });
 
     buffer.clear();
-    Indexed::encode(&mut buffer, &columns.borrow());
+    indexed::encode(&mut buffer, &columns.borrow());
 
     group.bench_function("access", |b| {
         b.iter(|| {
             let decoded =
                 <<<T as Columnar>::Container as Borrow>::Borrowed<'_> as FromBytes>::from_bytes(
-                    &mut Indexed::decode(&buffer),
+                    &mut indexed::decode(&buffer),
                 );
             black_box(decoded);
         })
@@ -50,14 +46,14 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
         b.iter(|| {
             let decoded =
                 <<<T as Columnar>::Container as Borrow>::Borrowed<'_> as FromBytes>::from_bytes(
-                    &mut Indexed::decode(&buffer),
+                    &mut indexed::decode(&buffer),
                 );
             black_box(<T as Columnar>::into_owned(decoded.get(0)));
         })
     });
 
     let decoded = <<<T as Columnar>::Container as Borrow>::Borrowed<'_> as FromBytes>::from_bytes(
-        &mut Indexed::decode(&buffer),
+        &mut indexed::decode(&buffer),
     );
     let mut deser: T = <T as Columnar>::into_owned(decoded.get(0));
 
@@ -66,7 +62,7 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
         b.iter(|| {
             let decoded =
                 <<<T as Columnar>::Container as Borrow>::Borrowed<'_> as FromBytes>::from_bytes(
-                    &mut Indexed::decode(&buffer),
+                    &mut indexed::decode(&buffer),
                 );
             deser.copy_from(decoded.get(0));
             black_box(&deser);
@@ -75,7 +71,7 @@ pub fn bench<T: Columnar + PartialEq>(name: &'static str, c: &mut Criterion, dat
     crate::bench_size(name, "columnar", bytemuck::cast_slice(&buffer));
 
     let decoded = <<<T as Columnar>::Container as Borrow>::Borrowed<'_> as FromBytes>::from_bytes(
-        &mut Indexed::decode(&buffer),
+        &mut indexed::decode(&buffer),
     );
     let deser: T = <T as Columnar>::into_owned(decoded.get(0));
     assert!(data == &deser);
