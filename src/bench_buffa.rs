@@ -69,10 +69,6 @@ where
 {
     bench(name, c, data);
 
-    fn decode_borrowed<M: HasMessageView>(buf: &[u8]) -> M::View<'_> {
-        <M::View<'_> as MessageView<'_>>::decode_view(buf).unwrap()
-    }
-
     let mut group = c.benchmark_group(format!("{}/buffa", name));
 
     let mut deserialize_buffer = Vec::new();
@@ -80,7 +76,8 @@ where
 
     // The borrowed view should decode to the same data as the owned value.
     assert!(
-        decode_borrowed::<T::Message>(&deserialize_buffer)
+        <T::Message as HasMessageView>::View::decode_view(&deserialize_buffer)
+            .unwrap()
             .to_owned_message()
             .into()
             == *data
@@ -88,9 +85,10 @@ where
 
     group.bench_function("borrow", |b| {
         b.iter(|| {
-            black_box(decode_borrowed::<T::Message>(black_box(
-                &deserialize_buffer,
-            )));
+            black_box(
+                <T::Message as HasMessageView>::View::decode_view(black_box(&deserialize_buffer))
+                    .unwrap(),
+            );
         })
     });
 
