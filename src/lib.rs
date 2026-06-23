@@ -14,6 +14,8 @@ pub mod bench_bincode1;
 pub mod bench_bitcode;
 #[cfg(feature = "borsh")]
 pub mod bench_borsh;
+#[cfg(feature = "buffa")]
+pub mod bench_buffa;
 #[cfg(feature = "capnp")]
 pub mod bench_capnp;
 #[cfg(feature = "cbor4ii")]
@@ -173,15 +175,28 @@ pub fn generate_vec<R: Rng, T: Generate>(rng: &mut R, range: ops::Range<usize>) 
 }
 
 pub fn bench_size(name: &str, lib: &str, bytes: &[u8]) {
-    println!("{}/{}/size {}", name, lib, bytes.len());
+    bench_size_inner(name, lib, None, bytes);
+}
+
+/// Like [`bench_size`], but records the size under a named variant of `lib`
+/// (e.g. capnp's `packed` variant) instead of as the library's primary size,
+/// matching the `serialize (variant)` naming used for timed benchmarks.
+pub fn bench_size_variant(name: &str, lib: &str, variant: &str, bytes: &[u8]) {
+    bench_size_inner(name, lib, Some(variant), bytes);
+}
+
+fn bench_size_inner(name: &str, lib: &str, variant: Option<&str>, bytes: &[u8]) {
+    let suffix = variant.map(|v| format!(" ({v})")).unwrap_or_default();
+    println!("{}/{}/size{} {}", name, lib, suffix, bytes.len());
     #[cfg(feature = "measure-compression")]
     {
-        println!("{}/{}/zlib {}", name, lib, zlib_size(bytes));
-        println!("{}/{}/zstd {}", name, lib, zstd_size(bytes));
+        println!("{}/{}/zlib{} {}", name, lib, suffix, zlib_size(bytes));
+        println!("{}/{}/zstd{} {}", name, lib, suffix, zstd_size(bytes));
         println!(
-            "{}/{}/zstd_time {}",
+            "{}/{}/zstd_time{} {}",
             name,
             lib,
+            suffix,
             bench_compression(|| zstd_size(bytes))
         );
     }

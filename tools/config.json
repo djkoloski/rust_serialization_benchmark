@@ -28,7 +28,6 @@
     },
     "common_encodings": {
         "capnp": "capnp",
-        "capnp_packed": "capnp",
         "cbor4ii": "cbor",
         "ciborium": "cbor",
         "serde_cbor": "cbor",
@@ -38,6 +37,7 @@
         "msgpacker": "messagepack",
         "rmp-serde": "messagepack",
         "zerompk": "messagepack",
+        "buffa": "protobuf",
         "prost": "protobuf",
         "protobuf": "protobuf",
         "parity-scale-codec": "scale"

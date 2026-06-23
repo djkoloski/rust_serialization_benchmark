@@ -31,6 +31,20 @@ fn flatc_compile_dataset(name: &'static str) -> flatc_rust::Result<()> {
     })
 }
 
+#[cfg(feature = "regenerate-buffa")]
+fn buffa_compile_dataset(name: &'static str) {
+    if cfg!(windows) && env::var("PROTOC").is_err() {
+        env::set_var("PROTOC", "./prebuilt/protoc.exe");
+    }
+    buffa_build::Config::new()
+        .files(&[format!("./src/datasets/{name}/{name}.proto")])
+        .includes(&[format!("./src/datasets/{name}/")])
+        .out_dir(format!("./src/datasets/{name}/{name}_buffa"))
+        .include_file("mod.rs")
+        .compile()
+        .unwrap();
+}
+
 #[cfg(feature = "regenerate-prost")]
 fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     if cfg!(windows) && env::var("PROTOC").is_err() {
@@ -64,6 +78,7 @@ fn protobuf_compile_dataset(name: &'static str) -> std::io::Result<()> {
 
 fn main() {
     #[cfg(any(
+        feature = "regenerate-buffa",
         feature = "regenerate-capnp",
         feature = "regenerate-flatbuffers",
         feature = "regenerate-prost",
@@ -72,6 +87,8 @@ fn main() {
     {
         const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
         for &name in DATASETS.iter() {
+            #[cfg(feature = "regenerate-buffa")]
+            buffa_compile_dataset(name);
             #[cfg(feature = "regenerate-capnp")]
             capnpc_compile_dataset(name).unwrap();
             #[cfg(feature = "regenerate-flatbuffers")]

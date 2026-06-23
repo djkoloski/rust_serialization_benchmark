@@ -1,3 +1,6 @@
+#[cfg(feature = "buffa")]
+#[path = "mesh_buffa/mod.rs"]
+pub mod mesh_buffa_generated;
 #[cfg(feature = "capnp")]
 pub mod mesh_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -10,6 +13,9 @@ pub mod mesh_prost;
 #[cfg(feature = "protobuf")]
 pub mod mesh_protobuf;
 
+#[cfg(feature = "buffa")]
+use mesh_buffa_generated::prost::mesh as mesh_buffa;
+
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -20,6 +26,8 @@ use rand::Rng;
 #[cfg(feature = "wiring")]
 use wiring::prelude::{Unwiring, Wiring};
 
+#[cfg(feature = "buffa")]
+use crate::bench_buffa;
 #[cfg(feature = "capnp")]
 use crate::bench_capnp;
 #[cfg(feature = "flatbuffers")]
@@ -132,6 +140,32 @@ impl bench_prost::Serialize for Vector3 {
 #[cfg(feature = "prost")]
 impl From<mesh_prost::Vector3> for Vector3 {
     fn from(value: mesh_prost::Vector3) -> Self {
+        Vector3 {
+            x: value.x,
+            y: value.y,
+            z: value.z,
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Vector3 {
+    type Message = mesh_buffa::Vector3;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<mesh_buffa::Vector3> for Vector3 {
+    fn from(value: mesh_buffa::Vector3) -> Self {
         Vector3 {
             x: value.x,
             y: value.y,
@@ -288,6 +322,34 @@ impl From<mesh_prost::Triangle> for Triangle {
     }
 }
 
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Triangle {
+    type Message = mesh_buffa::Triangle;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            v0: buffa::MessageField::some(self.v0.serialize_pb()),
+            v1: buffa::MessageField::some(self.v1.serialize_pb()),
+            v2: buffa::MessageField::some(self.v2.serialize_pb()),
+            normal: buffa::MessageField::some(self.normal.serialize_pb()),
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<mesh_buffa::Triangle> for Triangle {
+    fn from(value: mesh_buffa::Triangle) -> Self {
+        Triangle {
+            v0: value.v0.into_option().unwrap().into(),
+            v1: value.v1.into_option().unwrap().into(),
+            v2: value.v2.into_option().unwrap().into(),
+            normal: value.normal.into_option().unwrap().into(),
+        }
+    }
+}
+
 #[cfg(feature = "protobuf")]
 impl bench_protobuf::Serialize for Triangle {
     type Message = mesh_protobuf::mesh::Triangle;
@@ -421,6 +483,32 @@ impl bench_prost::Serialize for Mesh {
 #[cfg(feature = "prost")]
 impl From<mesh_prost::Mesh> for Mesh {
     fn from(value: mesh_prost::Mesh) -> Self {
+        Mesh {
+            triangles: value.triangles.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl bench_buffa::Serialize for Mesh {
+    type Message = mesh_buffa::Mesh;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        Self::Message {
+            triangles: self
+                .triangles
+                .iter()
+                .map(|triangle| triangle.serialize_pb())
+                .collect(),
+            ..Default::default()
+        }
+    }
+}
+
+#[cfg(feature = "buffa")]
+impl From<mesh_buffa::Mesh> for Mesh {
+    fn from(value: mesh_buffa::Mesh) -> Self {
         Mesh {
             triangles: value.triangles.into_iter().map(Into::into).collect(),
         }
