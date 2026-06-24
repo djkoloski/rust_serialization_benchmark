@@ -153,7 +153,5 @@ fn main() -> eyre::Result<()> {
         .status()?
         .exit_ok("formatter")?;
 
-    metadata_path.close()?;
-
     Ok(())
 }
