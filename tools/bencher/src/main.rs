@@ -1,32 +1,64 @@
-use std::{fs, path::PathBuf, process::Command};
-
+use eyre::{eyre as err, OptionExt};
+use std::{
+    fs::{self, OpenOptions},
+    io::{BufReader, Read, Write},
+    path::PathBuf,
+    process::{Command, ExitStatus, Stdio},
+};
 use tempfile::NamedTempFile;
 use time::OffsetDateTime;
 
-fn main() {
+struct Tee<R, W> {
+    reader: R,
+    writer: W,
+}
+
+impl<R: Read, W: Write> Read for Tee<R, W> {
+    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+        let n = self.reader.read(buf)?;
+        self.writer.write_all(&buf[..n])?;
+        Ok(n)
+    }
+}
+
+trait Exit {
+    fn exit_ok(self, name: &str) -> eyre::Result<()>;
+}
+
+impl Exit for ExitStatus {
+    fn exit_ok(self, name: &str) -> eyre::Result<()> {
+        self.success().ok_or_else(|| {
+            err!(
+                "{name} process exited with status {status:?}",
+                status = self.code()
+            )
+        })
+    }
+}
+
+fn main() -> eyre::Result<()> {
     let now = OffsetDateTime::now_utc();
 
-    let metadata_path = NamedTempFile::new().unwrap().into_temp_path();
+    let metadata_path = NamedTempFile::new()?.into_temp_path();
     let metadata = Command::new("cargo")
         .args(["metadata", "--format-version", "1"])
-        .output()
-        .unwrap()
-        .stdout;
-    fs::write(&metadata_path, metadata).unwrap();
+        .output()?;
+    metadata.status.exit_ok("cargo metadata")?;
+    fs::write(&metadata_path, metadata.stdout)?;
 
-    let rustc_info_path = NamedTempFile::new().unwrap().into_temp_path();
+    let rustc_info_path = NamedTempFile::new()?.into_temp_path();
     let rustc_version = Command::new("rustc")
         .args(["--version", "--verbose"])
-        .output()
-        .unwrap()
-        .stdout;
-    fs::write(&rustc_info_path, rustc_version).unwrap();
+        .output()?;
+    rustc_version.status.exit_ok("rustc info")?;
+    fs::write(&rustc_info_path, rustc_version.stdout)?;
 
     #[cfg(target_os = "linux")]
     let cpu_info_path = {
-        let cpu_info_path = NamedTempFile::new().unwrap().into_temp_path();
-        let lscpu = Command::new("lscpu").output().unwrap().stdout;
-        fs::write(&cpu_info_path, lscpu).unwrap();
+        let cpu_info_path = NamedTempFile::new()?.into_temp_path();
+        let lscpu = Command::new("lscpu").output()?;
+        lscpu.status.exit_ok("lscpu")?;
+        fs::write(&cpu_info_path, lscpu.stdout)?;
         cpu_info_path
     };
 
@@ -41,15 +73,37 @@ fn main() {
         sec = now.second(),
     ));
 
+    eprintln!("Running benchmarks:");
+    eprintln!("-------------------");
+
     let mut log_path = bench_path.clone();
     log_path.set_extension("log");
-    let log = Command::new("cargo")
+    let mut benchmark_command = Command::new("cargo")
         .args(["bench"])
         .env("RUSTFLAGS", "-C target-cpu=native")
-        .output()
-        .unwrap()
-        .stdout;
-    fs::write(&log_path, log).unwrap();
+        .stdout(Stdio::piped())
+        .spawn()?;
+    let benchmark_stdout = std::io::BufReader::new(
+        benchmark_command
+            .stdout
+            .as_mut()
+            .ok_or_eyre("couldn't get benchmark stdout")?,
+    );
+    let mut stdout_tee = Tee {
+        reader: BufReader::new(benchmark_stdout),
+        writer: std::io::stdout(),
+    };
+    let mut log_file = OpenOptions::new()
+        .create(true)
+        .write(true)
+        .open(&log_path)?;
+    std::io::copy(&mut stdout_tee, &mut log_file)?;
+    benchmark_command.wait()?.exit_ok("benchmark")?;
+    log_file.sync_all()?;
+    drop(log_file);
+
+    eprintln!("-------------------");
+    eprintln!("Benchmarks complete");
 
     let mut config_path = PathBuf::from("tools");
     config_path.push("config.json");
@@ -70,7 +124,7 @@ fn main() {
         .arg(&json_path);
     #[cfg(target_os = "linux")]
     parser.arg("--cpu-info").arg(&cpu_info_path);
-    parser.status().unwrap();
+    parser.status()?.exit_ok("parser")?;
 
     let mut template_path = PathBuf::from("tools");
     template_path.push("README.md.template");
@@ -96,8 +150,10 @@ fn main() {
             "--output",
             "README.md",
         ])
-        .status()
-        .unwrap();
+        .status()?
+        .exit_ok("formatter")?;
 
-    metadata_path.close().unwrap();
+    metadata_path.close()?;
+
+    Ok(())
 }

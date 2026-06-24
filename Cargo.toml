@@ -17,6 +17,7 @@ publish = false
 cargo_metadata = "0.15"
 clap = "4"
 enum-iterator = "0.8"
+eyre = "0.6.12"
 fixed-map = { version = "0.9", default-features = false }
 regex = "1.12"
 schema = { path = "tools/schema" }
