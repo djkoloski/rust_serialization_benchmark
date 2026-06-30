@@ -56,6 +56,8 @@ pub mod bench_pot;
 pub mod bench_prost;
 #[cfg(feature = "protobuf")]
 pub mod bench_protobuf;
+#[cfg(feature = "protobuf4")]
+pub mod bench_protobuf4;
 #[cfg(feature = "rkyv")]
 pub mod bench_rkyv;
 #[cfg(feature = "rmp-serde")]

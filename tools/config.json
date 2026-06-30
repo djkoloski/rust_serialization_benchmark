@@ -24,6 +24,14 @@
         "bincode": {
             "crate_name": "bincode",
             "version": "2"
+        },
+        "protobuf": {
+            "crate_name": "protobuf",
+            "version": "3"
+        },
+        "protobuf4": {
+            "crate_name": "protobuf",
+            "version": ">=4"
         }
     },
     "common_encodings": {
@@ -40,6 +48,7 @@
         "buffa": "protobuf",
         "prost": "protobuf",
         "protobuf": "protobuf",
+        "protobuf4": "protobuf",
         "parity-scale-codec": "scale"
     }
 }

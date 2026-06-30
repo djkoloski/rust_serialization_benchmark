@@ -12,6 +12,8 @@ pub mod mesh_fb;
 pub mod mesh_prost;
 #[cfg(feature = "protobuf")]
 pub mod mesh_protobuf;
+#[cfg(feature = "protobuf4")]
+use protobuf4_generated as proto4;
 
 #[cfg(feature = "buffa")]
 use mesh_buffa_generated::prost::mesh as mesh_buffa;
@@ -36,6 +38,8 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 #[cfg(feature = "protobuf")]
 use crate::bench_protobuf;
+#[cfg(feature = "protobuf4")]
+use crate::bench_protobuf4;
 use crate::Generate;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -196,6 +200,31 @@ impl From<mesh_protobuf::mesh::Vector3> for Vector3 {
             x: value.x,
             y: value.y,
             z: value.z,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Vector3 {
+    type Message = proto4::mesh::Vector3;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        protobuf4::proto!(Self::Message {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+        })
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl From<proto4::mesh::Vector3> for Vector3 {
+    fn from(value: proto4::mesh::Vector3) -> Self {
+        Vector3 {
+            x: value.x(),
+            y: value.y(),
+            z: value.z(),
         }
     }
 }
@@ -378,6 +407,33 @@ impl From<mesh_protobuf::mesh::Triangle> for Triangle {
     }
 }
 
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Triangle {
+    type Message = proto4::mesh::Triangle;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        protobuf4::proto!(Self::Message {
+            v0: self.v0.serialize_pb(),
+            v1: self.v1.serialize_pb(),
+            v2: self.v2.serialize_pb(),
+            normal: self.normal.serialize_pb(),
+        })
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl From<proto4::mesh::Triangle> for Triangle {
+    fn from(value: proto4::mesh::Triangle) -> Self {
+        Triangle {
+            v0: value.v0().to_owned().into(),
+            v1: value.v1().to_owned().into(),
+            v2: value.v2().to_owned().into(),
+            normal: value.normal().to_owned().into(),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(
@@ -534,6 +590,33 @@ impl From<mesh_protobuf::mesh::Mesh> for Mesh {
     fn from(value: mesh_protobuf::mesh::Mesh) -> Self {
         Mesh {
             triangles: value.triangles.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Mesh {
+    type Message = proto4::mesh::Mesh;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::new();
+        result
+            .triangles_mut()
+            .extend(self.triangles.iter().map(|tri| tri.serialize_pb()));
+        result
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl From<proto4::mesh::Mesh> for Mesh {
+    fn from(value: proto4::mesh::Mesh) -> Self {
+        Mesh {
+            triangles: value
+                .triangles()
+                .into_iter()
+                .map(|tri| tri.to_owned().into())
+                .collect(),
         }
     }
 }
