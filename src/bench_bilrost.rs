@@ -39,13 +39,9 @@ where
     // prepended encoding path emits precisely the same bytes as the forward-encoded one.
     assert_eq!(prepended_data, deserialize_buffer);
 
-    let mut res = T::new_empty();
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(
-                res.replace_from_slice(black_box(&deserialize_buffer).as_slice())
-                    .unwrap(),
-            );
+            black_box(T::decode(black_box(&deserialize_buffer).as_slice()).unwrap());
         })
     });
 
@@ -79,12 +75,10 @@ where
     // The borrowed value we decode should be equivalent to the input
     assert!(T::Borrowed::decode_borrowed(&deserialize_buffer).unwrap() == bdata);
 
-    let mut res = T::Borrowed::new_empty();
     group.bench_function("borrow", |b| {
         b.iter(|| {
             black_box(
-                res.replace_borrowed_from(black_box(&deserialize_buffer).as_slice())
-                    .unwrap(),
+                T::Borrowed::decode_borrowed(black_box(&deserialize_buffer).as_slice()).unwrap(),
             );
         })
     });
