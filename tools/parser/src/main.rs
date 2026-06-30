@@ -47,10 +47,10 @@ fn main() {
         .map(|path| fs::read_to_string(path).unwrap());
 
     let time_benches_re = Regex::new(
-        r"(?m)^(?<suite>[a-z0-9_\-]+)\/(?<feature>[a-z0-9_\-]+)\/(?<bench>[a-z0-9_\-]+)(?: \((?<variant>[a-z0-9_\-+ ]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (?<time>\d+\.\d+ [µnm]s)"
+        r"(?m)^(?<suite>[a-z0-9_\-]+)\/(?<feature>[a-z0-9_\-]+)\/(?<bench>[a-z0-9_\-]+)(?: \((?<variant>[a-z0-9_\-+ ,]*)\))?\s+time:   \[\d+\.\d+ [µnm]s (?<time>\d+\.\d+ [µnm]s)"
     ).unwrap();
     let size_benches_re = Regex::new(
-        r"(?m)^(?<dataset>[a-z0-9_\-]+)\/(?<feature>[a-z0-9_\-]+)\/(?<bench>size|zlib|zstd)(?: \((?<variant>[a-z0-9_\-+ ]*)\))? (?<size>\d+)",
+        r"(?m)^(?<dataset>[a-z0-9_\-]+)\/(?<feature>[a-z0-9_\-]+)\/(?<bench>size|zlib|zstd)(?: \((?<variant>[a-z0-9_\-+ ,]*)\))? (?<size>\d+)",
     )
     .unwrap();
 
