@@ -133,12 +133,7 @@ impl Vector2f {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.Vector2f";
 }
-impl ::buffa::DefaultInstance for Vector2f {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<Vector2f> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(Vector2f);
 impl ::buffa::MessageName for Vector2f {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "Vector2f";
@@ -173,14 +168,10 @@ impl ::buffa::Message for Vector2f {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.x.to_bits() != 0u32 {
-            ::buffa::encoding::Tag::new(1u32, ::buffa::encoding::WireType::Fixed32)
-                .encode(buf);
-            ::buffa::types::encode_float(self.x, buf);
+            ::buffa::types::put_float_field(1u32, self.x, buf);
         }
         if self.y.to_bits() != 0u32 {
-            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Fixed32)
-                .encode(buf);
-            ::buffa::types::encode_float(self.y, buf);
+            ::buffa::types::put_float_field(2u32, self.y, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
     }
@@ -188,7 +179,7 @@ impl ::buffa::Message for Vector2f {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -196,28 +187,22 @@ impl ::buffa::Message for Vector2f {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Fixed32 {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 5u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Fixed32,
+                )?;
                 self.x = ::buffa::types::decode_float(buf)?;
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Fixed32 {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 5u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Fixed32,
+                )?;
                 self.y = ::buffa::types::decode_float(buf)?;
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -267,12 +252,7 @@ impl Transform {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.Transform";
 }
-impl ::buffa::DefaultInstance for Transform {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<Transform> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(Transform);
 impl ::buffa::MessageName for Transform {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "Transform";
@@ -318,28 +298,17 @@ impl ::buffa::Message for Transform {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.altitude != 0i32 {
-            ::buffa::encoding::Tag::new(1u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_int32(self.altitude, buf);
+            ::buffa::types::put_int32_field(1u32, self.altitude, buf);
         }
         if self.angle != 0u32 {
-            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_uint32(self.angle, buf);
+            ::buffa::types::put_uint32_field(2u32, self.angle, buf);
         }
         if self.position.is_set() {
-            ::buffa::encoding::Tag::new(
-                    3u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(3u32, __cache.consume_next(), buf);
             self.position.write_to(__cache, buf);
         }
         if self.velocity != 0i32 {
-            ::buffa::encoding::Tag::new(4u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_int32(self.velocity, buf);
+            ::buffa::types::put_int32_field(4u32, self.velocity, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
     }
@@ -347,7 +316,7 @@ impl ::buffa::Message for Transform {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -355,52 +324,40 @@ impl ::buffa::Message for Transform {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.altitude = ::buffa::types::decode_int32(buf)?;
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.angle = ::buffa::types::decode_uint32(buf)?;
             }
             3u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 3u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 ::buffa::Message::merge_length_delimited(
                     self.position.get_or_insert_default(),
                     buf,
-                    depth,
+                    ctx,
                 )?;
             }
             4u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 4u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.velocity = ::buffa::types::decode_int32(buf)?;
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -449,12 +406,7 @@ impl Guidance {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.Guidance";
 }
-impl ::buffa::DefaultInstance for Guidance {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<Guidance> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(Guidance);
 impl ::buffa::MessageName for Guidance {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "Guidance";
@@ -492,19 +444,13 @@ impl ::buffa::Message for Guidance {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.angle != 0u32 {
-            ::buffa::encoding::Tag::new(1u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_uint32(self.angle, buf);
+            ::buffa::types::put_uint32_field(1u32, self.angle, buf);
         }
         if self.submerge {
-            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_bool(self.submerge, buf);
+            ::buffa::types::put_bool_field(2u32, self.submerge, buf);
         }
         if self.velocity != 0i32 {
-            ::buffa::encoding::Tag::new(3u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_int32(self.velocity, buf);
+            ::buffa::types::put_int32_field(3u32, self.velocity, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
     }
@@ -512,7 +458,7 @@ impl ::buffa::Message for Guidance {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -520,38 +466,29 @@ impl ::buffa::Message for Guidance {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.angle = ::buffa::types::decode_uint32(buf)?;
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.submerge = ::buffa::types::decode_bool(buf)?;
             }
             3u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 3u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.velocity = ::buffa::types::decode_int32(buf)?;
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -633,12 +570,7 @@ impl Contact {
         self
     }
 }
-impl ::buffa::DefaultInstance for Contact {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<Contact> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(Contact);
 impl ::buffa::MessageName for Contact {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "Contact";
@@ -710,54 +642,31 @@ impl ::buffa::Message for Contact {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.damage != 0u32 {
-            ::buffa::encoding::Tag::new(1u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_uint32(self.damage, buf);
+            ::buffa::types::put_uint32_field(1u32, self.damage, buf);
         }
         if self.entity_id != 0u32 {
-            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_uint32(self.entity_id, buf);
+            ::buffa::types::put_uint32_field(2u32, self.entity_id, buf);
         }
         if let Some(ref v) = self.entity_type {
-            ::buffa::encoding::Tag::new(3u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_int32(v.to_i32(), buf);
+            ::buffa::types::put_int32_field(3u32, v.to_i32(), buf);
         }
         if self.guidance.is_set() {
-            ::buffa::encoding::Tag::new(
-                    4u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(4u32, __cache.consume_next(), buf);
             self.guidance.write_to(__cache, buf);
         }
         if let Some(v) = self.player_id {
-            ::buffa::encoding::Tag::new(5u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_uint32(v, buf);
+            ::buffa::types::put_uint32_field(5u32, v, buf);
         }
         if !self.reloads.is_empty() {
             let payload: u32 = self.reloads.len() as u32
                 * ::buffa::types::BOOL_ENCODED_LEN as u32;
-            ::buffa::encoding::Tag::new(
-                    6u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(payload as u64, buf);
+            ::buffa::types::put_len_delimited_header(6u32, payload, buf);
             for &v in &self.reloads {
                 ::buffa::types::encode_bool(v, buf);
             }
         }
         if self.transform.is_set() {
-            ::buffa::encoding::Tag::new(
-                    7u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(7u32, __cache.consume_next(), buf);
             self.transform.write_to(__cache, buf);
         }
         if !self.turret_angles.is_empty() {
@@ -766,12 +675,7 @@ impl ::buffa::Message for Contact {
                 .iter()
                 .map(|&v| ::buffa::types::uint32_encoded_len(v) as u32)
                 .sum::<u32>();
-            ::buffa::encoding::Tag::new(
-                    8u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(payload as u64, buf);
+            ::buffa::types::put_len_delimited_header(8u32, payload, buf);
             for &v in &self.turret_angles {
                 ::buffa::types::encode_uint32(v, buf);
             }
@@ -782,7 +686,7 @@ impl ::buffa::Message for Contact {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -790,59 +694,44 @@ impl ::buffa::Message for Contact {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.damage = ::buffa::types::decode_uint32(buf)?;
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.entity_id = ::buffa::types::decode_uint32(buf)?;
             }
             3u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 3u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.entity_type = ::core::option::Option::Some(
                     ::buffa::EnumValue::from(::buffa::types::decode_int32(buf)?),
                 );
             }
             4u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 4u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 ::buffa::Message::merge_length_delimited(
                     self.guidance.get_or_insert_default(),
                     buf,
-                    depth,
+                    ctx,
                 )?;
             }
             5u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 5u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.player_id = ::core::option::Option::Some(
                     ::buffa::types::decode_uint32(buf)?,
                 );
@@ -869,25 +758,23 @@ impl ::buffa::Message for Contact {
                 } else if tag.wire_type() == ::buffa::encoding::WireType::Varint {
                     self.reloads.push(::buffa::types::decode_bool(buf)?);
                 } else {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 6u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
+                    return ::core::result::Result::Err(
+                        ::buffa::encoding::wire_type_mismatch(
+                            tag,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        ),
+                    );
                 }
             }
             7u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 7u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 ::buffa::Message::merge_length_delimited(
                     self.transform.get_or_insert_default(),
                     buf,
-                    depth,
+                    ctx,
                 )?;
             }
             8u32 => {
@@ -913,16 +800,17 @@ impl ::buffa::Message for Contact {
                 } else if tag.wire_type() == ::buffa::encoding::WireType::Varint {
                     self.turret_angles.push(::buffa::types::decode_uint32(buf)?);
                 } else {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 8u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
+                    return ::core::result::Result::Err(
+                        ::buffa::encoding::wire_type_mismatch(
+                            tag,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        ),
+                    );
                 }
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -969,12 +857,7 @@ impl ChunkId {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.ChunkId";
 }
-impl ::buffa::DefaultInstance for ChunkId {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<ChunkId> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(ChunkId);
 impl ::buffa::MessageName for ChunkId {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "ChunkId";
@@ -1009,14 +892,10 @@ impl ::buffa::Message for ChunkId {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.x != 0i32 {
-            ::buffa::encoding::Tag::new(1u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_int32(self.x, buf);
+            ::buffa::types::put_int32_field(1u32, self.x, buf);
         }
         if self.y != 0i32 {
-            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_int32(self.y, buf);
+            ::buffa::types::put_int32_field(2u32, self.y, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
     }
@@ -1024,7 +903,7 @@ impl ::buffa::Message for ChunkId {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -1032,28 +911,22 @@ impl ::buffa::Message for ChunkId {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.x = ::buffa::types::decode_int32(buf)?;
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.y = ::buffa::types::decode_int32(buf)?;
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -1097,12 +970,7 @@ impl TerrainUpdate {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.TerrainUpdate";
 }
-impl ::buffa::DefaultInstance for TerrainUpdate {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<TerrainUpdate> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(TerrainUpdate);
 impl ::buffa::MessageName for TerrainUpdate {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "TerrainUpdate";
@@ -1142,21 +1010,11 @@ impl ::buffa::Message for TerrainUpdate {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.chunk_id.is_set() {
-            ::buffa::encoding::Tag::new(
-                    1u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
             self.chunk_id.write_to(__cache, buf);
         }
         if !self.data.is_empty() {
-            ::buffa::encoding::Tag::new(
-                    2u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::types::encode_bytes(&self.data, buf);
+            ::buffa::types::put_bytes_field(2u32, &self.data, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
     }
@@ -1164,7 +1022,7 @@ impl ::buffa::Message for TerrainUpdate {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -1172,32 +1030,26 @@ impl ::buffa::Message for TerrainUpdate {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 ::buffa::Message::merge_length_delimited(
                     self.chunk_id.get_or_insert_default(),
                     buf,
-                    depth,
+                    ctx,
                 )?;
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 ::buffa::types::merge_bytes(&mut self.data, buf)?;
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -1247,12 +1099,7 @@ impl Update {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.Update";
 }
-impl ::buffa::DefaultInstance for Update {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<Update> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(Update);
 impl ::buffa::MessageName for Update {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "Update";
@@ -1303,31 +1150,17 @@ impl ::buffa::Message for Update {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         for v in &self.contacts {
-            ::buffa::encoding::Tag::new(
-                    1u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
             v.write_to(__cache, buf);
         }
         if self.score != 0u32 {
-            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
-                .encode(buf);
-            ::buffa::types::encode_uint32(self.score, buf);
+            ::buffa::types::put_uint32_field(2u32, self.score, buf);
         }
         if self.world_radius.to_bits() != 0u32 {
-            ::buffa::encoding::Tag::new(3u32, ::buffa::encoding::WireType::Fixed32)
-                .encode(buf);
-            ::buffa::types::encode_float(self.world_radius, buf);
+            ::buffa::types::put_float_field(3u32, self.world_radius, buf);
         }
         for v in &self.terrain_updates {
-            ::buffa::encoding::Tag::new(
-                    4u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(4u32, __cache.consume_next(), buf);
             v.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -1336,7 +1169,7 @@ impl ::buffa::Message for Update {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -1344,52 +1177,40 @@ impl ::buffa::Message for Update {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 let mut elem = ::core::default::Default::default();
-                ::buffa::Message::merge_length_delimited(&mut elem, buf, depth)?;
+                ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.contacts.push(elem);
             }
             2u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 2u32,
-                        expected: 0u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
                 self.score = ::buffa::types::decode_uint32(buf)?;
             }
             3u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::Fixed32 {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 3u32,
-                        expected: 5u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Fixed32,
+                )?;
                 self.world_radius = ::buffa::types::decode_float(buf)?;
             }
             4u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 4u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 let mut elem = ::core::default::Default::default();
-                ::buffa::Message::merge_length_delimited(&mut elem, buf, depth)?;
+                ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.terrain_updates.push(elem);
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
@@ -1430,12 +1251,7 @@ impl Updates {
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/prost.mk48.Updates";
 }
-impl ::buffa::DefaultInstance for Updates {
-    fn default_instance() -> &'static Self {
-        static VALUE: ::buffa::__private::OnceBox<Updates> = ::buffa::__private::OnceBox::new();
-        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
-    }
-}
+::buffa::impl_default_instance!(Updates);
 impl ::buffa::MessageName for Updates {
     const PACKAGE: &'static str = "prost.mk48";
     const NAME: &'static str = "Updates";
@@ -1472,12 +1288,7 @@ impl ::buffa::Message for Updates {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         for v in &self.updates {
-            ::buffa::encoding::Tag::new(
-                    1u32,
-                    ::buffa::encoding::WireType::LengthDelimited,
-                )
-                .encode(buf);
-            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
             v.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -1486,7 +1297,7 @@ impl ::buffa::Message for Updates {
         &mut self,
         tag: ::buffa::encoding::Tag,
         buf: &mut impl ::buffa::bytes::Buf,
-        depth: u32,
+        ctx: ::buffa::DecodeContext<'_>,
     ) -> ::core::result::Result<(), ::buffa::DecodeError> {
         #[allow(unused_imports)]
         use ::buffa::bytes::Buf as _;
@@ -1494,20 +1305,17 @@ impl ::buffa::Message for Updates {
         use ::buffa::Enumeration as _;
         match tag.field_number() {
             1u32 => {
-                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
-                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
-                        field_number: 1u32,
-                        expected: 2u8,
-                        actual: tag.wire_type() as u8,
-                    });
-                }
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )?;
                 let mut elem = ::core::default::Default::default();
-                ::buffa::Message::merge_length_delimited(&mut elem, buf, depth)?;
+                ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.updates.push(elem);
             }
             _ => {
                 self.__buffa_unknown_fields
-                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, ctx)?);
             }
         }
         ::core::result::Result::Ok(())
