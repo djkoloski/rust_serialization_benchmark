@@ -31,7 +31,7 @@
         },
         "protobuf4": {
             "crate_name": "protobuf",
-            "version": ">=4"
+            "version": "4.35.1-release"
         }
     },
     "common_encodings": {
