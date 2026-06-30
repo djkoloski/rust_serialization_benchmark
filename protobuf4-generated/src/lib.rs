@@ -4,12 +4,16 @@
 //! `::protobuf` actually references the correct version of the library.
 
 #[path = "log/generated.rs"]
+#[cfg_attr(rustfmt, rustfmt::skip)]
 pub mod log;
 #[path = "mesh/generated.rs"]
+#[cfg_attr(rustfmt, rustfmt::skip)]
 pub mod mesh;
 #[path = "minecraft_savedata/generated.rs"]
+#[cfg_attr(rustfmt, rustfmt::skip)]
 pub mod minecraft_savedata;
 #[path = "mk48/generated.rs"]
+#[cfg_attr(rustfmt, rustfmt::skip)]
 pub mod mk48;
 
 impl From<minecraft_savedata::Vector3dView<'_>> for (f64, f64, f64) {
