@@ -38,7 +38,7 @@ where
 
     // protobuf 4 doesn't, for example, validate string values as valid utf8 at all until you ask
     // for them
-    group.bench_function("deserialize (unvalidated)", |b| {
+    group.bench_function("deserialize (decode, unvalidated)", |b| {
         b.iter(|| {
             black_box(T::Message::parse(black_box(&deserialize_buffer)).unwrap());
         })

@@ -43,6 +43,13 @@ where
         })
     });
 
+    group.bench_function("deserialize (decode + convert)", |b| {
+        b.iter(|| {
+            let decoded = <T::Message>::decode(black_box(&deserialize_buffer).as_slice()).unwrap();
+            black_box(decoded.into());
+        })
+    });
+
     crate::bench_size(name, "prost", deserialize_buffer.as_slice());
 
     assert!(<T::Message>::decode(&*deserialize_buffer).unwrap().into() == *data);

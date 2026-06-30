@@ -47,6 +47,13 @@ where
         })
     });
 
+    group.bench_function("deserialize (decode + convert)", |b| {
+        b.iter(|| {
+            let decoded = T::Message::parse_from_bytes(black_box(&deserialize_buffer)).unwrap();
+            black_box(decoded.into());
+        })
+    });
+
     crate::bench_size(name, "protobuf", deserialize_buffer.as_slice());
 
     assert!(
