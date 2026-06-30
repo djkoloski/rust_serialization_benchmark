@@ -1,10 +1,16 @@
 use criterion::{black_box, Criterion};
-use protobuf4::{Message, Parse, Serialize as _};
+use protobuf4::{AsView, Parse, Serialize as _};
 
 pub trait Serialize: Sized {
-    type Message: Default + Into<Self> + Message;
+    type Message: Default + protobuf4::Message;
 
     fn serialize_pb(&self) -> Self::Message;
+
+    fn from_view(view: <Self::Message as protobuf4::Message>::MessageView<'_>) -> Self;
+
+    fn from_owned(owned: Self::Message) -> Self {
+        Self::from_view(owned.as_view())
+    }
 }
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
@@ -43,13 +49,13 @@ where
     group.bench_function("deserialize (decode + convert)", |b| {
         b.iter(|| {
             let val = T::Message::parse(black_box(&deserialize_buffer)).unwrap();
-            black_box(val.into());
+            black_box(T::from_view(val.as_view()));
         })
     });
 
     crate::bench_size(name, "protobuf4", deserialize_buffer.as_slice());
 
-    assert!(T::Message::parse(&deserialize_buffer).unwrap().into() == *data);
+    assert!(T::from_view(T::Message::parse(&deserialize_buffer).unwrap().as_view()) == *data);
 
     group.finish();
 }

@@ -30,14 +30,14 @@ impl From<minecraft_savedata::UuidView<'_>> for [u32; 4] {
     }
 }
 
-impl From<mk48::Vector2f> for (f32, f32) {
-    fn from(value: mk48::Vector2f) -> Self {
+impl From<mk48::Vector2fView<'_>> for (f32, f32) {
+    fn from(value: mk48::Vector2fView) -> Self {
         (value.x(), value.y())
     }
 }
 
-impl From<mk48::ChunkId> for (i8, i8) {
-    fn from(value: mk48::ChunkId) -> Self {
+impl From<mk48::ChunkIdView<'_>> for (i8, i8) {
+    fn from(value: mk48::ChunkIdView) -> Self {
         (value.x().try_into().unwrap(), value.y().try_into().unwrap())
     }
 }

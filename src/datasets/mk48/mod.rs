@@ -656,15 +656,12 @@ impl bench_protobuf4::Serialize for Transform {
             velocity: self.velocity.into(),
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mk48::Transform> for Transform {
-    fn from(value: proto4::mk48::Transform) -> Self {
+    fn from_view(value: proto4::mk48::TransformView) -> Self {
         Transform {
             altitude: value.altitude().try_into().unwrap(),
             angle: value.angle().try_into().unwrap(),
-            position: value.position().to_owned().into(),
+            position: value.position().into(),
             velocity: value.velocity().try_into().unwrap(),
         }
     }
@@ -844,11 +841,8 @@ impl bench_protobuf4::Serialize for Guidance {
             velocity: self.velocity as i32,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mk48::Guidance> for Guidance {
-    fn from(value: proto4::mk48::Guidance) -> Self {
+    fn from_view(value: proto4::mk48::GuidanceView) -> Self {
         Guidance {
             angle: value.angle().try_into().unwrap(),
             submerge: value.submerge(),
@@ -1202,19 +1196,16 @@ impl bench_protobuf4::Serialize for Contact {
         );
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mk48::Contact> for Contact {
-    fn from(value: proto4::mk48::Contact) -> Self {
+    fn from_view(value: proto4::mk48::ContactView) -> Self {
         Contact {
             damage: value.damage().try_into().unwrap(),
             entity_id: value.entity_id(),
             entity_type: value.entity_type_opt().map(Into::into),
-            guidance: value.guidance().to_owned().into(),
+            guidance: Guidance::from_view(value.guidance()),
             player_id: value.player_id_opt().map(|id| id.try_into().unwrap()),
             reloads: value.reloads().iter().collect(),
-            transform: value.transform().to_owned().into(),
+            transform: Transform::from_view(value.transform()),
             turret_angles: value
                 .turret_angles()
                 .iter()
@@ -1449,13 +1440,10 @@ impl bench_protobuf4::Serialize for TerrainUpdate {
             data: &self.data,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mk48::TerrainUpdate> for TerrainUpdate {
-    fn from(value: proto4::mk48::TerrainUpdate) -> Self {
+    fn from_view(value: proto4::mk48::TerrainUpdateView) -> Self {
         TerrainUpdate {
-            chunk_id: value.chunk_id().to_owned().into(),
+            chunk_id: value.chunk_id().into(),
             data: value.data().to_vec(),
         }
     }
@@ -1695,23 +1683,16 @@ impl bench_protobuf4::Serialize for Update {
         );
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mk48::Update> for Update {
-    fn from(value: proto4::mk48::Update) -> Self {
+    fn from_view(value: proto4::mk48::UpdateView) -> Self {
         Update {
-            contacts: value
-                .contacts()
-                .iter()
-                .map(|contact| contact.to_owned().into())
-                .collect(),
+            contacts: value.contacts().iter().map(Contact::from_view).collect(),
             score: value.score(),
             world_radius: value.world_radius(),
             terrain_updates: value
                 .terrain_updates()
                 .iter()
-                .map(|update| update.to_owned().into())
+                .map(TerrainUpdate::from_view)
                 .collect(),
         }
     }
@@ -1883,17 +1864,10 @@ impl bench_protobuf4::Serialize for Updates {
             .extend(self.updates.iter().map(|update| update.serialize_pb()));
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mk48::Updates> for Updates {
-    fn from(value: proto4::mk48::Updates) -> Self {
+    fn from_view(value: proto4::mk48::UpdatesView) -> Self {
         Updates {
-            updates: value
-                .updates()
-                .iter()
-                .map(|update| update.to_owned().into())
-                .collect(),
+            updates: value.updates().iter().map(Update::from_view).collect(),
         }
     }
 }

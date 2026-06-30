@@ -216,11 +216,8 @@ impl bench_protobuf4::Serialize for Vector3 {
             z: self.z,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mesh::Vector3> for Vector3 {
-    fn from(value: proto4::mesh::Vector3) -> Self {
+    fn from_view(value: proto4::mesh::Vector3View) -> Self {
         Vector3 {
             x: value.x(),
             y: value.y(),
@@ -420,16 +417,13 @@ impl bench_protobuf4::Serialize for Triangle {
             normal: self.normal.serialize_pb(),
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mesh::Triangle> for Triangle {
-    fn from(value: proto4::mesh::Triangle) -> Self {
+    fn from_view(value: proto4::mesh::TriangleView) -> Self {
         Triangle {
-            v0: value.v0().to_owned().into(),
-            v1: value.v1().to_owned().into(),
-            v2: value.v2().to_owned().into(),
-            normal: value.normal().to_owned().into(),
+            v0: Vector3::from_view(value.v0()),
+            v1: Vector3::from_view(value.v1()),
+            v2: Vector3::from_view(value.v2()),
+            normal: Vector3::from_view(value.normal()),
         }
     }
 }
@@ -606,17 +600,10 @@ impl bench_protobuf4::Serialize for Mesh {
             .extend(self.triangles.iter().map(|tri| tri.serialize_pb()));
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::mesh::Mesh> for Mesh {
-    fn from(value: proto4::mesh::Mesh) -> Self {
+    fn from_view(value: proto4::mesh::MeshView) -> Self {
         Mesh {
-            triangles: value
-                .triangles()
-                .into_iter()
-                .map(|tri| tri.to_owned().into())
-                .collect(),
+            triangles: value.triangles().iter().map(Triangle::from_view).collect(),
         }
     }
 }

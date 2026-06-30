@@ -500,11 +500,8 @@ impl bench_protobuf4::Serialize for Item {
             id: &self.id,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::minecraft_savedata::Item> for Item {
-    fn from(value: proto4::minecraft_savedata::Item) -> Self {
+    fn from_view(value: proto4::minecraft_savedata::ItemView) -> Self {
         Item {
             count: value.count().try_into().unwrap(),
             slot: value.slot().try_into().unwrap(),
@@ -739,11 +736,8 @@ impl bench_protobuf4::Serialize for Abilities {
             instabuild: self.instabuild,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::minecraft_savedata::Abilities> for Abilities {
-    fn from(value: proto4::minecraft_savedata::Abilities) -> Self {
+    fn from_view(value: proto4::minecraft_savedata::AbilitiesView) -> Self {
         Abilities {
             walk_speed: value.walk_speed(),
             fly_speed: value.fly_speed(),
@@ -1367,11 +1361,8 @@ impl bench_protobuf4::Serialize for Entity {
         }
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::minecraft_savedata::Entity> for Entity {
-    fn from(value: proto4::minecraft_savedata::Entity) -> Self {
+    fn from_view(value: proto4::minecraft_savedata::EntityView) -> Self {
         Entity {
             id: value.id().to_string(),
             pos: value.pos().into(),
@@ -1799,11 +1790,8 @@ impl bench_protobuf4::Serialize for RecipeBook {
             .extend(self.to_be_displayed.iter());
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::minecraft_savedata::RecipeBook> for RecipeBook {
-    fn from(value: proto4::minecraft_savedata::RecipeBook) -> Self {
+    fn from_view(value: proto4::minecraft_savedata::RecipeBookView) -> Self {
         RecipeBook {
             recipes: value.recipes().iter().map(ToString::to_string).collect(),
             to_be_displayed: value
@@ -2717,18 +2705,15 @@ impl bench_protobuf4::Serialize for Player {
         );
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::minecraft_savedata::Player> for Player {
-    fn from(value: proto4::minecraft_savedata::Player) -> Self {
+    fn from_view(value: proto4::minecraft_savedata::PlayerView) -> Self {
         Player {
             game_type: value.game_type().into(),
             previous_game_type: value.previous_game_type().into(),
             score: value.score(),
             dimension: value.dimension().to_string(),
             selected_item_slot: value.selected_item_slot(),
-            selected_item: value.selected_item().to_owned().into(),
+            selected_item: Item::from_view(value.selected_item()),
             spawn_dimension: value.spawn_dimension_opt().map(ToString::to_string),
             spawn_x: value.spawn_x(),
             spawn_y: value.spawn_y(),
@@ -2742,17 +2727,9 @@ impl From<proto4::minecraft_savedata::Player> for Player {
             xp_p: value.xp_p(),
             xp_total: value.xp_total(),
             xp_seed: value.xp_seed(),
-            inventory: value
-                .inventory()
-                .iter()
-                .map(|item| item.to_owned().into())
-                .collect(),
-            ender_items: value
-                .ender_items()
-                .iter()
-                .map(|item| item.to_owned().into())
-                .collect(),
-            abilities: value.abilities().to_owned().into(),
+            inventory: value.inventory().iter().map(Item::from_view).collect(),
+            ender_items: value.ender_items().iter().map(Item::from_view).collect(),
+            abilities: Abilities::from_view(value.abilities()),
             entered_nether_position: value
                 .entered_nether_position_opt()
                 .map(|p| (p.x(), p.y(), p.z())),
@@ -2760,17 +2737,13 @@ impl From<proto4::minecraft_savedata::Player> for Player {
                 let uuid = vehicle.uuid();
                 (
                     [uuid.x0(), uuid.x1(), uuid.x2(), uuid.x3()],
-                    vehicle.entity().to_owned().into(),
+                    Entity::from_view(vehicle.entity()),
                 )
             }),
-            shoulder_entity_left: value
-                .shoulder_entity_left_opt()
-                .map(|entity| entity.to_owned().into()),
-            shoulder_entity_right: value
-                .shoulder_entity_right_opt()
-                .map(|entity| entity.to_owned().into()),
+            shoulder_entity_left: value.shoulder_entity_left_opt().map(Entity::from_view),
+            shoulder_entity_right: value.shoulder_entity_right_opt().map(Entity::from_view),
             seen_credits: value.seen_credits(),
-            recipe_book: value.recipe_book().to_owned().into(),
+            recipe_book: RecipeBook::from_view(value.recipe_book()),
         }
     }
 }
@@ -2982,17 +2955,10 @@ impl bench_protobuf4::Serialize for Players {
             .extend(self.players.iter().map(|player| player.serialize_pb()));
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::minecraft_savedata::Players> for Players {
-    fn from(value: proto4::minecraft_savedata::Players) -> Self {
+    fn from_view(value: proto4::minecraft_savedata::PlayersView) -> Self {
         Players {
-            players: value
-                .players()
-                .iter()
-                .map(|player| player.to_owned().into())
-                .collect(),
+            players: value.players().iter().map(Player::from_view).collect(),
         }
     }
 }

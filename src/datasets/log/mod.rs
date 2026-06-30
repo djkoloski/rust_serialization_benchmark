@@ -280,11 +280,9 @@ impl bench_protobuf4::Serialize for Address {
             x3: self.x3 as u32,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::log::Address> for Address {
-    fn from(value: proto4::log::Address) -> Self {
+    #[inline]
+    fn from_view(value: proto4::log::AddressView) -> Self {
         Address {
             x0: value.x0().try_into().unwrap(),
             x1: value.x1().try_into().unwrap(),
@@ -637,13 +635,10 @@ impl bench_protobuf4::Serialize for Log {
             size: self.size,
         })
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::log::Log> for Log {
-    fn from(value: proto4::log::Log) -> Self {
+    fn from_view(value: proto4::log::LogView) -> Self {
         Log {
-            address: value.address().to_owned().into(),
+            address: Address::from_view(value.address()),
             identity: value.identity().to_string(),
             userid: value.userid().to_string(),
             date: value.date().to_string(),
@@ -857,17 +852,10 @@ impl bench_protobuf4::Serialize for Logs {
             .extend(self.logs.iter().map(|log| log.serialize_pb()));
         result
     }
-}
 
-#[cfg(feature = "protobuf4")]
-impl From<proto4::log::Logs> for Logs {
-    fn from(value: proto4::log::Logs) -> Self {
+    fn from_view(value: proto4::log::LogsView) -> Self {
         Logs {
-            logs: value
-                .logs()
-                .iter()
-                .map(|log| log.to_owned().into())
-                .collect(),
+            logs: value.logs().iter().map(Log::from_view).collect(),
         }
     }
 }
