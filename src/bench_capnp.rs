@@ -95,7 +95,7 @@ where
     data.serialize_capnp(&mut builder.init_root::<T::Builder>());
     capnp::serialize_packed::write_message(&mut deserialize_buffer, &builder).unwrap();
 
-    group.bench_function("read (packed)", |b| {
+    group.bench_function("deserialize (packed)", |b| {
         b.iter(|| {
             read(black_box(&mut deserialize_buffer.as_slice()));
             black_box(());
