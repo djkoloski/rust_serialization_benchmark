@@ -83,9 +83,10 @@ where
 
     // The borrowed view should decode to the same data as the owned value.
     assert!(
-        <T::Message as HasMessageView>::View::decode_view(&deserialize_buffer)
+        T::Message::decode_view(&deserialize_buffer)
             .unwrap()
             .to_owned_message()
+            .unwrap()
             .into()
             == *data
     );
@@ -93,7 +94,7 @@ where
     group.bench_function("borrow", |b| {
         b.iter(|| {
             black_box(
-                <T::Message as HasMessageView>::View::decode_view(black_box(&deserialize_buffer))
+                <T::Message as HasMessageView>::decode_view(black_box(&deserialize_buffer))
                     .unwrap(),
             );
         })
