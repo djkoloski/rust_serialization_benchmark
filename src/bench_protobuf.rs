@@ -41,7 +41,7 @@ where
         .write_to_vec(&mut deserialize_buffer)
         .unwrap();
 
-    group.bench_function("deserialize", |b| {
+    group.bench_function("deserialize (decode)", |b| {
         b.iter(|| {
             black_box(T::Message::parse_from_bytes(black_box(&deserialize_buffer)).unwrap());
         })
