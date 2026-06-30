@@ -49,13 +49,13 @@ where
     group.bench_function("deserialize (decode + convert)", |b| {
         b.iter(|| {
             let val = T::Message::parse(black_box(&deserialize_buffer)).unwrap();
-            black_box(T::from_view(val.as_view()));
+            black_box(T::from_owned(val));
         })
     });
 
     crate::bench_size(name, "protobuf4", deserialize_buffer.as_slice());
 
-    assert!(T::from_view(T::Message::parse(&deserialize_buffer).unwrap().as_view()) == *data);
+    assert!(T::from_owned(T::Message::parse(&deserialize_buffer).unwrap()) == *data);
 
     group.finish();
 }
