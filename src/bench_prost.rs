@@ -37,9 +37,16 @@ where
     let mut deserialize_buffer = Vec::new();
     data.serialize_pb().encode(&mut deserialize_buffer).unwrap();
 
-    group.bench_function("deserialize", |b| {
+    group.bench_function("deserialize (decode)", |b| {
         b.iter(|| {
             black_box(<T::Message>::decode(black_box(&deserialize_buffer).as_slice()).unwrap());
+        })
+    });
+
+    group.bench_function("deserialize (decode + convert)", |b| {
+        b.iter(|| {
+            let decoded = <T::Message>::decode(black_box(&deserialize_buffer).as_slice()).unwrap();
+            black_box(decoded.into());
         })
     });
 

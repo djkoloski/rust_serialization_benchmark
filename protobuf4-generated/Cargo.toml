@@ -1,0 +1,9 @@
+[package]
+name = "protobuf4-generated"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+protobuf = "=4.35.1-release"

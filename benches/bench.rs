@@ -55,6 +55,8 @@ use rust_serialization_benchmark::bench_pot;
 use rust_serialization_benchmark::bench_prost;
 #[cfg(feature = "protobuf")]
 use rust_serialization_benchmark::bench_protobuf;
+#[cfg(feature = "protobuf4")]
+use rust_serialization_benchmark::bench_protobuf4;
 #[cfg(feature = "rkyv")]
 use rust_serialization_benchmark::bench_rkyv;
 #[cfg(feature = "rmp-serde")]
@@ -249,6 +251,9 @@ fn bench_log(c: &mut Criterion) {
 
     #[cfg(feature = "protobuf")]
     bench_protobuf::bench(BENCH, c, &data);
+
+    #[cfg(feature = "protobuf4")]
+    bench_protobuf4::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
@@ -485,6 +490,9 @@ fn bench_mesh(c: &mut Criterion) {
     #[cfg(feature = "protobuf")]
     bench_protobuf::bench(BENCH, c, &data);
 
+    #[cfg(feature = "protobuf4")]
+    bench_protobuf4::bench(BENCH, c, &data);
+
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
         BENCH,
@@ -718,6 +726,9 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
     #[cfg(feature = "protobuf")]
     bench_protobuf::bench(BENCH, c, &data);
 
+    #[cfg(feature = "protobuf4")]
+    bench_protobuf4::bench(BENCH, c, &data);
+
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
         BENCH,
@@ -950,6 +961,9 @@ fn bench_mk48(c: &mut Criterion) {
 
     #[cfg(feature = "protobuf")]
     bench_protobuf::bench(BENCH, c, &data);
+
+    #[cfg(feature = "protobuf4")]
+    bench_protobuf4::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(

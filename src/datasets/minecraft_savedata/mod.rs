@@ -12,6 +12,8 @@ pub mod minecraft_savedata_fb;
 pub mod minecraft_savedata_prost;
 #[cfg(feature = "protobuf")]
 pub mod minecraft_savedata_protobuf;
+#[cfg(feature = "protobuf4")]
+use protobuf4_generated as proto4;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
@@ -39,6 +41,8 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 #[cfg(feature = "protobuf")]
 use crate::bench_protobuf;
+#[cfg(feature = "protobuf4")]
+use crate::bench_protobuf4;
 use crate::datasets::BorrowableData;
 use crate::{generate_vec, Generate};
 
@@ -224,6 +228,32 @@ impl From<rpb::minecraft_savedata::GameType> for GameType {
             rpb::minecraft_savedata::GameType::CREATIVE => GameType::Creative,
             rpb::minecraft_savedata::GameType::ADVENTURE => GameType::Adventure,
             rpb::minecraft_savedata::GameType::SPECTATOR => GameType::Spectator,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl From<GameType> for proto4::minecraft_savedata::GameType {
+    #[inline]
+    fn from(value: GameType) -> Self {
+        match value {
+            GameType::Survival => Self::Survival,
+            GameType::Creative => Self::Creative,
+            GameType::Adventure => Self::Adventure,
+            GameType::Spectator => Self::Spectator,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl From<proto4::minecraft_savedata::GameType> for GameType {
+    fn from(value: proto4::minecraft_savedata::GameType) -> Self {
+        match value {
+            proto4::minecraft_savedata::GameType::Survival => GameType::Survival,
+            proto4::minecraft_savedata::GameType::Creative => GameType::Creative,
+            proto4::minecraft_savedata::GameType::Adventure => GameType::Adventure,
+            proto4::minecraft_savedata::GameType::Spectator => GameType::Spectator,
+            _ => panic!("invalid value"),
         }
     }
 }
@@ -458,6 +488,28 @@ impl From<rpb::minecraft_savedata::Item> for Item {
     }
 }
 
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Item {
+    type Message = proto4::minecraft_savedata::Item;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        protobuf4::proto!(Self::Message {
+            count: self.count as i32,
+            slot: self.slot as u32,
+            id: &self.id,
+        })
+    }
+
+    fn from_view(value: proto4::minecraft_savedata::ItemView) -> Self {
+        Item {
+            count: value.count().try_into().unwrap(),
+            slot: value.slot().try_into().unwrap(),
+            id: value.id().to_string(),
+        }
+    }
+}
+
 #[derive(Clone, Copy, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(
@@ -664,6 +716,36 @@ impl From<rpb::minecraft_savedata::Abilities> for Abilities {
             invulnerable: value.invulnerable,
             may_build: value.may_build,
             instabuild: value.instabuild,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Abilities {
+    type Message = proto4::minecraft_savedata::Abilities;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        protobuf4::proto!(Self::Message {
+            walk_speed: self.walk_speed,
+            fly_speed: self.fly_speed,
+            may_fly: self.may_fly,
+            flying: self.flying,
+            invulnerable: self.invulnerable,
+            may_build: self.may_build,
+            instabuild: self.instabuild,
+        })
+    }
+
+    fn from_view(value: proto4::minecraft_savedata::AbilitiesView) -> Self {
+        Abilities {
+            walk_speed: value.walk_speed(),
+            fly_speed: value.fly_speed(),
+            may_fly: value.may_fly(),
+            flying: value.flying(),
+            invulnerable: value.invulnerable(),
+            may_build: value.may_build(),
+            instabuild: value.instabuild(),
         }
     }
 }
@@ -1235,6 +1317,73 @@ impl From<rpb::minecraft_savedata::Entity> for Entity {
     }
 }
 
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Entity {
+    type Message = proto4::minecraft_savedata::Entity;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = protobuf4::proto!(Self::Message {
+            id: &self.id,
+            pos: __ {
+                x: self.pos.0,
+                y: self.pos.1,
+                z: self.pos.2,
+            },
+            motion: __ {
+                x: self.motion.0,
+                y: self.motion.1,
+                z: self.motion.2,
+            },
+            rotation: __ {
+                x: self.rotation.0,
+                y: self.rotation.1,
+            },
+            fall_distance: self.fall_distance,
+            fire: self.fire as u32,
+            air: self.air as u32,
+            on_ground: self.on_ground,
+            no_gravity: self.no_gravity,
+            invulnerable: self.invulnerable,
+            portal_cooldown: self.portal_cooldown,
+            uuid: __ {
+                x0: self.uuid[0],
+                x1: self.uuid[1],
+                x2: self.uuid[2],
+                x3: self.uuid[3],
+            },
+            custom_name_visible: self.custom_name_visible,
+            silent: self.silent,
+            glowing: self.glowing,
+        });
+        if let Some(custom_name) = &self.custom_name {
+            result.set_custom_name(custom_name);
+        }
+        result
+    }
+
+    fn from_view(value: proto4::minecraft_savedata::EntityView) -> Self {
+        Entity {
+            id: value.id().to_string(),
+            pos: value.pos().into(),
+            motion: value.motion().into(),
+            rotation: value.rotation().into(),
+            fall_distance: value.fall_distance(),
+            fire: value.fire().try_into().unwrap(),
+            air: value.air().try_into().unwrap(),
+            on_ground: value.on_ground(),
+            no_gravity: value.no_gravity(),
+            invulnerable: value.invulnerable(),
+            portal_cooldown: value.portal_cooldown(),
+            uuid: value.uuid().into(),
+            custom_name: value.custom_name_opt().map(ToString::to_string),
+            custom_name_visible: value.custom_name_visible(),
+            silent: value.silent(),
+            glowing: value.glowing(),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(
@@ -1615,6 +1764,50 @@ impl From<rpb::minecraft_savedata::RecipeBook> for RecipeBook {
             is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
             is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
             is_smoker_gui_open: value.is_smoker_gui_open,
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for RecipeBook {
+    type Message = proto4::minecraft_savedata::RecipeBook;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = protobuf4::proto!(Self::Message {
+            is_filtering_craftable: self.is_filtering_craftable,
+            is_gui_open: self.is_gui_open,
+            is_furnace_filtering_craftable: self.is_furnace_filtering_craftable,
+            is_furnace_gui_open: self.is_furnace_gui_open,
+            is_blasting_furnace_filtering_craftable: self.is_blasting_furnace_filtering_craftable,
+            is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
+            is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
+            is_smoker_gui_open: self.is_smoker_gui_open,
+        });
+        result.recipes_mut().extend(self.recipes.iter());
+        result
+            .to_be_displayed_mut()
+            .extend(self.to_be_displayed.iter());
+        result
+    }
+
+    fn from_view(value: proto4::minecraft_savedata::RecipeBookView) -> Self {
+        RecipeBook {
+            recipes: value.recipes().iter().map(ToString::to_string).collect(),
+            to_be_displayed: value
+                .to_be_displayed()
+                .iter()
+                .map(ToString::to_string)
+                .collect(),
+            is_filtering_craftable: value.is_filtering_craftable(),
+            is_gui_open: value.is_gui_open(),
+            is_furnace_filtering_craftable: value.is_furnace_filtering_craftable(),
+            is_furnace_gui_open: value.is_furnace_gui_open(),
+            is_blasting_furnace_filtering_craftable: value
+                .is_blasting_furnace_filtering_craftable(),
+            is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open(),
+            is_smoker_filtering_craftable: value.is_smoker_filtering_craftable(),
+            is_smoker_gui_open: value.is_smoker_gui_open(),
         }
     }
 }
@@ -2445,6 +2638,116 @@ impl From<rpb::minecraft_savedata::Player> for Player {
     }
 }
 
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Player {
+    type Message = proto4::minecraft_savedata::Player;
+
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = protobuf4::proto!(Self::Message {
+            game_type: self.game_type.into(),
+            previous_game_type: self.previous_game_type.into(),
+            score: self.score,
+            dimension: self.dimension.clone(),
+            selected_item_slot: self.selected_item_slot,
+            selected_item: self.selected_item.serialize_pb(),
+            spawn_x: self.spawn_x,
+            spawn_y: self.spawn_y,
+            spawn_z: self.spawn_z,
+            sleep_timer: self.sleep_timer as u32,
+            food_exhaustion_level: self.food_exhaustion_level,
+            food_saturation_level: self.food_saturation_level,
+            food_tick_timer: self.food_tick_timer,
+            xp_level: self.xp_level,
+            xp_p: self.xp_p,
+            xp_total: self.xp_total,
+            xp_seed: self.xp_seed,
+            abilities: self.abilities.serialize_pb(),
+            seen_credits: self.seen_credits,
+            recipe_book: self.recipe_book.serialize_pb(),
+        });
+        if let Some(spawn_dimension) = &self.spawn_dimension {
+            result.set_spawn_dimension(spawn_dimension);
+        }
+        if let Some(spawn_forced) = self.spawn_forced {
+            result.set_spawn_forced(spawn_forced);
+        }
+        if let Some((x, y, z)) = self.entered_nether_position {
+            result.set_entered_nether_position(protobuf4::proto!(
+                proto4::minecraft_savedata::Vector3d { x: x, y: y, z: z }
+            ));
+        }
+        if let Some(([x0, x1, x2, x3], entity)) = &self.root_vehicle {
+            result.set_root_vehicle(protobuf4::proto!(proto4::minecraft_savedata::Vehicle {
+                uuid: __ {
+                    x0: *x0,
+                    x1: *x1,
+                    x2: *x2,
+                    x3: *x3,
+                },
+                entity: entity.serialize_pb(),
+            }));
+        }
+        if let Some(left) = &self.shoulder_entity_left {
+            result.set_shoulder_entity_left(left.serialize_pb());
+        }
+        if let Some(right) = &self.shoulder_entity_right {
+            result.set_shoulder_entity_right(right.serialize_pb());
+        }
+        result.inventory_mut().extend(
+            self.inventory
+                .iter()
+                .map(|item| item.clone().serialize_pb()),
+        );
+        result.ender_items_mut().extend(
+            self.ender_items
+                .iter()
+                .map(|item| item.clone().serialize_pb()),
+        );
+        result
+    }
+
+    fn from_view(value: proto4::minecraft_savedata::PlayerView) -> Self {
+        Player {
+            game_type: value.game_type().into(),
+            previous_game_type: value.previous_game_type().into(),
+            score: value.score(),
+            dimension: value.dimension().to_string(),
+            selected_item_slot: value.selected_item_slot(),
+            selected_item: Item::from_view(value.selected_item()),
+            spawn_dimension: value.spawn_dimension_opt().map(ToString::to_string),
+            spawn_x: value.spawn_x(),
+            spawn_y: value.spawn_y(),
+            spawn_z: value.spawn_z(),
+            spawn_forced: value.spawn_forced_opt(),
+            sleep_timer: value.sleep_timer().try_into().unwrap(),
+            food_exhaustion_level: value.food_exhaustion_level(),
+            food_saturation_level: value.food_saturation_level(),
+            food_tick_timer: value.food_tick_timer(),
+            xp_level: value.xp_level(),
+            xp_p: value.xp_p(),
+            xp_total: value.xp_total(),
+            xp_seed: value.xp_seed(),
+            inventory: value.inventory().iter().map(Item::from_view).collect(),
+            ender_items: value.ender_items().iter().map(Item::from_view).collect(),
+            abilities: Abilities::from_view(value.abilities()),
+            entered_nether_position: value
+                .entered_nether_position_opt()
+                .map(|p| (p.x(), p.y(), p.z())),
+            root_vehicle: value.root_vehicle_opt().map(|vehicle| {
+                let uuid = vehicle.uuid();
+                (
+                    [uuid.x0(), uuid.x1(), uuid.x2(), uuid.x3()],
+                    Entity::from_view(vehicle.entity()),
+                )
+            }),
+            shoulder_entity_left: value.shoulder_entity_left_opt().map(Entity::from_view),
+            shoulder_entity_right: value.shoulder_entity_right_opt().map(Entity::from_view),
+            seen_credits: value.seen_credits(),
+            recipe_book: RecipeBook::from_view(value.recipe_book()),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(
@@ -2636,6 +2939,26 @@ impl From<rpb::minecraft_savedata::Players> for Players {
     fn from(value: rpb::minecraft_savedata::Players) -> Self {
         Players {
             players: value.players.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Players {
+    type Message = proto4::minecraft_savedata::Players;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result
+            .players_mut()
+            .extend(self.players.iter().map(|player| player.serialize_pb()));
+        result
+    }
+
+    fn from_view(value: proto4::minecraft_savedata::PlayersView) -> Self {
+        Players {
+            players: value.players().iter().map(Player::from_view).collect(),
         }
     }
 }

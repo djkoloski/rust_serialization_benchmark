@@ -12,6 +12,8 @@ pub mod log_fb;
 pub mod log_prost;
 #[cfg(feature = "protobuf")]
 pub mod log_protobuf;
+#[cfg(feature = "protobuf4")]
+use protobuf4_generated as proto4;
 
 #[cfg(feature = "buffa")]
 use log_buffa_generated::prost::log as log_buffa;
@@ -36,6 +38,8 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 #[cfg(feature = "protobuf")]
 use crate::bench_protobuf;
+#[cfg(feature = "protobuf4")]
+use crate::bench_protobuf4;
 use crate::datasets::BorrowableData;
 use crate::Generate;
 
@@ -259,6 +263,31 @@ impl From<log_protobuf::log::Address> for Address {
             x1: value.x1.try_into().unwrap(),
             x2: value.x2.try_into().unwrap(),
             x3: value.x3.try_into().unwrap(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Address {
+    type Message = proto4::log::Address;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        protobuf4::proto!(Self::Message {
+            x0: self.x0 as u32,
+            x1: self.x1 as u32,
+            x2: self.x2 as u32,
+            x3: self.x3 as u32,
+        })
+    }
+
+    #[inline]
+    fn from_view(value: proto4::log::AddressView) -> Self {
+        Address {
+            x0: value.x0().try_into().unwrap(),
+            x1: value.x1().try_into().unwrap(),
+            x2: value.x2().try_into().unwrap(),
+            x3: value.x3().try_into().unwrap(),
         }
     }
 }
@@ -590,6 +619,36 @@ impl From<log_protobuf::log::Log> for Log {
     }
 }
 
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Log {
+    type Message = proto4::log::Log;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        protobuf4::proto!(Self::Message {
+            address: self.address.serialize_pb(),
+            identity: &self.identity,
+            userid: &self.userid,
+            date: &self.date,
+            request: &self.request,
+            code: self.code as u32,
+            size: self.size,
+        })
+    }
+
+    fn from_view(value: proto4::log::LogView) -> Self {
+        Log {
+            address: Address::from_view(value.address()),
+            identity: value.identity().to_string(),
+            userid: value.userid().to_string(),
+            date: value.date().to_string(),
+            request: value.request().to_string(),
+            code: value.code().try_into().unwrap(),
+            size: value.size(),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 #[cfg_attr(feature = "bilrost", derive(bilrost::Message))]
 #[cfg_attr(
@@ -777,6 +836,26 @@ impl From<log_protobuf::log::Logs> for Logs {
     fn from(value: log_protobuf::log::Logs) -> Self {
         Logs {
             logs: value.logs.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "protobuf4")]
+impl bench_protobuf4::Serialize for Logs {
+    type Message = proto4::log::Logs;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::new();
+        result
+            .logs_mut()
+            .extend(self.logs.iter().map(|log| log.serialize_pb()));
+        result
+    }
+
+    fn from_view(value: proto4::log::LogsView) -> Self {
+        Logs {
+            logs: value.logs().iter().map(Log::from_view).collect(),
         }
     }
 }
