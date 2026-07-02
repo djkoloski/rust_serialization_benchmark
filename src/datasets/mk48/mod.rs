@@ -571,11 +571,12 @@ impl bench_buffa::Serialize for Transform {
         Self::Message {
             altitude: self.altitude.into(),
             angle: self.angle.into(),
-            position: buffa::MessageField::some(bpb::Vector2f {
+            position: bpb::Vector2f {
                 x: self.position.0,
                 y: self.position.1,
                 ..Default::default()
-            }),
+            }
+            .into(),
             velocity: self.velocity.into(),
             ..Default::default()
         }
@@ -595,7 +596,7 @@ impl From<bpb::Transform> for Transform {
         Transform {
             altitude: value.altitude.try_into().unwrap(),
             angle: value.angle.try_into().unwrap(),
-            position: value.position.into_option().unwrap().into(),
+            position: value.position.unwrap().into(),
             velocity: value.velocity.try_into().unwrap(),
         }
     }
@@ -1084,11 +1085,11 @@ impl bench_buffa::Serialize for Contact {
             entity_id: self.entity_id,
             entity_type: self
                 .entity_type
-                .map(|entity_type| buffa::EnumValue::from(bpb::EntityType::from(entity_type))),
-            guidance: buffa::MessageField::some(self.guidance.serialize_pb()),
+                .map(|entity_type| bpb::EntityType::from(entity_type).into()),
+            guidance: self.guidance.serialize_pb().into(),
             player_id: self.player_id.map(Into::into),
             reloads: Default::default(),
-            transform: buffa::MessageField::some(self.transform.serialize_pb()),
+            transform: self.transform.serialize_pb().into(),
             turret_angles: Default::default(),
             ..Default::default()
         };
@@ -1109,10 +1110,10 @@ impl From<bpb::Contact> for Contact {
             damage: value.damage.try_into().unwrap(),
             entity_id: value.entity_id,
             entity_type: value.entity_type.map(|et| et.as_known().unwrap().into()),
-            guidance: value.guidance.into_option().unwrap().into(),
+            guidance: value.guidance.unwrap().into(),
             player_id: value.player_id.map(|id| id.try_into().unwrap()),
             reloads: value.reloads,
-            transform: value.transform.into_option().unwrap().into(),
+            transform: value.transform.unwrap().into(),
             turret_angles: value
                 .turret_angles
                 .into_iter()
@@ -1357,11 +1358,12 @@ impl bench_buffa::Serialize for TerrainUpdate {
 
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message {
-            chunk_id: buffa::MessageField::some(bpb::ChunkId {
+            chunk_id: bpb::ChunkId {
                 x: self.chunk_id.0 as i32,
                 y: self.chunk_id.1 as i32,
                 ..Default::default()
-            }),
+            }
+            .into(),
             data: Default::default(),
             ..Default::default()
         };
@@ -1383,7 +1385,7 @@ impl From<bpb::ChunkId> for (i8, i8) {
 impl From<bpb::TerrainUpdate> for TerrainUpdate {
     fn from(value: bpb::TerrainUpdate) -> Self {
         TerrainUpdate {
-            chunk_id: value.chunk_id.into_option().unwrap().into(),
+            chunk_id: value.chunk_id.unwrap().into(),
             data: value.data,
         }
     }

@@ -355,10 +355,10 @@ impl bench_buffa::Serialize for Triangle {
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
         Self::Message {
-            v0: buffa::MessageField::some(self.v0.serialize_pb()),
-            v1: buffa::MessageField::some(self.v1.serialize_pb()),
-            v2: buffa::MessageField::some(self.v2.serialize_pb()),
-            normal: buffa::MessageField::some(self.normal.serialize_pb()),
+            v0: self.v0.serialize_pb().into(),
+            v1: self.v1.serialize_pb().into(),
+            v2: self.v2.serialize_pb().into(),
+            normal: self.normal.serialize_pb().into(),
             ..Default::default()
         }
     }
@@ -368,10 +368,10 @@ impl bench_buffa::Serialize for Triangle {
 impl From<mesh_buffa::Triangle> for Triangle {
     fn from(value: mesh_buffa::Triangle) -> Self {
         Triangle {
-            v0: value.v0.into_option().unwrap().into(),
-            v1: value.v1.into_option().unwrap().into(),
-            v2: value.v2.into_option().unwrap().into(),
-            normal: value.normal.into_option().unwrap().into(),
+            v0: value.v0.unwrap().into(),
+            v1: value.v1.unwrap().into(),
+            v2: value.v2.unwrap().into(),
+            normal: value.normal.unwrap().into(),
         }
     }
 }

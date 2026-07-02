@@ -1139,23 +1139,26 @@ impl bench_buffa::Serialize for Entity {
     fn serialize_pb(&self) -> Self::Message {
         Self::Message {
             id: self.id.clone(),
-            pos: buffa::MessageField::some(bpb::Vector3d {
+            pos: bpb::Vector3d {
                 x: self.pos.0,
                 y: self.pos.1,
                 z: self.pos.2,
                 ..Default::default()
-            }),
-            motion: buffa::MessageField::some(bpb::Vector3d {
+            }
+            .into(),
+            motion: bpb::Vector3d {
                 x: self.motion.0,
                 y: self.motion.1,
                 z: self.motion.2,
                 ..Default::default()
-            }),
-            rotation: buffa::MessageField::some(bpb::Vector2f {
+            }
+            .into(),
+            rotation: bpb::Vector2f {
                 x: self.rotation.0,
                 y: self.rotation.1,
                 ..Default::default()
-            }),
+            }
+            .into(),
             fall_distance: self.fall_distance,
             fire: self.fire as u32,
             air: self.air as u32,
@@ -1163,13 +1166,14 @@ impl bench_buffa::Serialize for Entity {
             no_gravity: self.no_gravity,
             invulnerable: self.invulnerable,
             portal_cooldown: self.portal_cooldown,
-            uuid: buffa::MessageField::some(bpb::Uuid {
+            uuid: bpb::Uuid {
                 x0: self.uuid[0],
                 x1: self.uuid[1],
                 x2: self.uuid[2],
                 x3: self.uuid[3],
                 ..Default::default()
-            }),
+            }
+            .into(),
             custom_name: self.custom_name.clone(),
             custom_name_visible: self.custom_name_visible,
             silent: self.silent,
@@ -1205,9 +1209,9 @@ impl From<bpb::Entity> for Entity {
     fn from(value: bpb::Entity) -> Self {
         Entity {
             id: value.id,
-            pos: value.pos.into_option().unwrap().into(),
-            motion: value.motion.into_option().unwrap().into(),
-            rotation: value.rotation.into_option().unwrap().into(),
+            pos: value.pos.unwrap().into(),
+            motion: value.motion.unwrap().into(),
+            rotation: value.rotation.unwrap().into(),
             fall_distance: value.fall_distance,
             fire: value.fire.try_into().unwrap(),
             air: value.air.try_into().unwrap(),
@@ -1215,7 +1219,7 @@ impl From<bpb::Entity> for Entity {
             no_gravity: value.no_gravity,
             invulnerable: value.invulnerable,
             portal_cooldown: value.portal_cooldown,
-            uuid: value.uuid.into_option().unwrap().into(),
+            uuid: value.uuid.unwrap().into(),
             custom_name: value.custom_name,
             custom_name_visible: value.custom_name_visible,
             silent: value.silent,
@@ -2406,14 +2410,12 @@ impl bench_buffa::Serialize for Player {
 
     fn serialize_pb(&self) -> Self::Message {
         let mut result = Self::Message {
-            game_type: buffa::EnumValue::from(bpb::GameType::from(self.game_type)),
-            previous_game_type: buffa::EnumValue::from(bpb::GameType::from(
-                self.previous_game_type,
-            )),
+            game_type: bpb::GameType::from(self.game_type).into(),
+            previous_game_type: bpb::GameType::from(self.previous_game_type).into(),
             score: self.score,
             dimension: self.dimension.clone(),
             selected_item_slot: self.selected_item_slot,
-            selected_item: buffa::MessageField::some(self.selected_item.serialize_pb()),
+            selected_item: self.selected_item.serialize_pb().into(),
             spawn_dimension: self.spawn_dimension.clone(),
             spawn_x: self.spawn_x,
             spawn_y: self.spawn_y,
@@ -2429,7 +2431,7 @@ impl bench_buffa::Serialize for Player {
             xp_seed: self.xp_seed,
             inventory: Default::default(),
             ender_items: Default::default(),
-            abilities: buffa::MessageField::some(self.abilities.serialize_pb()),
+            abilities: self.abilities.serialize_pb().into(),
             entered_nether_position: self
                 .entered_nether_position
                 .map(|p| bpb::Vector3d {
@@ -2443,14 +2445,15 @@ impl bench_buffa::Serialize for Player {
                 .root_vehicle
                 .as_ref()
                 .map(|v| bpb::Vehicle {
-                    uuid: buffa::MessageField::some(bpb::Uuid {
+                    uuid: bpb::Uuid {
                         x0: v.0[0],
                         x1: v.0[1],
                         x2: v.0[2],
                         x3: v.0[3],
                         ..Default::default()
-                    }),
-                    entity: buffa::MessageField::some(v.1.serialize_pb()),
+                    }
+                    .into(),
+                    entity: v.1.serialize_pb().into(),
                     ..Default::default()
                 })
                 .into(),
@@ -2465,7 +2468,7 @@ impl bench_buffa::Serialize for Player {
                 .map(|e| e.serialize_pb())
                 .into(),
             seen_credits: self.seen_credits,
-            recipe_book: buffa::MessageField::some(self.recipe_book.serialize_pb()),
+            recipe_book: self.recipe_book.serialize_pb().into(),
             ..Default::default()
         };
         for item in self.inventory.iter() {
@@ -2487,7 +2490,7 @@ impl From<bpb::Player> for Player {
             score: value.score,
             dimension: value.dimension,
             selected_item_slot: value.selected_item_slot,
-            selected_item: value.selected_item.into_option().unwrap().into(),
+            selected_item: value.selected_item.unwrap().into(),
             spawn_dimension: value.spawn_dimension,
             spawn_x: value.spawn_x,
             spawn_y: value.spawn_y,
@@ -2503,18 +2506,16 @@ impl From<bpb::Player> for Player {
             xp_seed: value.xp_seed,
             inventory: value.inventory.into_iter().map(Into::into).collect(),
             ender_items: value.ender_items.into_iter().map(Into::into).collect(),
-            abilities: value.abilities.into_option().unwrap().into(),
+            abilities: value.abilities.unwrap().into(),
             entered_nether_position: value.entered_nether_position.into_option().map(Into::into),
-            root_vehicle: value.root_vehicle.into_option().map(|vehicle| {
-                (
-                    vehicle.uuid.into_option().unwrap().into(),
-                    vehicle.entity.into_option().unwrap().into(),
-                )
-            }),
+            root_vehicle: value
+                .root_vehicle
+                .into_option()
+                .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
             shoulder_entity_left: value.shoulder_entity_left.into_option().map(Into::into),
             shoulder_entity_right: value.shoulder_entity_right.into_option().map(Into::into),
             seen_credits: value.seen_credits,
-            recipe_book: value.recipe_book.into_option().unwrap().into(),
+            recipe_book: value.recipe_book.unwrap().into(),
         }
     }
 }
