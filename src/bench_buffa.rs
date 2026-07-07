@@ -93,10 +93,7 @@ where
 
     group.bench_function("borrow", |b| {
         b.iter(|| {
-            black_box(
-                <T::Message as HasMessageView>::decode_view(black_box(&deserialize_buffer))
-                    .unwrap(),
-            );
+            black_box(T::Message::decode_view(black_box(&deserialize_buffer)).unwrap());
         })
     });
 

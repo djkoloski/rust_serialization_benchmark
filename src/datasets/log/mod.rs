@@ -558,7 +558,7 @@ impl bench_buffa::Serialize for Log {
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
         Self::Message {
-            address: buffa::MessageField::some(self.address.serialize_pb()),
+            address: self.address.serialize_pb().into(),
             identity: self.identity.clone(),
             userid: self.userid.clone(),
             date: self.date.clone(),
@@ -574,7 +574,7 @@ impl bench_buffa::Serialize for Log {
 impl From<log_buffa::Log> for Log {
     fn from(value: log_buffa::Log) -> Self {
         Log {
-            address: value.address.into_option().unwrap().into(),
+            address: value.address.unwrap().into(),
             identity: value.identity,
             userid: value.userid,
             date: value.date,
