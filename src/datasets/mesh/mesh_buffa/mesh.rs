@@ -38,30 +38,32 @@ impl ::buffa::MessageName for Vector3 {
 impl ::buffa::Message for Vector3 {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.x.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.y.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.z.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -134,13 +136,13 @@ impl ::buffa::ExtensionSet for Vector3 {
 #[derive(Clone, PartialEq, Default)]
 pub struct Triangle {
     /// Field 1: `v0`
-    pub v0: ::buffa::MessageField<Vector3>,
+    pub v0: ::buffa::MessageField<Vector3, ::buffa::Inline<Vector3>>,
     /// Field 2: `v1`
-    pub v1: ::buffa::MessageField<Vector3>,
+    pub v1: ::buffa::MessageField<Vector3, ::buffa::Inline<Vector3>>,
     /// Field 3: `v2`
-    pub v2: ::buffa::MessageField<Vector3>,
+    pub v2: ::buffa::MessageField<Vector3, ::buffa::Inline<Vector3>>,
     /// Field 4: `normal`
-    pub normal: ::buffa::MessageField<Vector3>,
+    pub normal: ::buffa::MessageField<Vector3, ::buffa::Inline<Vector3>>,
     #[doc(hidden)]
     pub __buffa_unknown_fields: ::buffa::UnknownFields,
 }
@@ -171,70 +173,88 @@ impl ::buffa::MessageName for Triangle {
 impl ::buffa::Message for Triangle {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.v0.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.v0.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.v1.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.v1.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.v2.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.v2.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.normal.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.normal.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.v0.is_set() {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.v0.write_to(__cache, buf);
         }
         if self.v1.is_set() {
-            ::buffa::types::put_len_delimited_header(2u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                2u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.v1.write_to(__cache, buf);
         }
         if self.v2.is_set() {
-            ::buffa::types::put_len_delimited_header(3u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                3u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.v2.write_to(__cache, buf);
         }
         if self.normal.is_set() {
-            ::buffa::types::put_len_delimited_header(4u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                4u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.normal.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -347,34 +367,40 @@ impl ::buffa::MessageName for Mesh {
 impl ::buffa::Message for Mesh {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         for v in &self.triangles {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         for v in &self.triangles {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -396,6 +422,9 @@ impl ::buffa::Message for Mesh {
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
                 let mut elem = ::core::default::Default::default();
+                ctx.register_element_memory(
+                    ::buffa::__private::element_footprint(&elem),
+                )?;
                 ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.triangles.push(elem);
             }
