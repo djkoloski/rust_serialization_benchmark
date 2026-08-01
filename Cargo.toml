@@ -136,7 +136,7 @@ default-encoding-set = [
     "dlhn",
     "flatbuffers",
     "flexbuffers",
-    "flexon",
+    # "flexon", # std assertion failure: https://github.com/cyruspyre/flexon/issues/8
     "minicbor",
     "msgpacker",
     "nachricht-serde",

@@ -93,4 +93,4 @@ jobs:
       - name: test benches
         shell: bash
         run: |
-          cargo test --benches --no-default-features --features default-encoding-set
+          cargo test -Zbuild-std --benches --no-default-features --features default-encoding-set
