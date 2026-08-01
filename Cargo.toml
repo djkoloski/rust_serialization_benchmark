@@ -62,6 +62,8 @@ columnar = { version = "=0.13.1", optional = true }
 # columnar doesn't properly pin its derive crate: https://github.com/frankmcsherry/columnar/issues/115
 columnar_derive = { version = "=0.13.1", optional = true }
 compactly = { version = "=0.1.7", optional = true }
+# compactly doesn't properly pin its derive crate: https://github.com/droundy/compactly/issues/40
+compactly-derive = { version = "=0.1.7", optional = true }
 databuf = { version = "=0.5.0", optional = true }
 dlhn = { version = "=0.1.7", optional = true }
 flatbuffers = { version = "=25.12.19", optional = true }
@@ -171,6 +173,7 @@ measure-compression = []
 buffa = ["dep:buffa"]
 capnp = ["dep:capnp"]
 columnar = ["dep:columnar", "dep:columnar_derive"]
+compactly = ["dep:compactly", "dep:compactly-derive"]
 prost = ["dep:prost", "dep:capnp"]
 protobuf = ["dep:protobuf"]
 protobuf4 = ["dep:protobuf4", "dep:protobuf4-generated"]
