@@ -74,6 +74,8 @@ pub mod bench_serde_brief;
 pub mod bench_serde_cbor;
 #[cfg(feature = "serde_json")]
 pub mod bench_serde_json;
+#[cfg(feature = "serde-zap")]
+pub mod bench_serde_zap;
 #[cfg(feature = "simd-json")]
 pub mod bench_simd_json;
 #[cfg(feature = "speedy")]

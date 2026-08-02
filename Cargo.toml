@@ -105,6 +105,7 @@ serde_cbor = { version = "=0.11.2", optional = true }
 serde_json = { version = "=1.0.151", features = [
     "float_roundtrip",
 ], optional = true }
+serde-zap = { version = "=0.1.0", optional = true }
 simd-json = { version = "=0.17.3", optional = true }
 simd-json-derive = { version = "=0.18.0", optional = true }
 speedy = { version = "=0.8.7", optional = true }
@@ -158,6 +159,7 @@ default-encoding-set = [
     "serde-brief",
     "serde_cbor",
     "serde_json",
+    "serde-zap",
     "simd-json",
     "speedy",
     "wincode",
