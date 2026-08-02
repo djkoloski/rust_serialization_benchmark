@@ -69,7 +69,7 @@ databuf = { version = "=0.5.0", optional = true }
 dlhn = { version = "=0.1.7", optional = true }
 flatbuffers = { version = "=25.12.19", optional = true }
 flexbuffers = { version = "=25.12.19", optional = true }
-flexon = { version = "=0.4.7", features = [
+flexon = { version = "=0.4.8", features = [
     "serde",
     "simd",
     "std",
@@ -138,7 +138,7 @@ default-encoding-set = [
     "dlhn",
     "flatbuffers",
     "flexbuffers",
-    # "flexon", # std assertion failure: https://github.com/cyruspyre/flexon/issues/8
+    "flexon",
     "minicbor",
     "msgpacker",
     "nachricht-serde",
