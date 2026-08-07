@@ -143,27 +143,29 @@ impl ::buffa::MessageName for Vector2f {
 impl ::buffa::Message for Vector2f {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.x.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.y.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -229,7 +231,7 @@ pub struct Transform {
     /// Field 2: `angle`
     pub angle: u32,
     /// Field 3: `position`
-    pub position: ::buffa::MessageField<Vector2f>,
+    pub position: ::buffa::MessageField<Vector2f, ::buffa::Inline<Vector2f>>,
     /// Field 4: `velocity`
     pub velocity: i32,
     #[doc(hidden)]
@@ -262,38 +264,40 @@ impl ::buffa::MessageName for Transform {
 impl ::buffa::Message for Transform {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.altitude != 0i32 {
-            size += 1u32 + ::buffa::types::int32_encoded_len(self.altitude) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(self.altitude) as u64;
         }
         if self.angle != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.angle) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.angle) as u64;
         }
         if self.position.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.position.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.velocity != 0i32 {
-            size += 1u32 + ::buffa::types::int32_encoded_len(self.velocity) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(self.velocity) as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -304,7 +308,11 @@ impl ::buffa::Message for Transform {
             ::buffa::types::put_uint32_field(2u32, self.angle, buf);
         }
         if self.position.is_set() {
-            ::buffa::types::put_len_delimited_header(3u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                3u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.position.write_to(__cache, buf);
         }
         if self.velocity != 0i32 {
@@ -416,30 +424,32 @@ impl ::buffa::MessageName for Guidance {
 impl ::buffa::Message for Guidance {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.angle != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.angle) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.angle) as u64;
         }
         if self.submerge {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.velocity != 0i32 {
-            size += 1u32 + ::buffa::types::int32_encoded_len(self.velocity) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(self.velocity) as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -518,13 +528,13 @@ pub struct Contact {
     /// Field 3: `entity_type`
     pub entity_type: ::core::option::Option<::buffa::EnumValue<EntityType>>,
     /// Field 4: `guidance`
-    pub guidance: ::buffa::MessageField<Guidance>,
+    pub guidance: ::buffa::MessageField<Guidance, ::buffa::Inline<Guidance>>,
     /// Field 5: `player_id`
     pub player_id: ::core::option::Option<u32>,
     /// Field 6: `reloads`
     pub reloads: ::buffa::alloc::vec::Vec<bool>,
     /// Field 7: `transform`
-    pub transform: ::buffa::MessageField<Transform>,
+    pub transform: ::buffa::MessageField<Transform, ::buffa::Inline<Transform>>,
     /// Field 8: `turret_angles`
     pub turret_angles: ::buffa::alloc::vec::Vec<u32>,
     #[doc(hidden)]
@@ -580,64 +590,64 @@ impl ::buffa::MessageName for Contact {
 impl ::buffa::Message for Contact {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.damage != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.damage) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.damage) as u64;
         }
         if self.entity_id != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.entity_id) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.entity_id) as u64;
         }
         if let Some(ref v) = self.entity_type {
-            size += 1u32 + ::buffa::types::int32_encoded_len(v.to_i32()) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(v.to_i32()) as u64;
         }
         if self.guidance.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.guidance.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if let Some(v) = self.player_id {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(v) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(v) as u64;
         }
         if !self.reloads.is_empty() {
-            let payload: u32 = self.reloads.len() as u32
-                * ::buffa::types::BOOL_ENCODED_LEN as u32;
-            size
-                += 1u32 + ::buffa::encoding::varint_len(payload as u64) as u32 + payload;
+            let payload: u64 = self.reloads.len() as u64
+                * ::buffa::types::BOOL_ENCODED_LEN as u64;
+            size += 1u64 + ::buffa::encoding::varint_len(payload) as u64 + payload;
         }
         if self.transform.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.transform.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if !self.turret_angles.is_empty() {
-            let payload: u32 = self
+            let payload: u64 = self
                 .turret_angles
                 .iter()
-                .map(|&v| ::buffa::types::uint32_encoded_len(v) as u32)
-                .sum::<u32>();
-            size
-                += 1u32 + ::buffa::encoding::varint_len(payload as u64) as u32 + payload;
+                .map(|&v| ::buffa::types::uint32_encoded_len(v) as u64)
+                .sum::<u64>();
+            size += 1u64 + ::buffa::encoding::varint_len(payload) as u64 + payload;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -651,30 +661,38 @@ impl ::buffa::Message for Contact {
             ::buffa::types::put_int32_field(3u32, v.to_i32(), buf);
         }
         if self.guidance.is_set() {
-            ::buffa::types::put_len_delimited_header(4u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                4u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.guidance.write_to(__cache, buf);
         }
         if let Some(v) = self.player_id {
             ::buffa::types::put_uint32_field(5u32, v, buf);
         }
         if !self.reloads.is_empty() {
-            let payload: u32 = self.reloads.len() as u32
-                * ::buffa::types::BOOL_ENCODED_LEN as u32;
+            let payload: u64 = self.reloads.len() as u64
+                * ::buffa::types::BOOL_ENCODED_LEN as u64;
             ::buffa::types::put_len_delimited_header(6u32, payload, buf);
             for &v in &self.reloads {
                 ::buffa::types::encode_bool(v, buf);
             }
         }
         if self.transform.is_set() {
-            ::buffa::types::put_len_delimited_header(7u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                7u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.transform.write_to(__cache, buf);
         }
         if !self.turret_angles.is_empty() {
-            let payload: u32 = self
+            let payload: u64 = self
                 .turret_angles
                 .iter()
-                .map(|&v| ::buffa::types::uint32_encoded_len(v) as u32)
-                .sum::<u32>();
+                .map(|&v| ::buffa::types::uint32_encoded_len(v) as u64)
+                .sum::<u64>();
             ::buffa::types::put_len_delimited_header(8u32, payload, buf);
             for &v in &self.turret_angles {
                 ::buffa::types::encode_uint32(v, buf);
@@ -746,14 +764,24 @@ impl ::buffa::Message for Contact {
                             ::buffa::DecodeError::UnexpectedEof,
                         );
                     }
-                    self.reloads.reserve(len);
-                    let mut limited = buf.take(len);
-                    while limited.has_remaining() {
-                        self.reloads.push(::buffa::types::decode_bool(&mut limited)?);
-                    }
-                    let leftover = limited.remaining();
-                    if leftover > 0 {
-                        limited.advance(leftover);
+                    if buf.chunk().len() >= len {
+                        ::buffa::types::extend_packed_bool(
+                            &buf.chunk()[..len],
+                            &mut self.reloads,
+                            len,
+                        )?;
+                        buf.advance(len);
+                    } else {
+                        self.reloads.reserve(len);
+                        let mut limited = buf.take(len);
+                        while limited.has_remaining() {
+                            self.reloads
+                                .push(::buffa::types::decode_bool_packed(&mut limited)?);
+                        }
+                        let leftover = limited.remaining();
+                        if leftover > 0 {
+                            limited.advance(leftover);
+                        }
                     }
                 } else if tag.wire_type() == ::buffa::encoding::WireType::Varint {
                     self.reloads.push(::buffa::types::decode_bool(buf)?);
@@ -787,15 +815,24 @@ impl ::buffa::Message for Contact {
                             ::buffa::DecodeError::UnexpectedEof,
                         );
                     }
-                    self.turret_angles.reserve(len);
-                    let mut limited = buf.take(len);
-                    while limited.has_remaining() {
-                        self.turret_angles
-                            .push(::buffa::types::decode_uint32(&mut limited)?);
-                    }
-                    let leftover = limited.remaining();
-                    if leftover > 0 {
-                        limited.advance(leftover);
+                    if buf.chunk().len() >= len {
+                        ::buffa::types::extend_packed_uint32(
+                            &buf.chunk()[..len],
+                            &mut self.turret_angles,
+                            len,
+                        )?;
+                        buf.advance(len);
+                    } else {
+                        self.turret_angles.reserve(len);
+                        let mut limited = buf.take(len);
+                        while limited.has_remaining() {
+                            self.turret_angles
+                                .push(::buffa::types::decode_uint32_packed(&mut limited)?);
+                        }
+                        let leftover = limited.remaining();
+                        if leftover > 0 {
+                            limited.advance(leftover);
+                        }
                     }
                 } else if tag.wire_type() == ::buffa::encoding::WireType::Varint {
                     self.turret_angles.push(::buffa::types::decode_uint32(buf)?);
@@ -867,27 +904,29 @@ impl ::buffa::MessageName for ChunkId {
 impl ::buffa::Message for ChunkId {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.x != 0i32 {
-            size += 1u32 + ::buffa::types::int32_encoded_len(self.x) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(self.x) as u64;
         }
         if self.y != 0i32 {
-            size += 1u32 + ::buffa::types::int32_encoded_len(self.y) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(self.y) as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -949,7 +988,7 @@ impl ::buffa::ExtensionSet for ChunkId {
 #[derive(Clone, PartialEq, Default)]
 pub struct TerrainUpdate {
     /// Field 1: `chunk_id`
-    pub chunk_id: ::buffa::MessageField<ChunkId>,
+    pub chunk_id: ::buffa::MessageField<ChunkId, ::buffa::Inline<ChunkId>>,
     /// Field 2: `data`
     pub data: ::buffa::alloc::vec::Vec<u8>,
     #[doc(hidden)]
@@ -980,41 +1019,47 @@ impl ::buffa::MessageName for TerrainUpdate {
 impl ::buffa::Message for TerrainUpdate {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.chunk_id.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.chunk_id.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if !self.data.is_empty() {
-            size += 1u32 + ::buffa::types::bytes_encoded_len(&self.data) as u32;
+            size += 1u64 + ::buffa::types::bytes_encoded_len(&self.data) as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.chunk_id.is_set() {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.chunk_id.write_to(__cache, buf);
         }
         if !self.data.is_empty() {
-            ::buffa::types::put_bytes_field(2u32, &self.data, buf);
+            ::buffa::types::put_shared_bytes_field(2u32, &self.data, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
     }
@@ -1109,48 +1154,54 @@ impl ::buffa::MessageName for Update {
 impl ::buffa::Message for Update {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         for v in &self.contacts {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.score != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.score) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.score) as u64;
         }
         if self.world_radius.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         for v in &self.terrain_updates {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         for v in &self.contacts {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         if self.score != 0u32 {
@@ -1160,7 +1211,11 @@ impl ::buffa::Message for Update {
             ::buffa::types::put_float_field(3u32, self.world_radius, buf);
         }
         for v in &self.terrain_updates {
-            ::buffa::types::put_len_delimited_header(4u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                4u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -1182,6 +1237,9 @@ impl ::buffa::Message for Update {
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
                 let mut elem = ::core::default::Default::default();
+                ctx.register_element_memory(
+                    ::buffa::__private::element_footprint(&elem),
+                )?;
                 ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.contacts.push(elem);
             }
@@ -1205,6 +1263,9 @@ impl ::buffa::Message for Update {
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
                 let mut elem = ::core::default::Default::default();
+                ctx.register_element_memory(
+                    ::buffa::__private::element_footprint(&elem),
+                )?;
                 ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.terrain_updates.push(elem);
             }
@@ -1261,34 +1322,40 @@ impl ::buffa::MessageName for Updates {
 impl ::buffa::Message for Updates {
     /// Returns the total encoded size in bytes.
     ///
-    /// The result is a `u32`; the protobuf specification requires all
-    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
-    /// compliant message will never overflow this type.
+    /// Accumulates in `u64` (which cannot overflow for in-memory
+    /// data) and saturates to `u32` at return, so a message whose
+    /// encoded size exceeds the 2 GiB protobuf limit yields a value
+    /// above [`::buffa::MAX_MESSAGE_BYTES`] that the encode entry
+    /// points reject, never a silently wrapped size.
     #[allow(clippy::let_and_return)]
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         for v in &self.updates {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         for v in &self.updates {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -1310,6 +1377,9 @@ impl ::buffa::Message for Updates {
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
                 let mut elem = ::core::default::Default::default();
+                ctx.register_element_memory(
+                    ::buffa::__private::element_footprint(&elem),
+                )?;
                 ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.updates.push(elem);
             }

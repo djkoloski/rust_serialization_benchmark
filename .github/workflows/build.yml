@@ -65,10 +65,10 @@ jobs:
             mv ./flatc /usr/local/bin
           )
 
-          wget "https://capnproto.org/capnproto-c++-1.4.0.tar.gz" -O capnproto.tar.gz
+          wget "https://capnproto.org/capnproto-c++-1.5.0.tar.gz" -O capnproto.tar.gz
           tar zxf capnproto.tar.gz
           (
-            cd capnproto-c++-1.4.0
+            cd capnproto-c++-1.5.0
             ./configure
             sudo make -j install
           )
@@ -93,4 +93,4 @@ jobs:
       - name: test benches
         shell: bash
         run: |
-          cargo test --benches --no-default-features --features default-encoding-set
+          cargo test -Zbuild-std --benches --no-default-features --features default-encoding-set

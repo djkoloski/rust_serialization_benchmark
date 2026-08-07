@@ -84,7 +84,7 @@ fn protobuf4_compile_dataset(name: &'static str) -> std::io::Result<()> {
     protobuf4_codegen::CodeGen::new()
         .include(format!("./src/datasets/{name}"))
         .inputs([format!("{name}.proto")])
-        .output_dir(format!("./protobuf4-wrapper/src/{name}"))
+        .output_dir(format!("./protobuf4-generated/src/{name}"))
         .generate_and_compile()
         .unwrap();
 

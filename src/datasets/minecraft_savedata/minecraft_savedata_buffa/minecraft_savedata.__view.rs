@@ -26,6 +26,7 @@ impl<'a> ::buffa::MessageView<'a> for ItemView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -94,24 +95,24 @@ impl<'a> ::buffa::ViewEncode<'a> for ItemView<'a> {
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.count != 0i32 {
-            size += 1u32 + ::buffa::types::int32_encoded_len(self.count) as u32;
+            size += 1u64 + ::buffa::types::int32_encoded_len(self.count) as u64;
         }
         if self.slot != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.slot) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.slot) as u64;
         }
         if !self.id.is_empty() {
-            size += 1u32 + ::buffa::types::string_encoded_len(&self.id) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(&self.id) as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -176,7 +177,9 @@ impl ItemOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Item,
@@ -190,13 +193,13 @@ impl ItemOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Item, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Item {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -277,6 +280,7 @@ impl<'a> ::buffa::MessageView<'a> for AbilitiesView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -377,36 +381,36 @@ impl<'a> ::buffa::ViewEncode<'a> for AbilitiesView<'a> {
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.walk_speed.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.fly_speed.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.may_fly {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.flying {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.invulnerable {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.may_build {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.instabuild {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -485,7 +489,9 @@ impl AbilitiesOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Abilities,
@@ -501,13 +507,13 @@ impl AbilitiesOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Abilities, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Abilities {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -603,6 +609,7 @@ impl<'a> ::buffa::MessageView<'a> for Vector3dView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -671,24 +678,24 @@ impl<'a> ::buffa::ViewEncode<'a> for Vector3dView<'a> {
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.x.to_bits() != 0u64 {
-            size += 1u32 + ::buffa::types::FIXED64_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED64_ENCODED_LEN as u64;
         }
         if self.y.to_bits() != 0u64 {
-            size += 1u32 + ::buffa::types::FIXED64_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED64_ENCODED_LEN as u64;
         }
         if self.z.to_bits() != 0u64 {
-            size += 1u32 + ::buffa::types::FIXED64_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED64_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -753,7 +760,9 @@ impl Vector3dOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Vector3d,
@@ -769,13 +778,13 @@ impl Vector3dOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Vector3d, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Vector3d {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -849,6 +858,7 @@ impl<'a> ::buffa::MessageView<'a> for Vector2fView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -909,21 +919,21 @@ impl<'a> ::buffa::ViewEncode<'a> for Vector2fView<'a> {
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.x.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.y.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -985,7 +995,9 @@ impl Vector2fOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Vector2f,
@@ -1001,13 +1013,13 @@ impl Vector2fOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Vector2f, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Vector2f {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -1080,6 +1092,7 @@ impl<'a> ::buffa::MessageView<'a> for UuidView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -1156,27 +1169,27 @@ impl<'a> ::buffa::ViewEncode<'a> for UuidView<'a> {
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.x0 != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.x0) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.x0) as u64;
         }
         if self.x1 != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.x1) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.x1) as u64;
         }
         if self.x2 != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.x2) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.x2) as u64;
         }
         if self.x3 != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.x3) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.x3) as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -1244,7 +1257,9 @@ impl UuidOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Uuid,
@@ -1258,13 +1273,13 @@ impl UuidOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Uuid, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Uuid {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -1370,6 +1385,7 @@ impl<'a> ::buffa::MessageView<'a> for EntityView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -1577,6 +1593,7 @@ impl<'a> ::buffa::MessageView<'a> for EntityView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Vector3d,
+                        ::buffa::Inline<super::super::Vector3d>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -1585,6 +1602,7 @@ impl<'a> ::buffa::MessageView<'a> for EntityView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Vector3d,
+                        ::buffa::Inline<super::super::Vector3d>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -1593,6 +1611,7 @@ impl<'a> ::buffa::MessageView<'a> for EntityView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Vector2f,
+                        ::buffa::Inline<super::super::Vector2f>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -1608,6 +1627,7 @@ impl<'a> ::buffa::MessageView<'a> for EntityView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Uuid,
+                        ::buffa::Inline<super::super::Uuid>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -1626,84 +1646,84 @@ impl<'a> ::buffa::ViewEncode<'a> for EntityView<'a> {
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if !self.id.is_empty() {
-            size += 1u32 + ::buffa::types::string_encoded_len(&self.id) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(&self.id) as u64;
         }
         if self.pos.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.pos.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.motion.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.motion.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.rotation.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.rotation.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.fall_distance.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.fire != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.fire) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.fire) as u64;
         }
         if self.air != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.air) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.air) as u64;
         }
         if self.on_ground {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.no_gravity {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.invulnerable {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.portal_cooldown != 0i32 {
             size
-                += 1u32 + ::buffa::types::int32_encoded_len(self.portal_cooldown) as u32;
+                += 1u64 + ::buffa::types::int32_encoded_len(self.portal_cooldown) as u64;
         }
         if self.uuid.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.uuid.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if let Some(ref v) = self.custom_name {
-            size += 1u32 + ::buffa::types::string_encoded_len(v) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(v) as u64;
         }
         if self.custom_name_visible {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.silent {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.glowing {
-            size += 2u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 2u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -1711,15 +1731,27 @@ impl<'a> ::buffa::ViewEncode<'a> for EntityView<'a> {
             ::buffa::types::put_string_field(1u32, &self.id, buf);
         }
         if self.pos.is_set() {
-            ::buffa::types::put_len_delimited_header(2u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                2u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.pos.write_to(__cache, buf);
         }
         if self.motion.is_set() {
-            ::buffa::types::put_len_delimited_header(3u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                3u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.motion.write_to(__cache, buf);
         }
         if self.rotation.is_set() {
-            ::buffa::types::put_len_delimited_header(4u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                4u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.rotation.write_to(__cache, buf);
         }
         if self.fall_distance.to_bits() != 0u32 {
@@ -1744,7 +1776,11 @@ impl<'a> ::buffa::ViewEncode<'a> for EntityView<'a> {
             ::buffa::types::put_int32_field(11u32, self.portal_cooldown, buf);
         }
         if self.uuid.is_set() {
-            ::buffa::types::put_len_delimited_header(12u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                12u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.uuid.write_to(__cache, buf);
         }
         if let Some(ref v) = self.custom_name {
@@ -1811,7 +1847,9 @@ impl EntityOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Entity,
@@ -1825,13 +1863,13 @@ impl EntityOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Entity, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Entity {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -1992,6 +2030,7 @@ impl<'a> ::buffa::MessageView<'a> for RecipeBookView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -2073,14 +2112,22 @@ impl<'a> ::buffa::MessageView<'a> for RecipeBookView<'a> {
                     tag,
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
-                view.recipes.push(::buffa::types::borrow_str(&mut cur)?);
+                let __elem = ::buffa::types::borrow_str(&mut cur)?;
+                ctx.register_element_memory(
+                    ::buffa::__private::element_footprint(&__elem),
+                )?;
+                view.recipes.push(__elem);
             }
             2u32 => {
                 ::buffa::encoding::check_wire_type(
                     tag,
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
-                view.to_be_displayed.push(::buffa::types::borrow_str(&mut cur)?);
+                let __elem = ::buffa::types::borrow_str(&mut cur)?;
+                ctx.register_element_memory(
+                    ::buffa::__private::element_footprint(&__elem),
+                )?;
+                view.to_be_displayed.push(__elem);
             }
             _ => {
                 ::buffa::encoding::skip_field_depth(tag, &mut cur, ctx.depth())?;
@@ -2129,45 +2176,45 @@ impl<'a> ::buffa::ViewEncode<'a> for RecipeBookView<'a> {
     fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         for v in &self.recipes {
-            size += 1u32 + ::buffa::types::string_encoded_len(v) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(v) as u64;
         }
         for v in &self.to_be_displayed {
-            size += 1u32 + ::buffa::types::string_encoded_len(v) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(v) as u64;
         }
         if self.is_filtering_craftable {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_gui_open {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_furnace_filtering_craftable {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_furnace_gui_open {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_blasting_furnace_filtering_craftable {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_blasting_furnace_gui_open {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_smoker_filtering_craftable {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.is_smoker_gui_open {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         _cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -2267,7 +2314,9 @@ impl RecipeBookOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::RecipeBook,
@@ -2283,13 +2332,13 @@ impl RecipeBookOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::RecipeBook, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::RecipeBook {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -2398,6 +2447,7 @@ impl<'a> ::buffa::MessageView<'a> for VehicleView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -2478,6 +2528,7 @@ impl<'a> ::buffa::MessageView<'a> for VehicleView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Uuid,
+                        ::buffa::Inline<super::super::Uuid>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -2486,6 +2537,7 @@ impl<'a> ::buffa::MessageView<'a> for VehicleView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Entity,
+                        ::buffa::Inline<super::super::Entity>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -2500,40 +2552,48 @@ impl<'a> ::buffa::ViewEncode<'a> for VehicleView<'a> {
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         if self.uuid.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.uuid.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.entity.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.entity.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         if self.uuid.is_set() {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.uuid.write_to(__cache, buf);
         }
         if self.entity.is_set() {
-            ::buffa::types::put_len_delimited_header(2u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                2u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.entity.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -2588,7 +2648,9 @@ impl VehicleOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Vehicle,
@@ -2604,13 +2666,13 @@ impl VehicleOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Vehicle, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Vehicle {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -2752,6 +2814,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -3055,6 +3118,9 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 )?;
                 let __sub_ctx = ctx.descend()?;
                 let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                ctx.register_element_memory(
+                    ::core::mem::size_of::<super::super::__buffa::view::ItemView>(),
+                )?;
                 view.inventory
                     .push(
                         <super::super::__buffa::view::ItemView as ::buffa::MessageView>::decode_view_ctx(
@@ -3070,6 +3136,9 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 )?;
                 let __sub_ctx = ctx.descend()?;
                 let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                ctx.register_element_memory(
+                    ::core::mem::size_of::<super::super::__buffa::view::ItemView>(),
+                )?;
                 view.ender_items
                     .push(
                         <super::super::__buffa::view::ItemView as ::buffa::MessageView>::decode_view_ctx(
@@ -3109,6 +3178,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Item,
+                        ::buffa::Inline<super::super::Item>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3140,6 +3210,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Abilities,
+                        ::buffa::Inline<super::super::Abilities>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3148,6 +3219,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Vector3d,
+                        ::buffa::Inline<super::super::Vector3d>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3156,6 +3228,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Vehicle,
+                        ::buffa::Inline<super::super::Vehicle>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3164,6 +3237,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Entity,
+                        ::buffa::Inline<super::super::Entity>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3172,6 +3246,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::Entity,
+                        ::buffa::Inline<super::super::Entity>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3181,6 +3256,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayerView<'a> {
                 Some(v) => {
                     ::buffa::MessageField::<
                         super::super::RecipeBook,
+                        ::buffa::Inline<super::super::RecipeBook>,
                     >::some(v.to_owned_from_source(__buffa_src)?)
                 }
                 None => ::buffa::MessageField::none(),
@@ -3195,154 +3271,154 @@ impl<'a> ::buffa::ViewEncode<'a> for PlayerView<'a> {
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         {
             let val = self.game_type.to_i32();
             if val != 0 {
-                size += 1u32 + ::buffa::types::int32_encoded_len(val) as u32;
+                size += 1u64 + ::buffa::types::int32_encoded_len(val) as u64;
             }
         }
         {
             let val = self.previous_game_type.to_i32();
             if val != 0 {
-                size += 1u32 + ::buffa::types::int32_encoded_len(val) as u32;
+                size += 1u64 + ::buffa::types::int32_encoded_len(val) as u64;
             }
         }
         if self.score != 0i64 {
-            size += 1u32 + ::buffa::types::int64_encoded_len(self.score) as u32;
+            size += 1u64 + ::buffa::types::int64_encoded_len(self.score) as u64;
         }
         if !self.dimension.is_empty() {
-            size += 1u32 + ::buffa::types::string_encoded_len(&self.dimension) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(&self.dimension) as u64;
         }
         if self.selected_item_slot != 0u32 {
             size
-                += 1u32
-                    + ::buffa::types::uint32_encoded_len(self.selected_item_slot) as u32;
+                += 1u64
+                    + ::buffa::types::uint32_encoded_len(self.selected_item_slot) as u64;
         }
         if self.selected_item.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.selected_item.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if let Some(ref v) = self.spawn_dimension {
-            size += 1u32 + ::buffa::types::string_encoded_len(v) as u32;
+            size += 1u64 + ::buffa::types::string_encoded_len(v) as u64;
         }
         if self.spawn_x != 0i64 {
-            size += 1u32 + ::buffa::types::int64_encoded_len(self.spawn_x) as u32;
+            size += 1u64 + ::buffa::types::int64_encoded_len(self.spawn_x) as u64;
         }
         if self.spawn_y != 0i64 {
-            size += 1u32 + ::buffa::types::int64_encoded_len(self.spawn_y) as u32;
+            size += 1u64 + ::buffa::types::int64_encoded_len(self.spawn_y) as u64;
         }
         if self.spawn_z != 0i64 {
-            size += 1u32 + ::buffa::types::int64_encoded_len(self.spawn_z) as u32;
+            size += 1u64 + ::buffa::types::int64_encoded_len(self.spawn_z) as u64;
         }
         if self.spawn_forced.is_some() {
-            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.sleep_timer != 0u32 {
-            size += 1u32 + ::buffa::types::uint32_encoded_len(self.sleep_timer) as u32;
+            size += 1u64 + ::buffa::types::uint32_encoded_len(self.sleep_timer) as u64;
         }
         if self.food_exhaustion_level.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.food_saturation_level.to_bits() != 0u32 {
-            size += 1u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 1u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.food_tick_timer != 0u32 {
             size
-                += 1u32
-                    + ::buffa::types::uint32_encoded_len(self.food_tick_timer) as u32;
+                += 1u64
+                    + ::buffa::types::uint32_encoded_len(self.food_tick_timer) as u64;
         }
         if self.xp_level != 0u32 {
-            size += 2u32 + ::buffa::types::uint32_encoded_len(self.xp_level) as u32;
+            size += 2u64 + ::buffa::types::uint32_encoded_len(self.xp_level) as u64;
         }
         if self.xp_p.to_bits() != 0u32 {
-            size += 2u32 + ::buffa::types::FIXED32_ENCODED_LEN as u32;
+            size += 2u64 + ::buffa::types::FIXED32_ENCODED_LEN as u64;
         }
         if self.xp_total != 0i32 {
-            size += 2u32 + ::buffa::types::int32_encoded_len(self.xp_total) as u32;
+            size += 2u64 + ::buffa::types::int32_encoded_len(self.xp_total) as u64;
         }
         if self.xp_seed != 0i32 {
-            size += 2u32 + ::buffa::types::int32_encoded_len(self.xp_seed) as u32;
+            size += 2u64 + ::buffa::types::int32_encoded_len(self.xp_seed) as u64;
         }
         for v in &self.inventory {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         for v in &self.ender_items {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.abilities.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.abilities.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.entered_nether_position.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.entered_nether_position.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.root_vehicle.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.root_vehicle.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.shoulder_entity_left.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.shoulder_entity_left.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.shoulder_entity_right.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.shoulder_entity_right.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
         if self.seen_credits {
-            size += 2u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+            size += 2u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
         }
         if self.recipe_book.is_set() {
             let __slot = __cache.reserve();
             let inner_size = self.recipe_book.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 2u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 2u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
@@ -3368,7 +3444,11 @@ impl<'a> ::buffa::ViewEncode<'a> for PlayerView<'a> {
             ::buffa::types::put_uint32_field(5u32, self.selected_item_slot, buf);
         }
         if self.selected_item.is_set() {
-            ::buffa::types::put_len_delimited_header(6u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                6u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.selected_item.write_to(__cache, buf);
         }
         if let Some(ref v) = self.spawn_dimension {
@@ -3411,38 +3491,70 @@ impl<'a> ::buffa::ViewEncode<'a> for PlayerView<'a> {
             ::buffa::types::put_int32_field(19u32, self.xp_seed, buf);
         }
         for v in &self.inventory {
-            ::buffa::types::put_len_delimited_header(20u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                20u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         for v in &self.ender_items {
-            ::buffa::types::put_len_delimited_header(21u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                21u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         if self.abilities.is_set() {
-            ::buffa::types::put_len_delimited_header(22u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                22u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.abilities.write_to(__cache, buf);
         }
         if self.entered_nether_position.is_set() {
-            ::buffa::types::put_len_delimited_header(23u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                23u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.entered_nether_position.write_to(__cache, buf);
         }
         if self.root_vehicle.is_set() {
-            ::buffa::types::put_len_delimited_header(24u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                24u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.root_vehicle.write_to(__cache, buf);
         }
         if self.shoulder_entity_left.is_set() {
-            ::buffa::types::put_len_delimited_header(25u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                25u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.shoulder_entity_left.write_to(__cache, buf);
         }
         if self.shoulder_entity_right.is_set() {
-            ::buffa::types::put_len_delimited_header(26u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                26u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.shoulder_entity_right.write_to(__cache, buf);
         }
         if self.seen_credits {
             ::buffa::types::put_bool_field(27u32, self.seen_credits, buf);
         }
         if self.recipe_book.is_set() {
-            ::buffa::types::put_len_delimited_header(28u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                28u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             self.recipe_book.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -3497,7 +3609,9 @@ impl PlayerOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Player,
@@ -3511,13 +3625,13 @@ impl PlayerOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Player, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Player {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
@@ -3730,6 +3844,7 @@ impl<'a> ::buffa::MessageView<'a> for PlayersView<'a> {
     ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
         <Self as ::buffa::MessageView>::decode_view_ctx(buf, ctx)
     }
+    #[inline]
     fn merge_view_field(
         &mut self,
         tag: ::buffa::encoding::Tag,
@@ -3749,6 +3864,9 @@ impl<'a> ::buffa::MessageView<'a> for PlayersView<'a> {
                 )?;
                 let __sub_ctx = ctx.descend()?;
                 let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                ctx.register_element_memory(
+                    ::core::mem::size_of::<super::super::__buffa::view::PlayerView>(),
+                )?;
                 view.players
                     .push(
                         <super::super::__buffa::view::PlayerView as ::buffa::MessageView>::decode_view_ctx(
@@ -3794,28 +3912,32 @@ impl<'a> ::buffa::ViewEncode<'a> for PlayersView<'a> {
     fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
-        let mut size = 0u32;
+        let mut size = 0u64;
         for v in &self.players {
             let __slot = __cache.reserve();
             let inner_size = v.compute_size(__cache);
             __cache.set(__slot, inner_size);
             size
-                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
-                    + inner_size;
+                += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
+                    + inner_size as u64;
         }
-        size += self.__buffa_unknown_fields.encoded_len() as u32;
-        size
+        size += self.__buffa_unknown_fields.encoded_len() as u64;
+        ::buffa::saturate_size(size)
     }
     #[allow(clippy::needless_borrow)]
     fn write_to(
         &self,
         __cache: &mut ::buffa::SizeCache,
-        buf: &mut impl ::buffa::bytes::BufMut,
+        buf: &mut impl ::buffa::EncodeSink,
     ) {
         #[allow(unused_imports)]
         use ::buffa::Enumeration as _;
         for v in &self.players {
-            ::buffa::types::put_len_delimited_header(1u32, __cache.consume_next(), buf);
+            ::buffa::types::put_len_delimited_header(
+                1u32,
+                u64::from(__cache.consume_next()),
+                buf,
+            );
             v.write_to(__cache, buf);
         }
         self.__buffa_unknown_fields.write_to(buf);
@@ -3870,7 +3992,9 @@ impl PlayersOwnedView {
     ///
     /// # Errors
     ///
-    /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+    /// Returns [`::buffa::DecodeError::MessageTooLarge`] if the
+    /// message's encoded size exceeds the 2 GiB protobuf limit, or
+    /// another [`::buffa::DecodeError`] if the re-encoded bytes are
     /// somehow invalid (should not happen for well-formed messages).
     pub fn from_owned(
         msg: &super::super::Players,
@@ -3886,13 +4010,13 @@ impl PlayersOwnedView {
     }
     /// Convert to the owned message type.
     ///
-    /// # Errors
-    ///
-    /// Returns an error if re-materializing preserved unknown fields
-    /// fails (e.g. the unknown-field limit is exceeded).
-    pub fn to_owned_message(
-        &self,
-    ) -> ::core::result::Result<super::super::Players, ::buffa::DecodeError> {
+    /// Infallible: this type's constructors wire-decode their
+    /// buffer, and a view produced by wire decoding always
+    /// converts. Delegates to [`::buffa::OwnedView::to_owned_message`],
+    /// whose contract also governs handles converted from a raw
+    /// [`::buffa::OwnedView`].
+    #[must_use]
+    pub fn to_owned_message(&self) -> super::super::Players {
         self.0.to_owned_message()
     }
     /// The underlying bytes buffer.
