@@ -308,7 +308,7 @@ pub struct Item {
     #[cfg_attr(feature = "minicbor", n(1))]
     pub slot: u8,
     #[cfg_attr(feature = "minicbor", b(2))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub id: String,
 }
 
@@ -793,7 +793,7 @@ impl bench_protobuf4::Serialize for Abilities {
 )]
 pub struct Entity {
     #[cfg_attr(feature = "minicbor", b(0))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub id: String,
     #[cfg_attr(feature = "wiring", fixed(11))]
     #[cfg_attr(feature = "minicbor", n(1))]
@@ -820,7 +820,7 @@ pub struct Entity {
     #[cfg_attr(feature = "minicbor", n(11))]
     pub uuid: [u32; 4],
     #[cfg_attr(feature = "minicbor", n(12))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub custom_name: Option<String>,
     #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(13))]
@@ -1866,14 +1866,14 @@ pub struct Player {
     #[cfg_attr(feature = "minicbor", n(2))]
     pub score: i64,
     #[cfg_attr(feature = "minicbor", b(3))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub dimension: String,
     #[cfg_attr(feature = "minicbor", b(4))]
     pub selected_item_slot: u32,
     #[cfg_attr(feature = "minicbor", n(5))]
     pub selected_item: Item,
     #[cfg_attr(feature = "minicbor", b(6))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub spawn_dimension: Option<String>,
     #[cfg_attr(feature = "wiring", fixed(3))]
     #[cfg_attr(feature = "minicbor", n(7))]
