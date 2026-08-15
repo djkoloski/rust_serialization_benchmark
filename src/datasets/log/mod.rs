@@ -339,12 +339,12 @@ pub struct Log {
     #[cfg_attr(feature = "minicbor", b(1))]
     pub identity: String,
     #[cfg_attr(feature = "minicbor", b(2))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub userid: String,
     #[cfg_attr(feature = "minicbor", b(3))]
     pub date: String,
     #[cfg_attr(feature = "minicbor", b(4))]
-    #[cfg_attr(feature = "compactly", compactly(LowCardinality))]
+    #[cfg_attr(feature = "compactly", compactly(LowCardinality, allow_string))]
     pub request: String,
     #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(5))]
