@@ -17,14 +17,6 @@
     },
     "do_not_edit_message": "<!-- AUTOMATICALLY GENERATED, DO NOT EDIT -->\n<!-- edit README.md.template instead -->",
     "crate_matching": {
-        "bincode1": {
-            "crate_name": "bincode",
-            "version": "1"
-        },
-        "bincode": {
-            "crate_name": "bincode",
-            "version": "2"
-        },
         "protobuf": {
             "crate_name": "protobuf",
             "version": "3"
@@ -38,7 +30,6 @@
         "capnp": "capnp",
         "cbor4ii": "cbor",
         "ciborium": "cbor",
-        "serde_cbor": "cbor",
         "flexon": "json",
         "serde_json": "json",
         "simd-json": "json",
@@ -49,6 +40,5 @@
         "prost": "protobuf",
         "protobuf": "protobuf",
         "protobuf4": "protobuf",
-        "parity-scale-codec": "scale"
     }
 }
