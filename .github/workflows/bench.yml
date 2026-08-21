@@ -54,7 +54,7 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
-          cargo run -p bencher
+          cargo run --locked -p bencher
 
           git add -A benchmark_results
           git add README.md

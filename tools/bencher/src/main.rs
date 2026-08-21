@@ -112,7 +112,7 @@ fn main() -> eyre::Result<()> {
     json_path.set_extension("json");
     let mut parser = Command::new("cargo");
     parser
-        .args(["run", "-p", "parser", "--"])
+        .args(["run", "--locked", "-p", "parser", "--"])
         .arg(&log_path)
         .arg("--config")
         .arg(&config_path)
@@ -130,7 +130,7 @@ fn main() -> eyre::Result<()> {
     template_path.push("README.md.template");
 
     Command::new("cargo")
-        .args(["run", "-p", "formatter", "--"])
+        .args(["run", "--locked", "-p", "formatter", "--"])
         .arg(&json_path)
         .arg("--config")
         .arg(&config_path)

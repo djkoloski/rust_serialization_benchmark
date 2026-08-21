@@ -1,0 +1,38 @@
+name: check-unlocked
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 15 8 * *"
+      timezone: "America/New_York"
+
+env:
+  CI: true
+
+jobs:
+  check-unlocked:
+    name: check unlocked build
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          submodules: true
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rust-src, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: build without lockfile
+        shell: bash
+        run: |
+          rm Cargo.lock
+          cargo build --workspace --benches

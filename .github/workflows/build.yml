@@ -80,7 +80,7 @@ jobs:
       - name: build
         shell: bash
         run: |
-          cargo build --benches --features regenerate
+          cargo build --locked --workspace --benches --features regenerate
 
       - name: check generated code
         shell: bash
@@ -93,4 +93,4 @@ jobs:
       - name: test benches
         shell: bash
         run: |
-          cargo test -Zbuild-std --benches --no-default-features --features default-encoding-set
+          cargo test --locked -Zbuild-std --benches --no-default-features --features default-encoding-set
