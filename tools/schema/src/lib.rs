@@ -50,6 +50,11 @@ impl Config {
     }
 }
 
+#[test]
+fn check_config() {
+    let _ = Config::read(Path::new("../config.json"));
+}
+
 #[derive(Default, Deserialize, Serialize)]
 pub struct Results {
     pub cpu_info: Option<String>,
