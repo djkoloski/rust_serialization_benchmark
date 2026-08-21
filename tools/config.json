@@ -39,6 +39,6 @@
         "buffa": "protobuf",
         "prost": "protobuf",
         "protobuf": "protobuf",
-        "protobuf4": "protobuf",
+        "protobuf4": "protobuf"
     }
 }
