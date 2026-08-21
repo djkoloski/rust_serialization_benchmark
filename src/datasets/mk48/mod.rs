@@ -28,8 +28,6 @@ use mk48_prost as pb;
 #[cfg(feature = "protobuf")]
 use mk48_protobuf as rpb;
 use rand::Rng;
-#[cfg(feature = "wiring")]
-use wiring::prelude::{Unwiring, Wiring};
 
 #[cfg(feature = "buffa")]
 use crate::bench_buffa;
@@ -52,39 +50,27 @@ use crate::{generate_vec, Generate};
     derive(bin_proto::BitEncode, bin_proto::BitDecode),
     bin_proto(discriminant_type = u8),
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(
     feature = "msgpacker",
     derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
 )]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeEntityType, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring), tag(u8))]
 #[cfg_attr(
     feature = "wincode",
     derive(wincode::SchemaWrite, wincode::SchemaRead),
@@ -434,39 +420,27 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     feature = "bin-proto",
     derive(bin_proto::BitEncode, bin_proto::BitDecode)
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(
     feature = "msgpacker",
     derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
 )]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeTransform, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 #[cfg_attr(
     feature = "zerompk",
@@ -474,7 +448,6 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 )]
 pub struct Transform {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
-    #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub altitude: i8,
     #[cfg_attr(feature = "minicbor", n(1))]
@@ -674,46 +647,33 @@ impl bench_protobuf4::Serialize for Transform {
     feature = "bin-proto",
     derive(bin_proto::BitEncode, bin_proto::BitDecode)
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(
     feature = "msgpacker",
     derive(msgpacker::MsgPacker, msgpacker::MsgUnpackerBorrowed)
 )]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeGuidance, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 #[cfg_attr(
     feature = "zerompk",
     derive(zerompk::ToMessagePack, zerompk::FromMessagePack)
 )]
 pub struct Guidance {
-    #[cfg_attr(feature = "wiring", fixed)]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub angle: u16,
     #[cfg_attr(feature = "minicbor", n(1))]
@@ -858,36 +818,24 @@ impl bench_protobuf4::Serialize for Guidance {
     feature = "bin-proto",
     derive(bin_proto::BitEncode, bin_proto::BitDecode)
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeContact, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 #[cfg_attr(
     feature = "zerompk",
@@ -895,7 +843,6 @@ impl bench_protobuf4::Serialize for Guidance {
 )]
 pub struct Contact {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(varint)))]
-    #[cfg_attr(feature = "wiring", fixed(2))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub damage: u8,
     #[cfg_attr(feature = "minicbor", n(1))]
@@ -1222,36 +1169,24 @@ impl bench_protobuf4::Serialize for Contact {
     feature = "bin-proto",
     derive(bin_proto::BitEncode, bin_proto::BitDecode)
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeTerrainUpdate, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 #[cfg_attr(
     feature = "zerompk",
@@ -1457,36 +1392,24 @@ impl bench_protobuf4::Serialize for TerrainUpdate {
     feature = "bin-proto",
     derive(bin_proto::BitEncode, bin_proto::BitDecode)
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeUpdate, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 #[cfg_attr(
     feature = "zerompk",
@@ -1496,7 +1419,6 @@ pub struct Update {
     #[cfg_attr(feature = "bilrost", bilrost(encoding(packed)))]
     #[cfg_attr(feature = "minicbor", n(0))]
     pub contacts: Vec<Contact>,
-    #[cfg_attr(feature = "wiring", fixed(2))]
     #[cfg_attr(feature = "minicbor", n(1))]
     pub score: u32,
     #[cfg_attr(feature = "minicbor", n(2))]
@@ -1706,36 +1628,24 @@ impl bench_protobuf4::Serialize for Update {
     feature = "bin-proto",
     derive(bin_proto::BitEncode, bin_proto::BitDecode)
 )]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "columnar", derive(columnar::Columnar))]
-#[cfg_attr(feature = "compactly", derive(compactly::Encode))]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "minicbor", derive(minicbor::Encode, minicbor::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
-#[cfg_attr(feature = "nibblecode", derive(nibblecode::Serialize))]
-#[cfg_attr(feature = "nibblecode", nibblecode(archived = NibblecodeUpdates, compare(PartialEq)))]
 #[cfg_attr(
     feature = "rkyv",
     derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(
     feature = "simd-json",
     derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
-#[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
-#[cfg_attr(feature = "wiring", derive(Wiring, Unwiring))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
 #[cfg_attr(
     feature = "zerompk",
