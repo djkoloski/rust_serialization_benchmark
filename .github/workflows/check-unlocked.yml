@@ -3,7 +3,7 @@ name: check-unlocked
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 15 8 * * *"
+    - cron: "0 15 8 * *"
       timezone: "America/New_York"
 
 env:
