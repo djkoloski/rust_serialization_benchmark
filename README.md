@@ -6,6 +6,10 @@
 The goal of these benchmarks is to provide thorough and complete benchmarks for various rust
 serialization frameworks.
 
+## Contributing
+
+See [`CONTRIBUTING.md`](https://github.com/djkoloski/rust_serialization_benchmark/blob/master/CONTRIBUTING.md).
+
 ## Maintainers
 
 These benchmarks are maintained by a small group of volunteers. Special thanks to:
