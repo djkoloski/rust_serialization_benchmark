@@ -57,6 +57,104 @@ use rust_serialization_benchmark::bench_wincode;
 use rust_serialization_benchmark::bench_zerompk;
 use rust_serialization_benchmark::generate_vec;
 
+/// Deduplicates simple calls to benchmarking functions for libraries that do not need any extra
+/// parameters or closures to be provided.
+macro_rules! bench_unvarying {
+    // Invokes the benchmarks for a non-borrowable data type.
+    ($BENCH:ident, $c:ident, $data:ident) => {
+        bench_unvarying!($BENCH, $c, $data; only the ones that cannot borrow);
+        bench_unvarying!($BENCH, $c, $data; only the ones that can borrow, calling bench);
+    };
+    // Invokes the benchmarks for a borrowable data type.
+    ($BENCH:ident, $c:ident, $data:ident; borrowable) => {
+        bench_unvarying!($BENCH, $c, $data; only the ones that cannot borrow);
+        bench_unvarying!(
+            $BENCH, $c, $data; only the ones that can borrow, calling bench_borrowable
+        );
+    };
+
+    // Benchmark invocations for libraries that do not support borrowed decoding go here.
+    ($BENCH:ident, $c:ident, $data:ident; only the ones that cannot borrow) => {
+        #[cfg(feature = "bin-proto")]
+        bench_bin_proto::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "borsh")]
+        bench_borsh::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "ciborium")]
+        bench_ciborium::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "flexon")]
+        bench_flexon::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "prost")]
+        bench_prost::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "protobuf")]
+        bench_protobuf::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "protobuf4")]
+        bench_protobuf4::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "savefile")]
+        bench_savefile::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "serde_json")]
+        bench_serde_json::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "simd-json")]
+        bench_simd_json::bench($BENCH, $c, &$data);
+
+        #[cfg(feature = "nanoserde")]
+        bench_nanoserde::bench($BENCH, $c, &$data);
+    };
+
+    // Benchmark invocations for libraries that DO support borrowed decoding go here.
+    (
+        $BENCH:ident, $c:ident, $data:ident;
+        only the ones that can borrow, calling $bench_fn:ident
+    ) => {
+        #[cfg(feature = "bilrost")]
+        bench_bilrost::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "bitcode")]
+        bench_bitcode::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "cbor4ii")]
+        bench_cbor4ii::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "flexbuffers")]
+        bench_flexbuffers::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "minicbor")]
+        bench_minicbor::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "msgpacker")]
+        bench_msgpacker::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "postcard")]
+        bench_postcard::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "buffa")]
+        bench_buffa::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "rmp-serde")]
+        bench_rmp_serde::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "ron")]
+        bench_ron::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "serde-zap")]
+        bench_serde_zap::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "wincode")]
+        bench_wincode::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "zerompk")]
+        bench_zerompk::$bench_fn($BENCH, $c, &$data);
+    };
+}
+
 fn bench_log(c: &mut Criterion) {
     use rust_serialization_benchmark::datasets::log::{Log, Logs};
 
@@ -73,17 +171,7 @@ fn bench_log(c: &mut Criterion) {
         logs: generate_vec::<_, Log>(&mut rng, LOGS..LOGS + 1),
     };
 
-    #[cfg(feature = "bilrost")]
-    bench_bilrost::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "bin-proto")]
-    bench_bin_proto::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bitcode")]
-    bench_bitcode::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "borsh")]
-    bench_borsh::bench(BENCH, c, &data);
+    bench_unvarying!(BENCH, c, data; borrowable);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -113,12 +201,6 @@ fn bench_log(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "ciborium")]
-    bench_ciborium::bench(BENCH, c, &data);
-
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,
@@ -145,33 +227,6 @@ fn bench_log(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "flexbuffers")]
-    bench_flexbuffers::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "flexon")]
-    bench_flexon::bench(BENCH, c, &data);
-
-    #[cfg(feature = "minicbor")]
-    bench_minicbor::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "msgpacker")]
-    bench_msgpacker::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "postcard")]
-    bench_postcard::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "buffa")]
-    bench_buffa::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "prost")]
-    bench_prost::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf")]
-    bench_protobuf::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf4")]
-    bench_protobuf4::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
@@ -216,33 +271,6 @@ fn bench_log(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "rmp-serde")]
-    bench_rmp_serde::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "ron")]
-    bench_ron::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde_json")]
-    bench_serde_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde-zap")]
-    bench_serde_zap::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "simd-json")]
-    bench_simd_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "nanoserde")]
-    bench_nanoserde::bench(BENCH, c, &data);
-
-    #[cfg(feature = "wincode")]
-    bench_wincode::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "zerompk")]
-    bench_zerompk::bench_borrowable(BENCH, c, &data);
 }
 
 fn bench_mesh(c: &mut Criterion) {
@@ -261,17 +289,7 @@ fn bench_mesh(c: &mut Criterion) {
         triangles: generate_vec::<_, Triangle>(&mut rng, TRIANGLES..TRIANGLES + 1),
     };
 
-    #[cfg(feature = "bilrost")]
-    bench_bilrost::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bin-proto")]
-    bench_bin_proto::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bitcode")]
-    bench_bitcode::bench(BENCH, c, &data);
-
-    #[cfg(feature = "borsh")]
-    bench_borsh::bench(BENCH, c, &data);
+    bench_unvarying!(BENCH, c, data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -297,12 +315,6 @@ fn bench_mesh(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench(BENCH, c, &data);
-
-    #[cfg(feature = "ciborium")]
-    bench_ciborium::bench(BENCH, c, &data);
-
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,
@@ -325,33 +337,6 @@ fn bench_mesh(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "flexbuffers")]
-    bench_flexbuffers::bench(BENCH, c, &data);
-
-    #[cfg(feature = "flexon")]
-    bench_flexon::bench(BENCH, c, &data);
-
-    #[cfg(feature = "minicbor")]
-    bench_minicbor::bench(BENCH, c, &data);
-
-    #[cfg(feature = "msgpacker")]
-    bench_msgpacker::bench(BENCH, c, &data);
-
-    #[cfg(feature = "postcard")]
-    bench_postcard::bench(BENCH, c, &data);
-
-    #[cfg(feature = "buffa")]
-    bench_buffa::bench(BENCH, c, &data);
-
-    #[cfg(feature = "prost")]
-    bench_prost::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf")]
-    bench_protobuf::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf4")]
-    bench_protobuf4::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
@@ -389,33 +374,6 @@ fn bench_mesh(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "rmp-serde")]
-    bench_rmp_serde::bench(BENCH, c, &data);
-
-    #[cfg(feature = "ron")]
-    bench_ron::bench(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde_json")]
-    bench_serde_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde-zap")]
-    bench_serde_zap::bench(BENCH, c, &data);
-
-    #[cfg(feature = "simd-json")]
-    bench_simd_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "nanoserde")]
-    bench_nanoserde::bench(BENCH, c, &data);
-
-    #[cfg(feature = "wincode")]
-    bench_wincode::bench(BENCH, c, &data);
-
-    #[cfg(feature = "zerompk")]
-    bench_zerompk::bench(BENCH, c, &data);
 }
 
 fn bench_minecraft_savedata(c: &mut Criterion) {
@@ -434,17 +392,7 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         players: generate_vec::<_, Player>(&mut rng, PLAYERS..PLAYERS + 1),
     };
 
-    #[cfg(feature = "bilrost")]
-    bench_bilrost::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "bin-proto")]
-    bench_bin_proto::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bitcode")]
-    bench_bitcode::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "borsh")]
-    bench_borsh::bench(BENCH, c, &data);
+    bench_unvarying!(BENCH, c, data; borrowable);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -470,12 +418,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
         }
     });
 
-    #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "ciborium")]
-    bench_ciborium::bench(BENCH, c, &data);
-
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
         BENCH,
@@ -499,33 +441,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "flexbuffers")]
-    bench_flexbuffers::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "flexon")]
-    bench_flexon::bench(BENCH, c, &data);
-
-    #[cfg(feature = "minicbor")]
-    bench_minicbor::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "msgpacker")]
-    bench_msgpacker::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "postcard")]
-    bench_postcard::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "buffa")]
-    bench_buffa::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "prost")]
-    bench_prost::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf")]
-    bench_protobuf::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf4")]
-    bench_protobuf4::bench(BENCH, c, &data);
 
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
@@ -565,36 +480,6 @@ fn bench_minecraft_savedata(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "rmp-serde")]
-    bench_rmp_serde::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "ron")]
-    bench_ron::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde_json")]
-    bench_serde_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde-zap")]
-    bench_serde_zap::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "simd-json")]
-    bench_simd_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "nanoserde")]
-    bench_nanoserde::bench(BENCH, c, &data);
-
-    #[cfg(feature = "wincode")]
-    bench_wincode::bench(BENCH, c, &data);
-
-    #[cfg(feature = "wincode")]
-    bench_wincode::bench_borrowable(BENCH, c, &data);
-
-    #[cfg(feature = "zerompk")]
-    bench_zerompk::bench_borrowable(BENCH, c, &data);
 }
 
 fn bench_mk48(c: &mut Criterion) {
@@ -613,17 +498,7 @@ fn bench_mk48(c: &mut Criterion) {
         updates: generate_vec(&mut rng, UPDATES..UPDATES + 1),
     };
 
-    #[cfg(feature = "bilrost")]
-    bench_bilrost::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bin-proto")]
-    bench_bin_proto::bench(BENCH, c, &data);
-
-    #[cfg(feature = "bitcode")]
-    bench_bitcode::bench(BENCH, c, &data);
-
-    #[cfg(feature = "borsh")]
-    bench_borsh::bench(BENCH, c, &data);
+    bench_unvarying!(BENCH, c, data);
 
     #[cfg(feature = "capnp")]
     bench_capnp::bench(BENCH, c, &data, |bytes| {
@@ -648,12 +523,6 @@ fn bench_mk48(c: &mut Criterion) {
             black_box(update.get_score());
         }
     });
-
-    #[cfg(feature = "cbor4ii")]
-    bench_cbor4ii::bench(BENCH, c, &data);
-
-    #[cfg(feature = "ciborium")]
-    bench_ciborium::bench(BENCH, c, &data);
 
     #[cfg(feature = "flatbuffers")]
     bench_flatbuffers::bench(
@@ -680,33 +549,6 @@ fn bench_mk48(c: &mut Criterion) {
         },
     );
 
-    #[cfg(feature = "flexbuffers")]
-    bench_flexbuffers::bench(BENCH, c, &data);
-
-    #[cfg(feature = "flexon")]
-    bench_flexon::bench(BENCH, c, &data);
-
-    #[cfg(feature = "minicbor")]
-    bench_minicbor::bench(BENCH, c, &data);
-
-    #[cfg(feature = "msgpacker")]
-    bench_msgpacker::bench(BENCH, c, &data);
-
-    #[cfg(feature = "postcard")]
-    bench_postcard::bench(BENCH, c, &data);
-
-    #[cfg(feature = "buffa")]
-    bench_buffa::bench(BENCH, c, &data);
-
-    #[cfg(feature = "prost")]
-    bench_prost::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf")]
-    bench_protobuf::bench(BENCH, c, &data);
-
-    #[cfg(feature = "protobuf4")]
-    bench_protobuf4::bench(BENCH, c, &data);
-
     #[cfg(feature = "rkyv")]
     bench_rkyv::bench(
         BENCH,
@@ -730,33 +572,6 @@ fn bench_mk48(c: &mut Criterion) {
             }
         },
     );
-
-    #[cfg(feature = "rmp-serde")]
-    bench_rmp_serde::bench(BENCH, c, &data);
-
-    #[cfg(feature = "ron")]
-    bench_ron::bench(BENCH, c, &data);
-
-    #[cfg(feature = "savefile")]
-    bench_savefile::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde_json")]
-    bench_serde_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "serde-zap")]
-    bench_serde_zap::bench(BENCH, c, &data);
-
-    #[cfg(feature = "simd-json")]
-    bench_simd_json::bench(BENCH, c, &data);
-
-    #[cfg(feature = "nanoserde")]
-    bench_nanoserde::bench(BENCH, c, &data);
-
-    #[cfg(feature = "wincode")]
-    bench_wincode::bench(BENCH, c, &data);
-
-    #[cfg(feature = "zerompk")]
-    bench_zerompk::bench(BENCH, c, &data);
 }
 
 #[cfg(feature = "pprof")]
