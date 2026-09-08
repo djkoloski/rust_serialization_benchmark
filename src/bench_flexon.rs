@@ -1,4 +1,5 @@
 use criterion::{black_box, Criterion};
+use flexon::source::NullPadded;
 use serde::{Deserialize, Serialize};
 
 pub fn bench<T>(name: &'static str, c: &mut Criterion, data: &T)
@@ -18,18 +19,18 @@ where
         })
     });
 
-    let mut deserialize_buffer = Vec::new();
+    let mut deserialize_buffer = NullPadded::new();
     flexon::to_writer(&mut deserialize_buffer, data).unwrap();
 
     group.bench_function("deserialize", |b| {
         b.iter(|| {
-            black_box(flexon::from_slice::<'_, T>(black_box(&deserialize_buffer)).unwrap());
+            black_box(flexon::from_source::<'_, T>(black_box(&deserialize_buffer)).unwrap());
         })
     });
 
     crate::bench_size(name, "flexon", &deserialize_buffer);
 
-    assert!(flexon::from_slice::<T>(&deserialize_buffer).unwrap() == *data);
+    assert!(flexon::from_source::<T>(&deserialize_buffer).unwrap() == *data);
 
     group.finish();
 }

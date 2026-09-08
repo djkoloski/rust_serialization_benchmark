@@ -957,9 +957,9 @@ dependencies = [
 
 [[package]]
 name = "flexon"
-version = "0.4.8"
+version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35d85ce71ccafd5d243cbe6a9604018fe717eec969a8590841a0a02e4263f346"
+checksum = "7ac88c92bece510aca6a7776eef0a2674b12e8f65b2c73cc47188fa465227622"
 dependencies = [
  "itoa",
  "serde_core",

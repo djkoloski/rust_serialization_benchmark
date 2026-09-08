@@ -55,7 +55,7 @@ cbor4ii = { version = "=1.2.2", features = [
 ciborium = { version = "=0.2.2", optional = true }
 flatbuffers = { version = "=25.12.19", optional = true }
 flexbuffers = { version = "=25.12.19", optional = true }
-flexon = { version = "=0.4.8", features = [
+flexon = { version = "=0.4.9", features = [
     "serde",
     "simd",
     "std",
