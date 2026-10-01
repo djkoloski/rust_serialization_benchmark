@@ -1,4 +1,4 @@
-use cargo_metadata::{Metadata, MetadataCommand};
+use cargo_metadata::{CargoOpt::AllFeatures, Metadata, MetadataCommand};
 use clap::Parser;
 use regex::Regex;
 use std::fs;
@@ -168,6 +168,7 @@ fn check_config() {
     let config = Config::read(Path::new("../config.json"));
 
     let metadata_output = MetadataCommand::new()
+        .features(AllFeatures)
         .cargo_command()
         .output()
         .expect("should execute");
