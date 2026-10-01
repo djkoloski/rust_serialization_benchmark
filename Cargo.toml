@@ -20,7 +20,7 @@ clap = "4"
 enum-iterator = "0.8"
 eyre = "0.6.14"
 fixed-map = { version = "0.9", default-features = false }
-regex = "1.12"
+regex = "1.13.1"
 schema = { path = "tools/schema" }
 semver = "1.0.28"
 serde = "1.0"
@@ -29,7 +29,7 @@ stylist = { version = "0.15", default-features = false }
 tempfile = "3.27"
 time = "0.3"
 wasm-bindgen = "0.2"
-web-sys = "0.3.102"
+web-sys = "0.3.106"
 yew = { version = "0.23", default-features = false }
 
 [package]
@@ -91,7 +91,7 @@ wincode = { version = "=0.6.2", optional = true, features = ["derive"] }
 zerompk = { version = "=0.8.0", optional = true, features = ["derive"] }
 
 criterion = "=0.5.1"
-libflate = "=2.3.1"
+libflate = "=2.3.2"
 pprof = { version = "=0.15.0", features = ["flamegraph"], optional = true }
 rand = "=0.8.5"
 serde = { version = "=1.0.229", features = ["derive"] }
