@@ -1,4 +1,4 @@
-const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.1-release");
+const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.2-release");
 // This variable must not be referenced except by protobuf generated
 // code.
 pub(crate) static mut prost__log__Address_msg_init: ::protobuf::__internal::runtime::MiniTableInitPtr =
@@ -535,11 +535,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Address {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__log__Address_msg_init.0 =
+        super::log_proto::prost__log__Address_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$)P)P)P)P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__log__Address_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__log__Address_msg_init.0)
+            super::log_proto::prost__log__Address_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::log_proto::prost__log__Address_msg_init.0)
       }).0
     }
   }
@@ -678,16 +678,16 @@ impl<'msg> LogView<'msg> {
       self.inner.ptr().has_field_at_index(0)
     }
   }
-  pub fn address_opt(self) -> ::std::option::Option<super::AddressView<'msg>> {
+  pub fn address_opt(self) -> ::std::option::Option<super::log_proto::AddressView<'msg>> {
     self.has_address().then(|| self.address())
   }
-  pub fn address(self) -> super::AddressView<'msg> {
+  pub fn address(self) -> super::log_proto::AddressView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::AddressView::default())
+       .unwrap_or(super::log_proto::AddressView::default())
   }
 
   // identity: optional string
@@ -864,18 +864,18 @@ impl<'msg> LogMut<'msg> {
       );
     }
   }
-  pub fn address_opt(&self) -> ::std::option::Option<super::AddressView<'_>> {
+  pub fn address_opt(&self) -> ::std::option::Option<super::log_proto::AddressView<'_>> {
     self.has_address().then(|| self.address())
   }
-  pub fn address(&self) -> super::AddressView<'_> {
+  pub fn address(&self) -> super::log_proto::AddressView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::AddressView::default())
+       .unwrap_or(super::log_proto::AddressView::default())
   }
-  pub fn address_mut(&mut self) -> super::AddressMut<'_> {
+  pub fn address_mut(&mut self) -> super::log_proto::AddressMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -887,7 +887,7 @@ impl<'msg> LogMut<'msg> {
      ).into()
   }
   pub fn set_address(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Address>) {
+    val: impl ::protobuf::IntoProxied<super::log_proto::Address>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1095,18 +1095,18 @@ impl Log {
       );
     }
   }
-  pub fn address_opt(&self) -> ::std::option::Option<super::AddressView<'_>> {
+  pub fn address_opt(&self) -> ::std::option::Option<super::log_proto::AddressView<'_>> {
     self.has_address().then(|| self.address())
   }
-  pub fn address(&self) -> super::AddressView<'_> {
+  pub fn address(&self) -> super::log_proto::AddressView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::AddressView::default())
+       .unwrap_or(super::log_proto::AddressView::default())
   }
-  pub fn address_mut(&mut self) -> super::AddressMut<'_> {
+  pub fn address_mut(&mut self) -> super::log_proto::AddressMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -1118,7 +1118,7 @@ impl Log {
      ).into()
   }
   pub fn set_address(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Address>) {
+    val: impl ::protobuf::IntoProxied<super::log_proto::Address>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1287,12 +1287,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Log {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__log__Log_msg_init.0 =
+        super::log_proto::prost__log__Log_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$31X1X1X1X)P,P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__log__Log_msg_init.0, &[<super::Address as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::log_proto::prost__log__Log_msg_init.0, &[<super::log_proto::Address as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__log__Log_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::log_proto::prost__log__Log_msg_init.0)
       }).0
     }
   }
@@ -1426,13 +1426,13 @@ impl<'msg> LogsView<'msg> {
   }
 
   // logs: repeated message prost.log.Log
-  pub fn logs(self) -> ::protobuf::RepeatedView<'msg, super::Log> {
+  pub fn logs(self) -> ::protobuf::RepeatedView<'msg, super::log_proto::Log> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Log>,
+        ::protobuf::__internal::runtime::empty_array::<super::log_proto::Log>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -1531,19 +1531,19 @@ impl<'msg> LogsMut<'msg> {
   }
 
   // logs: repeated message prost.log.Log
-  pub fn logs(&self) -> ::protobuf::RepeatedView<'_, super::Log> {
+  pub fn logs(&self) -> ::protobuf::RepeatedView<'_, super::log_proto::Log> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Log>,
+        ::protobuf::__internal::runtime::empty_array::<super::log_proto::Log>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn logs_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Log> {
+  pub fn logs_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::log_proto::Log> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -1557,7 +1557,7 @@ impl<'msg> LogsMut<'msg> {
       )
     }
   }
-  pub fn set_logs(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Log>>) {
+  pub fn set_logs(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::log_proto::Log>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -1627,19 +1627,19 @@ impl Logs {
   }
 
   // logs: repeated message prost.log.Log
-  pub fn logs(&self) -> ::protobuf::RepeatedView<'_, super::Log> {
+  pub fn logs(&self) -> ::protobuf::RepeatedView<'_, super::log_proto::Log> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Log>,
+        ::protobuf::__internal::runtime::empty_array::<super::log_proto::Log>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn logs_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Log> {
+  pub fn logs_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::log_proto::Log> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -1653,7 +1653,7 @@ impl Logs {
       )
     }
   }
-  pub fn set_logs(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Log>>) {
+  pub fn set_logs(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::log_proto::Log>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -1696,12 +1696,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Logs {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__log__Logs_msg_init.0 =
+        super::log_proto::prost__log__Logs_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$G");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__log__Logs_msg_init.0, &[<super::Log as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::log_proto::prost__log__Logs_msg_init.0, &[<super::log_proto::Log as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__log__Logs_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::log_proto::prost__log__Logs_msg_init.0)
       }).0
     }
   }

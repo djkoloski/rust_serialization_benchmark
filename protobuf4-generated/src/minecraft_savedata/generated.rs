@@ -1,11 +1,9 @@
 #[path="minecraft_savedata.u.pb.rs"]
-#[allow(nonstandard_style, unused, unreachable_pub)]
-#[doc(hidden)]
-mod internal_do_not_use_minecraft__savedata;
-
+#[allow(nonstandard_style, unused)]
+pub mod minecraft_savedata_proto;
 #[allow(nonstandard_style, unused)]
 #[doc(inline)]
-pub use internal_do_not_use_minecraft__savedata::*;
+pub use minecraft_savedata_proto::*;
 #[allow(nonstandard_style, unused)]
 pub mod __unstable {
 pub static MINECRAFT_SAVEDATA_DESCRIPTOR_INFO: ::protobuf::__internal::runtime::__unstable::DescriptorInfo = ::protobuf::__internal::runtime::__unstable::DescriptorInfo {

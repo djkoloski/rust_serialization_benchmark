@@ -448,9 +448,9 @@ dependencies = [
 
 [[package]]
 name = "capnp"
-version = "0.27.0"
+version = "0.27.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ebfc0da565e747b1640e029bfbda72f61f39fcddfc8b465b4ae3f3e8b649f78"
+checksum = "93f7ce2b1b49d58b2b754f9146ef07e3244f9b67e7563bc1292fbd5f01b142f0"
 dependencies = [
  "embedded-io 0.7.1",
 ]
@@ -495,9 +495,9 @@ checksum = "37b2a672a2cb129a2e41c10b1224bb368f9f37a2b16b612598138befd7b37eb5"
 
 [[package]]
 name = "cbor4ii"
-version = "1.2.2"
+version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "faed1a83001dc2c9201451030cc317e35bef36c84d3781d7c5bb9f343c397da8"
+checksum = "a0948fe1a10668d439d5fd476904223ab08a6783945d451fb996728e952ebcc7"
 dependencies = [
  "serde",
 ]
@@ -989,9 +989,9 @@ dependencies = [
 
 [[package]]
 name = "flexon"
-version = "0.4.8"
+version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35d85ce71ccafd5d243cbe6a9604018fe717eec969a8590841a0a02e4263f346"
+checksum = "7ac88c92bece510aca6a7776eef0a2674b12e8f65b2c73cc47188fa465227622"
 dependencies = [
  "itoa",
  "serde_core",
@@ -1352,9 +1352,9 @@ dependencies = [
 
 [[package]]
 name = "google-protobuf"
-version = "0.36.1-release"
+version = "0.36.2-release"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c1b1799baa729b23385d7b48428279c3ecbd1222083e872a507ffb794631932"
+checksum = "eb6a2d5d79f0041702be6081437d082721099677d4a708e80bca4e6a831df343"
 dependencies = [
  "cc",
  "linkme",
@@ -2281,9 +2281,9 @@ dependencies = [
 
 [[package]]
 name = "protobuf"
-version = "4.36.1-release"
+version = "4.36.2-release"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee794de60d9736458ad4316aee4339f0761b87a7b6b10b2ac6d4c99b1c8af0ff"
+checksum = "4c351b2f1b637e2682f884159b6150683c98f5e29e15c126b7acc77979e9e390"
 dependencies = [
  "google-protobuf",
 ]
@@ -2305,15 +2305,15 @@ dependencies = [
 
 [[package]]
 name = "protobuf-codegen"
-version = "4.36.1-release"
+version = "4.36.2-release"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea064ac566d3f94e5017da436d8c47d6afb8101febf62194055171b6ed4b5577"
+checksum = "9736ac5d6daf50e96988dabf170662b96e0db7d1063c288e06ecc8ddc40b5d59"
 
 [[package]]
 name = "protobuf-macros"
-version = "0.36.1-release"
+version = "0.36.2-release"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16a4745e7f0a32c238439105b43ad064d6dbda6ed4d9f7f0c7957e573f10eb40"
+checksum = "3efdd431f0efb3b196516e124416be3a3b09bf733ba42397c6cff71ea34539d2"
 dependencies = [
  "quote",
  "syn 2.0.119",
@@ -2348,7 +2348,7 @@ dependencies = [
 name = "protobuf4-generated"
 version = "0.1.0"
 dependencies = [
- "protobuf 4.36.1-release",
+ "protobuf 4.36.2-release",
 ]
 
 [[package]]
@@ -2643,9 +2643,9 @@ dependencies = [
  "prost",
  "prost-build",
  "protobuf 3.7.2",
- "protobuf 4.36.1-release",
+ "protobuf 4.36.2-release",
  "protobuf-codegen 3.7.2",
- "protobuf-codegen 4.36.1-release",
+ "protobuf-codegen 4.36.2-release",
  "protobuf4-generated",
  "rand",
  "rand_pcg",
@@ -3481,9 +3481,9 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "wincode"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfc6339f1ba427bf7ad7c42403b28e524832ba2ddb5eef1bb2cc3b85db6b7b75"
+checksum = "1d4abae4bfc30e59d97d3ea4924e5c5e7fede946390bffbd52c076c081b87a6c"
 dependencies = [
  "pastey",
  "proc-macro2",

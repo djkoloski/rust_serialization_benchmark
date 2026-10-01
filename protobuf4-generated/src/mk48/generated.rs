@@ -1,11 +1,9 @@
 #[path="mk48.u.pb.rs"]
-#[allow(nonstandard_style, unused, unreachable_pub)]
-#[doc(hidden)]
-mod internal_do_not_use_mk48;
-
+#[allow(nonstandard_style, unused)]
+pub mod mk48_proto;
 #[allow(nonstandard_style, unused)]
 #[doc(inline)]
-pub use internal_do_not_use_mk48::*;
+pub use mk48_proto::*;
 #[allow(nonstandard_style, unused)]
 pub mod __unstable {
 pub static MK48_DESCRIPTOR_INFO: ::protobuf::__internal::runtime::__unstable::DescriptorInfo = ::protobuf::__internal::runtime::__unstable::DescriptorInfo {
