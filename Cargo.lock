@@ -2660,6 +2660,7 @@ dependencies = [
  "simd-json",
  "simd-json-derive",
  "wincode",
+ "zerocbor",
  "zerompk",
  "zstd",
 ]
@@ -3705,6 +3706,26 @@ dependencies = [
  "proc-macro2",
  "quote",
  "rustversion",
+ "syn 2.0.119",
+]
+
+[[package]]
+name = "zerocbor"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "220956d277b638181e4597384df439dc83d3dd469e944b86838dd20653998e16"
+dependencies = [
+ "zerocbor_derive",
+]
+
+[[package]]
+name = "zerocbor_derive"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67dc3ac532aa952803d208bbf9ce76d3f8628c74113671d7b012559e7a318aa9"
+dependencies = [
+ "proc-macro2",
+ "quote",
  "syn 2.0.119",
 ]
 

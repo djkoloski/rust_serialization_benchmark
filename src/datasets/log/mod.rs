@@ -68,6 +68,7 @@ use crate::Generate;
 )]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
+#[cfg_attr(feature = "zerocbor", derive(zerocbor::ToCbor, zerocbor::FromCbor))]
 #[cfg_attr(
     feature = "zerompk",
     derive(zerompk::ToMessagePack, zerompk::FromMessagePack)
@@ -302,6 +303,7 @@ impl bench_protobuf4::Serialize for Address {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
+#[cfg_attr(feature = "zerocbor", derive(zerocbor::ToCbor, zerocbor::FromCbor))]
 #[cfg_attr(
     feature = "zerompk",
     derive(zerompk::ToMessagePack, zerompk::FromMessagePack)
@@ -330,6 +332,7 @@ pub struct Log {
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
+#[cfg_attr(feature = "zerocbor", derive(zerocbor::ToCbor, zerocbor::FromCbor))]
 #[cfg_attr(
     feature = "zerompk",
     derive(zerompk::ToMessagePack, zerompk::FromMessagePack)
@@ -641,6 +644,7 @@ impl bench_protobuf4::Serialize for Log {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
+#[cfg_attr(feature = "zerocbor", derive(zerocbor::ToCbor, zerocbor::FromCbor))]
 #[cfg_attr(
     feature = "zerompk",
     derive(zerompk::ToMessagePack, zerompk::FromMessagePack)
@@ -658,6 +662,7 @@ pub struct Logs {
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPackerBorrowed))]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "wincode", derive(wincode::SchemaWrite, wincode::SchemaRead))]
+#[cfg_attr(feature = "zerocbor", derive(zerocbor::ToCbor, zerocbor::FromCbor))]
 #[cfg_attr(
     feature = "zerompk",
     derive(zerompk::ToMessagePack, zerompk::FromMessagePack)

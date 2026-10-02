@@ -30,6 +30,7 @@
         "capnp": "capnp",
         "cbor4ii": "cbor",
         "ciborium": "cbor",
+        "zerocbor": "cbor",
         "flexon": "json",
         "serde_json": "json",
         "simd-json": "json",

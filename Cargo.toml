@@ -86,6 +86,7 @@ serde-zap = { version = "=0.1.1", optional = true }
 simd-json = { version = "=0.17.3", optional = true }
 simd-json-derive = { version = "=0.18.0", optional = true }
 wincode = { version = "=0.6.1", optional = true, features = ["derive"] }
+zerocbor = { version = "=0.1.0", optional = true, features = ["derive"] }
 zerompk = { version = "=0.8.0", optional = true, features = ["derive"] }
 
 criterion = "=0.5.1"
@@ -124,11 +125,12 @@ default-encoding-set = [
     "serde-zap",
     "simd-json",
     "wincode",
+    "zerocbor",
     "zerompk",
 ]
 
 # Grouped features for comparing different implementations for a specific encoding
-all-cbor = ["cbor4ii", "ciborium"]
+all-cbor = ["cbor4ii", "ciborium", "zerocbor"]
 all-messagepack = ["msgpacker", "rmp-serde", "zerompk"]
 all-json = ["flexon", "serde_json", "simd-json"]
 all-protobuf = ["buffa", "prost", "protobuf", "protobuf4"]

@@ -53,6 +53,8 @@ use rust_serialization_benchmark::bench_serde_zap;
 use rust_serialization_benchmark::bench_simd_json;
 #[cfg(feature = "wincode")]
 use rust_serialization_benchmark::bench_wincode;
+#[cfg(feature = "zerocbor")]
+use rust_serialization_benchmark::bench_zerocbor;
 #[cfg(feature = "zerompk")]
 use rust_serialization_benchmark::bench_zerompk;
 use rust_serialization_benchmark::generate_vec;
@@ -149,6 +151,9 @@ macro_rules! bench_unvarying {
 
         #[cfg(feature = "wincode")]
         bench_wincode::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "zerocbor")]
+        bench_zerocbor::$bench_fn($BENCH, $c, &$data);
 
         #[cfg(feature = "zerompk")]
         bench_zerompk::$bench_fn($BENCH, $c, &$data);
