@@ -50,6 +50,8 @@ pub mod bench_serde_zap;
 pub mod bench_simd_json;
 #[cfg(feature = "wincode")]
 pub mod bench_wincode;
+#[cfg(feature = "zerocbor")]
+pub mod bench_zerocbor;
 #[cfg(feature = "zerompk")]
 pub mod bench_zerompk;
 pub mod datasets;
