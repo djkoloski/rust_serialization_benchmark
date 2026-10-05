@@ -80,7 +80,7 @@ jobs:
       - name: build
         shell: bash
         run: |
-          cargo build --locked --workspace --benches --features regenerate
+          cargo build --locked --workspace --all-targets --benches --features regenerate
 
       - name: check generated code
         shell: bash

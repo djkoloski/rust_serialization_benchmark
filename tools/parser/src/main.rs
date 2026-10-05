@@ -1,8 +1,8 @@
-use cargo_metadata::{CargoOpt::AllFeatures, Metadata, MetadataCommand};
+use cargo_metadata::Metadata;
 use clap::Parser;
 use regex::Regex;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use schema::{Bench, Config, PackageId, Results};
 
@@ -165,6 +165,9 @@ fn find_package_version(name: &str, version_req: Option<&str>, metadata: &Metada
 /// found in the metadata
 #[test]
 fn check_config() {
+    use cargo_metadata::{CargoOpt::AllFeatures, MetadataCommand};
+    use std::path::Path;
+
     let config = Config::read(Path::new("../config.json"));
 
     let metadata_output = MetadataCommand::new()
