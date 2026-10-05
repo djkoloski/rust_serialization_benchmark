@@ -50,7 +50,7 @@ jobs:
           mkdir proto
           (
             cd proto
-            wget "https://github.com/protocolbuffers/protobuf/releases/download/v36.1/protoc-36.1-linux-x86_64.zip" -O protoc.zip
+            wget "https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protoc-36.2-linux-x86_64.zip" -O protoc.zip
             unzip protoc.zip
             chmod +x bin/protoc
             mv bin/protoc /usr/local/bin/

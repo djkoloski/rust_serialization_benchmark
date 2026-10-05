@@ -1,7 +1,8 @@
-use cargo_metadata::Metadata;
+use cargo_metadata::{CargoOpt::AllFeatures, Metadata, MetadataCommand};
 use clap::Parser;
 use regex::Regex;
-use std::{fs, path::PathBuf};
+use std::fs;
+use std::path::{Path, PathBuf};
 
 use schema::{Bench, Config, PackageId, Results};
 
@@ -121,12 +122,7 @@ fn find_package_id(feature: &str, config: &Config, metadata: &Metadata) -> Packa
             crate_name: package_id.crate_name.clone(),
             version: find_package_version(
                 &package_id.crate_name,
-                Some(
-                    package_id
-                        .version
-                        .parse()
-                        .expect("invalid version spec in config"),
-                ),
+                Some(&package_id.version),
                 metadata,
             ),
         }
@@ -138,21 +134,48 @@ fn find_package_id(feature: &str, config: &Config, metadata: &Metadata) -> Packa
     }
 }
 
-fn find_package_version(
-    name: &str,
-    version_req: Option<semver::VersionReq>,
-    metadata: &Metadata,
-) -> String {
-    metadata
+fn find_package_version(name: &str, version_req: Option<&str>, metadata: &Metadata) -> String {
+    let packages: Vec<_> = metadata
         .packages
         .iter()
-        .find(|pkg| {
+        .filter(|pkg| {
             pkg.name == name
                 && version_req
-                    .as_ref()
+                    .map(|version_str| {
+                        version_str
+                            .parse::<semver::VersionReq>()
+                            .unwrap_or_else(|err| {
+                                panic!("invalid version spec in config: {version_str:?} - {err}")
+                            })
+                    })
                     .is_none_or(|req| req.matches(&pkg.version))
         })
-        .unwrap()
-        .version
-        .to_string()
+        .collect();
+    match *packages {
+        [one_match] => one_match.version.to_string(),
+        [] => panic!("package {name:?} with version {version_req:?} not found in crate metadata"),
+        _ => panic!(
+            "package {name:?} with version {version_req:?} matches multiple crates in crate \
+            metadata"
+        ),
+    }
+}
+
+/// Check that the config exists, is valid json, and all the items in the crate mapping can be
+/// found in the metadata
+#[test]
+fn check_config() {
+    let config = Config::read(Path::new("../config.json"));
+
+    let metadata_output = MetadataCommand::new()
+        .features(AllFeatures)
+        .cargo_command()
+        .output()
+        .expect("should execute");
+    assert!(metadata_output.status.success());
+    let metadata = serde_json::from_slice(&metadata_output.stdout).unwrap();
+
+    for package_id in config.crate_matching.values() {
+        let _ = find_package_version(&package_id.crate_name, Some(&package_id.version), &metadata);
+    }
 }

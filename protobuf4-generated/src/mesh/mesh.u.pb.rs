@@ -1,4 +1,4 @@
-const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.1-release");
+const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.2-release");
 // This variable must not be referenced except by protobuf generated
 // code.
 pub(crate) static mut prost__mesh__Vector3_msg_init: ::protobuf::__internal::runtime::MiniTableInitPtr =
@@ -468,11 +468,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Vector3 {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mesh__Vector3_msg_init.0 =
+        super::mesh_proto::prost__mesh__Vector3_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$!P!P!P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mesh__Vector3_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mesh__Vector3_msg_init.0)
+            super::mesh_proto::prost__mesh__Vector3_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mesh_proto::prost__mesh__Vector3_msg_init.0)
       }).0
     }
   }
@@ -611,16 +611,16 @@ impl<'msg> TriangleView<'msg> {
       self.inner.ptr().has_field_at_index(0)
     }
   }
-  pub fn v0_opt(self) -> ::std::option::Option<super::Vector3View<'msg>> {
+  pub fn v0_opt(self) -> ::std::option::Option<super::mesh_proto::Vector3View<'msg>> {
     self.has_v0().then(|| self.v0())
   }
-  pub fn v0(self) -> super::Vector3View<'msg> {
+  pub fn v0(self) -> super::mesh_proto::Vector3View<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
 
   // v1: optional message prost.mesh.Vector3
@@ -629,16 +629,16 @@ impl<'msg> TriangleView<'msg> {
       self.inner.ptr().has_field_at_index(1)
     }
   }
-  pub fn v1_opt(self) -> ::std::option::Option<super::Vector3View<'msg>> {
+  pub fn v1_opt(self) -> ::std::option::Option<super::mesh_proto::Vector3View<'msg>> {
     self.has_v1().then(|| self.v1())
   }
-  pub fn v1(self) -> super::Vector3View<'msg> {
+  pub fn v1(self) -> super::mesh_proto::Vector3View<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
 
   // v2: optional message prost.mesh.Vector3
@@ -647,16 +647,16 @@ impl<'msg> TriangleView<'msg> {
       self.inner.ptr().has_field_at_index(2)
     }
   }
-  pub fn v2_opt(self) -> ::std::option::Option<super::Vector3View<'msg>> {
+  pub fn v2_opt(self) -> ::std::option::Option<super::mesh_proto::Vector3View<'msg>> {
     self.has_v2().then(|| self.v2())
   }
-  pub fn v2(self) -> super::Vector3View<'msg> {
+  pub fn v2(self) -> super::mesh_proto::Vector3View<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
 
   // normal: optional message prost.mesh.Vector3
@@ -665,16 +665,16 @@ impl<'msg> TriangleView<'msg> {
       self.inner.ptr().has_field_at_index(3)
     }
   }
-  pub fn normal_opt(self) -> ::std::option::Option<super::Vector3View<'msg>> {
+  pub fn normal_opt(self) -> ::std::option::Option<super::mesh_proto::Vector3View<'msg>> {
     self.has_normal().then(|| self.normal())
   }
-  pub fn normal(self) -> super::Vector3View<'msg> {
+  pub fn normal(self) -> super::mesh_proto::Vector3View<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
 
 }
@@ -781,18 +781,18 @@ impl<'msg> TriangleMut<'msg> {
       );
     }
   }
-  pub fn v0_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn v0_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_v0().then(|| self.v0())
   }
-  pub fn v0(&self) -> super::Vector3View<'_> {
+  pub fn v0(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn v0_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn v0_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -804,7 +804,7 @@ impl<'msg> TriangleMut<'msg> {
      ).into()
   }
   pub fn set_v0(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -828,18 +828,18 @@ impl<'msg> TriangleMut<'msg> {
       );
     }
   }
-  pub fn v1_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn v1_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_v1().then(|| self.v1())
   }
-  pub fn v1(&self) -> super::Vector3View<'_> {
+  pub fn v1(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn v1_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn v1_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          1, self.inner.arena()
@@ -851,7 +851,7 @@ impl<'msg> TriangleMut<'msg> {
      ).into()
   }
   pub fn set_v1(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -875,18 +875,18 @@ impl<'msg> TriangleMut<'msg> {
       );
     }
   }
-  pub fn v2_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn v2_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_v2().then(|| self.v2())
   }
-  pub fn v2(&self) -> super::Vector3View<'_> {
+  pub fn v2(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn v2_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn v2_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          2, self.inner.arena()
@@ -898,7 +898,7 @@ impl<'msg> TriangleMut<'msg> {
      ).into()
   }
   pub fn set_v2(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -922,18 +922,18 @@ impl<'msg> TriangleMut<'msg> {
       );
     }
   }
-  pub fn normal_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn normal_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_normal().then(|| self.normal())
   }
-  pub fn normal(&self) -> super::Vector3View<'_> {
+  pub fn normal(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn normal_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn normal_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          3, self.inner.arena()
@@ -945,7 +945,7 @@ impl<'msg> TriangleMut<'msg> {
      ).into()
   }
   pub fn set_normal(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1029,18 +1029,18 @@ impl Triangle {
       );
     }
   }
-  pub fn v0_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn v0_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_v0().then(|| self.v0())
   }
-  pub fn v0(&self) -> super::Vector3View<'_> {
+  pub fn v0(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn v0_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn v0_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -1052,7 +1052,7 @@ impl Triangle {
      ).into()
   }
   pub fn set_v0(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1076,18 +1076,18 @@ impl Triangle {
       );
     }
   }
-  pub fn v1_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn v1_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_v1().then(|| self.v1())
   }
-  pub fn v1(&self) -> super::Vector3View<'_> {
+  pub fn v1(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn v1_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn v1_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          1, self.inner.arena()
@@ -1099,7 +1099,7 @@ impl Triangle {
      ).into()
   }
   pub fn set_v1(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1123,18 +1123,18 @@ impl Triangle {
       );
     }
   }
-  pub fn v2_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn v2_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_v2().then(|| self.v2())
   }
-  pub fn v2(&self) -> super::Vector3View<'_> {
+  pub fn v2(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn v2_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn v2_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          2, self.inner.arena()
@@ -1146,7 +1146,7 @@ impl Triangle {
      ).into()
   }
   pub fn set_v2(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1170,18 +1170,18 @@ impl Triangle {
       );
     }
   }
-  pub fn normal_opt(&self) -> ::std::option::Option<super::Vector3View<'_>> {
+  pub fn normal_opt(&self) -> ::std::option::Option<super::mesh_proto::Vector3View<'_>> {
     self.has_normal().then(|| self.normal())
   }
-  pub fn normal(&self) -> super::Vector3View<'_> {
+  pub fn normal(&self) -> super::mesh_proto::Vector3View<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3View::default())
+       .unwrap_or(super::mesh_proto::Vector3View::default())
   }
-  pub fn normal_mut(&mut self) -> super::Vector3Mut<'_> {
+  pub fn normal_mut(&mut self) -> super::mesh_proto::Vector3Mut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          3, self.inner.arena()
@@ -1193,7 +1193,7 @@ impl Triangle {
      ).into()
   }
   pub fn set_normal(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3>) {
+    val: impl ::protobuf::IntoProxied<super::mesh_proto::Vector3>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1238,15 +1238,15 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Triangle {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mesh__Triangle_msg_init.0 =
+        super::mesh_proto::prost__mesh__Triangle_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$3333");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mesh__Triangle_msg_init.0, &[<super::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mesh_proto::prost__mesh__Triangle_msg_init.0, &[<super::mesh_proto::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::mesh_proto::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::mesh_proto::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::mesh_proto::Vector3 as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mesh__Triangle_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mesh_proto::prost__mesh__Triangle_msg_init.0)
       }).0
     }
   }
@@ -1380,13 +1380,13 @@ impl<'msg> MeshView<'msg> {
   }
 
   // triangles: repeated message prost.mesh.Triangle
-  pub fn triangles(self) -> ::protobuf::RepeatedView<'msg, super::Triangle> {
+  pub fn triangles(self) -> ::protobuf::RepeatedView<'msg, super::mesh_proto::Triangle> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Triangle>,
+        ::protobuf::__internal::runtime::empty_array::<super::mesh_proto::Triangle>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -1485,19 +1485,19 @@ impl<'msg> MeshMut<'msg> {
   }
 
   // triangles: repeated message prost.mesh.Triangle
-  pub fn triangles(&self) -> ::protobuf::RepeatedView<'_, super::Triangle> {
+  pub fn triangles(&self) -> ::protobuf::RepeatedView<'_, super::mesh_proto::Triangle> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Triangle>,
+        ::protobuf::__internal::runtime::empty_array::<super::mesh_proto::Triangle>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn triangles_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Triangle> {
+  pub fn triangles_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mesh_proto::Triangle> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -1511,7 +1511,7 @@ impl<'msg> MeshMut<'msg> {
       )
     }
   }
-  pub fn set_triangles(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Triangle>>) {
+  pub fn set_triangles(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mesh_proto::Triangle>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -1581,19 +1581,19 @@ impl Mesh {
   }
 
   // triangles: repeated message prost.mesh.Triangle
-  pub fn triangles(&self) -> ::protobuf::RepeatedView<'_, super::Triangle> {
+  pub fn triangles(&self) -> ::protobuf::RepeatedView<'_, super::mesh_proto::Triangle> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Triangle>,
+        ::protobuf::__internal::runtime::empty_array::<super::mesh_proto::Triangle>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn triangles_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Triangle> {
+  pub fn triangles_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mesh_proto::Triangle> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -1607,7 +1607,7 @@ impl Mesh {
       )
     }
   }
-  pub fn set_triangles(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Triangle>>) {
+  pub fn set_triangles(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mesh_proto::Triangle>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -1650,12 +1650,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Mesh {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mesh__Mesh_msg_init.0 =
+        super::mesh_proto::prost__mesh__Mesh_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$G");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mesh__Mesh_msg_init.0, &[<super::Triangle as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mesh_proto::prost__mesh__Mesh_msg_init.0, &[<super::mesh_proto::Triangle as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mesh__Mesh_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mesh_proto::prost__mesh__Mesh_msg_init.0)
       }).0
     }
   }

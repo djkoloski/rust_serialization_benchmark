@@ -1,11 +1,9 @@
 #[path="log.u.pb.rs"]
-#[allow(nonstandard_style, unused, unreachable_pub)]
-#[doc(hidden)]
-mod internal_do_not_use_log;
-
+#[allow(nonstandard_style, unused)]
+pub mod log_proto;
 #[allow(nonstandard_style, unused)]
 #[doc(inline)]
-pub use internal_do_not_use_log::*;
+pub use log_proto::*;
 #[allow(nonstandard_style, unused)]
 pub mod __unstable {
 pub static LOG_DESCRIPTOR_INFO: ::protobuf::__internal::runtime::__unstable::DescriptorInfo = ::protobuf::__internal::runtime::__unstable::DescriptorInfo {

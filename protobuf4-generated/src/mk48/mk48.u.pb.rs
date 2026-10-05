@@ -1,4 +1,4 @@
-const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.1-release");
+const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.2-release");
 // This variable must not be referenced except by protobuf generated
 // code.
 pub(crate) static mut prost__mk48__Vector2f_msg_init: ::protobuf::__internal::runtime::MiniTableInitPtr =
@@ -401,11 +401,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Vector2f {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__Vector2f_msg_init.0 =
+        super::mk48_proto::prost__mk48__Vector2f_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$!P!P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__Vector2f_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__Vector2f_msg_init.0)
+            super::mk48_proto::prost__mk48__Vector2f_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__Vector2f_msg_init.0)
       }).0
     }
   }
@@ -574,16 +574,16 @@ impl<'msg> TransformView<'msg> {
       self.inner.ptr().has_field_at_index(2)
     }
   }
-  pub fn position_opt(self) -> ::std::option::Option<super::Vector2fView<'msg>> {
+  pub fn position_opt(self) -> ::std::option::Option<super::mk48_proto::Vector2fView<'msg>> {
     self.has_position().then(|| self.position())
   }
-  pub fn position(self) -> super::Vector2fView<'msg> {
+  pub fn position(self) -> super::mk48_proto::Vector2fView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector2fView::default())
+       .unwrap_or(super::mk48_proto::Vector2fView::default())
   }
 
   // velocity: optional int32
@@ -757,18 +757,18 @@ impl<'msg> TransformMut<'msg> {
       );
     }
   }
-  pub fn position_opt(&self) -> ::std::option::Option<super::Vector2fView<'_>> {
+  pub fn position_opt(&self) -> ::std::option::Option<super::mk48_proto::Vector2fView<'_>> {
     self.has_position().then(|| self.position())
   }
-  pub fn position(&self) -> super::Vector2fView<'_> {
+  pub fn position(&self) -> super::mk48_proto::Vector2fView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector2fView::default())
+       .unwrap_or(super::mk48_proto::Vector2fView::default())
   }
-  pub fn position_mut(&mut self) -> super::Vector2fMut<'_> {
+  pub fn position_mut(&mut self) -> super::mk48_proto::Vector2fMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          2, self.inner.arena()
@@ -780,7 +780,7 @@ impl<'msg> TransformMut<'msg> {
      ).into()
   }
   pub fn set_position(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector2f>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::Vector2f>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -942,18 +942,18 @@ impl Transform {
       );
     }
   }
-  pub fn position_opt(&self) -> ::std::option::Option<super::Vector2fView<'_>> {
+  pub fn position_opt(&self) -> ::std::option::Option<super::mk48_proto::Vector2fView<'_>> {
     self.has_position().then(|| self.position())
   }
-  pub fn position(&self) -> super::Vector2fView<'_> {
+  pub fn position(&self) -> super::mk48_proto::Vector2fView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector2fView::default())
+       .unwrap_or(super::mk48_proto::Vector2fView::default())
   }
-  pub fn position_mut(&mut self) -> super::Vector2fMut<'_> {
+  pub fn position_mut(&mut self) -> super::mk48_proto::Vector2fMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          2, self.inner.arena()
@@ -965,7 +965,7 @@ impl Transform {
      ).into()
   }
   pub fn set_position(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector2f>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::Vector2f>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -1036,12 +1036,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Transform {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__Transform_msg_init.0 =
+        super::mk48_proto::prost__mk48__Transform_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$(P)P3(P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__Transform_msg_init.0, &[<super::Vector2f as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mk48_proto::prost__mk48__Transform_msg_init.0, &[<super::mk48_proto::Vector2f as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__Transform_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__Transform_msg_init.0)
       }).0
     }
   }
@@ -1560,11 +1560,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Guidance {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__Guidance_msg_init.0 =
+        super::mk48_proto::prost__mk48__Guidance_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$)P/P(P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__Guidance_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__Guidance_msg_init.0)
+            super::mk48_proto::prost__mk48__Guidance_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__Guidance_msg_init.0)
       }).0
     }
   }
@@ -1733,10 +1733,10 @@ impl<'msg> ContactView<'msg> {
       self.inner.ptr().has_field_at_index(2)
     }
   }
-  pub fn entity_type_opt(self) -> ::std::option::Option<super::EntityType> {
+  pub fn entity_type_opt(self) -> ::std::option::Option<super::mk48_proto::EntityType> {
     self.has_entity_type().then(|| self.entity_type())
   }
-  pub fn entity_type(self) -> super::EntityType {
+  pub fn entity_type(self) -> super::mk48_proto::EntityType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -1745,7 +1745,7 @@ impl<'msg> ContactView<'msg> {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        2, (super::EntityType::ArleighBurke).into()
+        2, (super::mk48_proto::EntityType::ArleighBurke).into()
       ).try_into().unwrap()
     }
   }
@@ -1756,16 +1756,16 @@ impl<'msg> ContactView<'msg> {
       self.inner.ptr().has_field_at_index(3)
     }
   }
-  pub fn guidance_opt(self) -> ::std::option::Option<super::GuidanceView<'msg>> {
+  pub fn guidance_opt(self) -> ::std::option::Option<super::mk48_proto::GuidanceView<'msg>> {
     self.has_guidance().then(|| self.guidance())
   }
-  pub fn guidance(self) -> super::GuidanceView<'msg> {
+  pub fn guidance(self) -> super::mk48_proto::GuidanceView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::GuidanceView::default())
+       .unwrap_or(super::mk48_proto::GuidanceView::default())
   }
 
   // player_id: optional uint32
@@ -1811,16 +1811,16 @@ impl<'msg> ContactView<'msg> {
       self.inner.ptr().has_field_at_index(6)
     }
   }
-  pub fn transform_opt(self) -> ::std::option::Option<super::TransformView<'msg>> {
+  pub fn transform_opt(self) -> ::std::option::Option<super::mk48_proto::TransformView<'msg>> {
     self.has_transform().then(|| self.transform())
   }
-  pub fn transform(self) -> super::TransformView<'msg> {
+  pub fn transform(self) -> super::mk48_proto::TransformView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(6)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::TransformView::default())
+       .unwrap_or(super::mk48_proto::TransformView::default())
   }
 
   // turret_angles: repeated uint32
@@ -1993,10 +1993,10 @@ impl<'msg> ContactMut<'msg> {
       );
     }
   }
-  pub fn entity_type_opt(&self) -> ::std::option::Option<super::EntityType> {
+  pub fn entity_type_opt(&self) -> ::std::option::Option<super::mk48_proto::EntityType> {
     self.has_entity_type().then(|| self.entity_type())
   }
-  pub fn entity_type(&self) -> super::EntityType {
+  pub fn entity_type(&self) -> super::mk48_proto::EntityType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -2005,11 +2005,11 @@ impl<'msg> ContactMut<'msg> {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        2, (super::EntityType::ArleighBurke).into()
+        2, (super::mk48_proto::EntityType::ArleighBurke).into()
       ).try_into().unwrap()
     }
   }
-  pub fn set_entity_type(&mut self, val: super::EntityType) {
+  pub fn set_entity_type(&mut self, val: super::mk48_proto::EntityType) {
     unsafe {
       // TODO: b/361751487: This .into() is only here
       // here for the enum<->i32 case, we should avoid it for
@@ -2034,18 +2034,18 @@ impl<'msg> ContactMut<'msg> {
       );
     }
   }
-  pub fn guidance_opt(&self) -> ::std::option::Option<super::GuidanceView<'_>> {
+  pub fn guidance_opt(&self) -> ::std::option::Option<super::mk48_proto::GuidanceView<'_>> {
     self.has_guidance().then(|| self.guidance())
   }
-  pub fn guidance(&self) -> super::GuidanceView<'_> {
+  pub fn guidance(&self) -> super::mk48_proto::GuidanceView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::GuidanceView::default())
+       .unwrap_or(super::mk48_proto::GuidanceView::default())
   }
-  pub fn guidance_mut(&mut self) -> super::GuidanceMut<'_> {
+  pub fn guidance_mut(&mut self) -> super::mk48_proto::GuidanceMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          3, self.inner.arena()
@@ -2057,7 +2057,7 @@ impl<'msg> ContactMut<'msg> {
      ).into()
   }
   pub fn set_guidance(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Guidance>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::Guidance>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -2158,18 +2158,18 @@ impl<'msg> ContactMut<'msg> {
       );
     }
   }
-  pub fn transform_opt(&self) -> ::std::option::Option<super::TransformView<'_>> {
+  pub fn transform_opt(&self) -> ::std::option::Option<super::mk48_proto::TransformView<'_>> {
     self.has_transform().then(|| self.transform())
   }
-  pub fn transform(&self) -> super::TransformView<'_> {
+  pub fn transform(&self) -> super::mk48_proto::TransformView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(6)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::TransformView::default())
+       .unwrap_or(super::mk48_proto::TransformView::default())
   }
-  pub fn transform_mut(&mut self) -> super::TransformMut<'_> {
+  pub fn transform_mut(&mut self) -> super::mk48_proto::TransformMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          6, self.inner.arena()
@@ -2181,7 +2181,7 @@ impl<'msg> ContactMut<'msg> {
      ).into()
   }
   pub fn set_transform(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Transform>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::Transform>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -2353,10 +2353,10 @@ impl Contact {
       );
     }
   }
-  pub fn entity_type_opt(&self) -> ::std::option::Option<super::EntityType> {
+  pub fn entity_type_opt(&self) -> ::std::option::Option<super::mk48_proto::EntityType> {
     self.has_entity_type().then(|| self.entity_type())
   }
-  pub fn entity_type(&self) -> super::EntityType {
+  pub fn entity_type(&self) -> super::mk48_proto::EntityType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -2365,11 +2365,11 @@ impl Contact {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        2, (super::EntityType::ArleighBurke).into()
+        2, (super::mk48_proto::EntityType::ArleighBurke).into()
       ).try_into().unwrap()
     }
   }
-  pub fn set_entity_type(&mut self, val: super::EntityType) {
+  pub fn set_entity_type(&mut self, val: super::mk48_proto::EntityType) {
     unsafe {
       // TODO: b/361751487: This .into() is only here
       // here for the enum<->i32 case, we should avoid it for
@@ -2394,18 +2394,18 @@ impl Contact {
       );
     }
   }
-  pub fn guidance_opt(&self) -> ::std::option::Option<super::GuidanceView<'_>> {
+  pub fn guidance_opt(&self) -> ::std::option::Option<super::mk48_proto::GuidanceView<'_>> {
     self.has_guidance().then(|| self.guidance())
   }
-  pub fn guidance(&self) -> super::GuidanceView<'_> {
+  pub fn guidance(&self) -> super::mk48_proto::GuidanceView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::GuidanceView::default())
+       .unwrap_or(super::mk48_proto::GuidanceView::default())
   }
-  pub fn guidance_mut(&mut self) -> super::GuidanceMut<'_> {
+  pub fn guidance_mut(&mut self) -> super::mk48_proto::GuidanceMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          3, self.inner.arena()
@@ -2417,7 +2417,7 @@ impl Contact {
      ).into()
   }
   pub fn set_guidance(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Guidance>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::Guidance>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -2518,18 +2518,18 @@ impl Contact {
       );
     }
   }
-  pub fn transform_opt(&self) -> ::std::option::Option<super::TransformView<'_>> {
+  pub fn transform_opt(&self) -> ::std::option::Option<super::mk48_proto::TransformView<'_>> {
     self.has_transform().then(|| self.transform())
   }
-  pub fn transform(&self) -> super::TransformView<'_> {
+  pub fn transform(&self) -> super::mk48_proto::TransformView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(6)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::TransformView::default())
+       .unwrap_or(super::mk48_proto::TransformView::default())
   }
-  pub fn transform_mut(&mut self) -> super::TransformMut<'_> {
+  pub fn transform_mut(&mut self) -> super::mk48_proto::TransformMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          6, self.inner.arena()
@@ -2541,7 +2541,7 @@ impl Contact {
      ).into()
   }
   pub fn set_transform(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Transform>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::Transform>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -2622,13 +2622,13 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Contact {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__Contact_msg_init.0 =
+        super::mk48_proto::prost__mk48__Contact_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$N)P)P.3)C3=");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__Contact_msg_init.0, &[<super::Guidance as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Transform as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mk48_proto::prost__mk48__Contact_msg_init.0, &[<super::mk48_proto::Guidance as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::mk48_proto::Transform as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__Contact_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__Contact_msg_init.0)
       }).0
     }
   }
@@ -3080,11 +3080,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for ChunkId {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__ChunkId_msg_init.0 =
+        super::mk48_proto::prost__mk48__ChunkId_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$(P(P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__ChunkId_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__ChunkId_msg_init.0)
+            super::mk48_proto::prost__mk48__ChunkId_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__ChunkId_msg_init.0)
       }).0
     }
   }
@@ -3223,16 +3223,16 @@ impl<'msg> TerrainUpdateView<'msg> {
       self.inner.ptr().has_field_at_index(0)
     }
   }
-  pub fn chunk_id_opt(self) -> ::std::option::Option<super::ChunkIdView<'msg>> {
+  pub fn chunk_id_opt(self) -> ::std::option::Option<super::mk48_proto::ChunkIdView<'msg>> {
     self.has_chunk_id().then(|| self.chunk_id())
   }
-  pub fn chunk_id(self) -> super::ChunkIdView<'msg> {
+  pub fn chunk_id(self) -> super::mk48_proto::ChunkIdView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::ChunkIdView::default())
+       .unwrap_or(super::mk48_proto::ChunkIdView::default())
   }
 
   // data: optional bytes
@@ -3349,18 +3349,18 @@ impl<'msg> TerrainUpdateMut<'msg> {
       );
     }
   }
-  pub fn chunk_id_opt(&self) -> ::std::option::Option<super::ChunkIdView<'_>> {
+  pub fn chunk_id_opt(&self) -> ::std::option::Option<super::mk48_proto::ChunkIdView<'_>> {
     self.has_chunk_id().then(|| self.chunk_id())
   }
-  pub fn chunk_id(&self) -> super::ChunkIdView<'_> {
+  pub fn chunk_id(&self) -> super::mk48_proto::ChunkIdView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::ChunkIdView::default())
+       .unwrap_or(super::mk48_proto::ChunkIdView::default())
   }
-  pub fn chunk_id_mut(&mut self) -> super::ChunkIdMut<'_> {
+  pub fn chunk_id_mut(&mut self) -> super::mk48_proto::ChunkIdMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -3372,7 +3372,7 @@ impl<'msg> TerrainUpdateMut<'msg> {
      ).into()
   }
   pub fn set_chunk_id(&mut self,
-    val: impl ::protobuf::IntoProxied<super::ChunkId>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::ChunkId>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3474,18 +3474,18 @@ impl TerrainUpdate {
       );
     }
   }
-  pub fn chunk_id_opt(&self) -> ::std::option::Option<super::ChunkIdView<'_>> {
+  pub fn chunk_id_opt(&self) -> ::std::option::Option<super::mk48_proto::ChunkIdView<'_>> {
     self.has_chunk_id().then(|| self.chunk_id())
   }
-  pub fn chunk_id(&self) -> super::ChunkIdView<'_> {
+  pub fn chunk_id(&self) -> super::mk48_proto::ChunkIdView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::ChunkIdView::default())
+       .unwrap_or(super::mk48_proto::ChunkIdView::default())
   }
-  pub fn chunk_id_mut(&mut self) -> super::ChunkIdMut<'_> {
+  pub fn chunk_id_mut(&mut self) -> super::mk48_proto::ChunkIdMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -3497,7 +3497,7 @@ impl TerrainUpdate {
      ).into()
   }
   pub fn set_chunk_id(&mut self,
-    val: impl ::protobuf::IntoProxied<super::ChunkId>) {
+    val: impl ::protobuf::IntoProxied<super::mk48_proto::ChunkId>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3560,12 +3560,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for TerrainUpda
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__TerrainUpdate_msg_init.0 =
+        super::mk48_proto::prost__mk48__TerrainUpdate_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$30P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__TerrainUpdate_msg_init.0, &[<super::ChunkId as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mk48_proto::prost__mk48__TerrainUpdate_msg_init.0, &[<super::mk48_proto::ChunkId as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__TerrainUpdate_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__TerrainUpdate_msg_init.0)
       }).0
     }
   }
@@ -3699,13 +3699,13 @@ impl<'msg> UpdateView<'msg> {
   }
 
   // contacts: repeated message prost.mk48.Contact
-  pub fn contacts(self) -> ::protobuf::RepeatedView<'msg, super::Contact> {
+  pub fn contacts(self) -> ::protobuf::RepeatedView<'msg, super::mk48_proto::Contact> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Contact>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::Contact>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -3743,13 +3743,13 @@ impl<'msg> UpdateView<'msg> {
   }
 
   // terrain_updates: repeated message prost.mk48.TerrainUpdate
-  pub fn terrain_updates(self) -> ::protobuf::RepeatedView<'msg, super::TerrainUpdate> {
+  pub fn terrain_updates(self) -> ::protobuf::RepeatedView<'msg, super::mk48_proto::TerrainUpdate> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         3
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::TerrainUpdate>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::TerrainUpdate>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -3848,19 +3848,19 @@ impl<'msg> UpdateMut<'msg> {
   }
 
   // contacts: repeated message prost.mk48.Contact
-  pub fn contacts(&self) -> ::protobuf::RepeatedView<'_, super::Contact> {
+  pub fn contacts(&self) -> ::protobuf::RepeatedView<'_, super::mk48_proto::Contact> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Contact>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::Contact>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn contacts_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Contact> {
+  pub fn contacts_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mk48_proto::Contact> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -3874,7 +3874,7 @@ impl<'msg> UpdateMut<'msg> {
       )
     }
   }
-  pub fn set_contacts(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Contact>>) {
+  pub fn set_contacts(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mk48_proto::Contact>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -3936,19 +3936,19 @@ impl<'msg> UpdateMut<'msg> {
   }
 
   // terrain_updates: repeated message prost.mk48.TerrainUpdate
-  pub fn terrain_updates(&self) -> ::protobuf::RepeatedView<'_, super::TerrainUpdate> {
+  pub fn terrain_updates(&self) -> ::protobuf::RepeatedView<'_, super::mk48_proto::TerrainUpdate> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         3
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::TerrainUpdate>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::TerrainUpdate>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn terrain_updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::TerrainUpdate> {
+  pub fn terrain_updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mk48_proto::TerrainUpdate> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         3,
@@ -3962,7 +3962,7 @@ impl<'msg> UpdateMut<'msg> {
       )
     }
   }
-  pub fn set_terrain_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::TerrainUpdate>>) {
+  pub fn set_terrain_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mk48_proto::TerrainUpdate>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -4032,19 +4032,19 @@ impl Update {
   }
 
   // contacts: repeated message prost.mk48.Contact
-  pub fn contacts(&self) -> ::protobuf::RepeatedView<'_, super::Contact> {
+  pub fn contacts(&self) -> ::protobuf::RepeatedView<'_, super::mk48_proto::Contact> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Contact>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::Contact>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn contacts_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Contact> {
+  pub fn contacts_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mk48_proto::Contact> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -4058,7 +4058,7 @@ impl Update {
       )
     }
   }
-  pub fn set_contacts(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Contact>>) {
+  pub fn set_contacts(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mk48_proto::Contact>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -4120,19 +4120,19 @@ impl Update {
   }
 
   // terrain_updates: repeated message prost.mk48.TerrainUpdate
-  pub fn terrain_updates(&self) -> ::protobuf::RepeatedView<'_, super::TerrainUpdate> {
+  pub fn terrain_updates(&self) -> ::protobuf::RepeatedView<'_, super::mk48_proto::TerrainUpdate> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         3
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::TerrainUpdate>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::TerrainUpdate>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn terrain_updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::TerrainUpdate> {
+  pub fn terrain_updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mk48_proto::TerrainUpdate> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         3,
@@ -4146,7 +4146,7 @@ impl Update {
       )
     }
   }
-  pub fn set_terrain_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::TerrainUpdate>>) {
+  pub fn set_terrain_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mk48_proto::TerrainUpdate>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -4189,13 +4189,13 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Update {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__Update_msg_init.0 =
+        super::mk48_proto::prost__mk48__Update_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$G)P!PG");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__Update_msg_init.0, &[<super::Contact as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::TerrainUpdate as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mk48_proto::prost__mk48__Update_msg_init.0, &[<super::mk48_proto::Contact as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::mk48_proto::TerrainUpdate as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__Update_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__Update_msg_init.0)
       }).0
     }
   }
@@ -4329,13 +4329,13 @@ impl<'msg> UpdatesView<'msg> {
   }
 
   // updates: repeated message prost.mk48.Update
-  pub fn updates(self) -> ::protobuf::RepeatedView<'msg, super::Update> {
+  pub fn updates(self) -> ::protobuf::RepeatedView<'msg, super::mk48_proto::Update> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Update>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::Update>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -4434,19 +4434,19 @@ impl<'msg> UpdatesMut<'msg> {
   }
 
   // updates: repeated message prost.mk48.Update
-  pub fn updates(&self) -> ::protobuf::RepeatedView<'_, super::Update> {
+  pub fn updates(&self) -> ::protobuf::RepeatedView<'_, super::mk48_proto::Update> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Update>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::Update>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Update> {
+  pub fn updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mk48_proto::Update> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -4460,7 +4460,7 @@ impl<'msg> UpdatesMut<'msg> {
       )
     }
   }
-  pub fn set_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Update>>) {
+  pub fn set_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mk48_proto::Update>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -4530,19 +4530,19 @@ impl Updates {
   }
 
   // updates: repeated message prost.mk48.Update
-  pub fn updates(&self) -> ::protobuf::RepeatedView<'_, super::Update> {
+  pub fn updates(&self) -> ::protobuf::RepeatedView<'_, super::mk48_proto::Update> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Update>,
+        ::protobuf::__internal::runtime::empty_array::<super::mk48_proto::Update>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Update> {
+  pub fn updates_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::mk48_proto::Update> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -4556,7 +4556,7 @@ impl Updates {
       )
     }
   }
-  pub fn set_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Update>>) {
+  pub fn set_updates(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::mk48_proto::Update>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -4599,12 +4599,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Updates {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__mk48__Updates_msg_init.0 =
+        super::mk48_proto::prost__mk48__Updates_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$G");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__mk48__Updates_msg_init.0, &[<super::Update as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::mk48_proto::prost__mk48__Updates_msg_init.0, &[<super::mk48_proto::Update as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__mk48__Updates_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::mk48_proto::prost__mk48__Updates_msg_init.0)
       }).0
     }
   }

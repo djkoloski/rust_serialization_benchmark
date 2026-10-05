@@ -1,4 +1,4 @@
-const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.1-release");
+const _: () = ::protobuf::__internal::assert_compatible_gencode_version("0.36.2-release");
 // This variable must not be referenced except by protobuf generated
 // code.
 pub(crate) static mut prost__minecraft_0savedata__Item_msg_init: ::protobuf::__internal::runtime::MiniTableInitPtr =
@@ -447,11 +447,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Item {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Item_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Item_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$(P)P1X");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Item_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Item_msg_init.0)
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Item_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Item_msg_init.0)
       }).0
     }
   }
@@ -1238,11 +1238,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Abilities {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Abilities_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Abilities_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$!P!P/P/P/P/P/P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Abilities_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Abilities_msg_init.0)
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Abilities_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Abilities_msg_init.0)
       }).0
     }
   }
@@ -1761,11 +1761,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Vector3d {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Vector3d_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Vector3d_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$ P P P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Vector3d_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Vector3d_msg_init.0)
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Vector3d_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Vector3d_msg_init.0)
       }).0
     }
   }
@@ -2217,11 +2217,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Vector2f {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Vector2f_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Vector2f_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$!P!P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Vector2f_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Vector2f_msg_init.0)
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Vector2f_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Vector2f_msg_init.0)
       }).0
     }
   }
@@ -2807,11 +2807,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Uuid {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Uuid_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Uuid_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$)P)P)P)P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Uuid_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Uuid_msg_init.0)
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Uuid_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Uuid_msg_init.0)
       }).0
     }
   }
@@ -2960,16 +2960,16 @@ impl<'msg> EntityView<'msg> {
       self.inner.ptr().has_field_at_index(1)
     }
   }
-  pub fn pos_opt(self) -> ::std::option::Option<super::Vector3dView<'msg>> {
+  pub fn pos_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'msg>> {
     self.has_pos().then(|| self.pos())
   }
-  pub fn pos(self) -> super::Vector3dView<'msg> {
+  pub fn pos(self) -> super::minecraft_savedata_proto::Vector3dView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
 
   // motion: optional message prost.minecraft_savedata.Vector3d
@@ -2978,16 +2978,16 @@ impl<'msg> EntityView<'msg> {
       self.inner.ptr().has_field_at_index(2)
     }
   }
-  pub fn motion_opt(self) -> ::std::option::Option<super::Vector3dView<'msg>> {
+  pub fn motion_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'msg>> {
     self.has_motion().then(|| self.motion())
   }
-  pub fn motion(self) -> super::Vector3dView<'msg> {
+  pub fn motion(self) -> super::minecraft_savedata_proto::Vector3dView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
 
   // rotation: optional message prost.minecraft_savedata.Vector2f
@@ -2996,16 +2996,16 @@ impl<'msg> EntityView<'msg> {
       self.inner.ptr().has_field_at_index(3)
     }
   }
-  pub fn rotation_opt(self) -> ::std::option::Option<super::Vector2fView<'msg>> {
+  pub fn rotation_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector2fView<'msg>> {
     self.has_rotation().then(|| self.rotation())
   }
-  pub fn rotation(self) -> super::Vector2fView<'msg> {
+  pub fn rotation(self) -> super::minecraft_savedata_proto::Vector2fView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector2fView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector2fView::default())
   }
 
   // fall_distance: optional float
@@ -3119,16 +3119,16 @@ impl<'msg> EntityView<'msg> {
       self.inner.ptr().has_field_at_index(11)
     }
   }
-  pub fn uuid_opt(self) -> ::std::option::Option<super::UuidView<'msg>> {
+  pub fn uuid_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::UuidView<'msg>> {
     self.has_uuid().then(|| self.uuid())
   }
-  pub fn uuid(self) -> super::UuidView<'msg> {
+  pub fn uuid(self) -> super::minecraft_savedata_proto::UuidView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(11)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::UuidView::default())
+       .unwrap_or(super::minecraft_savedata_proto::UuidView::default())
   }
 
   // custom_name: optional string
@@ -3316,18 +3316,18 @@ impl<'msg> EntityMut<'msg> {
       );
     }
   }
-  pub fn pos_opt(&self) -> ::std::option::Option<super::Vector3dView<'_>> {
+  pub fn pos_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'_>> {
     self.has_pos().then(|| self.pos())
   }
-  pub fn pos(&self) -> super::Vector3dView<'_> {
+  pub fn pos(&self) -> super::minecraft_savedata_proto::Vector3dView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
-  pub fn pos_mut(&mut self) -> super::Vector3dMut<'_> {
+  pub fn pos_mut(&mut self) -> super::minecraft_savedata_proto::Vector3dMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          1, self.inner.arena()
@@ -3339,7 +3339,7 @@ impl<'msg> EntityMut<'msg> {
      ).into()
   }
   pub fn set_pos(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3d>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector3d>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3363,18 +3363,18 @@ impl<'msg> EntityMut<'msg> {
       );
     }
   }
-  pub fn motion_opt(&self) -> ::std::option::Option<super::Vector3dView<'_>> {
+  pub fn motion_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'_>> {
     self.has_motion().then(|| self.motion())
   }
-  pub fn motion(&self) -> super::Vector3dView<'_> {
+  pub fn motion(&self) -> super::minecraft_savedata_proto::Vector3dView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
-  pub fn motion_mut(&mut self) -> super::Vector3dMut<'_> {
+  pub fn motion_mut(&mut self) -> super::minecraft_savedata_proto::Vector3dMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          2, self.inner.arena()
@@ -3386,7 +3386,7 @@ impl<'msg> EntityMut<'msg> {
      ).into()
   }
   pub fn set_motion(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3d>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector3d>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3410,18 +3410,18 @@ impl<'msg> EntityMut<'msg> {
       );
     }
   }
-  pub fn rotation_opt(&self) -> ::std::option::Option<super::Vector2fView<'_>> {
+  pub fn rotation_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector2fView<'_>> {
     self.has_rotation().then(|| self.rotation())
   }
-  pub fn rotation(&self) -> super::Vector2fView<'_> {
+  pub fn rotation(&self) -> super::minecraft_savedata_proto::Vector2fView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector2fView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector2fView::default())
   }
-  pub fn rotation_mut(&mut self) -> super::Vector2fMut<'_> {
+  pub fn rotation_mut(&mut self) -> super::minecraft_savedata_proto::Vector2fMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          3, self.inner.arena()
@@ -3433,7 +3433,7 @@ impl<'msg> EntityMut<'msg> {
      ).into()
   }
   pub fn set_rotation(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector2f>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector2f>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3639,18 +3639,18 @@ impl<'msg> EntityMut<'msg> {
       );
     }
   }
-  pub fn uuid_opt(&self) -> ::std::option::Option<super::UuidView<'_>> {
+  pub fn uuid_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::UuidView<'_>> {
     self.has_uuid().then(|| self.uuid())
   }
-  pub fn uuid(&self) -> super::UuidView<'_> {
+  pub fn uuid(&self) -> super::minecraft_savedata_proto::UuidView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(11)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::UuidView::default())
+       .unwrap_or(super::minecraft_savedata_proto::UuidView::default())
   }
-  pub fn uuid_mut(&mut self) -> super::UuidMut<'_> {
+  pub fn uuid_mut(&mut self) -> super::minecraft_savedata_proto::UuidMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          11, self.inner.arena()
@@ -3662,7 +3662,7 @@ impl<'msg> EntityMut<'msg> {
      ).into()
   }
   pub fn set_uuid(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Uuid>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Uuid>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3875,18 +3875,18 @@ impl Entity {
       );
     }
   }
-  pub fn pos_opt(&self) -> ::std::option::Option<super::Vector3dView<'_>> {
+  pub fn pos_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'_>> {
     self.has_pos().then(|| self.pos())
   }
-  pub fn pos(&self) -> super::Vector3dView<'_> {
+  pub fn pos(&self) -> super::minecraft_savedata_proto::Vector3dView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
-  pub fn pos_mut(&mut self) -> super::Vector3dMut<'_> {
+  pub fn pos_mut(&mut self) -> super::minecraft_savedata_proto::Vector3dMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          1, self.inner.arena()
@@ -3898,7 +3898,7 @@ impl Entity {
      ).into()
   }
   pub fn set_pos(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3d>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector3d>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3922,18 +3922,18 @@ impl Entity {
       );
     }
   }
-  pub fn motion_opt(&self) -> ::std::option::Option<super::Vector3dView<'_>> {
+  pub fn motion_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'_>> {
     self.has_motion().then(|| self.motion())
   }
-  pub fn motion(&self) -> super::Vector3dView<'_> {
+  pub fn motion(&self) -> super::minecraft_savedata_proto::Vector3dView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(2)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
-  pub fn motion_mut(&mut self) -> super::Vector3dMut<'_> {
+  pub fn motion_mut(&mut self) -> super::minecraft_savedata_proto::Vector3dMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          2, self.inner.arena()
@@ -3945,7 +3945,7 @@ impl Entity {
      ).into()
   }
   pub fn set_motion(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3d>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector3d>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -3969,18 +3969,18 @@ impl Entity {
       );
     }
   }
-  pub fn rotation_opt(&self) -> ::std::option::Option<super::Vector2fView<'_>> {
+  pub fn rotation_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector2fView<'_>> {
     self.has_rotation().then(|| self.rotation())
   }
-  pub fn rotation(&self) -> super::Vector2fView<'_> {
+  pub fn rotation(&self) -> super::minecraft_savedata_proto::Vector2fView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(3)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector2fView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector2fView::default())
   }
-  pub fn rotation_mut(&mut self) -> super::Vector2fMut<'_> {
+  pub fn rotation_mut(&mut self) -> super::minecraft_savedata_proto::Vector2fMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          3, self.inner.arena()
@@ -3992,7 +3992,7 @@ impl Entity {
      ).into()
   }
   pub fn set_rotation(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector2f>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector2f>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -4198,18 +4198,18 @@ impl Entity {
       );
     }
   }
-  pub fn uuid_opt(&self) -> ::std::option::Option<super::UuidView<'_>> {
+  pub fn uuid_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::UuidView<'_>> {
     self.has_uuid().then(|| self.uuid())
   }
-  pub fn uuid(&self) -> super::UuidView<'_> {
+  pub fn uuid(&self) -> super::minecraft_savedata_proto::UuidView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(11)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::UuidView::default())
+       .unwrap_or(super::minecraft_savedata_proto::UuidView::default())
   }
-  pub fn uuid_mut(&mut self) -> super::UuidMut<'_> {
+  pub fn uuid_mut(&mut self) -> super::minecraft_savedata_proto::UuidMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          11, self.inner.arena()
@@ -4221,7 +4221,7 @@ impl Entity {
      ).into()
   }
   pub fn set_uuid(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Uuid>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Uuid>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -4377,15 +4377,15 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Entity {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Entity_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Entity_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$1X333!P)P)P/P/P/P(P31T/P/P/P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Entity_msg_init.0, &[<super::Vector3d as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vector3d as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vector2f as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Uuid as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Entity_msg_init.0, &[<super::minecraft_savedata_proto::Vector3d as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Vector3d as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Vector2f as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Uuid as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Entity_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Entity_msg_init.0)
       }).0
     }
   }
@@ -5411,11 +5411,11 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for RecipeBook 
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__RecipeBook_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__RecipeBook_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$ETET/P/P/P/P/P/P/P/P");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__RecipeBook_msg_init.0, &[], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__RecipeBook_msg_init.0)
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__RecipeBook_msg_init.0, &[], &[]);
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__RecipeBook_msg_init.0)
       }).0
     }
   }
@@ -5554,16 +5554,16 @@ impl<'msg> VehicleView<'msg> {
       self.inner.ptr().has_field_at_index(0)
     }
   }
-  pub fn uuid_opt(self) -> ::std::option::Option<super::UuidView<'msg>> {
+  pub fn uuid_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::UuidView<'msg>> {
     self.has_uuid().then(|| self.uuid())
   }
-  pub fn uuid(self) -> super::UuidView<'msg> {
+  pub fn uuid(self) -> super::minecraft_savedata_proto::UuidView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::UuidView::default())
+       .unwrap_or(super::minecraft_savedata_proto::UuidView::default())
   }
 
   // entity: optional message prost.minecraft_savedata.Entity
@@ -5572,16 +5572,16 @@ impl<'msg> VehicleView<'msg> {
       self.inner.ptr().has_field_at_index(1)
     }
   }
-  pub fn entity_opt(self) -> ::std::option::Option<super::EntityView<'msg>> {
+  pub fn entity_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'msg>> {
     self.has_entity().then(|| self.entity())
   }
-  pub fn entity(self) -> super::EntityView<'msg> {
+  pub fn entity(self) -> super::minecraft_savedata_proto::EntityView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
 
 }
@@ -5688,18 +5688,18 @@ impl<'msg> VehicleMut<'msg> {
       );
     }
   }
-  pub fn uuid_opt(&self) -> ::std::option::Option<super::UuidView<'_>> {
+  pub fn uuid_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::UuidView<'_>> {
     self.has_uuid().then(|| self.uuid())
   }
-  pub fn uuid(&self) -> super::UuidView<'_> {
+  pub fn uuid(&self) -> super::minecraft_savedata_proto::UuidView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::UuidView::default())
+       .unwrap_or(super::minecraft_savedata_proto::UuidView::default())
   }
-  pub fn uuid_mut(&mut self) -> super::UuidMut<'_> {
+  pub fn uuid_mut(&mut self) -> super::minecraft_savedata_proto::UuidMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -5711,7 +5711,7 @@ impl<'msg> VehicleMut<'msg> {
      ).into()
   }
   pub fn set_uuid(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Uuid>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Uuid>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -5735,18 +5735,18 @@ impl<'msg> VehicleMut<'msg> {
       );
     }
   }
-  pub fn entity_opt(&self) -> ::std::option::Option<super::EntityView<'_>> {
+  pub fn entity_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'_>> {
     self.has_entity().then(|| self.entity())
   }
-  pub fn entity(&self) -> super::EntityView<'_> {
+  pub fn entity(&self) -> super::minecraft_savedata_proto::EntityView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
-  pub fn entity_mut(&mut self) -> super::EntityMut<'_> {
+  pub fn entity_mut(&mut self) -> super::minecraft_savedata_proto::EntityMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          1, self.inner.arena()
@@ -5758,7 +5758,7 @@ impl<'msg> VehicleMut<'msg> {
      ).into()
   }
   pub fn set_entity(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Entity>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Entity>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -5842,18 +5842,18 @@ impl Vehicle {
       );
     }
   }
-  pub fn uuid_opt(&self) -> ::std::option::Option<super::UuidView<'_>> {
+  pub fn uuid_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::UuidView<'_>> {
     self.has_uuid().then(|| self.uuid())
   }
-  pub fn uuid(&self) -> super::UuidView<'_> {
+  pub fn uuid(&self) -> super::minecraft_savedata_proto::UuidView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(0)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::UuidView::default())
+       .unwrap_or(super::minecraft_savedata_proto::UuidView::default())
   }
-  pub fn uuid_mut(&mut self) -> super::UuidMut<'_> {
+  pub fn uuid_mut(&mut self) -> super::minecraft_savedata_proto::UuidMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          0, self.inner.arena()
@@ -5865,7 +5865,7 @@ impl Vehicle {
      ).into()
   }
   pub fn set_uuid(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Uuid>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Uuid>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -5889,18 +5889,18 @@ impl Vehicle {
       );
     }
   }
-  pub fn entity_opt(&self) -> ::std::option::Option<super::EntityView<'_>> {
+  pub fn entity_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'_>> {
     self.has_entity().then(|| self.entity())
   }
-  pub fn entity(&self) -> super::EntityView<'_> {
+  pub fn entity(&self) -> super::minecraft_savedata_proto::EntityView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(1)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
-  pub fn entity_mut(&mut self) -> super::EntityMut<'_> {
+  pub fn entity_mut(&mut self) -> super::minecraft_savedata_proto::EntityMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          1, self.inner.arena()
@@ -5912,7 +5912,7 @@ impl Vehicle {
      ).into()
   }
   pub fn set_entity(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Entity>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Entity>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -5957,13 +5957,13 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Vehicle {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Vehicle_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Vehicle_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$33");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Vehicle_msg_init.0, &[<super::Uuid as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Entity as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Vehicle_msg_init.0, &[<super::minecraft_savedata_proto::Uuid as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Entity as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Vehicle_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Vehicle_msg_init.0)
       }).0
     }
   }
@@ -6097,7 +6097,7 @@ impl<'msg> PlayerView<'msg> {
   }
 
   // game_type: optional enum prost.minecraft_savedata.GameType
-  pub fn game_type(self) -> super::GameType {
+  pub fn game_type(self) -> super::minecraft_savedata_proto::GameType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -6106,13 +6106,13 @@ impl<'msg> PlayerView<'msg> {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        0, (super::GameType::Survival).into()
+        0, (super::minecraft_savedata_proto::GameType::Survival).into()
       ).try_into().unwrap()
     }
   }
 
   // previous_game_type: optional enum prost.minecraft_savedata.GameType
-  pub fn previous_game_type(self) -> super::GameType {
+  pub fn previous_game_type(self) -> super::minecraft_savedata_proto::GameType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -6121,7 +6121,7 @@ impl<'msg> PlayerView<'msg> {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        1, (super::GameType::Survival).into()
+        1, (super::minecraft_savedata_proto::GameType::Survival).into()
       ).try_into().unwrap()
     }
   }
@@ -6172,16 +6172,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(5)
     }
   }
-  pub fn selected_item_opt(self) -> ::std::option::Option<super::ItemView<'msg>> {
+  pub fn selected_item_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::ItemView<'msg>> {
     self.has_selected_item().then(|| self.selected_item())
   }
-  pub fn selected_item(self) -> super::ItemView<'msg> {
+  pub fn selected_item(self) -> super::minecraft_savedata_proto::ItemView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(5)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::ItemView::default())
+       .unwrap_or(super::minecraft_savedata_proto::ItemView::default())
   }
 
   // spawn_dimension: optional string
@@ -6391,13 +6391,13 @@ impl<'msg> PlayerView<'msg> {
   }
 
   // inventory: repeated message prost.minecraft_savedata.Item
-  pub fn inventory(self) -> ::protobuf::RepeatedView<'msg, super::Item> {
+  pub fn inventory(self) -> ::protobuf::RepeatedView<'msg, super::minecraft_savedata_proto::Item> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         19
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Item>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Item>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -6405,13 +6405,13 @@ impl<'msg> PlayerView<'msg> {
   }
 
   // ender_items: repeated message prost.minecraft_savedata.Item
-  pub fn ender_items(self) -> ::protobuf::RepeatedView<'msg, super::Item> {
+  pub fn ender_items(self) -> ::protobuf::RepeatedView<'msg, super::minecraft_savedata_proto::Item> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         20
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Item>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Item>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -6424,16 +6424,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(21)
     }
   }
-  pub fn abilities_opt(self) -> ::std::option::Option<super::AbilitiesView<'msg>> {
+  pub fn abilities_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::AbilitiesView<'msg>> {
     self.has_abilities().then(|| self.abilities())
   }
-  pub fn abilities(self) -> super::AbilitiesView<'msg> {
+  pub fn abilities(self) -> super::minecraft_savedata_proto::AbilitiesView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(21)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::AbilitiesView::default())
+       .unwrap_or(super::minecraft_savedata_proto::AbilitiesView::default())
   }
 
   // entered_nether_position: optional message prost.minecraft_savedata.Vector3d
@@ -6442,16 +6442,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(22)
     }
   }
-  pub fn entered_nether_position_opt(self) -> ::std::option::Option<super::Vector3dView<'msg>> {
+  pub fn entered_nether_position_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'msg>> {
     self.has_entered_nether_position().then(|| self.entered_nether_position())
   }
-  pub fn entered_nether_position(self) -> super::Vector3dView<'msg> {
+  pub fn entered_nether_position(self) -> super::minecraft_savedata_proto::Vector3dView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(22)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
 
   // root_vehicle: optional message prost.minecraft_savedata.Vehicle
@@ -6460,16 +6460,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(23)
     }
   }
-  pub fn root_vehicle_opt(self) -> ::std::option::Option<super::VehicleView<'msg>> {
+  pub fn root_vehicle_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::VehicleView<'msg>> {
     self.has_root_vehicle().then(|| self.root_vehicle())
   }
-  pub fn root_vehicle(self) -> super::VehicleView<'msg> {
+  pub fn root_vehicle(self) -> super::minecraft_savedata_proto::VehicleView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(23)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::VehicleView::default())
+       .unwrap_or(super::minecraft_savedata_proto::VehicleView::default())
   }
 
   // shoulder_entity_left: optional message prost.minecraft_savedata.Entity
@@ -6478,16 +6478,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(24)
     }
   }
-  pub fn shoulder_entity_left_opt(self) -> ::std::option::Option<super::EntityView<'msg>> {
+  pub fn shoulder_entity_left_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'msg>> {
     self.has_shoulder_entity_left().then(|| self.shoulder_entity_left())
   }
-  pub fn shoulder_entity_left(self) -> super::EntityView<'msg> {
+  pub fn shoulder_entity_left(self) -> super::minecraft_savedata_proto::EntityView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(24)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
 
   // shoulder_entity_right: optional message prost.minecraft_savedata.Entity
@@ -6496,16 +6496,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(25)
     }
   }
-  pub fn shoulder_entity_right_opt(self) -> ::std::option::Option<super::EntityView<'msg>> {
+  pub fn shoulder_entity_right_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'msg>> {
     self.has_shoulder_entity_right().then(|| self.shoulder_entity_right())
   }
-  pub fn shoulder_entity_right(self) -> super::EntityView<'msg> {
+  pub fn shoulder_entity_right(self) -> super::minecraft_savedata_proto::EntityView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(25)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
 
   // seen_credits: optional bool
@@ -6529,16 +6529,16 @@ impl<'msg> PlayerView<'msg> {
       self.inner.ptr().has_field_at_index(27)
     }
   }
-  pub fn recipe_book_opt(self) -> ::std::option::Option<super::RecipeBookView<'msg>> {
+  pub fn recipe_book_opt(self) -> ::std::option::Option<super::minecraft_savedata_proto::RecipeBookView<'msg>> {
     self.has_recipe_book().then(|| self.recipe_book())
   }
-  pub fn recipe_book(self) -> super::RecipeBookView<'msg> {
+  pub fn recipe_book(self) -> super::minecraft_savedata_proto::RecipeBookView<'msg> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(27)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::RecipeBookView::default())
+       .unwrap_or(super::minecraft_savedata_proto::RecipeBookView::default())
   }
 
 }
@@ -6633,7 +6633,7 @@ impl<'msg> PlayerMut<'msg> {
   }
 
   // game_type: optional enum prost.minecraft_savedata.GameType
-  pub fn game_type(&self) -> super::GameType {
+  pub fn game_type(&self) -> super::minecraft_savedata_proto::GameType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -6642,11 +6642,11 @@ impl<'msg> PlayerMut<'msg> {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        0, (super::GameType::Survival).into()
+        0, (super::minecraft_savedata_proto::GameType::Survival).into()
       ).try_into().unwrap()
     }
   }
-  pub fn set_game_type(&mut self, val: super::GameType) {
+  pub fn set_game_type(&mut self, val: super::minecraft_savedata_proto::GameType) {
     unsafe {
       // TODO: b/361751487: This .into() is only here
       // here for the enum<->i32 case, we should avoid it for
@@ -6659,7 +6659,7 @@ impl<'msg> PlayerMut<'msg> {
   }
 
   // previous_game_type: optional enum prost.minecraft_savedata.GameType
-  pub fn previous_game_type(&self) -> super::GameType {
+  pub fn previous_game_type(&self) -> super::minecraft_savedata_proto::GameType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -6668,11 +6668,11 @@ impl<'msg> PlayerMut<'msg> {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        1, (super::GameType::Survival).into()
+        1, (super::minecraft_savedata_proto::GameType::Survival).into()
       ).try_into().unwrap()
     }
   }
-  pub fn set_previous_game_type(&mut self, val: super::GameType) {
+  pub fn set_previous_game_type(&mut self, val: super::minecraft_savedata_proto::GameType) {
     unsafe {
       // TODO: b/361751487: This .into() is only here
       // here for the enum<->i32 case, we should avoid it for
@@ -6767,18 +6767,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn selected_item_opt(&self) -> ::std::option::Option<super::ItemView<'_>> {
+  pub fn selected_item_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::ItemView<'_>> {
     self.has_selected_item().then(|| self.selected_item())
   }
-  pub fn selected_item(&self) -> super::ItemView<'_> {
+  pub fn selected_item(&self) -> super::minecraft_savedata_proto::ItemView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(5)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::ItemView::default())
+       .unwrap_or(super::minecraft_savedata_proto::ItemView::default())
   }
-  pub fn selected_item_mut(&mut self) -> super::ItemMut<'_> {
+  pub fn selected_item_mut(&mut self) -> super::minecraft_savedata_proto::ItemMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          5, self.inner.arena()
@@ -6790,7 +6790,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_selected_item(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Item>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Item>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7162,19 +7162,19 @@ impl<'msg> PlayerMut<'msg> {
   }
 
   // inventory: repeated message prost.minecraft_savedata.Item
-  pub fn inventory(&self) -> ::protobuf::RepeatedView<'_, super::Item> {
+  pub fn inventory(&self) -> ::protobuf::RepeatedView<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         19
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Item>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Item>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn inventory_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Item> {
+  pub fn inventory_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         19,
@@ -7188,7 +7188,7 @@ impl<'msg> PlayerMut<'msg> {
       )
     }
   }
-  pub fn set_inventory(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Item>>) {
+  pub fn set_inventory(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::minecraft_savedata_proto::Item>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -7198,19 +7198,19 @@ impl<'msg> PlayerMut<'msg> {
   }
 
   // ender_items: repeated message prost.minecraft_savedata.Item
-  pub fn ender_items(&self) -> ::protobuf::RepeatedView<'_, super::Item> {
+  pub fn ender_items(&self) -> ::protobuf::RepeatedView<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         20
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Item>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Item>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn ender_items_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Item> {
+  pub fn ender_items_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         20,
@@ -7224,7 +7224,7 @@ impl<'msg> PlayerMut<'msg> {
       )
     }
   }
-  pub fn set_ender_items(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Item>>) {
+  pub fn set_ender_items(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::minecraft_savedata_proto::Item>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -7246,18 +7246,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn abilities_opt(&self) -> ::std::option::Option<super::AbilitiesView<'_>> {
+  pub fn abilities_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::AbilitiesView<'_>> {
     self.has_abilities().then(|| self.abilities())
   }
-  pub fn abilities(&self) -> super::AbilitiesView<'_> {
+  pub fn abilities(&self) -> super::minecraft_savedata_proto::AbilitiesView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(21)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::AbilitiesView::default())
+       .unwrap_or(super::minecraft_savedata_proto::AbilitiesView::default())
   }
-  pub fn abilities_mut(&mut self) -> super::AbilitiesMut<'_> {
+  pub fn abilities_mut(&mut self) -> super::minecraft_savedata_proto::AbilitiesMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          21, self.inner.arena()
@@ -7269,7 +7269,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_abilities(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Abilities>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Abilities>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7293,18 +7293,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn entered_nether_position_opt(&self) -> ::std::option::Option<super::Vector3dView<'_>> {
+  pub fn entered_nether_position_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'_>> {
     self.has_entered_nether_position().then(|| self.entered_nether_position())
   }
-  pub fn entered_nether_position(&self) -> super::Vector3dView<'_> {
+  pub fn entered_nether_position(&self) -> super::minecraft_savedata_proto::Vector3dView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(22)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
-  pub fn entered_nether_position_mut(&mut self) -> super::Vector3dMut<'_> {
+  pub fn entered_nether_position_mut(&mut self) -> super::minecraft_savedata_proto::Vector3dMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          22, self.inner.arena()
@@ -7316,7 +7316,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_entered_nether_position(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3d>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector3d>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7340,18 +7340,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn root_vehicle_opt(&self) -> ::std::option::Option<super::VehicleView<'_>> {
+  pub fn root_vehicle_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::VehicleView<'_>> {
     self.has_root_vehicle().then(|| self.root_vehicle())
   }
-  pub fn root_vehicle(&self) -> super::VehicleView<'_> {
+  pub fn root_vehicle(&self) -> super::minecraft_savedata_proto::VehicleView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(23)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::VehicleView::default())
+       .unwrap_or(super::minecraft_savedata_proto::VehicleView::default())
   }
-  pub fn root_vehicle_mut(&mut self) -> super::VehicleMut<'_> {
+  pub fn root_vehicle_mut(&mut self) -> super::minecraft_savedata_proto::VehicleMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          23, self.inner.arena()
@@ -7363,7 +7363,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_root_vehicle(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vehicle>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vehicle>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7387,18 +7387,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn shoulder_entity_left_opt(&self) -> ::std::option::Option<super::EntityView<'_>> {
+  pub fn shoulder_entity_left_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'_>> {
     self.has_shoulder_entity_left().then(|| self.shoulder_entity_left())
   }
-  pub fn shoulder_entity_left(&self) -> super::EntityView<'_> {
+  pub fn shoulder_entity_left(&self) -> super::minecraft_savedata_proto::EntityView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(24)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
-  pub fn shoulder_entity_left_mut(&mut self) -> super::EntityMut<'_> {
+  pub fn shoulder_entity_left_mut(&mut self) -> super::minecraft_savedata_proto::EntityMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          24, self.inner.arena()
@@ -7410,7 +7410,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_shoulder_entity_left(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Entity>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Entity>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7434,18 +7434,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn shoulder_entity_right_opt(&self) -> ::std::option::Option<super::EntityView<'_>> {
+  pub fn shoulder_entity_right_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'_>> {
     self.has_shoulder_entity_right().then(|| self.shoulder_entity_right())
   }
-  pub fn shoulder_entity_right(&self) -> super::EntityView<'_> {
+  pub fn shoulder_entity_right(&self) -> super::minecraft_savedata_proto::EntityView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(25)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
-  pub fn shoulder_entity_right_mut(&mut self) -> super::EntityMut<'_> {
+  pub fn shoulder_entity_right_mut(&mut self) -> super::minecraft_savedata_proto::EntityMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          25, self.inner.arena()
@@ -7457,7 +7457,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_shoulder_entity_right(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Entity>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Entity>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7507,18 +7507,18 @@ impl<'msg> PlayerMut<'msg> {
       );
     }
   }
-  pub fn recipe_book_opt(&self) -> ::std::option::Option<super::RecipeBookView<'_>> {
+  pub fn recipe_book_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::RecipeBookView<'_>> {
     self.has_recipe_book().then(|| self.recipe_book())
   }
-  pub fn recipe_book(&self) -> super::RecipeBookView<'_> {
+  pub fn recipe_book(&self) -> super::minecraft_savedata_proto::RecipeBookView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(27)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::RecipeBookView::default())
+       .unwrap_or(super::minecraft_savedata_proto::RecipeBookView::default())
   }
-  pub fn recipe_book_mut(&mut self) -> super::RecipeBookMut<'_> {
+  pub fn recipe_book_mut(&mut self) -> super::minecraft_savedata_proto::RecipeBookMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          27, self.inner.arena()
@@ -7530,7 +7530,7 @@ impl<'msg> PlayerMut<'msg> {
      ).into()
   }
   pub fn set_recipe_book(&mut self,
-    val: impl ::protobuf::IntoProxied<super::RecipeBook>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::RecipeBook>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -7602,7 +7602,7 @@ impl Player {
   }
 
   // game_type: optional enum prost.minecraft_savedata.GameType
-  pub fn game_type(&self) -> super::GameType {
+  pub fn game_type(&self) -> super::minecraft_savedata_proto::GameType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -7611,11 +7611,11 @@ impl Player {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        0, (super::GameType::Survival).into()
+        0, (super::minecraft_savedata_proto::GameType::Survival).into()
       ).try_into().unwrap()
     }
   }
-  pub fn set_game_type(&mut self, val: super::GameType) {
+  pub fn set_game_type(&mut self, val: super::minecraft_savedata_proto::GameType) {
     unsafe {
       // TODO: b/361751487: This .into() is only here
       // here for the enum<->i32 case, we should avoid it for
@@ -7628,7 +7628,7 @@ impl Player {
   }
 
   // previous_game_type: optional enum prost.minecraft_savedata.GameType
-  pub fn previous_game_type(&self) -> super::GameType {
+  pub fn previous_game_type(&self) -> super::minecraft_savedata_proto::GameType {
     unsafe {
       // TODO: b/361751487: This .into() and .try_into() is only
       // here for the enum<->i32 case, we should avoid it for
@@ -7637,11 +7637,11 @@ impl Player {
       // i32->enum types, since even for closed enums we trust
       // upb to only return one of the named values).
       self.inner.ptr().get_i32_at_index(
-        1, (super::GameType::Survival).into()
+        1, (super::minecraft_savedata_proto::GameType::Survival).into()
       ).try_into().unwrap()
     }
   }
-  pub fn set_previous_game_type(&mut self, val: super::GameType) {
+  pub fn set_previous_game_type(&mut self, val: super::minecraft_savedata_proto::GameType) {
     unsafe {
       // TODO: b/361751487: This .into() is only here
       // here for the enum<->i32 case, we should avoid it for
@@ -7736,18 +7736,18 @@ impl Player {
       );
     }
   }
-  pub fn selected_item_opt(&self) -> ::std::option::Option<super::ItemView<'_>> {
+  pub fn selected_item_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::ItemView<'_>> {
     self.has_selected_item().then(|| self.selected_item())
   }
-  pub fn selected_item(&self) -> super::ItemView<'_> {
+  pub fn selected_item(&self) -> super::minecraft_savedata_proto::ItemView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(5)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::ItemView::default())
+       .unwrap_or(super::minecraft_savedata_proto::ItemView::default())
   }
-  pub fn selected_item_mut(&mut self) -> super::ItemMut<'_> {
+  pub fn selected_item_mut(&mut self) -> super::minecraft_savedata_proto::ItemMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          5, self.inner.arena()
@@ -7759,7 +7759,7 @@ impl Player {
      ).into()
   }
   pub fn set_selected_item(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Item>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Item>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8131,19 +8131,19 @@ impl Player {
   }
 
   // inventory: repeated message prost.minecraft_savedata.Item
-  pub fn inventory(&self) -> ::protobuf::RepeatedView<'_, super::Item> {
+  pub fn inventory(&self) -> ::protobuf::RepeatedView<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         19
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Item>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Item>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn inventory_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Item> {
+  pub fn inventory_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         19,
@@ -8157,7 +8157,7 @@ impl Player {
       )
     }
   }
-  pub fn set_inventory(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Item>>) {
+  pub fn set_inventory(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::minecraft_savedata_proto::Item>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -8167,19 +8167,19 @@ impl Player {
   }
 
   // ender_items: repeated message prost.minecraft_savedata.Item
-  pub fn ender_items(&self) -> ::protobuf::RepeatedView<'_, super::Item> {
+  pub fn ender_items(&self) -> ::protobuf::RepeatedView<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         20
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Item>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Item>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn ender_items_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Item> {
+  pub fn ender_items_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::minecraft_savedata_proto::Item> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         20,
@@ -8193,7 +8193,7 @@ impl Player {
       )
     }
   }
-  pub fn set_ender_items(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Item>>) {
+  pub fn set_ender_items(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::minecraft_savedata_proto::Item>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -8215,18 +8215,18 @@ impl Player {
       );
     }
   }
-  pub fn abilities_opt(&self) -> ::std::option::Option<super::AbilitiesView<'_>> {
+  pub fn abilities_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::AbilitiesView<'_>> {
     self.has_abilities().then(|| self.abilities())
   }
-  pub fn abilities(&self) -> super::AbilitiesView<'_> {
+  pub fn abilities(&self) -> super::minecraft_savedata_proto::AbilitiesView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(21)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::AbilitiesView::default())
+       .unwrap_or(super::minecraft_savedata_proto::AbilitiesView::default())
   }
-  pub fn abilities_mut(&mut self) -> super::AbilitiesMut<'_> {
+  pub fn abilities_mut(&mut self) -> super::minecraft_savedata_proto::AbilitiesMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          21, self.inner.arena()
@@ -8238,7 +8238,7 @@ impl Player {
      ).into()
   }
   pub fn set_abilities(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Abilities>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Abilities>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8262,18 +8262,18 @@ impl Player {
       );
     }
   }
-  pub fn entered_nether_position_opt(&self) -> ::std::option::Option<super::Vector3dView<'_>> {
+  pub fn entered_nether_position_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::Vector3dView<'_>> {
     self.has_entered_nether_position().then(|| self.entered_nether_position())
   }
-  pub fn entered_nether_position(&self) -> super::Vector3dView<'_> {
+  pub fn entered_nether_position(&self) -> super::minecraft_savedata_proto::Vector3dView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(22)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::Vector3dView::default())
+       .unwrap_or(super::minecraft_savedata_proto::Vector3dView::default())
   }
-  pub fn entered_nether_position_mut(&mut self) -> super::Vector3dMut<'_> {
+  pub fn entered_nether_position_mut(&mut self) -> super::minecraft_savedata_proto::Vector3dMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          22, self.inner.arena()
@@ -8285,7 +8285,7 @@ impl Player {
      ).into()
   }
   pub fn set_entered_nether_position(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vector3d>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vector3d>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8309,18 +8309,18 @@ impl Player {
       );
     }
   }
-  pub fn root_vehicle_opt(&self) -> ::std::option::Option<super::VehicleView<'_>> {
+  pub fn root_vehicle_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::VehicleView<'_>> {
     self.has_root_vehicle().then(|| self.root_vehicle())
   }
-  pub fn root_vehicle(&self) -> super::VehicleView<'_> {
+  pub fn root_vehicle(&self) -> super::minecraft_savedata_proto::VehicleView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(23)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::VehicleView::default())
+       .unwrap_or(super::minecraft_savedata_proto::VehicleView::default())
   }
-  pub fn root_vehicle_mut(&mut self) -> super::VehicleMut<'_> {
+  pub fn root_vehicle_mut(&mut self) -> super::minecraft_savedata_proto::VehicleMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          23, self.inner.arena()
@@ -8332,7 +8332,7 @@ impl Player {
      ).into()
   }
   pub fn set_root_vehicle(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Vehicle>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Vehicle>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8356,18 +8356,18 @@ impl Player {
       );
     }
   }
-  pub fn shoulder_entity_left_opt(&self) -> ::std::option::Option<super::EntityView<'_>> {
+  pub fn shoulder_entity_left_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'_>> {
     self.has_shoulder_entity_left().then(|| self.shoulder_entity_left())
   }
-  pub fn shoulder_entity_left(&self) -> super::EntityView<'_> {
+  pub fn shoulder_entity_left(&self) -> super::minecraft_savedata_proto::EntityView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(24)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
-  pub fn shoulder_entity_left_mut(&mut self) -> super::EntityMut<'_> {
+  pub fn shoulder_entity_left_mut(&mut self) -> super::minecraft_savedata_proto::EntityMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          24, self.inner.arena()
@@ -8379,7 +8379,7 @@ impl Player {
      ).into()
   }
   pub fn set_shoulder_entity_left(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Entity>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Entity>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8403,18 +8403,18 @@ impl Player {
       );
     }
   }
-  pub fn shoulder_entity_right_opt(&self) -> ::std::option::Option<super::EntityView<'_>> {
+  pub fn shoulder_entity_right_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::EntityView<'_>> {
     self.has_shoulder_entity_right().then(|| self.shoulder_entity_right())
   }
-  pub fn shoulder_entity_right(&self) -> super::EntityView<'_> {
+  pub fn shoulder_entity_right(&self) -> super::minecraft_savedata_proto::EntityView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(25)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::EntityView::default())
+       .unwrap_or(super::minecraft_savedata_proto::EntityView::default())
   }
-  pub fn shoulder_entity_right_mut(&mut self) -> super::EntityMut<'_> {
+  pub fn shoulder_entity_right_mut(&mut self) -> super::minecraft_savedata_proto::EntityMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          25, self.inner.arena()
@@ -8426,7 +8426,7 @@ impl Player {
      ).into()
   }
   pub fn set_shoulder_entity_right(&mut self,
-    val: impl ::protobuf::IntoProxied<super::Entity>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::Entity>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8476,18 +8476,18 @@ impl Player {
       );
     }
   }
-  pub fn recipe_book_opt(&self) -> ::std::option::Option<super::RecipeBookView<'_>> {
+  pub fn recipe_book_opt(&self) -> ::std::option::Option<super::minecraft_savedata_proto::RecipeBookView<'_>> {
     self.has_recipe_book().then(|| self.recipe_book())
   }
-  pub fn recipe_book(&self) -> super::RecipeBookView<'_> {
+  pub fn recipe_book(&self) -> super::minecraft_savedata_proto::RecipeBookView<'_> {
     let submsg = unsafe {
       self.inner.ptr().get_message_at_index(27)
     };
     submsg
         .map(|ptr| unsafe { ::protobuf::__internal::runtime::MessageViewInner::wrap(ptr).into() })
-       .unwrap_or(super::RecipeBookView::default())
+       .unwrap_or(super::minecraft_savedata_proto::RecipeBookView::default())
   }
-  pub fn recipe_book_mut(&mut self) -> super::RecipeBookMut<'_> {
+  pub fn recipe_book_mut(&mut self) -> super::minecraft_savedata_proto::RecipeBookMut<'_> {
      let ptr = unsafe {
        self.inner.ptr_mut().get_or_create_mutable_message_at_index(
          27, self.inner.arena()
@@ -8499,7 +8499,7 @@ impl Player {
      ).into()
   }
   pub fn set_recipe_book(&mut self,
-    val: impl ::protobuf::IntoProxied<super::RecipeBook>) {
+    val: impl ::protobuf::IntoProxied<super::minecraft_savedata_proto::RecipeBook>) {
 
     unsafe {
       ::protobuf::__internal::runtime::message_set_sub_message(
@@ -8544,20 +8544,20 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Player {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Player_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Player_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$.P.P+P1X)P31T+P+P+P/)P!P!P)P)P!P(P(PGG33333/P3");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Player_msg_init.0, &[<super::Item as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Item as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Item as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Abilities as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vector3d as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Vehicle as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Entity as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::Entity as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
-            <super::RecipeBook as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Player_msg_init.0, &[<super::minecraft_savedata_proto::Item as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Item as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Item as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Abilities as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Vector3d as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Vehicle as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Entity as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::Entity as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            <super::minecraft_savedata_proto::RecipeBook as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Player_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Player_msg_init.0)
       }).0
     }
   }
@@ -8691,13 +8691,13 @@ impl<'msg> PlayersView<'msg> {
   }
 
   // players: repeated message prost.minecraft_savedata.Player
-  pub fn players(self) -> ::protobuf::RepeatedView<'msg, super::Player> {
+  pub fn players(self) -> ::protobuf::RepeatedView<'msg, super::minecraft_savedata_proto::Player> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Player>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Player>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
@@ -8796,19 +8796,19 @@ impl<'msg> PlayersMut<'msg> {
   }
 
   // players: repeated message prost.minecraft_savedata.Player
-  pub fn players(&self) -> ::protobuf::RepeatedView<'_, super::Player> {
+  pub fn players(&self) -> ::protobuf::RepeatedView<'_, super::minecraft_savedata_proto::Player> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Player>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Player>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn players_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Player> {
+  pub fn players_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::minecraft_savedata_proto::Player> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -8822,7 +8822,7 @@ impl<'msg> PlayersMut<'msg> {
       )
     }
   }
-  pub fn set_players(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Player>>) {
+  pub fn set_players(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::minecraft_savedata_proto::Player>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -8892,19 +8892,19 @@ impl Players {
   }
 
   // players: repeated message prost.minecraft_savedata.Player
-  pub fn players(&self) -> ::protobuf::RepeatedView<'_, super::Player> {
+  pub fn players(&self) -> ::protobuf::RepeatedView<'_, super::minecraft_savedata_proto::Player> {
     unsafe {
       self.inner.ptr().get_array_at_index(
         0
       )
     }.map_or_else(
-        ::protobuf::__internal::runtime::empty_array::<super::Player>,
+        ::protobuf::__internal::runtime::empty_array::<super::minecraft_savedata_proto::Player>,
         |raw| unsafe {
           ::protobuf::RepeatedView::from_raw(::protobuf::__internal::Private, raw)
         }
       )
   }
-  pub fn players_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::Player> {
+  pub fn players_mut(&mut self) -> ::protobuf::RepeatedMut<'_, super::minecraft_savedata_proto::Player> {
     unsafe {
       let raw_array = self.inner.ptr_mut().get_or_create_mutable_array_at_index(
         0,
@@ -8918,7 +8918,7 @@ impl Players {
       )
     }
   }
-  pub fn set_players(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::Player>>) {
+  pub fn set_players(&mut self, src: impl ::protobuf::IntoProxied<::protobuf::Repeated<super::minecraft_savedata_proto::Player>>) {
     unsafe {
       ::protobuf::__internal::runtime::message_set_repeated_field(
         ::protobuf::AsMut::as_mut(self).inner,
@@ -8961,12 +8961,12 @@ unsafe impl ::protobuf::__internal::runtime::AssociatedMiniTable for Players {
         ::std::sync::OnceLock::new();
     unsafe {
       ONCE_LOCK.get_or_init(|| {
-        super::prost__minecraft_0savedata__Players_msg_init.0 =
+        super::minecraft_savedata_proto::prost__minecraft_0savedata__Players_msg_init.0 =
             ::protobuf::__internal::runtime::build_mini_table("$G");
         ::protobuf::__internal::runtime::link_mini_table(
-            super::prost__minecraft_0savedata__Players_msg_init.0, &[<super::Player as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
+            super::minecraft_savedata_proto::prost__minecraft_0savedata__Players_msg_init.0, &[<super::minecraft_savedata_proto::Player as ::protobuf::__internal::runtime::AssociatedMiniTable>::mini_table(),
             ], &[]);
-        ::protobuf::__internal::runtime::MiniTableInitPtr(super::prost__minecraft_0savedata__Players_msg_init.0)
+        ::protobuf::__internal::runtime::MiniTableInitPtr(super::minecraft_savedata_proto::prost__minecraft_0savedata__Players_msg_init.0)
       }).0
     }
   }
