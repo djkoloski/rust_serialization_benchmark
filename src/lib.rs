@@ -55,6 +55,7 @@ pub mod bench_zerompk;
 pub mod datasets;
 
 use core::{mem, ops};
+use std::io::Write;
 
 use rand::Rng;
 
@@ -169,6 +170,29 @@ fn bench_size_inner(name: &str, lib: &str, variant: Option<&str>, bytes: &[u8]) 
             suffix,
             bench_compression(|| zstd_size(bytes))
         );
+    }
+    #[cfg(feature = "output-encoded-data")]
+    {
+        use std::fs;
+        use std::path::Path;
+
+        let output_path = Path::new("./encoded-data").join(name);
+        fs::create_dir_all(&output_path).expect("failed to create directory for encoded data");
+
+        let output_file_name = if let Some(variant) = variant {
+            format!("{lib}__{variant}")
+        } else {
+            lib.to_owned()
+        };
+
+        fs::OpenOptions::new()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .open(output_path.join(output_file_name))
+            .expect("failed to open output file for encoded data")
+            .write_all(bytes)
+            .expect("failed to write encoded data");
     }
 }
 
