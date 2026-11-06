@@ -135,7 +135,13 @@ all-messagepack = ["msgpacker", "rmp-serde", "zerompk"]
 all-json = ["flexon", "serde_json", "simd-json"]
 all-protobuf = ["buffa", "prost", "protobuf", "protobuf4"]
 
+# Enable to also benchmark compressing the encoded data with zstd and zlib. Enabled by default,
+# quite slow with debug-assertions enabled.
 measure-compression = []
+# Enable this feature to make the benchmarks write encoded data to an "encoded-data" folder.
+# Example command: `cargo test --benches --no-default-features --features default-encoding-set,output-encoded-data`
+output-encoded-data = []
+
 buffa = ["dep:buffa"]
 capnp = ["dep:capnp"]
 prost = ["dep:prost", "dep:capnp"]
