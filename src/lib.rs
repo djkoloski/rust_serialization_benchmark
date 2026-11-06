@@ -55,7 +55,6 @@ pub mod bench_zerompk;
 pub mod datasets;
 
 use core::{mem, ops};
-use std::io::Write;
 
 use rand::Rng;
 
@@ -174,6 +173,7 @@ fn bench_size_inner(name: &str, lib: &str, variant: Option<&str>, bytes: &[u8]) 
     #[cfg(feature = "output-encoded-data")]
     {
         use std::fs;
+        use std::io::Write;
         use std::path::Path;
 
         let output_path = Path::new("./encoded-data").join(name);
