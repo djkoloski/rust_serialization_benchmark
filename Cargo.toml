@@ -43,7 +43,7 @@ build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 bilrost = { version = "=0.1016.3", optional = true }
-bin-proto = { version = "=0.12.9", features = ["prepend-tags"], optional = true }
+bin-proto = { version = "=1.1.0", features = ["prepend-tags"], optional = true }
 bitcode = { version = "=0.6.9", optional = true }
 borsh = { version = "=1.8.1", features = ["derive"], optional = true }
 buffa = { version = "=0.9.2", optional = true }

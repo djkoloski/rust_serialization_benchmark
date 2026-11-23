@@ -203,9 +203,9 @@ dependencies = [
 
 [[package]]
 name = "bin-proto"
-version = "0.12.9"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa3f0543e1dc90f7b8ffb882c6d78b7005c4bab496ab8a68da25c0103dfbac6b"
+checksum = "440998dbe10a743138ea6e7f3e9e645029e5b422769dfba865437d69c5393084"
 dependencies = [
  "bin-proto-derive",
  "bitstream-io",
@@ -215,9 +215,9 @@ dependencies = [
 
 [[package]]
 name = "bin-proto-derive"
-version = "0.12.8"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2122c8e5d4c61b8c401873877ed9e8baeb583468ef29adeed61fc2393276250f"
+checksum = "7819e8afa5d49d118ae2d2069bb8103dbe306ffc36b6f183c85597024c91e21e"
 dependencies = [
  "proc-macro2",
  "quote",
