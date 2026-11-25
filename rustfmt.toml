@@ -32,4 +32,8 @@ ignore = [
     "src/datasets/mk48/mk48_buffa/mk48.rs",
     "src/datasets/mk48/mk48_buffa/mk48.__view.rs",
     "src/datasets/mk48/mk48_buffa/prost.mk48.mod.rs",
+    "src/datasets/log/log_omnibuf.rs",
+    "src/datasets/mesh/mesh_omnibuf.rs",
+    "src/datasets/minecraft_savedata/minecraft_savedata_omnibuf.rs",
+    "src/datasets/mk48/mk48_omnibuf.rs",
 ]

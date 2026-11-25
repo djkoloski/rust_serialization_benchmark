@@ -1938,6 +1938,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "omnibuf"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fadf6659053a354bfe323098a5fdd2eb29e4fd472f6ddd6781546f146e7d456a"
+dependencies = [
+ "itoa",
+ "ryu",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2617,6 +2627,7 @@ dependencies = [
  "minicbor",
  "msgpacker",
  "nanoserde",
+ "omnibuf",
  "postcard",
  "pprof",
  "prost",

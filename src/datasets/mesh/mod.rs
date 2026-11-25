@@ -7,6 +7,9 @@ pub mod mesh_capnp;
 #[path = "mesh_generated.rs"]
 #[allow(unused_imports, clippy::all)]
 pub mod mesh_fb;
+#[cfg(feature = "omnibuf")]
+#[allow(clippy::all)]
+pub mod mesh_omnibuf;
 #[cfg(feature = "prost")]
 #[path = "prost.mesh.rs"]
 pub mod mesh_prost;
@@ -564,6 +567,84 @@ impl bench_protobuf4::Serialize for Mesh {
     fn from_view(value: proto4::mesh::MeshView) -> Self {
         Mesh {
             triangles: value.triangles().iter().map(Triangle::from_view).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "omnibuf")]
+mod omnibuf_impl {
+    use super::mesh_omnibuf as ob;
+    use super::{Mesh, Triangle, Vector3};
+    use crate::bench_omnibuf;
+
+    impl bench_omnibuf::Serialize for Vector3 {
+        type Message = ob::Vector3;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                x: self.x,
+                y: self.y,
+                z: self.z,
+            }
+        }
+    }
+
+    impl From<ob::Vector3> for Vector3 {
+        fn from(value: ob::Vector3) -> Self {
+            Vector3 {
+                x: value.x,
+                y: value.y,
+                z: value.z,
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Triangle {
+        type Message = ob::Triangle;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                v0: Some(self.v0.serialize_omnibuf()),
+                v1: Some(self.v1.serialize_omnibuf()),
+                v2: Some(self.v2.serialize_omnibuf()),
+                normal: Some(self.normal.serialize_omnibuf()),
+            }
+        }
+    }
+
+    impl From<ob::Triangle> for Triangle {
+        fn from(value: ob::Triangle) -> Self {
+            Triangle {
+                v0: value.v0.unwrap().into(),
+                v1: value.v1.unwrap().into(),
+                v2: value.v2.unwrap().into(),
+                normal: value.normal.unwrap().into(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Mesh {
+        type Message = ob::Mesh;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                triangles: self
+                    .triangles
+                    .iter()
+                    .map(|triangle| triangle.serialize_omnibuf())
+                    .collect(),
+            }
+        }
+    }
+
+    impl From<ob::Mesh> for Mesh {
+        fn from(value: ob::Mesh) -> Self {
+            Mesh {
+                triangles: value.triangles.into_iter().map(Into::into).collect(),
+            }
         }
     }
 }

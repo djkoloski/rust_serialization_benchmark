@@ -7,6 +7,9 @@ pub mod minecraft_savedata_capnp;
 #[path = "minecraft_savedata_generated.rs"]
 #[allow(unused_imports, clippy::all)]
 pub mod minecraft_savedata_fb;
+#[cfg(feature = "omnibuf")]
+#[allow(clippy::all)]
+pub mod minecraft_savedata_omnibuf;
 #[cfg(feature = "prost")]
 #[path = "prost.minecraft_savedata.rs"]
 pub mod minecraft_savedata_prost;
@@ -2844,6 +2847,458 @@ impl bench_protobuf4::Serialize for Players {
     fn from_view(value: proto4::minecraft_savedata::PlayersView) -> Self {
         Players {
             players: value.players().iter().map(Player::from_view).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "omnibuf")]
+mod omnibuf_impl {
+    use super::minecraft_savedata_omnibuf as ob;
+    use super::{Abilities, Entity, GameType, Item, Player, Players, RecipeBook};
+    use crate::bench_omnibuf;
+
+    fn game_type_from_i32(value: i32) -> GameType {
+        match value {
+            0 => GameType::Survival,
+            1 => GameType::Creative,
+            2 => GameType::Adventure,
+            3 => GameType::Spectator,
+            other => panic!("invalid GameType: {other}"),
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Item {
+        type Message = ob::Item;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                count: self.count as i32,
+                slot: self.slot as u32,
+                id: self.id.clone(),
+            }
+        }
+    }
+
+    impl From<ob::Item> for Item {
+        fn from(value: ob::Item) -> Self {
+            Item {
+                count: value.count.try_into().unwrap(),
+                slot: value.slot.try_into().unwrap(),
+                id: value.id,
+            }
+        }
+    }
+
+    impl From<ob::ItemBorrowed<'_>> for Item {
+        fn from(value: ob::ItemBorrowed<'_>) -> Self {
+            Item {
+                count: value.count.try_into().unwrap(),
+                slot: value.slot.try_into().unwrap(),
+                id: value.id.to_owned(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Abilities {
+        type Message = ob::Abilities;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                walk_speed: self.walk_speed,
+                fly_speed: self.fly_speed,
+                may_fly: self.may_fly,
+                flying: self.flying,
+                invulnerable: self.invulnerable,
+                may_build: self.may_build,
+                instabuild: self.instabuild,
+            }
+        }
+    }
+
+    impl From<ob::Abilities> for Abilities {
+        fn from(value: ob::Abilities) -> Self {
+            Abilities {
+                walk_speed: value.walk_speed,
+                fly_speed: value.fly_speed,
+                may_fly: value.may_fly,
+                flying: value.flying,
+                invulnerable: value.invulnerable,
+                may_build: value.may_build,
+                instabuild: value.instabuild,
+            }
+        }
+    }
+
+    impl From<ob::AbilitiesBorrowed<'_>> for Abilities {
+        fn from(value: ob::AbilitiesBorrowed<'_>) -> Self {
+            Abilities {
+                walk_speed: value.walk_speed,
+                fly_speed: value.fly_speed,
+                may_fly: value.may_fly,
+                flying: value.flying,
+                invulnerable: value.invulnerable,
+                may_build: value.may_build,
+                instabuild: value.instabuild,
+            }
+        }
+    }
+
+    impl From<ob::Vector3d> for (f64, f64, f64) {
+        fn from(value: ob::Vector3d) -> Self {
+            (value.x, value.y, value.z)
+        }
+    }
+
+    impl From<ob::Vector3dBorrowed<'_>> for (f64, f64, f64) {
+        fn from(value: ob::Vector3dBorrowed<'_>) -> Self {
+            (value.x, value.y, value.z)
+        }
+    }
+
+    impl From<ob::Vector2f> for (f32, f32) {
+        fn from(value: ob::Vector2f) -> Self {
+            (value.x, value.y)
+        }
+    }
+
+    impl From<ob::Vector2fBorrowed<'_>> for (f32, f32) {
+        fn from(value: ob::Vector2fBorrowed<'_>) -> Self {
+            (value.x, value.y)
+        }
+    }
+
+    impl From<ob::Uuid> for [u32; 4] {
+        fn from(value: ob::Uuid) -> Self {
+            [value.x0, value.x1, value.x2, value.x3]
+        }
+    }
+
+    impl From<ob::UuidBorrowed<'_>> for [u32; 4] {
+        fn from(value: ob::UuidBorrowed<'_>) -> Self {
+            [value.x0, value.x1, value.x2, value.x3]
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Entity {
+        type Message = ob::Entity;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                id: self.id.clone(),
+                pos: Some(ob::Vector3d {
+                    x: self.pos.0,
+                    y: self.pos.1,
+                    z: self.pos.2,
+                }),
+                motion: Some(ob::Vector3d {
+                    x: self.motion.0,
+                    y: self.motion.1,
+                    z: self.motion.2,
+                }),
+                rotation: Some(ob::Vector2f {
+                    x: self.rotation.0,
+                    y: self.rotation.1,
+                }),
+                fall_distance: self.fall_distance,
+                fire: self.fire as u32,
+                air: self.air as u32,
+                on_ground: self.on_ground,
+                no_gravity: self.no_gravity,
+                invulnerable: self.invulnerable,
+                portal_cooldown: self.portal_cooldown,
+                uuid: Some(ob::Uuid {
+                    x0: self.uuid[0],
+                    x1: self.uuid[1],
+                    x2: self.uuid[2],
+                    x3: self.uuid[3],
+                }),
+                custom_name: self.custom_name.clone(),
+                custom_name_visible: self.custom_name_visible,
+                silent: self.silent,
+                glowing: self.glowing,
+            }
+        }
+    }
+
+    impl From<ob::Entity> for Entity {
+        fn from(value: ob::Entity) -> Self {
+            Entity {
+                id: value.id,
+                pos: value.pos.unwrap().into(),
+                motion: value.motion.unwrap().into(),
+                rotation: value.rotation.unwrap().into(),
+                fall_distance: value.fall_distance,
+                fire: value.fire.try_into().unwrap(),
+                air: value.air.try_into().unwrap(),
+                on_ground: value.on_ground,
+                no_gravity: value.no_gravity,
+                invulnerable: value.invulnerable,
+                portal_cooldown: value.portal_cooldown,
+                uuid: value.uuid.unwrap().into(),
+                custom_name: value.custom_name,
+                custom_name_visible: value.custom_name_visible,
+                silent: value.silent,
+                glowing: value.glowing,
+            }
+        }
+    }
+
+    impl From<ob::EntityBorrowed<'_>> for Entity {
+        fn from(value: ob::EntityBorrowed<'_>) -> Self {
+            Entity {
+                id: value.id.to_owned(),
+                pos: value.pos.unwrap().into(),
+                motion: value.motion.unwrap().into(),
+                rotation: value.rotation.unwrap().into(),
+                fall_distance: value.fall_distance,
+                fire: value.fire.try_into().unwrap(),
+                air: value.air.try_into().unwrap(),
+                on_ground: value.on_ground,
+                no_gravity: value.no_gravity,
+                invulnerable: value.invulnerable,
+                portal_cooldown: value.portal_cooldown,
+                uuid: value.uuid.unwrap().into(),
+                custom_name: value.custom_name.map(str::to_owned),
+                custom_name_visible: value.custom_name_visible,
+                silent: value.silent,
+                glowing: value.glowing,
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for RecipeBook {
+        type Message = ob::RecipeBook;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                recipes: self.recipes.clone(),
+                to_be_displayed: self.to_be_displayed.clone(),
+                is_filtering_craftable: self.is_filtering_craftable,
+                is_gui_open: self.is_gui_open,
+                is_furnace_filtering_craftable: self.is_furnace_filtering_craftable,
+                is_furnace_gui_open: self.is_furnace_gui_open,
+                is_blasting_furnace_filtering_craftable: self
+                    .is_blasting_furnace_filtering_craftable,
+                is_blasting_furnace_gui_open: self.is_blasting_furnace_gui_open,
+                is_smoker_filtering_craftable: self.is_smoker_filtering_craftable,
+                is_smoker_gui_open: self.is_smoker_gui_open,
+            }
+        }
+    }
+
+    impl From<ob::RecipeBook> for RecipeBook {
+        fn from(value: ob::RecipeBook) -> Self {
+            RecipeBook {
+                recipes: value.recipes,
+                to_be_displayed: value.to_be_displayed,
+                is_filtering_craftable: value.is_filtering_craftable,
+                is_gui_open: value.is_gui_open,
+                is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
+                is_furnace_gui_open: value.is_furnace_gui_open,
+                is_blasting_furnace_filtering_craftable: value
+                    .is_blasting_furnace_filtering_craftable,
+                is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
+                is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
+                is_smoker_gui_open: value.is_smoker_gui_open,
+            }
+        }
+    }
+
+    impl From<ob::RecipeBookBorrowed<'_>> for RecipeBook {
+        fn from(value: ob::RecipeBookBorrowed<'_>) -> Self {
+            RecipeBook {
+                recipes: value.recipes.into_iter().map(str::to_owned).collect(),
+                to_be_displayed: value
+                    .to_be_displayed
+                    .into_iter()
+                    .map(str::to_owned)
+                    .collect(),
+                is_filtering_craftable: value.is_filtering_craftable,
+                is_gui_open: value.is_gui_open,
+                is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
+                is_furnace_gui_open: value.is_furnace_gui_open,
+                is_blasting_furnace_filtering_craftable: value
+                    .is_blasting_furnace_filtering_craftable,
+                is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
+                is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
+                is_smoker_gui_open: value.is_smoker_gui_open,
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Player {
+        type Message = ob::Player;
+
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                game_type: self.game_type as i32,
+                previous_game_type: self.previous_game_type as i32,
+                score: self.score,
+                dimension: self.dimension.clone(),
+                selected_item_slot: self.selected_item_slot,
+                selected_item: Some(self.selected_item.serialize_omnibuf()),
+                spawn_dimension: self.spawn_dimension.clone(),
+                spawn_x: self.spawn_x,
+                spawn_y: self.spawn_y,
+                spawn_z: self.spawn_z,
+                spawn_forced: self.spawn_forced,
+                sleep_timer: self.sleep_timer as u32,
+                food_exhaustion_level: self.food_exhaustion_level,
+                food_saturation_level: self.food_saturation_level,
+                food_tick_timer: self.food_tick_timer,
+                xp_level: self.xp_level,
+                xp_p: self.xp_p,
+                xp_total: self.xp_total,
+                xp_seed: self.xp_seed,
+                inventory: self
+                    .inventory
+                    .iter()
+                    .map(|item| item.serialize_omnibuf())
+                    .collect(),
+                ender_items: self
+                    .ender_items
+                    .iter()
+                    .map(|item| item.serialize_omnibuf())
+                    .collect(),
+                abilities: Some(self.abilities.serialize_omnibuf()),
+                entered_nether_position: self.entered_nether_position.map(|p| ob::Vector3d {
+                    x: p.0,
+                    y: p.1,
+                    z: p.2,
+                }),
+                root_vehicle: self.root_vehicle.as_ref().map(|v| ob::Vehicle {
+                    uuid: Some(ob::Uuid {
+                        x0: v.0[0],
+                        x1: v.0[1],
+                        x2: v.0[2],
+                        x3: v.0[3],
+                    }),
+                    entity: Some(v.1.serialize_omnibuf()),
+                }),
+                shoulder_entity_left: self
+                    .shoulder_entity_left
+                    .as_ref()
+                    .map(|e| e.serialize_omnibuf()),
+                shoulder_entity_right: self
+                    .shoulder_entity_right
+                    .as_ref()
+                    .map(|e| e.serialize_omnibuf()),
+                seen_credits: self.seen_credits,
+                recipe_book: Some(self.recipe_book.serialize_omnibuf()),
+            }
+        }
+    }
+
+    impl From<ob::Player> for Player {
+        fn from(value: ob::Player) -> Self {
+            Player {
+                game_type: game_type_from_i32(value.game_type),
+                previous_game_type: game_type_from_i32(value.previous_game_type),
+                score: value.score,
+                dimension: value.dimension,
+                selected_item_slot: value.selected_item_slot,
+                selected_item: value.selected_item.unwrap().into(),
+                spawn_dimension: value.spawn_dimension,
+                spawn_x: value.spawn_x,
+                spawn_y: value.spawn_y,
+                spawn_z: value.spawn_z,
+                spawn_forced: value.spawn_forced,
+                sleep_timer: value.sleep_timer.try_into().unwrap(),
+                food_exhaustion_level: value.food_exhaustion_level,
+                food_saturation_level: value.food_saturation_level,
+                food_tick_timer: value.food_tick_timer,
+                xp_level: value.xp_level,
+                xp_p: value.xp_p,
+                xp_total: value.xp_total,
+                xp_seed: value.xp_seed,
+                inventory: value.inventory.into_iter().map(Into::into).collect(),
+                ender_items: value.ender_items.into_iter().map(Into::into).collect(),
+                abilities: value.abilities.unwrap().into(),
+                entered_nether_position: value.entered_nether_position.map(Into::into),
+                root_vehicle: value
+                    .root_vehicle
+                    .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
+                shoulder_entity_left: value.shoulder_entity_left.map(Into::into),
+                shoulder_entity_right: value.shoulder_entity_right.map(Into::into),
+                seen_credits: value.seen_credits,
+                recipe_book: value.recipe_book.unwrap().into(),
+            }
+        }
+    }
+
+    impl From<ob::PlayerBorrowed<'_>> for Player {
+        fn from(value: ob::PlayerBorrowed<'_>) -> Self {
+            Player {
+                game_type: game_type_from_i32(value.game_type),
+                previous_game_type: game_type_from_i32(value.previous_game_type),
+                score: value.score,
+                dimension: value.dimension.to_owned(),
+                selected_item_slot: value.selected_item_slot,
+                selected_item: value.selected_item.unwrap().into(),
+                spawn_dimension: value.spawn_dimension.map(str::to_owned),
+                spawn_x: value.spawn_x,
+                spawn_y: value.spawn_y,
+                spawn_z: value.spawn_z,
+                spawn_forced: value.spawn_forced,
+                sleep_timer: value.sleep_timer.try_into().unwrap(),
+                food_exhaustion_level: value.food_exhaustion_level,
+                food_saturation_level: value.food_saturation_level,
+                food_tick_timer: value.food_tick_timer,
+                xp_level: value.xp_level,
+                xp_p: value.xp_p,
+                xp_total: value.xp_total,
+                xp_seed: value.xp_seed,
+                inventory: value.inventory.into_iter().map(Into::into).collect(),
+                ender_items: value.ender_items.into_iter().map(Into::into).collect(),
+                abilities: value.abilities.unwrap().into(),
+                entered_nether_position: value.entered_nether_position.map(Into::into),
+                root_vehicle: value
+                    .root_vehicle
+                    .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
+                shoulder_entity_left: value.shoulder_entity_left.map(Into::into),
+                shoulder_entity_right: value.shoulder_entity_right.map(Into::into),
+                seen_credits: value.seen_credits,
+                recipe_book: value.recipe_book.unwrap().into(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Players {
+        type Message = ob::Players;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                players: self
+                    .players
+                    .iter()
+                    .map(|player| player.serialize_omnibuf())
+                    .collect(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::SerializeBorrowed for Players {
+        type Borrowed<'a> = ob::PlayersBorrowed<'a>;
+    }
+
+    impl From<ob::Players> for Players {
+        fn from(value: ob::Players) -> Self {
+            Players {
+                players: value.players.into_iter().map(Into::into).collect(),
+            }
+        }
+    }
+
+    impl From<ob::PlayersBorrowed<'_>> for Players {
+        fn from(value: ob::PlayersBorrowed<'_>) -> Self {
+            Players {
+                players: value.players.into_iter().map(Into::into).collect(),
+            }
         }
     }
 }
