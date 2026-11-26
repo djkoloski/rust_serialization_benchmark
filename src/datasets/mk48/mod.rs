@@ -7,6 +7,9 @@ pub mod mk48_capnp;
 #[path = "mk48_generated.rs"]
 #[allow(unused_imports, clippy::all)]
 pub mod mk48_fb;
+#[cfg(feature = "omnibuf")]
+#[allow(clippy::all)]
+pub mod mk48_omnibuf;
 #[cfg(feature = "prost")]
 #[path = "prost.mk48.rs"]
 pub mod mk48_prost;
@@ -1780,6 +1783,202 @@ impl bench_protobuf4::Serialize for Updates {
     fn from_view(value: proto4::mk48::UpdatesView) -> Self {
         Updates {
             updates: value.updates().iter().map(Update::from_view).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "omnibuf")]
+mod omnibuf_impl {
+    use super::mk48_omnibuf as ob;
+    use super::{Contact, EntityType, Guidance, TerrainUpdate, Transform, Update, Updates};
+    use crate::bench_omnibuf;
+
+    fn entity_type_from_i32(value: i32) -> EntityType {
+        match value {
+            0 => EntityType::ArleighBurke,
+            1 => EntityType::Bismarck,
+            2 => EntityType::Clemenceau,
+            3 => EntityType::Fletcher,
+            4 => EntityType::G5,
+            5 => EntityType::Iowa,
+            6 => EntityType::Kolkata,
+            7 => EntityType::Osa,
+            8 => EntityType::Yasen,
+            9 => EntityType::Zubr,
+            other => panic!("invalid EntityType: {other}"),
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Transform {
+        type Message = ob::Transform;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                altitude: self.altitude.into(),
+                angle: self.angle.into(),
+                position: Some(ob::Vector2f {
+                    x: self.position.0,
+                    y: self.position.1,
+                }),
+                velocity: self.velocity.into(),
+            }
+        }
+    }
+
+    impl From<ob::Vector2f> for (f32, f32) {
+        fn from(value: ob::Vector2f) -> Self {
+            (value.x, value.y)
+        }
+    }
+
+    impl From<ob::Transform> for Transform {
+        fn from(value: ob::Transform) -> Self {
+            Transform {
+                altitude: value.altitude.try_into().unwrap(),
+                angle: value.angle.try_into().unwrap(),
+                position: value.position.unwrap().into(),
+                velocity: value.velocity.try_into().unwrap(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Guidance {
+        type Message = ob::Guidance;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                angle: self.angle as u32,
+                submerge: self.submerge,
+                velocity: self.velocity as i32,
+            }
+        }
+    }
+
+    impl From<ob::Guidance> for Guidance {
+        fn from(value: ob::Guidance) -> Self {
+            Guidance {
+                angle: value.angle.try_into().unwrap(),
+                submerge: value.submerge,
+                velocity: value.velocity.try_into().unwrap(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Contact {
+        type Message = ob::Contact;
+
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                damage: self.damage as u32,
+                entity_id: self.entity_id,
+                entity_type: self.entity_type.map(|et| et as i32),
+                guidance: Some(self.guidance.serialize_omnibuf()),
+                player_id: self.player_id.map(Into::into),
+                reloads: self.reloads.clone(),
+                transform: Some(self.transform.serialize_omnibuf()),
+                turret_angles: self.turret_angles.iter().map(|&a| a as u32).collect(),
+            }
+        }
+    }
+
+    impl From<ob::Contact> for Contact {
+        fn from(value: ob::Contact) -> Self {
+            Contact {
+                damage: value.damage.try_into().unwrap(),
+                entity_id: value.entity_id,
+                entity_type: value.entity_type.map(entity_type_from_i32),
+                guidance: value.guidance.unwrap().into(),
+                player_id: value.player_id.map(|id| id.try_into().unwrap()),
+                reloads: value.reloads,
+                transform: value.transform.unwrap().into(),
+                turret_angles: value
+                    .turret_angles
+                    .into_iter()
+                    .map(|a| a.try_into().unwrap())
+                    .collect(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for TerrainUpdate {
+        type Message = ob::TerrainUpdate;
+
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                chunk_id: Some(ob::ChunkId {
+                    x: self.chunk_id.0 as i32,
+                    y: self.chunk_id.1 as i32,
+                }),
+                data: self.data.clone(),
+            }
+        }
+    }
+
+    impl From<ob::ChunkId> for (i8, i8) {
+        fn from(value: ob::ChunkId) -> Self {
+            (value.x.try_into().unwrap(), value.y.try_into().unwrap())
+        }
+    }
+
+    impl From<ob::TerrainUpdate> for TerrainUpdate {
+        fn from(value: ob::TerrainUpdate) -> Self {
+            TerrainUpdate {
+                chunk_id: value.chunk_id.unwrap().into(),
+                data: value.data,
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Update {
+        type Message = ob::Update;
+
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                contacts: self
+                    .contacts
+                    .iter()
+                    .map(|c| c.serialize_omnibuf())
+                    .collect(),
+                score: self.score,
+                world_radius: self.world_radius,
+                terrain_updates: self
+                    .terrain_updates
+                    .iter()
+                    .map(|t| t.serialize_omnibuf())
+                    .collect(),
+            }
+        }
+    }
+
+    impl From<ob::Update> for Update {
+        fn from(value: ob::Update) -> Self {
+            Update {
+                contacts: value.contacts.into_iter().map(Into::into).collect(),
+                score: value.score,
+                world_radius: value.world_radius,
+                terrain_updates: value.terrain_updates.into_iter().map(Into::into).collect(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Updates {
+        type Message = ob::Updates;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                updates: self.updates.iter().map(|u| u.serialize_omnibuf()).collect(),
+            }
+        }
+    }
+
+    impl From<ob::Updates> for Updates {
+        fn from(value: ob::Updates) -> Self {
+            Updates {
+                updates: value.updates.into_iter().map(Into::into).collect(),
+            }
         }
     }
 }

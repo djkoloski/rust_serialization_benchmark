@@ -29,6 +29,8 @@ use rust_serialization_benchmark::bench_minicbor;
 use rust_serialization_benchmark::bench_msgpacker;
 #[cfg(feature = "nanoserde")]
 use rust_serialization_benchmark::bench_nanoserde;
+#[cfg(feature = "omnibuf")]
+use rust_serialization_benchmark::bench_omnibuf;
 #[cfg(feature = "postcard")]
 use rust_serialization_benchmark::bench_postcard;
 #[cfg(feature = "prost")]
@@ -131,6 +133,9 @@ macro_rules! bench_unvarying {
 
         #[cfg(feature = "msgpacker")]
         bench_msgpacker::$bench_fn($BENCH, $c, &$data);
+
+        #[cfg(feature = "omnibuf")]
+        bench_omnibuf::$bench_fn($BENCH, $c, &$data);
 
         #[cfg(feature = "postcard")]
         bench_postcard::$bench_fn($BENCH, $c, &$data);

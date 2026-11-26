@@ -7,6 +7,9 @@ pub mod log_capnp;
 #[path = "log_generated.rs"]
 #[allow(unused_imports, clippy::all)]
 pub mod log_fb;
+#[cfg(feature = "omnibuf")]
+#[allow(clippy::all)]
+pub mod log_omnibuf;
 #[cfg(feature = "prost")]
 #[path = "prost.log.rs"]
 pub mod log_prost;
@@ -808,6 +811,129 @@ impl bench_protobuf4::Serialize for Logs {
     fn from_view(value: proto4::log::LogsView) -> Self {
         Logs {
             logs: value.logs().iter().map(Log::from_view).collect(),
+        }
+    }
+}
+
+#[cfg(feature = "omnibuf")]
+mod omnibuf_impl {
+    use super::log_omnibuf as ob;
+    use super::{Address, Log, Logs};
+    use crate::bench_omnibuf;
+
+    impl bench_omnibuf::Serialize for Address {
+        type Message = ob::Address;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                x0: self.x0 as u32,
+                x1: self.x1 as u32,
+                x2: self.x2 as u32,
+                x3: self.x3 as u32,
+            }
+        }
+    }
+
+    impl From<ob::Address> for Address {
+        fn from(value: ob::Address) -> Self {
+            Address {
+                x0: value.x0.try_into().unwrap(),
+                x1: value.x1.try_into().unwrap(),
+                x2: value.x2.try_into().unwrap(),
+                x3: value.x3.try_into().unwrap(),
+            }
+        }
+    }
+
+    impl From<ob::AddressBorrowed<'_>> for Address {
+        fn from(value: ob::AddressBorrowed<'_>) -> Self {
+            Address {
+                x0: value.x0.try_into().unwrap(),
+                x1: value.x1.try_into().unwrap(),
+                x2: value.x2.try_into().unwrap(),
+                x3: value.x3.try_into().unwrap(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Log {
+        type Message = ob::Log;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                address: Some(self.address.serialize_omnibuf()),
+                identity: self.identity.clone(),
+                userid: self.userid.clone(),
+                date: self.date.clone(),
+                request: self.request.clone(),
+                code: self.code as u32,
+                size: self.size,
+            }
+        }
+    }
+
+    impl From<ob::Log> for Log {
+        fn from(value: ob::Log) -> Self {
+            Log {
+                address: value.address.unwrap().into(),
+                identity: value.identity,
+                userid: value.userid,
+                date: value.date,
+                request: value.request,
+                code: value.code.try_into().unwrap(),
+                size: value.size,
+            }
+        }
+    }
+
+    impl From<ob::LogBorrowed<'_>> for Log {
+        fn from(value: ob::LogBorrowed<'_>) -> Self {
+            Log {
+                address: value.address.unwrap().into(),
+                identity: value.identity.to_owned(),
+                userid: value.userid.to_owned(),
+                date: value.date.to_owned(),
+                request: value.request.to_owned(),
+                code: value.code.try_into().unwrap(),
+                size: value.size,
+            }
+        }
+    }
+
+    impl bench_omnibuf::Serialize for Logs {
+        type Message = ob::Logs;
+
+        #[inline]
+        fn serialize_omnibuf(&self) -> Self::Message {
+            Self::Message {
+                logs: self
+                    .logs
+                    .iter()
+                    .map(|log| log.serialize_omnibuf())
+                    .collect(),
+            }
+        }
+    }
+
+    impl bench_omnibuf::SerializeBorrowed for Logs {
+        type Borrowed<'a> = ob::LogsBorrowed<'a>;
+    }
+
+    impl From<ob::Logs> for Logs {
+        fn from(value: ob::Logs) -> Self {
+            Logs {
+                logs: value.logs.into_iter().map(Into::into).collect(),
+            }
+        }
+    }
+
+    impl From<ob::LogsBorrowed<'_>> for Logs {
+        fn from(value: ob::LogsBorrowed<'_>) -> Self {
+            Logs {
+                logs: value.logs.into_iter().map(Into::into).collect(),
+            }
         }
     }
 }
