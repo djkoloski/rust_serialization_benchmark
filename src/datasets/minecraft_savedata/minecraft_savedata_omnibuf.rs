@@ -97,44 +97,17 @@ impl ::omnibuf::Message for Item {
     }
 
     fn build_schema_meta(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
+        let _ = active;
         if depth >= ::omnibuf::MAX_NESTING_DEPTH {
             return ::core::option::Option::None;
         }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Item"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("count"));
-        meta.fields.insert(2, ::std::string::String::from("slot"));
-        meta.fields.insert(3, ::std::string::String::from("id"));
-        if !active.insert(type_id) {
-            return ::core::option::Option::Some(meta);
-        }
-        active.remove(&type_id);
-        ::core::option::Option::Some(meta)
-    }
-
-    fn is_schema_cyclic(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> bool {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return false; }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        if !active.insert(type_id) { return true; }
-        active.remove(&type_id);
-        false
-    }
-
-    fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Item"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("count"));
-        meta.fields.insert(2, ::std::string::String::from("slot"));
-        meta.fields.insert(3, ::std::string::String::from("id"));
-        ::core::option::Option::Some(meta)
+        ::core::option::Option::Some(
+            ::omnibuf::SchemaMeta {
+                type_name: ::std::string::String::from("Item"),
+                fields: [(1u32, "count"), (2u32, "slot"), (3u32, "id")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+                children: ::std::collections::BTreeMap::new(),
+            }
+        )
     }
 }
 
@@ -176,12 +149,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for ItemBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        self.count = ::core::default::Default::default();
-        self.slot = ::core::default::Default::default();
-        self.id = "";
-    }
 }
 
 #[allow(dead_code)]
@@ -300,6 +267,25 @@ impl<'a> OpaqueItem<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_sint_field(dst, 1, i64::from(__dirty.f_count));
+            }
+            2 => {
+        ::omnibuf::codec::write_uint_field(dst, 2, u64::from(__dirty.f_slot));
+            }
+            3 => {
+        ::omnibuf::codec::write_string_field(dst, 3, __dirty.f_id.as_str());
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -311,22 +297,7 @@ impl<'a> OpaqueItem<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_sint_field(dst, 1, i64::from(self.dirty_state.as_deref().unwrap().f_count));
-                }
-                2 => {
-        ::omnibuf::codec::write_uint_field(dst, 2, u64::from(self.dirty_state.as_deref().unwrap().f_slot));
-                }
-                3 => {
-        ::omnibuf::codec::write_string_field(dst, 3, self.dirty_state.as_deref().unwrap().f_id.as_str());
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -340,22 +311,7 @@ impl<'a> OpaqueItem<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_sint_field(dst, 1, i64::from(self.dirty_state.as_deref().unwrap().f_count));
-                }
-                2 => {
-        ::omnibuf::codec::write_uint_field(dst, 2, u64::from(self.dirty_state.as_deref().unwrap().f_slot));
-                }
-                3 => {
-        ::omnibuf::codec::write_string_field(dst, 3, self.dirty_state.as_deref().unwrap().f_id.as_str());
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -460,13 +416,7 @@ impl ::omnibuf::Message for Abilities {
 
     #[inline]
     fn clear_omnibuf(&mut self) {
-        self.walk_speed = ::core::default::Default::default();
-        self.fly_speed = ::core::default::Default::default();
-        self.may_fly = ::core::default::Default::default();
-        self.flying = ::core::default::Default::default();
-        self.invulnerable = ::core::default::Default::default();
-        self.may_build = ::core::default::Default::default();
-        self.instabuild = ::core::default::Default::default();
+        *self = ::core::default::Default::default();
     }
 
     #[inline]
@@ -484,52 +434,17 @@ impl ::omnibuf::Message for Abilities {
     }
 
     fn build_schema_meta(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
+        let _ = active;
         if depth >= ::omnibuf::MAX_NESTING_DEPTH {
             return ::core::option::Option::None;
         }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Abilities"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("walk_speed"));
-        meta.fields.insert(2, ::std::string::String::from("fly_speed"));
-        meta.fields.insert(3, ::std::string::String::from("may_fly"));
-        meta.fields.insert(4, ::std::string::String::from("flying"));
-        meta.fields.insert(5, ::std::string::String::from("invulnerable"));
-        meta.fields.insert(6, ::std::string::String::from("may_build"));
-        meta.fields.insert(7, ::std::string::String::from("instabuild"));
-        if !active.insert(type_id) {
-            return ::core::option::Option::Some(meta);
-        }
-        active.remove(&type_id);
-        ::core::option::Option::Some(meta)
-    }
-
-    fn is_schema_cyclic(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> bool {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return false; }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        if !active.insert(type_id) { return true; }
-        active.remove(&type_id);
-        false
-    }
-
-    fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Abilities"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("walk_speed"));
-        meta.fields.insert(2, ::std::string::String::from("fly_speed"));
-        meta.fields.insert(3, ::std::string::String::from("may_fly"));
-        meta.fields.insert(4, ::std::string::String::from("flying"));
-        meta.fields.insert(5, ::std::string::String::from("invulnerable"));
-        meta.fields.insert(6, ::std::string::String::from("may_build"));
-        meta.fields.insert(7, ::std::string::String::from("instabuild"));
-        ::core::option::Option::Some(meta)
+        ::core::option::Option::Some(
+            ::omnibuf::SchemaMeta {
+                type_name: ::std::string::String::from("Abilities"),
+                fields: [(1u32, "walk_speed"), (2u32, "fly_speed"), (3u32, "may_fly"), (4u32, "flying"), (5u32, "invulnerable"), (6u32, "may_build"), (7u32, "instabuild")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+                children: ::std::collections::BTreeMap::new(),
+            }
+        )
     }
 }
 
@@ -579,16 +494,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for AbilitiesBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        self.walk_speed = ::core::default::Default::default();
-        self.fly_speed = ::core::default::Default::default();
-        self.may_fly = ::core::default::Default::default();
-        self.flying = ::core::default::Default::default();
-        self.invulnerable = ::core::default::Default::default();
-        self.may_build = ::core::default::Default::default();
-        self.instabuild = ::core::default::Default::default();
-    }
 }
 
 #[allow(dead_code)]
@@ -763,6 +668,37 @@ impl<'a> OpaqueAbilities<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_float32_field(dst, 1, __dirty.f_walk_speed);
+            }
+            2 => {
+        ::omnibuf::codec::write_float32_field(dst, 2, __dirty.f_fly_speed);
+            }
+            3 => {
+        ::omnibuf::codec::write_bool_field(dst, 3, __dirty.f_may_fly);
+            }
+            4 => {
+        ::omnibuf::codec::write_bool_field(dst, 4, __dirty.f_flying);
+            }
+            5 => {
+        ::omnibuf::codec::write_bool_field(dst, 5, __dirty.f_invulnerable);
+            }
+            6 => {
+        ::omnibuf::codec::write_bool_field(dst, 6, __dirty.f_may_build);
+            }
+            7 => {
+        ::omnibuf::codec::write_bool_field(dst, 7, __dirty.f_instabuild);
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -774,34 +710,7 @@ impl<'a> OpaqueAbilities<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 7, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_float32_field(dst, 1, self.dirty_state.as_deref().unwrap().f_walk_speed);
-                }
-                2 => {
-        ::omnibuf::codec::write_float32_field(dst, 2, self.dirty_state.as_deref().unwrap().f_fly_speed);
-                }
-                3 => {
-        ::omnibuf::codec::write_bool_field(dst, 3, self.dirty_state.as_deref().unwrap().f_may_fly);
-                }
-                4 => {
-        ::omnibuf::codec::write_bool_field(dst, 4, self.dirty_state.as_deref().unwrap().f_flying);
-                }
-                5 => {
-        ::omnibuf::codec::write_bool_field(dst, 5, self.dirty_state.as_deref().unwrap().f_invulnerable);
-                }
-                6 => {
-        ::omnibuf::codec::write_bool_field(dst, 6, self.dirty_state.as_deref().unwrap().f_may_build);
-                }
-                7 => {
-        ::omnibuf::codec::write_bool_field(dst, 7, self.dirty_state.as_deref().unwrap().f_instabuild);
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 7, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -815,34 +724,7 @@ impl<'a> OpaqueAbilities<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 7, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_float32_field(dst, 1, self.dirty_state.as_deref().unwrap().f_walk_speed);
-                }
-                2 => {
-        ::omnibuf::codec::write_float32_field(dst, 2, self.dirty_state.as_deref().unwrap().f_fly_speed);
-                }
-                3 => {
-        ::omnibuf::codec::write_bool_field(dst, 3, self.dirty_state.as_deref().unwrap().f_may_fly);
-                }
-                4 => {
-        ::omnibuf::codec::write_bool_field(dst, 4, self.dirty_state.as_deref().unwrap().f_flying);
-                }
-                5 => {
-        ::omnibuf::codec::write_bool_field(dst, 5, self.dirty_state.as_deref().unwrap().f_invulnerable);
-                }
-                6 => {
-        ::omnibuf::codec::write_bool_field(dst, 6, self.dirty_state.as_deref().unwrap().f_may_build);
-                }
-                7 => {
-        ::omnibuf::codec::write_bool_field(dst, 7, self.dirty_state.as_deref().unwrap().f_instabuild);
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 7, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -926,9 +808,7 @@ impl ::omnibuf::Message for Vector3d {
 
     #[inline]
     fn clear_omnibuf(&mut self) {
-        self.x = ::core::default::Default::default();
-        self.y = ::core::default::Default::default();
-        self.z = ::core::default::Default::default();
+        *self = ::core::default::Default::default();
     }
 
     #[inline]
@@ -942,44 +822,17 @@ impl ::omnibuf::Message for Vector3d {
     }
 
     fn build_schema_meta(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
+        let _ = active;
         if depth >= ::omnibuf::MAX_NESTING_DEPTH {
             return ::core::option::Option::None;
         }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Vector3d"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("x"));
-        meta.fields.insert(2, ::std::string::String::from("y"));
-        meta.fields.insert(3, ::std::string::String::from("z"));
-        if !active.insert(type_id) {
-            return ::core::option::Option::Some(meta);
-        }
-        active.remove(&type_id);
-        ::core::option::Option::Some(meta)
-    }
-
-    fn is_schema_cyclic(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> bool {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return false; }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        if !active.insert(type_id) { return true; }
-        active.remove(&type_id);
-        false
-    }
-
-    fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Vector3d"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("x"));
-        meta.fields.insert(2, ::std::string::String::from("y"));
-        meta.fields.insert(3, ::std::string::String::from("z"));
-        ::core::option::Option::Some(meta)
+        ::core::option::Option::Some(
+            ::omnibuf::SchemaMeta {
+                type_name: ::std::string::String::from("Vector3d"),
+                fields: [(1u32, "x"), (2u32, "y"), (3u32, "z")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+                children: ::std::collections::BTreeMap::new(),
+            }
+        )
     }
 }
 
@@ -1021,12 +874,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for Vector3dBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        self.x = ::core::default::Default::default();
-        self.y = ::core::default::Default::default();
-        self.z = ::core::default::Default::default();
-    }
 }
 
 #[allow(dead_code)]
@@ -1145,6 +992,25 @@ impl<'a> OpaqueVector3d<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_float64_field(dst, 1, __dirty.f_x);
+            }
+            2 => {
+        ::omnibuf::codec::write_float64_field(dst, 2, __dirty.f_y);
+            }
+            3 => {
+        ::omnibuf::codec::write_float64_field(dst, 3, __dirty.f_z);
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -1156,22 +1022,7 @@ impl<'a> OpaqueVector3d<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_float64_field(dst, 1, self.dirty_state.as_deref().unwrap().f_x);
-                }
-                2 => {
-        ::omnibuf::codec::write_float64_field(dst, 2, self.dirty_state.as_deref().unwrap().f_y);
-                }
-                3 => {
-        ::omnibuf::codec::write_float64_field(dst, 3, self.dirty_state.as_deref().unwrap().f_z);
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -1185,22 +1036,7 @@ impl<'a> OpaqueVector3d<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_float64_field(dst, 1, self.dirty_state.as_deref().unwrap().f_x);
-                }
-                2 => {
-        ::omnibuf::codec::write_float64_field(dst, 2, self.dirty_state.as_deref().unwrap().f_y);
-                }
-                3 => {
-        ::omnibuf::codec::write_float64_field(dst, 3, self.dirty_state.as_deref().unwrap().f_z);
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 3, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -1280,8 +1116,7 @@ impl ::omnibuf::Message for Vector2f {
 
     #[inline]
     fn clear_omnibuf(&mut self) {
-        self.x = ::core::default::Default::default();
-        self.y = ::core::default::Default::default();
+        *self = ::core::default::Default::default();
     }
 
     #[inline]
@@ -1294,42 +1129,17 @@ impl ::omnibuf::Message for Vector2f {
     }
 
     fn build_schema_meta(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
+        let _ = active;
         if depth >= ::omnibuf::MAX_NESTING_DEPTH {
             return ::core::option::Option::None;
         }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Vector2f"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("x"));
-        meta.fields.insert(2, ::std::string::String::from("y"));
-        if !active.insert(type_id) {
-            return ::core::option::Option::Some(meta);
-        }
-        active.remove(&type_id);
-        ::core::option::Option::Some(meta)
-    }
-
-    fn is_schema_cyclic(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> bool {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return false; }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        if !active.insert(type_id) { return true; }
-        active.remove(&type_id);
-        false
-    }
-
-    fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Vector2f"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("x"));
-        meta.fields.insert(2, ::std::string::String::from("y"));
-        ::core::option::Option::Some(meta)
+        ::core::option::Option::Some(
+            ::omnibuf::SchemaMeta {
+                type_name: ::std::string::String::from("Vector2f"),
+                fields: [(1u32, "x"), (2u32, "y")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+                children: ::std::collections::BTreeMap::new(),
+            }
+        )
     }
 }
 
@@ -1369,11 +1179,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for Vector2fBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        self.x = ::core::default::Default::default();
-        self.y = ::core::default::Default::default();
-    }
 }
 
 #[allow(dead_code)]
@@ -1478,6 +1283,22 @@ impl<'a> OpaqueVector2f<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_float32_field(dst, 1, __dirty.f_x);
+            }
+            2 => {
+        ::omnibuf::codec::write_float32_field(dst, 2, __dirty.f_y);
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -1489,19 +1310,7 @@ impl<'a> OpaqueVector2f<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_float32_field(dst, 1, self.dirty_state.as_deref().unwrap().f_x);
-                }
-                2 => {
-        ::omnibuf::codec::write_float32_field(dst, 2, self.dirty_state.as_deref().unwrap().f_y);
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -1515,19 +1324,7 @@ impl<'a> OpaqueVector2f<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_float32_field(dst, 1, self.dirty_state.as_deref().unwrap().f_x);
-                }
-                2 => {
-        ::omnibuf::codec::write_float32_field(dst, 2, self.dirty_state.as_deref().unwrap().f_y);
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -1615,10 +1412,7 @@ impl ::omnibuf::Message for Uuid {
 
     #[inline]
     fn clear_omnibuf(&mut self) {
-        self.x0 = ::core::default::Default::default();
-        self.x1 = ::core::default::Default::default();
-        self.x2 = ::core::default::Default::default();
-        self.x3 = ::core::default::Default::default();
+        *self = ::core::default::Default::default();
     }
 
     #[inline]
@@ -1633,46 +1427,17 @@ impl ::omnibuf::Message for Uuid {
     }
 
     fn build_schema_meta(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
+        let _ = active;
         if depth >= ::omnibuf::MAX_NESTING_DEPTH {
             return ::core::option::Option::None;
         }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Uuid"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("x0"));
-        meta.fields.insert(2, ::std::string::String::from("x1"));
-        meta.fields.insert(3, ::std::string::String::from("x2"));
-        meta.fields.insert(4, ::std::string::String::from("x3"));
-        if !active.insert(type_id) {
-            return ::core::option::Option::Some(meta);
-        }
-        active.remove(&type_id);
-        ::core::option::Option::Some(meta)
-    }
-
-    fn is_schema_cyclic(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> bool {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return false; }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        if !active.insert(type_id) { return true; }
-        active.remove(&type_id);
-        false
-    }
-
-    fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Uuid"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("x0"));
-        meta.fields.insert(2, ::std::string::String::from("x1"));
-        meta.fields.insert(3, ::std::string::String::from("x2"));
-        meta.fields.insert(4, ::std::string::String::from("x3"));
-        ::core::option::Option::Some(meta)
+        ::core::option::Option::Some(
+            ::omnibuf::SchemaMeta {
+                type_name: ::std::string::String::from("Uuid"),
+                fields: [(1u32, "x0"), (2u32, "x1"), (3u32, "x2"), (4u32, "x3")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+                children: ::std::collections::BTreeMap::new(),
+            }
+        )
     }
 }
 
@@ -1716,13 +1481,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for UuidBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        self.x0 = ::core::default::Default::default();
-        self.x1 = ::core::default::Default::default();
-        self.x2 = ::core::default::Default::default();
-        self.x3 = ::core::default::Default::default();
-    }
 }
 
 #[allow(dead_code)]
@@ -1855,6 +1613,28 @@ impl<'a> OpaqueUuid<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_uint_field(dst, 1, u64::from(__dirty.f_x0));
+            }
+            2 => {
+        ::omnibuf::codec::write_uint_field(dst, 2, u64::from(__dirty.f_x1));
+            }
+            3 => {
+        ::omnibuf::codec::write_uint_field(dst, 3, u64::from(__dirty.f_x2));
+            }
+            4 => {
+        ::omnibuf::codec::write_uint_field(dst, 4, u64::from(__dirty.f_x3));
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -1866,25 +1646,7 @@ impl<'a> OpaqueUuid<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 4, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_uint_field(dst, 1, u64::from(self.dirty_state.as_deref().unwrap().f_x0));
-                }
-                2 => {
-        ::omnibuf::codec::write_uint_field(dst, 2, u64::from(self.dirty_state.as_deref().unwrap().f_x1));
-                }
-                3 => {
-        ::omnibuf::codec::write_uint_field(dst, 3, u64::from(self.dirty_state.as_deref().unwrap().f_x2));
-                }
-                4 => {
-        ::omnibuf::codec::write_uint_field(dst, 4, u64::from(self.dirty_state.as_deref().unwrap().f_x3));
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 4, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -1898,25 +1660,7 @@ impl<'a> OpaqueUuid<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 4, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_uint_field(dst, 1, u64::from(self.dirty_state.as_deref().unwrap().f_x0));
-                }
-                2 => {
-        ::omnibuf::codec::write_uint_field(dst, 2, u64::from(self.dirty_state.as_deref().unwrap().f_x1));
-                }
-                3 => {
-        ::omnibuf::codec::write_uint_field(dst, 3, u64::from(self.dirty_state.as_deref().unwrap().f_x2));
-                }
-                4 => {
-        ::omnibuf::codec::write_uint_field(dst, 4, u64::from(self.dirty_state.as_deref().unwrap().f_x3));
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 4, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -1969,6 +1713,14 @@ impl Entity {
     #[inline]
     pub fn unmarshal_omnibuf(&mut self, data: &[u8]) -> ::omnibuf::Result<()> {
         <Self as ::omnibuf::Message>::decode_omnibuf(self, data)
+    }
+
+    fn __omnibuf_base_schema_meta() -> ::omnibuf::SchemaMeta {
+        ::omnibuf::SchemaMeta {
+            type_name: ::std::string::String::from("Entity"),
+            fields: [(1u32, "id"), (2u32, "pos"), (3u32, "motion"), (4u32, "rotation"), (5u32, "fall_distance"), (6u32, "fire"), (7u32, "air"), (8u32, "on_ground"), (9u32, "no_gravity"), (10u32, "invulnerable"), (11u32, "portal_cooldown"), (12u32, "uuid"), (13u32, "custom_name"), (14u32, "custom_name_visible"), (15u32, "silent"), (16u32, "glowing")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+            children: ::std::collections::BTreeMap::new(),
+        }
     }
 }
 
@@ -2114,27 +1866,7 @@ impl ::omnibuf::Message for Entity {
             return ::core::option::Option::None;
         }
         let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Entity"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("id"));
-        meta.fields.insert(2, ::std::string::String::from("pos"));
-        meta.fields.insert(3, ::std::string::String::from("motion"));
-        meta.fields.insert(4, ::std::string::String::from("rotation"));
-        meta.fields.insert(5, ::std::string::String::from("fall_distance"));
-        meta.fields.insert(6, ::std::string::String::from("fire"));
-        meta.fields.insert(7, ::std::string::String::from("air"));
-        meta.fields.insert(8, ::std::string::String::from("on_ground"));
-        meta.fields.insert(9, ::std::string::String::from("no_gravity"));
-        meta.fields.insert(10, ::std::string::String::from("invulnerable"));
-        meta.fields.insert(11, ::std::string::String::from("portal_cooldown"));
-        meta.fields.insert(12, ::std::string::String::from("uuid"));
-        meta.fields.insert(13, ::std::string::String::from("custom_name"));
-        meta.fields.insert(14, ::std::string::String::from("custom_name_visible"));
-        meta.fields.insert(15, ::std::string::String::from("silent"));
-        meta.fields.insert(16, ::std::string::String::from("glowing"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if !active.insert(type_id) {
             return ::core::option::Option::Some(meta);
         }
@@ -2160,27 +1892,7 @@ impl ::omnibuf::Message for Entity {
 
     fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
         if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Entity"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("id"));
-        meta.fields.insert(2, ::std::string::String::from("pos"));
-        meta.fields.insert(3, ::std::string::String::from("motion"));
-        meta.fields.insert(4, ::std::string::String::from("rotation"));
-        meta.fields.insert(5, ::std::string::String::from("fall_distance"));
-        meta.fields.insert(6, ::std::string::String::from("fire"));
-        meta.fields.insert(7, ::std::string::String::from("air"));
-        meta.fields.insert(8, ::std::string::String::from("on_ground"));
-        meta.fields.insert(9, ::std::string::String::from("no_gravity"));
-        meta.fields.insert(10, ::std::string::String::from("invulnerable"));
-        meta.fields.insert(11, ::std::string::String::from("portal_cooldown"));
-        meta.fields.insert(12, ::std::string::String::from("uuid"));
-        meta.fields.insert(13, ::std::string::String::from("custom_name"));
-        meta.fields.insert(14, ::std::string::String::from("custom_name_visible"));
-        meta.fields.insert(15, ::std::string::String::from("silent"));
-        meta.fields.insert(16, ::std::string::String::from("glowing"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if depth + 2 < ::omnibuf::MAX_NESTING_DEPTH {
             if let ::core::option::Option::Some(__c) = self.pos.as_ref().and_then(|__sub| <Vector3d as ::omnibuf::Message>::build_value_schema_meta(__sub, depth + 2)) { meta.children.insert(2, __c); }
             if let ::core::option::Option::Some(__c) = self.motion.as_ref().and_then(|__sub| <Vector3d as ::omnibuf::Message>::build_value_schema_meta(__sub, depth + 2)) { meta.children.insert(3, __c); }
@@ -2255,25 +1967,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for EntityBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        self.id = "";
-        if self.pos.is_some() { self.pos = ::core::option::Option::None; }
-        if self.motion.is_some() { self.motion = ::core::option::Option::None; }
-        if self.rotation.is_some() { self.rotation = ::core::option::Option::None; }
-        self.fall_distance = ::core::default::Default::default();
-        self.fire = ::core::default::Default::default();
-        self.air = ::core::default::Default::default();
-        self.on_ground = ::core::default::Default::default();
-        self.no_gravity = ::core::default::Default::default();
-        self.invulnerable = ::core::default::Default::default();
-        self.portal_cooldown = ::core::default::Default::default();
-        if self.uuid.is_some() { self.uuid = ::core::option::Option::None; }
-        if self.custom_name.is_some() { self.custom_name = ::core::option::Option::None; }
-        self.custom_name_visible = ::core::default::Default::default();
-        self.silent = ::core::default::Default::default();
-        self.glowing = ::core::default::Default::default();
-    }
 }
 
 #[allow(dead_code)]
@@ -2637,6 +2330,74 @@ impl<'a> OpaqueEntity<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_string_field(dst, 1, __dirty.f_id.as_str());
+            }
+            2 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_pos {
+            ::omnibuf::codec::write_sub_msg_field(dst, 2, sub, deterministic).unwrap();
+        }
+            }
+            3 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_motion {
+            ::omnibuf::codec::write_sub_msg_field(dst, 3, sub, deterministic).unwrap();
+        }
+            }
+            4 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_rotation {
+            ::omnibuf::codec::write_sub_msg_field(dst, 4, sub, deterministic).unwrap();
+        }
+            }
+            5 => {
+        ::omnibuf::codec::write_float32_field(dst, 5, __dirty.f_fall_distance);
+            }
+            6 => {
+        ::omnibuf::codec::write_uint_field(dst, 6, u64::from(__dirty.f_fire));
+            }
+            7 => {
+        ::omnibuf::codec::write_uint_field(dst, 7, u64::from(__dirty.f_air));
+            }
+            8 => {
+        ::omnibuf::codec::write_bool_field(dst, 8, __dirty.f_on_ground);
+            }
+            9 => {
+        ::omnibuf::codec::write_bool_field(dst, 9, __dirty.f_no_gravity);
+            }
+            10 => {
+        ::omnibuf::codec::write_bool_field(dst, 10, __dirty.f_invulnerable);
+            }
+            11 => {
+        ::omnibuf::codec::write_sint_field(dst, 11, i64::from(__dirty.f_portal_cooldown));
+            }
+            12 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_uuid {
+            ::omnibuf::codec::write_sub_msg_field(dst, 12, sub, deterministic).unwrap();
+        }
+            }
+            13 => {
+        if let ::core::option::Option::Some(ref v) = __dirty.f_custom_name {
+        ::omnibuf::codec::write_string_field(dst, 13, v.as_str());
+        }
+            }
+            14 => {
+        ::omnibuf::codec::write_bool_field(dst, 14, __dirty.f_custom_name_visible);
+            }
+            15 => {
+        ::omnibuf::codec::write_bool_field(dst, 15, __dirty.f_silent);
+            }
+            16 => {
+        ::omnibuf::codec::write_bool_field(dst, 16, __dirty.f_glowing);
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -2648,71 +2409,7 @@ impl<'a> OpaqueEntity<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 16, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_string_field(dst, 1, self.dirty_state.as_deref().unwrap().f_id.as_str());
-                }
-                2 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_pos {
-            ::omnibuf::codec::write_sub_msg_field(dst, 2, sub, deterministic).unwrap();
-        }
-                }
-                3 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_motion {
-            ::omnibuf::codec::write_sub_msg_field(dst, 3, sub, deterministic).unwrap();
-        }
-                }
-                4 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_rotation {
-            ::omnibuf::codec::write_sub_msg_field(dst, 4, sub, deterministic).unwrap();
-        }
-                }
-                5 => {
-        ::omnibuf::codec::write_float32_field(dst, 5, self.dirty_state.as_deref().unwrap().f_fall_distance);
-                }
-                6 => {
-        ::omnibuf::codec::write_uint_field(dst, 6, u64::from(self.dirty_state.as_deref().unwrap().f_fire));
-                }
-                7 => {
-        ::omnibuf::codec::write_uint_field(dst, 7, u64::from(self.dirty_state.as_deref().unwrap().f_air));
-                }
-                8 => {
-        ::omnibuf::codec::write_bool_field(dst, 8, self.dirty_state.as_deref().unwrap().f_on_ground);
-                }
-                9 => {
-        ::omnibuf::codec::write_bool_field(dst, 9, self.dirty_state.as_deref().unwrap().f_no_gravity);
-                }
-                10 => {
-        ::omnibuf::codec::write_bool_field(dst, 10, self.dirty_state.as_deref().unwrap().f_invulnerable);
-                }
-                11 => {
-        ::omnibuf::codec::write_sint_field(dst, 11, i64::from(self.dirty_state.as_deref().unwrap().f_portal_cooldown));
-                }
-                12 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_uuid {
-            ::omnibuf::codec::write_sub_msg_field(dst, 12, sub, deterministic).unwrap();
-        }
-                }
-                13 => {
-        if let ::core::option::Option::Some(ref v) = self.dirty_state.as_deref().unwrap().f_custom_name {
-        ::omnibuf::codec::write_string_field(dst, 13, v.as_str());
-        }
-                }
-                14 => {
-        ::omnibuf::codec::write_bool_field(dst, 14, self.dirty_state.as_deref().unwrap().f_custom_name_visible);
-                }
-                15 => {
-        ::omnibuf::codec::write_bool_field(dst, 15, self.dirty_state.as_deref().unwrap().f_silent);
-                }
-                16 => {
-        ::omnibuf::codec::write_bool_field(dst, 16, self.dirty_state.as_deref().unwrap().f_glowing);
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 16, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -2726,71 +2423,7 @@ impl<'a> OpaqueEntity<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 16, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_string_field(dst, 1, self.dirty_state.as_deref().unwrap().f_id.as_str());
-                }
-                2 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_pos {
-            ::omnibuf::codec::write_sub_msg_field(dst, 2, sub, deterministic).unwrap();
-        }
-                }
-                3 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_motion {
-            ::omnibuf::codec::write_sub_msg_field(dst, 3, sub, deterministic).unwrap();
-        }
-                }
-                4 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_rotation {
-            ::omnibuf::codec::write_sub_msg_field(dst, 4, sub, deterministic).unwrap();
-        }
-                }
-                5 => {
-        ::omnibuf::codec::write_float32_field(dst, 5, self.dirty_state.as_deref().unwrap().f_fall_distance);
-                }
-                6 => {
-        ::omnibuf::codec::write_uint_field(dst, 6, u64::from(self.dirty_state.as_deref().unwrap().f_fire));
-                }
-                7 => {
-        ::omnibuf::codec::write_uint_field(dst, 7, u64::from(self.dirty_state.as_deref().unwrap().f_air));
-                }
-                8 => {
-        ::omnibuf::codec::write_bool_field(dst, 8, self.dirty_state.as_deref().unwrap().f_on_ground);
-                }
-                9 => {
-        ::omnibuf::codec::write_bool_field(dst, 9, self.dirty_state.as_deref().unwrap().f_no_gravity);
-                }
-                10 => {
-        ::omnibuf::codec::write_bool_field(dst, 10, self.dirty_state.as_deref().unwrap().f_invulnerable);
-                }
-                11 => {
-        ::omnibuf::codec::write_sint_field(dst, 11, i64::from(self.dirty_state.as_deref().unwrap().f_portal_cooldown));
-                }
-                12 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_uuid {
-            ::omnibuf::codec::write_sub_msg_field(dst, 12, sub, deterministic).unwrap();
-        }
-                }
-                13 => {
-        if let ::core::option::Option::Some(ref v) = self.dirty_state.as_deref().unwrap().f_custom_name {
-        ::omnibuf::codec::write_string_field(dst, 13, v.as_str());
-        }
-                }
-                14 => {
-        ::omnibuf::codec::write_bool_field(dst, 14, self.dirty_state.as_deref().unwrap().f_custom_name_visible);
-                }
-                15 => {
-        ::omnibuf::codec::write_bool_field(dst, 15, self.dirty_state.as_deref().unwrap().f_silent);
-                }
-                16 => {
-        ::omnibuf::codec::write_bool_field(dst, 16, self.dirty_state.as_deref().unwrap().f_glowing);
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 16, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -2940,58 +2573,17 @@ impl ::omnibuf::Message for RecipeBook {
     }
 
     fn build_schema_meta(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
+        let _ = active;
         if depth >= ::omnibuf::MAX_NESTING_DEPTH {
             return ::core::option::Option::None;
         }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("RecipeBook"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("recipes"));
-        meta.fields.insert(2, ::std::string::String::from("to_be_displayed"));
-        meta.fields.insert(3, ::std::string::String::from("is_filtering_craftable"));
-        meta.fields.insert(4, ::std::string::String::from("is_gui_open"));
-        meta.fields.insert(5, ::std::string::String::from("is_furnace_filtering_craftable"));
-        meta.fields.insert(6, ::std::string::String::from("is_furnace_gui_open"));
-        meta.fields.insert(7, ::std::string::String::from("is_blasting_furnace_filtering_craftable"));
-        meta.fields.insert(8, ::std::string::String::from("is_blasting_furnace_gui_open"));
-        meta.fields.insert(9, ::std::string::String::from("is_smoker_filtering_craftable"));
-        meta.fields.insert(10, ::std::string::String::from("is_smoker_gui_open"));
-        if !active.insert(type_id) {
-            return ::core::option::Option::Some(meta);
-        }
-        active.remove(&type_id);
-        ::core::option::Option::Some(meta)
-    }
-
-    fn is_schema_cyclic(active: &mut ::std::collections::HashSet<::core::any::TypeId>, depth: usize) -> bool {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return false; }
-        let type_id = ::core::any::TypeId::of::<Self>();
-        if !active.insert(type_id) { return true; }
-        active.remove(&type_id);
-        false
-    }
-
-    fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
-        if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("RecipeBook"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("recipes"));
-        meta.fields.insert(2, ::std::string::String::from("to_be_displayed"));
-        meta.fields.insert(3, ::std::string::String::from("is_filtering_craftable"));
-        meta.fields.insert(4, ::std::string::String::from("is_gui_open"));
-        meta.fields.insert(5, ::std::string::String::from("is_furnace_filtering_craftable"));
-        meta.fields.insert(6, ::std::string::String::from("is_furnace_gui_open"));
-        meta.fields.insert(7, ::std::string::String::from("is_blasting_furnace_filtering_craftable"));
-        meta.fields.insert(8, ::std::string::String::from("is_blasting_furnace_gui_open"));
-        meta.fields.insert(9, ::std::string::String::from("is_smoker_filtering_craftable"));
-        meta.fields.insert(10, ::std::string::String::from("is_smoker_gui_open"));
-        ::core::option::Option::Some(meta)
+        ::core::option::Option::Some(
+            ::omnibuf::SchemaMeta {
+                type_name: ::std::string::String::from("RecipeBook"),
+                fields: [(1u32, "recipes"), (2u32, "to_be_displayed"), (3u32, "is_filtering_craftable"), (4u32, "is_gui_open"), (5u32, "is_furnace_filtering_craftable"), (6u32, "is_furnace_gui_open"), (7u32, "is_blasting_furnace_filtering_craftable"), (8u32, "is_blasting_furnace_gui_open"), (9u32, "is_smoker_filtering_craftable"), (10u32, "is_smoker_gui_open")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+                children: ::std::collections::BTreeMap::new(),
+            }
+        )
     }
 }
 
@@ -3322,6 +2914,46 @@ impl<'a> OpaqueRecipeBook<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_scalar_vec_field(dst, 1, 10, &__dirty.f_recipes, |dst, item| { ::omnibuf::wire::append_bytes_elem(dst, (item).as_bytes()); ::core::result::Result::Ok(()) }).unwrap();
+            }
+            2 => {
+        ::omnibuf::codec::write_scalar_vec_field(dst, 2, 10, &__dirty.f_to_be_displayed, |dst, item| { ::omnibuf::wire::append_bytes_elem(dst, (item).as_bytes()); ::core::result::Result::Ok(()) }).unwrap();
+            }
+            3 => {
+        ::omnibuf::codec::write_bool_field(dst, 3, __dirty.f_is_filtering_craftable);
+            }
+            4 => {
+        ::omnibuf::codec::write_bool_field(dst, 4, __dirty.f_is_gui_open);
+            }
+            5 => {
+        ::omnibuf::codec::write_bool_field(dst, 5, __dirty.f_is_furnace_filtering_craftable);
+            }
+            6 => {
+        ::omnibuf::codec::write_bool_field(dst, 6, __dirty.f_is_furnace_gui_open);
+            }
+            7 => {
+        ::omnibuf::codec::write_bool_field(dst, 7, __dirty.f_is_blasting_furnace_filtering_craftable);
+            }
+            8 => {
+        ::omnibuf::codec::write_bool_field(dst, 8, __dirty.f_is_blasting_furnace_gui_open);
+            }
+            9 => {
+        ::omnibuf::codec::write_bool_field(dst, 9, __dirty.f_is_smoker_filtering_craftable);
+            }
+            10 => {
+        ::omnibuf::codec::write_bool_field(dst, 10, __dirty.f_is_smoker_gui_open);
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -3333,43 +2965,7 @@ impl<'a> OpaqueRecipeBook<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 10, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_scalar_vec_field(dst, 1, 10, &self.dirty_state.as_deref().unwrap().f_recipes, |dst, item| { ::omnibuf::wire::append_bytes_elem(dst, (item).as_bytes()); ::core::result::Result::Ok(()) }).unwrap();
-                }
-                2 => {
-        ::omnibuf::codec::write_scalar_vec_field(dst, 2, 10, &self.dirty_state.as_deref().unwrap().f_to_be_displayed, |dst, item| { ::omnibuf::wire::append_bytes_elem(dst, (item).as_bytes()); ::core::result::Result::Ok(()) }).unwrap();
-                }
-                3 => {
-        ::omnibuf::codec::write_bool_field(dst, 3, self.dirty_state.as_deref().unwrap().f_is_filtering_craftable);
-                }
-                4 => {
-        ::omnibuf::codec::write_bool_field(dst, 4, self.dirty_state.as_deref().unwrap().f_is_gui_open);
-                }
-                5 => {
-        ::omnibuf::codec::write_bool_field(dst, 5, self.dirty_state.as_deref().unwrap().f_is_furnace_filtering_craftable);
-                }
-                6 => {
-        ::omnibuf::codec::write_bool_field(dst, 6, self.dirty_state.as_deref().unwrap().f_is_furnace_gui_open);
-                }
-                7 => {
-        ::omnibuf::codec::write_bool_field(dst, 7, self.dirty_state.as_deref().unwrap().f_is_blasting_furnace_filtering_craftable);
-                }
-                8 => {
-        ::omnibuf::codec::write_bool_field(dst, 8, self.dirty_state.as_deref().unwrap().f_is_blasting_furnace_gui_open);
-                }
-                9 => {
-        ::omnibuf::codec::write_bool_field(dst, 9, self.dirty_state.as_deref().unwrap().f_is_smoker_filtering_craftable);
-                }
-                10 => {
-        ::omnibuf::codec::write_bool_field(dst, 10, self.dirty_state.as_deref().unwrap().f_is_smoker_gui_open);
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 10, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -3383,43 +2979,7 @@ impl<'a> OpaqueRecipeBook<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 10, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_scalar_vec_field(dst, 1, 10, &self.dirty_state.as_deref().unwrap().f_recipes, |dst, item| { ::omnibuf::wire::append_bytes_elem(dst, (item).as_bytes()); ::core::result::Result::Ok(()) }).unwrap();
-                }
-                2 => {
-        ::omnibuf::codec::write_scalar_vec_field(dst, 2, 10, &self.dirty_state.as_deref().unwrap().f_to_be_displayed, |dst, item| { ::omnibuf::wire::append_bytes_elem(dst, (item).as_bytes()); ::core::result::Result::Ok(()) }).unwrap();
-                }
-                3 => {
-        ::omnibuf::codec::write_bool_field(dst, 3, self.dirty_state.as_deref().unwrap().f_is_filtering_craftable);
-                }
-                4 => {
-        ::omnibuf::codec::write_bool_field(dst, 4, self.dirty_state.as_deref().unwrap().f_is_gui_open);
-                }
-                5 => {
-        ::omnibuf::codec::write_bool_field(dst, 5, self.dirty_state.as_deref().unwrap().f_is_furnace_filtering_craftable);
-                }
-                6 => {
-        ::omnibuf::codec::write_bool_field(dst, 6, self.dirty_state.as_deref().unwrap().f_is_furnace_gui_open);
-                }
-                7 => {
-        ::omnibuf::codec::write_bool_field(dst, 7, self.dirty_state.as_deref().unwrap().f_is_blasting_furnace_filtering_craftable);
-                }
-                8 => {
-        ::omnibuf::codec::write_bool_field(dst, 8, self.dirty_state.as_deref().unwrap().f_is_blasting_furnace_gui_open);
-                }
-                9 => {
-        ::omnibuf::codec::write_bool_field(dst, 9, self.dirty_state.as_deref().unwrap().f_is_smoker_filtering_craftable);
-                }
-                10 => {
-        ::omnibuf::codec::write_bool_field(dst, 10, self.dirty_state.as_deref().unwrap().f_is_smoker_gui_open);
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 10, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -3458,6 +3018,14 @@ impl Vehicle {
     #[inline]
     pub fn unmarshal_omnibuf(&mut self, data: &[u8]) -> ::omnibuf::Result<()> {
         <Self as ::omnibuf::Message>::decode_omnibuf(self, data)
+    }
+
+    fn __omnibuf_base_schema_meta() -> ::omnibuf::SchemaMeta {
+        ::omnibuf::SchemaMeta {
+            type_name: ::std::string::String::from("Vehicle"),
+            fields: [(1u32, "uuid"), (2u32, "entity")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+            children: ::std::collections::BTreeMap::new(),
+        }
     }
 }
 
@@ -3503,8 +3071,7 @@ impl ::omnibuf::Message for Vehicle {
 
     #[inline]
     fn clear_omnibuf(&mut self) {
-        if self.uuid.is_some() { self.uuid = ::core::option::Option::None; }
-        if self.entity.is_some() { self.entity = ::core::option::Option::None; }
+        *self = ::core::default::Default::default();
     }
 
     #[inline]
@@ -3521,13 +3088,7 @@ impl ::omnibuf::Message for Vehicle {
             return ::core::option::Option::None;
         }
         let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Vehicle"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("uuid"));
-        meta.fields.insert(2, ::std::string::String::from("entity"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if !active.insert(type_id) {
             return ::core::option::Option::Some(meta);
         }
@@ -3549,13 +3110,7 @@ impl ::omnibuf::Message for Vehicle {
 
     fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
         if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Vehicle"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("uuid"));
-        meta.fields.insert(2, ::std::string::String::from("entity"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if depth + 2 < ::omnibuf::MAX_NESTING_DEPTH {
             if let ::core::option::Option::Some(__c) = self.uuid.as_ref().and_then(|__sub| <Uuid as ::omnibuf::Message>::build_value_schema_meta(__sub, depth + 2)) { meta.children.insert(1, __c); }
             if let ::core::option::Option::Some(__c) = self.entity.as_ref().and_then(|__sub| <Entity as ::omnibuf::Message>::build_value_schema_meta(__sub, depth + 2)) { meta.children.insert(2, __c); }
@@ -3600,11 +3155,6 @@ impl<'a> ::omnibuf::DecodeBorrowed<'a> for VehicleBorrowed<'a> {
         ::core::result::Result::Ok(())
     }
 
-    #[inline]
-    fn clear_omnibuf_borrowed(&mut self) {
-        if self.uuid.is_some() { self.uuid = ::core::option::Option::None; }
-        if self.entity.is_some() { self.entity = ::core::option::Option::None; }
-    }
 }
 
 #[allow(dead_code)]
@@ -3737,6 +3287,26 @@ impl<'a> OpaqueVehicle<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_uuid {
+            ::omnibuf::codec::write_sub_msg_field(dst, 1, sub, deterministic).unwrap();
+        }
+            }
+            2 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_entity {
+            ::omnibuf::codec::write_sub_msg_field(dst, 2, sub, deterministic).unwrap();
+        }
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -3748,23 +3318,7 @@ impl<'a> OpaqueVehicle<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_uuid {
-            ::omnibuf::codec::write_sub_msg_field(dst, 1, sub, deterministic).unwrap();
-        }
-                }
-                2 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_entity {
-            ::omnibuf::codec::write_sub_msg_field(dst, 2, sub, deterministic).unwrap();
-        }
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -3778,23 +3332,7 @@ impl<'a> OpaqueVehicle<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_uuid {
-            ::omnibuf::codec::write_sub_msg_field(dst, 1, sub, deterministic).unwrap();
-        }
-                }
-                2 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_entity {
-            ::omnibuf::codec::write_sub_msg_field(dst, 2, sub, deterministic).unwrap();
-        }
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 2, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -3859,6 +3397,14 @@ impl Player {
     #[inline]
     pub fn unmarshal_omnibuf(&mut self, data: &[u8]) -> ::omnibuf::Result<()> {
         <Self as ::omnibuf::Message>::decode_omnibuf(self, data)
+    }
+
+    fn __omnibuf_base_schema_meta() -> ::omnibuf::SchemaMeta {
+        ::omnibuf::SchemaMeta {
+            type_name: ::std::string::String::from("Player"),
+            fields: [(1u32, "game_type"), (2u32, "previous_game_type"), (3u32, "score"), (4u32, "dimension"), (5u32, "selected_item_slot"), (6u32, "selected_item"), (7u32, "spawn_dimension"), (8u32, "spawn_x"), (9u32, "spawn_y"), (10u32, "spawn_z"), (11u32, "spawn_forced"), (12u32, "sleep_timer"), (13u32, "food_exhaustion_level"), (14u32, "food_saturation_level"), (15u32, "food_tick_timer"), (16u32, "xp_level"), (17u32, "xp_p"), (18u32, "xp_total"), (19u32, "xp_seed"), (20u32, "inventory"), (21u32, "ender_items"), (22u32, "abilities"), (23u32, "entered_nether_position"), (24u32, "root_vehicle"), (25u32, "shoulder_entity_left"), (26u32, "shoulder_entity_right"), (27u32, "seen_credits"), (28u32, "recipe_book")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+            children: ::std::collections::BTreeMap::new(),
+        }
     }
 }
 
@@ -4027,39 +3573,7 @@ impl ::omnibuf::Message for Player {
             return ::core::option::Option::None;
         }
         let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Player"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("game_type"));
-        meta.fields.insert(2, ::std::string::String::from("previous_game_type"));
-        meta.fields.insert(3, ::std::string::String::from("score"));
-        meta.fields.insert(4, ::std::string::String::from("dimension"));
-        meta.fields.insert(5, ::std::string::String::from("selected_item_slot"));
-        meta.fields.insert(6, ::std::string::String::from("selected_item"));
-        meta.fields.insert(7, ::std::string::String::from("spawn_dimension"));
-        meta.fields.insert(8, ::std::string::String::from("spawn_x"));
-        meta.fields.insert(9, ::std::string::String::from("spawn_y"));
-        meta.fields.insert(10, ::std::string::String::from("spawn_z"));
-        meta.fields.insert(11, ::std::string::String::from("spawn_forced"));
-        meta.fields.insert(12, ::std::string::String::from("sleep_timer"));
-        meta.fields.insert(13, ::std::string::String::from("food_exhaustion_level"));
-        meta.fields.insert(14, ::std::string::String::from("food_saturation_level"));
-        meta.fields.insert(15, ::std::string::String::from("food_tick_timer"));
-        meta.fields.insert(16, ::std::string::String::from("xp_level"));
-        meta.fields.insert(17, ::std::string::String::from("xp_p"));
-        meta.fields.insert(18, ::std::string::String::from("xp_total"));
-        meta.fields.insert(19, ::std::string::String::from("xp_seed"));
-        meta.fields.insert(20, ::std::string::String::from("inventory"));
-        meta.fields.insert(21, ::std::string::String::from("ender_items"));
-        meta.fields.insert(22, ::std::string::String::from("abilities"));
-        meta.fields.insert(23, ::std::string::String::from("entered_nether_position"));
-        meta.fields.insert(24, ::std::string::String::from("root_vehicle"));
-        meta.fields.insert(25, ::std::string::String::from("shoulder_entity_left"));
-        meta.fields.insert(26, ::std::string::String::from("shoulder_entity_right"));
-        meta.fields.insert(27, ::std::string::String::from("seen_credits"));
-        meta.fields.insert(28, ::std::string::String::from("recipe_book"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if !active.insert(type_id) {
             return ::core::option::Option::Some(meta);
         }
@@ -4095,39 +3609,7 @@ impl ::omnibuf::Message for Player {
 
     fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
         if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Player"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("game_type"));
-        meta.fields.insert(2, ::std::string::String::from("previous_game_type"));
-        meta.fields.insert(3, ::std::string::String::from("score"));
-        meta.fields.insert(4, ::std::string::String::from("dimension"));
-        meta.fields.insert(5, ::std::string::String::from("selected_item_slot"));
-        meta.fields.insert(6, ::std::string::String::from("selected_item"));
-        meta.fields.insert(7, ::std::string::String::from("spawn_dimension"));
-        meta.fields.insert(8, ::std::string::String::from("spawn_x"));
-        meta.fields.insert(9, ::std::string::String::from("spawn_y"));
-        meta.fields.insert(10, ::std::string::String::from("spawn_z"));
-        meta.fields.insert(11, ::std::string::String::from("spawn_forced"));
-        meta.fields.insert(12, ::std::string::String::from("sleep_timer"));
-        meta.fields.insert(13, ::std::string::String::from("food_exhaustion_level"));
-        meta.fields.insert(14, ::std::string::String::from("food_saturation_level"));
-        meta.fields.insert(15, ::std::string::String::from("food_tick_timer"));
-        meta.fields.insert(16, ::std::string::String::from("xp_level"));
-        meta.fields.insert(17, ::std::string::String::from("xp_p"));
-        meta.fields.insert(18, ::std::string::String::from("xp_total"));
-        meta.fields.insert(19, ::std::string::String::from("xp_seed"));
-        meta.fields.insert(20, ::std::string::String::from("inventory"));
-        meta.fields.insert(21, ::std::string::String::from("ender_items"));
-        meta.fields.insert(22, ::std::string::String::from("abilities"));
-        meta.fields.insert(23, ::std::string::String::from("entered_nether_position"));
-        meta.fields.insert(24, ::std::string::String::from("root_vehicle"));
-        meta.fields.insert(25, ::std::string::String::from("shoulder_entity_left"));
-        meta.fields.insert(26, ::std::string::String::from("shoulder_entity_right"));
-        meta.fields.insert(27, ::std::string::String::from("seen_credits"));
-        meta.fields.insert(28, ::std::string::String::from("recipe_book"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if depth + 2 < ::omnibuf::MAX_NESTING_DEPTH {
             if let ::core::option::Option::Some(__c) = self.selected_item.as_ref().and_then(|__sub| <Item as ::omnibuf::Message>::build_value_schema_meta(__sub, depth + 2)) { meta.children.insert(6, __c); }
             if !self.inventory.is_empty() { let mut __ch = ::core::option::Option::None; for __el in &self.inventory { if let ::core::option::Option::Some(__cm) = <Item as ::omnibuf::Message>::build_value_schema_meta(__el, depth + 2) { __ch = ::core::option::Option::Some(::omnibuf::merge_schema_meta(__ch, __cm)); } } if let ::core::option::Option::Some(__c) = __ch { meta.children.insert(20, __c); } }
@@ -4882,6 +4364,118 @@ impl<'a> OpaquePlayer<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_sint_field(dst, 1, i64::from(__dirty.f_game_type));
+            }
+            2 => {
+        ::omnibuf::codec::write_sint_field(dst, 2, i64::from(__dirty.f_previous_game_type));
+            }
+            3 => {
+        ::omnibuf::codec::write_sint_field(dst, 3, __dirty.f_score);
+            }
+            4 => {
+        ::omnibuf::codec::write_string_field(dst, 4, __dirty.f_dimension.as_str());
+            }
+            5 => {
+        ::omnibuf::codec::write_uint_field(dst, 5, u64::from(__dirty.f_selected_item_slot));
+            }
+            6 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_selected_item {
+            ::omnibuf::codec::write_sub_msg_field(dst, 6, sub, deterministic).unwrap();
+        }
+            }
+            7 => {
+        if let ::core::option::Option::Some(ref v) = __dirty.f_spawn_dimension {
+        ::omnibuf::codec::write_string_field(dst, 7, v.as_str());
+        }
+            }
+            8 => {
+        ::omnibuf::codec::write_sint_field(dst, 8, __dirty.f_spawn_x);
+            }
+            9 => {
+        ::omnibuf::codec::write_sint_field(dst, 9, __dirty.f_spawn_y);
+            }
+            10 => {
+        ::omnibuf::codec::write_sint_field(dst, 10, __dirty.f_spawn_z);
+            }
+            11 => {
+        if let ::core::option::Option::Some(ref v) = __dirty.f_spawn_forced {
+        ::omnibuf::codec::write_bool_field(dst, 11, *v);
+        }
+            }
+            12 => {
+        ::omnibuf::codec::write_uint_field(dst, 12, u64::from(__dirty.f_sleep_timer));
+            }
+            13 => {
+        ::omnibuf::codec::write_float32_field(dst, 13, __dirty.f_food_exhaustion_level);
+            }
+            14 => {
+        ::omnibuf::codec::write_float32_field(dst, 14, __dirty.f_food_saturation_level);
+            }
+            15 => {
+        ::omnibuf::codec::write_uint_field(dst, 15, u64::from(__dirty.f_food_tick_timer));
+            }
+            16 => {
+        ::omnibuf::codec::write_uint_field(dst, 16, u64::from(__dirty.f_xp_level));
+            }
+            17 => {
+        ::omnibuf::codec::write_float32_field(dst, 17, __dirty.f_xp_p);
+            }
+            18 => {
+        ::omnibuf::codec::write_sint_field(dst, 18, i64::from(__dirty.f_xp_total));
+            }
+            19 => {
+        ::omnibuf::codec::write_sint_field(dst, 19, i64::from(__dirty.f_xp_seed));
+            }
+            20 => {
+        ::omnibuf::codec::write_sub_msg_vec_field(dst, 20, &__dirty.f_inventory, deterministic).unwrap();
+            }
+            21 => {
+        ::omnibuf::codec::write_sub_msg_vec_field(dst, 21, &__dirty.f_ender_items, deterministic).unwrap();
+            }
+            22 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_abilities {
+            ::omnibuf::codec::write_sub_msg_field(dst, 22, sub, deterministic).unwrap();
+        }
+            }
+            23 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_entered_nether_position {
+            ::omnibuf::codec::write_sub_msg_field(dst, 23, sub, deterministic).unwrap();
+        }
+            }
+            24 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_root_vehicle {
+            ::omnibuf::codec::write_sub_msg_field(dst, 24, sub, deterministic).unwrap();
+        }
+            }
+            25 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_shoulder_entity_left {
+            ::omnibuf::codec::write_sub_msg_field(dst, 25, sub, deterministic).unwrap();
+        }
+            }
+            26 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_shoulder_entity_right {
+            ::omnibuf::codec::write_sub_msg_field(dst, 26, sub, deterministic).unwrap();
+        }
+            }
+            27 => {
+        ::omnibuf::codec::write_bool_field(dst, 27, __dirty.f_seen_credits);
+            }
+            28 => {
+        if let ::core::option::Option::Some(ref sub) = __dirty.f_recipe_book {
+            ::omnibuf::codec::write_sub_msg_field(dst, 28, sub, deterministic).unwrap();
+        }
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -4893,115 +4487,7 @@ impl<'a> OpaquePlayer<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 28, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_sint_field(dst, 1, i64::from(self.dirty_state.as_deref().unwrap().f_game_type));
-                }
-                2 => {
-        ::omnibuf::codec::write_sint_field(dst, 2, i64::from(self.dirty_state.as_deref().unwrap().f_previous_game_type));
-                }
-                3 => {
-        ::omnibuf::codec::write_sint_field(dst, 3, self.dirty_state.as_deref().unwrap().f_score);
-                }
-                4 => {
-        ::omnibuf::codec::write_string_field(dst, 4, self.dirty_state.as_deref().unwrap().f_dimension.as_str());
-                }
-                5 => {
-        ::omnibuf::codec::write_uint_field(dst, 5, u64::from(self.dirty_state.as_deref().unwrap().f_selected_item_slot));
-                }
-                6 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_selected_item {
-            ::omnibuf::codec::write_sub_msg_field(dst, 6, sub, deterministic).unwrap();
-        }
-                }
-                7 => {
-        if let ::core::option::Option::Some(ref v) = self.dirty_state.as_deref().unwrap().f_spawn_dimension {
-        ::omnibuf::codec::write_string_field(dst, 7, v.as_str());
-        }
-                }
-                8 => {
-        ::omnibuf::codec::write_sint_field(dst, 8, self.dirty_state.as_deref().unwrap().f_spawn_x);
-                }
-                9 => {
-        ::omnibuf::codec::write_sint_field(dst, 9, self.dirty_state.as_deref().unwrap().f_spawn_y);
-                }
-                10 => {
-        ::omnibuf::codec::write_sint_field(dst, 10, self.dirty_state.as_deref().unwrap().f_spawn_z);
-                }
-                11 => {
-        if let ::core::option::Option::Some(ref v) = self.dirty_state.as_deref().unwrap().f_spawn_forced {
-        ::omnibuf::codec::write_bool_field(dst, 11, *v);
-        }
-                }
-                12 => {
-        ::omnibuf::codec::write_uint_field(dst, 12, u64::from(self.dirty_state.as_deref().unwrap().f_sleep_timer));
-                }
-                13 => {
-        ::omnibuf::codec::write_float32_field(dst, 13, self.dirty_state.as_deref().unwrap().f_food_exhaustion_level);
-                }
-                14 => {
-        ::omnibuf::codec::write_float32_field(dst, 14, self.dirty_state.as_deref().unwrap().f_food_saturation_level);
-                }
-                15 => {
-        ::omnibuf::codec::write_uint_field(dst, 15, u64::from(self.dirty_state.as_deref().unwrap().f_food_tick_timer));
-                }
-                16 => {
-        ::omnibuf::codec::write_uint_field(dst, 16, u64::from(self.dirty_state.as_deref().unwrap().f_xp_level));
-                }
-                17 => {
-        ::omnibuf::codec::write_float32_field(dst, 17, self.dirty_state.as_deref().unwrap().f_xp_p);
-                }
-                18 => {
-        ::omnibuf::codec::write_sint_field(dst, 18, i64::from(self.dirty_state.as_deref().unwrap().f_xp_total));
-                }
-                19 => {
-        ::omnibuf::codec::write_sint_field(dst, 19, i64::from(self.dirty_state.as_deref().unwrap().f_xp_seed));
-                }
-                20 => {
-        ::omnibuf::codec::write_sub_msg_vec_field(dst, 20, &self.dirty_state.as_deref().unwrap().f_inventory, deterministic).unwrap();
-                }
-                21 => {
-        ::omnibuf::codec::write_sub_msg_vec_field(dst, 21, &self.dirty_state.as_deref().unwrap().f_ender_items, deterministic).unwrap();
-                }
-                22 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_abilities {
-            ::omnibuf::codec::write_sub_msg_field(dst, 22, sub, deterministic).unwrap();
-        }
-                }
-                23 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_entered_nether_position {
-            ::omnibuf::codec::write_sub_msg_field(dst, 23, sub, deterministic).unwrap();
-        }
-                }
-                24 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_root_vehicle {
-            ::omnibuf::codec::write_sub_msg_field(dst, 24, sub, deterministic).unwrap();
-        }
-                }
-                25 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_shoulder_entity_left {
-            ::omnibuf::codec::write_sub_msg_field(dst, 25, sub, deterministic).unwrap();
-        }
-                }
-                26 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_shoulder_entity_right {
-            ::omnibuf::codec::write_sub_msg_field(dst, 26, sub, deterministic).unwrap();
-        }
-                }
-                27 => {
-        ::omnibuf::codec::write_bool_field(dst, 27, self.dirty_state.as_deref().unwrap().f_seen_credits);
-                }
-                28 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_recipe_book {
-            ::omnibuf::codec::write_sub_msg_field(dst, 28, sub, deterministic).unwrap();
-        }
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 28, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -5015,115 +4501,7 @@ impl<'a> OpaquePlayer<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 28, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_sint_field(dst, 1, i64::from(self.dirty_state.as_deref().unwrap().f_game_type));
-                }
-                2 => {
-        ::omnibuf::codec::write_sint_field(dst, 2, i64::from(self.dirty_state.as_deref().unwrap().f_previous_game_type));
-                }
-                3 => {
-        ::omnibuf::codec::write_sint_field(dst, 3, self.dirty_state.as_deref().unwrap().f_score);
-                }
-                4 => {
-        ::omnibuf::codec::write_string_field(dst, 4, self.dirty_state.as_deref().unwrap().f_dimension.as_str());
-                }
-                5 => {
-        ::omnibuf::codec::write_uint_field(dst, 5, u64::from(self.dirty_state.as_deref().unwrap().f_selected_item_slot));
-                }
-                6 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_selected_item {
-            ::omnibuf::codec::write_sub_msg_field(dst, 6, sub, deterministic).unwrap();
-        }
-                }
-                7 => {
-        if let ::core::option::Option::Some(ref v) = self.dirty_state.as_deref().unwrap().f_spawn_dimension {
-        ::omnibuf::codec::write_string_field(dst, 7, v.as_str());
-        }
-                }
-                8 => {
-        ::omnibuf::codec::write_sint_field(dst, 8, self.dirty_state.as_deref().unwrap().f_spawn_x);
-                }
-                9 => {
-        ::omnibuf::codec::write_sint_field(dst, 9, self.dirty_state.as_deref().unwrap().f_spawn_y);
-                }
-                10 => {
-        ::omnibuf::codec::write_sint_field(dst, 10, self.dirty_state.as_deref().unwrap().f_spawn_z);
-                }
-                11 => {
-        if let ::core::option::Option::Some(ref v) = self.dirty_state.as_deref().unwrap().f_spawn_forced {
-        ::omnibuf::codec::write_bool_field(dst, 11, *v);
-        }
-                }
-                12 => {
-        ::omnibuf::codec::write_uint_field(dst, 12, u64::from(self.dirty_state.as_deref().unwrap().f_sleep_timer));
-                }
-                13 => {
-        ::omnibuf::codec::write_float32_field(dst, 13, self.dirty_state.as_deref().unwrap().f_food_exhaustion_level);
-                }
-                14 => {
-        ::omnibuf::codec::write_float32_field(dst, 14, self.dirty_state.as_deref().unwrap().f_food_saturation_level);
-                }
-                15 => {
-        ::omnibuf::codec::write_uint_field(dst, 15, u64::from(self.dirty_state.as_deref().unwrap().f_food_tick_timer));
-                }
-                16 => {
-        ::omnibuf::codec::write_uint_field(dst, 16, u64::from(self.dirty_state.as_deref().unwrap().f_xp_level));
-                }
-                17 => {
-        ::omnibuf::codec::write_float32_field(dst, 17, self.dirty_state.as_deref().unwrap().f_xp_p);
-                }
-                18 => {
-        ::omnibuf::codec::write_sint_field(dst, 18, i64::from(self.dirty_state.as_deref().unwrap().f_xp_total));
-                }
-                19 => {
-        ::omnibuf::codec::write_sint_field(dst, 19, i64::from(self.dirty_state.as_deref().unwrap().f_xp_seed));
-                }
-                20 => {
-        ::omnibuf::codec::write_sub_msg_vec_field(dst, 20, &self.dirty_state.as_deref().unwrap().f_inventory, deterministic).unwrap();
-                }
-                21 => {
-        ::omnibuf::codec::write_sub_msg_vec_field(dst, 21, &self.dirty_state.as_deref().unwrap().f_ender_items, deterministic).unwrap();
-                }
-                22 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_abilities {
-            ::omnibuf::codec::write_sub_msg_field(dst, 22, sub, deterministic).unwrap();
-        }
-                }
-                23 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_entered_nether_position {
-            ::omnibuf::codec::write_sub_msg_field(dst, 23, sub, deterministic).unwrap();
-        }
-                }
-                24 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_root_vehicle {
-            ::omnibuf::codec::write_sub_msg_field(dst, 24, sub, deterministic).unwrap();
-        }
-                }
-                25 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_shoulder_entity_left {
-            ::omnibuf::codec::write_sub_msg_field(dst, 25, sub, deterministic).unwrap();
-        }
-                }
-                26 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_shoulder_entity_right {
-            ::omnibuf::codec::write_sub_msg_field(dst, 26, sub, deterministic).unwrap();
-        }
-                }
-                27 => {
-        ::omnibuf::codec::write_bool_field(dst, 27, self.dirty_state.as_deref().unwrap().f_seen_credits);
-                }
-                28 => {
-        if let ::core::option::Option::Some(ref sub) = self.dirty_state.as_deref().unwrap().f_recipe_book {
-            ::omnibuf::codec::write_sub_msg_field(dst, 28, sub, deterministic).unwrap();
-        }
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 28, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]
@@ -5161,6 +4539,14 @@ impl Players {
     #[inline]
     pub fn unmarshal_omnibuf(&mut self, data: &[u8]) -> ::omnibuf::Result<()> {
         <Self as ::omnibuf::Message>::decode_omnibuf(self, data)
+    }
+
+    fn __omnibuf_base_schema_meta() -> ::omnibuf::SchemaMeta {
+        ::omnibuf::SchemaMeta {
+            type_name: ::std::string::String::from("Players"),
+            fields: [(1u32, "players")].into_iter().map(|(k, v)| (k, ::std::string::String::from(v))).collect(),
+            children: ::std::collections::BTreeMap::new(),
+        }
     }
 }
 
@@ -5215,12 +4601,7 @@ impl ::omnibuf::Message for Players {
             return ::core::option::Option::None;
         }
         let type_id = ::core::any::TypeId::of::<Self>();
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Players"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("players"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if !active.insert(type_id) {
             return ::core::option::Option::Some(meta);
         }
@@ -5240,12 +4621,7 @@ impl ::omnibuf::Message for Players {
 
     fn build_value_schema_meta(&self, depth: usize) -> ::core::option::Option<::omnibuf::SchemaMeta> {
         if depth >= ::omnibuf::MAX_NESTING_DEPTH { return ::core::option::Option::None; }
-        let mut meta = ::omnibuf::SchemaMeta {
-            type_name: ::std::string::String::from("Players"),
-            fields: ::std::collections::BTreeMap::new(),
-            children: ::std::collections::BTreeMap::new(),
-        };
-        meta.fields.insert(1, ::std::string::String::from("players"));
+        let mut meta = Self::__omnibuf_base_schema_meta();
         if depth + 2 < ::omnibuf::MAX_NESTING_DEPTH {
             if !self.players.is_empty() { let mut __ch = ::core::option::Option::None; for __el in &self.players { if let ::core::option::Option::Some(__cm) = <Player as ::omnibuf::Message>::build_value_schema_meta(__el, depth + 2) { __ch = ::core::option::Option::Some(::omnibuf::merge_schema_meta(__ch, __cm)); } } if let ::core::option::Option::Some(__c) = __ch { meta.children.insert(1, __c); } }
         }
@@ -5401,6 +4777,19 @@ impl<'a> OpaquePlayers<'a> {
     }
 
     #[inline]
+    fn write_dirty_field(&self, dst: &mut ::std::vec::Vec<u8>, fnum: u16) {
+        let deterministic = true;
+        let _ = deterministic;
+        let ::core::option::Option::Some(__dirty) = self.dirty_state.as_deref() else { return; };
+        match fnum {
+            1 => {
+        ::omnibuf::codec::write_sub_msg_vec_field(dst, 1, &__dirty.f_players, deterministic).unwrap();
+            }
+            _ => {}
+        }
+    }
+
+    #[inline]
     pub fn marshal(&self) -> ::std::vec::Vec<u8> {
         let mut dst = ::std::vec::Vec::with_capacity(self.raw.len() + 32);
         self.marshal_append(&mut dst);
@@ -5412,16 +4801,7 @@ impl<'a> OpaquePlayers<'a> {
             ::omnibuf::opaque::append_packet(dst, &self.raw);
             return;
         }
-        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 1, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_sub_msg_vec_field(dst, 1, &self.dirty_state.as_deref().unwrap().f_players, deterministic).unwrap();
-                }
-                _ => {}
-            }
-        });
+        ::omnibuf::opaque::splice_fields(dst, &self.raw, self.dirty, 1, |dst, fnum| self.write_dirty_field(dst, fnum));
     }
 
     #[inline]
@@ -5435,16 +4815,7 @@ impl<'a> OpaquePlayers<'a> {
         if self.dirty == 0 {
             return ::omnibuf::opaque::try_append_packet(dst, &self.raw);
         }
-        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 1, |dst, fnum| {
-            let deterministic = true;
-            let _ = deterministic;
-            match fnum {
-                1 => {
-        ::omnibuf::codec::write_sub_msg_vec_field(dst, 1, &self.dirty_state.as_deref().unwrap().f_players, deterministic).unwrap();
-                }
-                _ => {}
-            }
-        })
+        ::omnibuf::opaque::try_splice_fields(dst, &self.raw, self.dirty, 1, |dst, fnum| self.write_dirty_field(dst, fnum))
     }
 
     #[inline]

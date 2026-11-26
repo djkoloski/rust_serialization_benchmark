@@ -1939,9 +1939,9 @@ dependencies = [
 
 [[package]]
 name = "omnibuf"
-version = "0.1.9"
+version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fadf6659053a354bfe323098a5fdd2eb29e4fd472f6ddd6781546f146e7d456a"
+checksum = "fce9c07c36d2ab0802d25f8179408d4c142f31b97a74b52650573b5076461da7"
 dependencies = [
  "itoa",
  "ryu",
